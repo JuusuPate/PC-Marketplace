@@ -1,0 +1,18 @@
+{
+  "name": "pc-marketplace",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace @pc-marketplace/web",
+    "build": "npm run build --workspace @pc-marketplace/web",
+    "typecheck": "npm run typecheck --workspace @pc-marketplace/web",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "prettier": "^3.9.6"
+  }
+}
