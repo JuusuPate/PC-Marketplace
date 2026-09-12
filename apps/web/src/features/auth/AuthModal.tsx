@@ -4,6 +4,8 @@ import type { Messages } from "../../i18n/messages/fi";
 import type { CountryCode, DemoUser, Locale } from "../../types";
 import { Icon } from "../../components/Icon";
 import { ModalShell } from "../../components/ModalShell";
+import { authService } from "../../lib/auth-service";
+import { getRuntimeCopy } from "../../lib/runtime-copy";
 
 interface AuthModalProps {
   copy: Messages;
@@ -19,12 +21,15 @@ export function AuthModal({ copy, locale, market, onClose, onComplete }: AuthMod
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [notice, setNotice] = useState("");
+  const [busy, setBusy] = useState(false);
+  const runtimeCopy = getRuntimeCopy(locale);
 
   const complete = (nextName: string, nextEmail: string) => {
     onComplete({ id: `demo-${Date.now()}`, name: nextName, email: nextEmail, countryCode: market, locale });
   };
 
-  const submit = (event: FormEvent) => {
+  const submit = async (event: FormEvent) => {
     event.preventDefault();
     if (!email.includes("@") || password.length < 6 || (mode === "register" && name.trim().length < 2)) {
       setError(
@@ -34,14 +39,37 @@ export function AuthModal({ copy, locale, market, onClose, onComplete }: AuthMod
       );
       return;
     }
-    complete(mode === "register" ? name.trim() : email.split("@")[0], email.trim());
+
+    setBusy(true);
+    setError("");
+    setNotice("");
+
+    try {
+      const normalizedEmail = email.trim().toLowerCase();
+      const result =
+        mode === "register"
+          ? await authService.signUp(name.trim(), normalizedEmail, password, market, locale)
+          : await authService.signIn(normalizedEmail, password, market, locale);
+
+      if (result.confirmationRequired) {
+        setNotice(runtimeCopy.confirmationRequired);
+        return;
+      }
+      if (result.user) onComplete(result.user);
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : runtimeCopy.listingError);
+    } finally {
+      setBusy(false);
+    }
   };
 
   return (
     <ModalShell title={copy.authTitle} onClose={onClose}>
       <div className="auth-layout">
         <div className="auth-visual">
-          <span className="demo-pill">{copy.demoBadge}</span>
+          <span className="demo-pill">
+            {authService.mode === "supabase" ? runtimeCopy.connectedBadge : copy.demoBadge}
+          </span>
           <div className="auth-orbit auth-orbit--one" />
           <div className="auth-orbit auth-orbit--two" />
           <div className="auth-shield">
@@ -63,6 +91,7 @@ export function AuthModal({ copy, locale, market, onClose, onComplete }: AuthMod
               onClick={() => {
                 setMode("login");
                 setError("");
+                setNotice("");
               }}
             >
               {copy.login}
@@ -73,6 +102,7 @@ export function AuthModal({ copy, locale, market, onClose, onComplete }: AuthMod
               onClick={() => {
                 setMode("register");
                 setError("");
+                setNotice("");
               }}
             >
               {copy.createAccount}
@@ -110,23 +140,33 @@ export function AuthModal({ copy, locale, market, onClose, onComplete }: AuthMod
                 {error}
               </p>
             )}
-            <button className="button button--primary button--full" type="submit">
-              {mode === "login" ? copy.login : copy.createAccount}
+            {notice && (
+              <p className="form-notice" role="status">
+                {notice}
+              </p>
+            )}
+            <button className="button button--primary button--full" type="submit" disabled={busy}>
+              {busy ? runtimeCopy.working : mode === "login" ? copy.login : copy.createAccount}
               <Icon name="arrow" />
             </button>
           </form>
-          <div className="divider">
-            <span>DEMO</span>
-          </div>
-          <button
-            className="button button--outline button--full"
-            type="button"
-            onClick={() => complete("Demo User", "demo@pcmarket.fi")}
-          >
-            {copy.useDemo}
-          </button>
+          {authService.mode === "demo" && (
+            <>
+              <div className="divider">
+                <span>DEMO</span>
+              </div>
+              <button
+                className="button button--outline button--full"
+                type="button"
+                onClick={() => complete("Demo User", "demo@pcmarket.fi")}
+              >
+                {copy.useDemo}
+              </button>
+            </>
+          )}
           <p className="demo-privacy">
-            <Icon name="shield" /> {copy.demoNotice}
+            <Icon name="shield" />
+            {authService.mode === "supabase" ? runtimeCopy.connectedNotice : copy.demoNotice}
           </p>
         </div>
       </div>

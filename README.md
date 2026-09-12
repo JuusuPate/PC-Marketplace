@@ -8,12 +8,12 @@ Finland-first, Nordic-ready -demo käytettyjen PC-komponenttien ja pelikoneiden 
 - Suomi-, Ruotsi-, Tanska- ja Norja-markkinoiden asetukset ja valuutat
 - ilmoitusten haku, kategoriat, lajittelu ja markkinakohtainen toimitussuodatus
 - tuotesivu, myyjän maine, testitiedot, sarjanumeron vahvistus ja ostajansuoja
-- paikallinen demo-kirjautuminen ja tilin luonti
-- ilmoituksen luonti, suosikit ja demo-osto
+- paikallinen demo-kirjautuminen tai valinnainen Supabase Auth sähköpostivahvistuksella
+- ilmoituksen luonti paikallisesti tai Supabase-tietokantaan, suosikit ja demo-osto
 - oma tili, tilaukset, omat ilmoitukset ja markkinoiden admin-esikatselu
 - mobiiliin mukautuva käyttöliittymä
 
-Demo ei käsittele oikeita maksuja, henkilötietoja eikä lähetä tietoja palvelimelle. Demoistunto tallennetaan vain selaimen localStorageen. Tuotantoon siirryttäessä se korvataan esimerkiksi Supabase Authilla ja marketplace-maksut Stripe Connectilla tai erikseen arvioidulla pohjoismaisella palvelulla.
+Ilman Supabase-asetuksia sovellus toimii edelleen paikallisena demona, eikä lähetä käyttäjätietoja palvelimelle. Kun Supabase on otettu käyttöön, käyttäjätilit, istunnot, profiilit ja käyttäjien julkaisemat ilmoitukset tallennetaan Supabaseen. Maksaminen, tilaukset ja suosikit ovat vielä paikallisia demotoimintoja.
 
 ## Käynnistys
 
@@ -31,6 +31,17 @@ Tuotantokäännös:
 ```bash
 npm run build
 ```
+
+## Supabase-kirjautumisen ja tietokannan käyttöönotto
+
+1. Luo Supabase-projekti.
+2. Suorita SQL-editorissa tiedostot `supabase/migrations/0001_initial.sql` ja `0002_auth_and_listing_persistence.sql` tässä järjestyksessä. Vaihtoehtoisesti linkitä paikallinen Supabase CLI -projekti ja suorita `supabase db push`.
+3. Kopioi `apps/web/.env.example` tiedostoksi `apps/web/.env.local`.
+4. Lisää ympäristötiedostoon projektin URL ja publishable key. Älä koskaan lisää selaimeen service role- tai secret key -avainta.
+5. Lisää Supabasen Authentication → URL Configuration -asetuksiin kehityksessä `http://localhost:4173` ja tuotannossa palvelun HTTPS-osoite sekä sallitut redirect-osoitteet.
+6. Käynnistä kehityspalvelin uudelleen komennolla `npm run dev`.
+
+Kun molemmat `VITE_SUPABASE_*`-arvot löytyvät, yläpalkissa näkyy `SUPABASE BETA`. Muussa tapauksessa sovellus käyttää automaattisesti paikallista demotilaa.
 
 ## Rakenne
 
@@ -60,7 +71,7 @@ Lisätiedot: [arkkitehtuuri](docs/architecture.md) ja [MVP-rajaus](docs/mvp-scop
 
 Tämä on käyttöliittymä- ja tuotevirtojen demo, ei julkaisuvalmis rahaa käsittelevä markkinapaikka. Ennen oikeita käyttäjiä tarvitaan ainakin:
 
-1. palvelinpuolinen autentikointi, sähköpostin vahvistus ja käyttöoikeustestit
+1. Supabase Auth on kytketty, mutta salasanan palautus, MFA ja kattavat käyttöoikeustestit puuttuvat
 2. ulkopuolinen marketplace-maksupalvelu, KYC/onboarding ja payout-logiikka
 3. tietoturva- ja maksujärjestelmäkatselmointi ammattilaisella
 4. GDPR-, DSA-, DAC7-, kuluttajansuoja- ja veromallin juridinen tarkistus

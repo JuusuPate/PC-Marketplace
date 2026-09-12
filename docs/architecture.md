@@ -54,3 +54,12 @@ Nykyisessä demossa jaettava koodi on vielä web-sovelluksen sisällä. Se irrot
 Selain ei saa päättää käyttäjän oikeuksista, tilauksen tilasta, maksun onnistumisesta tai payoutista. Tuotannossa jokainen tällainen muutos tehdään palvelinpuolella, todennetaan maksupalvelun allekirjoitetusta webhookista ja tallennetaan muuttumattomaan audit-lokiin.
 
 Selaimeen ei tallenneta salasanoja, KYC-aineistoa, henkilötunnuksia, maksukorttitietoja tai DAC7-raportointiaineistoa. Demon localStorage on vain käyttöliittymäprototyyppi.
+
+## Nykyinen palvelinyhteys
+
+Web-sovellus valitsee käynnistyksessä toimintatilan ympäristömuuttujien perusteella:
+
+- `demo`: istunto, ilmoitukset, suosikit ja tilaukset säilyvät vain selaimessa
+- `supabase`: autentikointi ja käyttäjän julkaisemien ilmoitusten tallennus käyttävät Supabasea; muut virrat säilyvät vielä demona
+
+Selain käyttää vain Supabasen julkista publishable key -avainta. Tietokanta luo profiilin Auth-käyttäjälle triggerillä. RLS-käytännöt ja erikseen rajatut tauluoikeudet suojaavat selaimelle näkyvän datan, eikä selain saa suoraa kirjoitusoikeutta profiili- tai ilmoitustauluihin. Ilmoitus ja toimitusmaat luodaan yhdessä tarkastetussa tietokantafunktiossa, jolloin osittain tallentunutta ilmoitusta ei synny.

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Header } from "../components/Header";
 import { Icon } from "../components/Icon";
 import { ListingCard } from "../components/ListingCard";
@@ -10,8 +10,12 @@ import { CheckoutModal } from "../features/checkout/CheckoutModal";
 import { ListingDrawer } from "../features/listings/ListingDrawer";
 import { SellModal } from "../features/sell/SellModal";
 import { getMessages } from "../i18n";
+import { authService } from "../lib/auth-service";
 import { demoStorage } from "../lib/demo-storage";
+import { listingService } from "../lib/listing-service";
 import { formatMoney } from "../lib/money";
+import { getRuntimeCopy } from "../lib/runtime-copy";
+import { backendMode } from "../lib/supabase";
 import type { Category, CountryCode, DemoOrder, DemoUser, Listing, Locale } from "../types";
 
 type SortOption = "newest" | "priceLow" | "bestDeals";
@@ -28,8 +32,10 @@ const categories: Array<{ key: "all" | Category; glyph: string }> = [
 export function App() {
   const [locale, setLocale] = useState<Locale>("fi");
   const [market, setMarket] = useState<CountryCode>("FI");
-  const [user, setUser] = useState<DemoUser | null>(() => demoStorage.getSession());
-  const [customListings, setCustomListings] = useState<Listing[]>(() => demoStorage.getListings());
+  const [user, setUser] = useState<DemoUser | null>(() => (backendMode === "demo" ? demoStorage.getSession() : null));
+  const [customListings, setCustomListings] = useState<Listing[]>(() =>
+    backendMode === "demo" ? demoStorage.getListings() : [],
+  );
   const [orders, setOrders] = useState<DemoOrder[]>(() => demoStorage.getOrders());
   const [favourites, setFavourites] = useState<string[]>(() => demoStorage.getFavourites());
   const [query, setQuery] = useState("");
@@ -45,7 +51,30 @@ export function App() {
   const [toast, setToast] = useState<string | null>(null);
 
   const copy = getMessages(locale);
+  const runtimeCopy = getRuntimeCopy(locale);
   const listings = useMemo(() => [...customListings, ...DEMO_LISTINGS], [customListings]);
+
+  useEffect(() => authService.subscribe(setUser), []);
+
+  useEffect(() => {
+    if (backendMode !== "supabase") return;
+    let isCurrent = true;
+
+    listingService
+      .listActive()
+      .then((nextListings) => {
+        if (isCurrent) setCustomListings(nextListings);
+      })
+      .catch(() => {
+        if (!isCurrent) return;
+        setToast(getRuntimeCopy(locale).listingError);
+        window.setTimeout(() => setToast(null), 3200);
+      });
+
+    return () => {
+      isCurrent = false;
+    };
+  }, []);
 
   const visibleListings = useMemo(() => {
     const normalizedQuery = query.trim().toLocaleLowerCase();
@@ -76,7 +105,7 @@ export function App() {
 
   const completeAuth = (nextUser: DemoUser) => {
     setUser(nextUser);
-    demoStorage.setSession(nextUser);
+    if (backendMode === "demo") demoStorage.setSession(nextUser);
     setAuthOpen(false);
     if (pendingCheckout) {
       setSelectedListing(null);
@@ -107,10 +136,13 @@ export function App() {
     }
   };
 
-  const publishListing = (listing: Listing) => {
-    const next = [listing, ...customListings];
-    setCustomListings(next);
-    demoStorage.setListings(next);
+  const publishListing = async (listing: Listing) => {
+    const savedListing = await listingService.create(listing, market);
+    setCustomListings((current) => {
+      const next = [savedListing, ...current];
+      if (backendMode === "demo") demoStorage.setListings(next);
+      return next;
+    });
     setSellOpen(false);
     setCategory("all");
     showToast(copy.published);
@@ -133,17 +165,21 @@ export function App() {
     demoStorage.setFavourites(next);
   };
 
-  const logout = () => {
-    setUser(null);
-    demoStorage.setSession(null);
-    setAccountOpen(false);
+  const logout = async () => {
+    try {
+      await authService.signOut();
+    } finally {
+      setUser(null);
+      if (backendMode === "demo") demoStorage.setSession(null);
+      setAccountOpen(false);
+    }
   };
 
   return (
     <div id="top">
       <div className="demo-banner">
-        <span>{copy.demoBadge}</span>
-        <p>{copy.demoNotice}</p>
+        <span>{backendMode === "supabase" ? runtimeCopy.connectedBadge : copy.demoBadge}</span>
+        <p>{backendMode === "supabase" ? runtimeCopy.connectedNotice : copy.demoNotice}</p>
       </div>
       <Header
         copy={copy}
@@ -482,6 +518,7 @@ export function App() {
       {sellOpen && user && (
         <SellModal
           copy={copy}
+          locale={locale}
           market={market}
           user={user}
           onClose={() => setSellOpen(false)}

@@ -1,19 +1,22 @@
 import { useState, type FormEvent } from "react";
 import { COUNTRY_FLAGS, MARKETS } from "../../config/markets";
 import type { Messages } from "../../i18n/messages/fi";
-import type { Category, Condition, CountryCode, DemoUser, Listing } from "../../types";
+import type { Category, Condition, CountryCode, DemoUser, Listing, Locale } from "../../types";
 import { Icon } from "../../components/Icon";
 import { ModalShell } from "../../components/ModalShell";
+import { getRuntimeCopy } from "../../lib/runtime-copy";
+import { backendMode } from "../../lib/supabase";
 
 interface SellModalProps {
   copy: Messages;
+  locale: Locale;
   market: CountryCode;
   user: DemoUser;
   onClose: () => void;
-  onPublish: (listing: Listing) => void;
+  onPublish: (listing: Listing) => Promise<void>;
 }
 
-export function SellModal({ copy, market, user, onClose, onPublish }: SellModalProps) {
+export function SellModal({ copy, locale, market, user, onClose, onPublish }: SellModalProps) {
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState<Category>("gpu");
   const [price, setPrice] = useState("");
@@ -21,54 +24,72 @@ export function SellModal({ copy, market, user, onClose, onPublish }: SellModalP
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
   const [shipsTo, setShipsTo] = useState<CountryCode[]>([market]);
+  const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
+  const runtimeCopy = getRuntimeCopy(locale);
 
   const toggleCountry = (country: CountryCode) =>
     setShipsTo((current) =>
       current.includes(country) ? current.filter((item) => item !== country) : [...current, country],
     );
 
-  const submit = (event: FormEvent) => {
+  const submit = async (event: FormEvent) => {
     event.preventDefault();
     const numericPrice = Number(price.replace(",", "."));
     if (
-      !title.trim() ||
+      title.trim().length < 5 ||
       !location.trim() ||
-      !description.trim() ||
+      description.trim().length < 20 ||
       !Number.isFinite(numericPrice) ||
       numericPrice <= 0 ||
       shipsTo.length === 0
-    )
+    ) {
+      setError(
+        locale === "fi"
+          ? "Täytä kaikki kentät. Kuvauksen tulee olla vähintään 20 merkkiä."
+          : "Please complete every field. The description must be at least 20 characters.",
+      );
       return;
-    onPublish({
-      id: `listing-${Date.now()}`,
-      title: title.trim(),
-      subtitle: `${copy[category]} · ${copy[condition === "fair" ? "conditionFair" : condition]}`,
-      category,
-      brand: title.trim().split(" ")[0],
-      priceMinor: Math.round(numericPrice * 100),
-      currency: MARKETS[market].currency,
-      condition,
-      city: location.trim(),
-      seller: {
-        id: user.id,
-        name: user.name,
-        initials: user.name.slice(0, 2).toUpperCase(),
-        countryCode: market,
-        rating: 5,
-        reviewCount: 0,
-        completedSales: 0,
-        verified: false,
-        joinedYear: new Date().getFullYear(),
-      },
-      shipsTo,
-      specs: { Kategoria: copy[category], Kunto: copy[condition === "fair" ? "conditionFair" : condition] },
-      description: description.trim(),
-      priceSignal: "fair",
-      buyerProtection: true,
-      serialVerified: false,
-      createdLabel: "nyt",
-      visual: category === "gpu" ? "lime" : category === "cpu" ? "orange" : category === "pc" ? "blue" : "violet",
-    });
+    }
+
+    setBusy(true);
+    setError("");
+    try {
+      await onPublish({
+        id: `listing-${Date.now()}`,
+        title: title.trim(),
+        subtitle: `${copy[category]} · ${copy[condition === "fair" ? "conditionFair" : condition]}`,
+        category,
+        brand: title.trim().split(" ")[0],
+        priceMinor: Math.round(numericPrice * 100),
+        currency: MARKETS[market].currency,
+        condition,
+        city: location.trim(),
+        seller: {
+          id: user.id,
+          name: user.name,
+          initials: user.name.slice(0, 2).toUpperCase(),
+          countryCode: user.countryCode,
+          rating: 5,
+          reviewCount: 0,
+          completedSales: 0,
+          verified: false,
+          joinedYear: new Date().getFullYear(),
+        },
+        shipsTo,
+        specs: { Kategoria: copy[category], Kunto: copy[condition === "fair" ? "conditionFair" : condition] },
+        description: description.trim(),
+        priceSignal: "fair",
+        buyerProtection: true,
+        serialVerified: false,
+        createdLabel: "nyt",
+        visual: category === "gpu" ? "lime" : category === "cpu" ? "orange" : category === "pc" ? "blue" : "violet",
+      });
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : runtimeCopy.listingError);
+    } finally {
+      setBusy(false);
+    }
   };
 
   return (
@@ -78,7 +99,7 @@ export function SellModal({ copy, market, user, onClose, onPublish }: SellModalP
           SELL / {MARKETS[market].countryCode} / {MARKETS[market].currency}
         </div>
         <h2>{copy.sellTitle}</h2>
-        <p className="modal-lead">{copy.demoNotice}</p>
+        <p className="modal-lead">{backendMode === "supabase" ? runtimeCopy.connectedNotice : copy.demoNotice}</p>
         <form className="stack-form sell-form" onSubmit={submit}>
           <label className="field-wide">
             {copy.productTitle}
@@ -144,8 +165,13 @@ export function SellModal({ copy, market, user, onClose, onPublish }: SellModalP
               placeholder="Kerro kunnosta, käytöstä, takuusta ja mukana tulevista tarvikkeista."
             />
           </label>
-          <button className="button button--primary button--full field-wide" type="submit">
-            {copy.publish}
+          {error && (
+            <p className="form-error field-wide" role="alert">
+              {error}
+            </p>
+          )}
+          <button className="button button--primary button--full field-wide" type="submit" disabled={busy}>
+            {busy ? runtimeCopy.publishing : backendMode === "supabase" ? runtimeCopy.publish : copy.publish}
             <Icon name="arrow" />
           </button>
         </form>

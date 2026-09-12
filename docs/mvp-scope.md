@@ -4,13 +4,15 @@
 
 1. Käyttäjä selaa ja suodattaa komponentteja.
 2. Käyttäjä näkee standardoidun tuotetiedon, myyjän historian, toimitusmaat ja turvasignaalit.
-3. Käyttäjä kirjautuu demotilille, tallentaa suosikin tai julkaisee demoilmoituksen.
+3. Käyttäjä kirjautuu demotilille tai Supabase Authilla, tallentaa suosikin tai julkaisee ilmoituksen.
 4. Käyttäjä tekee demo-oston ja näkee sen omalla tilillään.
 5. Admin-esikatselu näyttää markkinan tilan, valuutan ja provision.
 
-## Ensimmäiseen oikeaan betaan
+## Rakenteilla ensimmäiseen oikeaan betaan
 
-- palvelinpuolinen käyttäjätili, sähköpostin vahvistus ja salasanan palautus
+- [x] käyttäjätili, istunnon säilytys ja sähköpostin vahvistus Supabase Authilla
+- [x] profiilin automaattinen luonti ja ilmoitusten tietokantatallennus RLS-suojauksella
+- [ ] salasanan palautus, MFA ja automatisoidut RLS-käyttöoikeustestit
 - myyjäprofiili ja maksupalvelun hoitama tunnistaminen
 - kuvat, EXIF-poisto, tiedostotyyppien tarkistus ja haittaohjelmaskannaus
 - ilmoituksen luonnos/julkaisu/sulkeminen ja moderointijono

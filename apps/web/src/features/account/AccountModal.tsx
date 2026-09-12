@@ -2,6 +2,8 @@ import { MARKETS } from "../../config/markets";
 import type { Messages } from "../../i18n/messages/fi";
 import { formatMoney } from "../../lib/money";
 import type { DemoOrder, DemoUser, Listing, Locale } from "../../types";
+import { getRuntimeCopy } from "../../lib/runtime-copy";
+import { backendMode } from "../../lib/supabase";
 import { Icon } from "../../components/Icon";
 import { ModalShell } from "../../components/ModalShell";
 
@@ -16,6 +18,8 @@ interface AccountModalProps {
 }
 
 export function AccountModal({ copy, locale, user, orders, ownListings, onClose, onLogout }: AccountModalProps) {
+  const runtimeCopy = getRuntimeCopy(locale);
+
   return (
     <ModalShell title={copy.account} onClose={onClose} size="wide">
       <div className="account-wrap">
@@ -23,7 +27,7 @@ export function AccountModal({ copy, locale, user, orders, ownListings, onClose,
           <div className="account-avatar">{user.name.slice(0, 2).toUpperCase()}</div>
           <h2>{user.name}</h2>
           <p>{user.email}</p>
-          <span className="demo-pill">{copy.demoBadge}</span>
+          <span className="demo-pill">{backendMode === "supabase" ? runtimeCopy.connectedBadge : copy.demoBadge}</span>
           <button className="button button--outline button--full" type="button" onClick={onLogout}>
             {copy.logout}
           </button>
