@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { FocusEvent, MouseEvent } from "react";
 import { Icon } from "../../components/Icon";
 import { ListingVisual } from "../../components/ListingVisual";
@@ -11,6 +11,7 @@ import type { Listing, Locale } from "../../types";
 
 const SHOWCASE_SIZE = 3;
 const ROTATION_INTERVAL_MS = 7_500;
+const TRANSITION_MIDPOINT_MS = 190;
 
 interface FeaturedShowcaseProps {
   listings: readonly Listing[];
@@ -33,6 +34,9 @@ export function FeaturedShowcase({ listings, locale, copy, onOpen }: FeaturedSho
   const [pointerPaused, setPointerPaused] = useState(false);
   const [focusPaused, setFocusPaused] = useState(false);
   const [documentHidden, setDocumentHidden] = useState(document.hidden);
+  const [isSwitching, setIsSwitching] = useState(false);
+  const transitionTimeoutRef = useRef<number | null>(null);
+  const transitionFrameRef = useRef<number | null>(null);
   const listingSignature = listings.map((listing) => listing.id).join("|");
 
   const featuredListings = useMemo(
@@ -47,6 +51,16 @@ export function FeaturedShowcase({ listings, locale, copy, onOpen }: FeaturedSho
 
   useEffect(() => {
     const desiredCount = Math.min(SHOWCASE_SIZE, listings.length);
+    if (transitionTimeoutRef.current !== null) {
+      window.clearTimeout(transitionTimeoutRef.current);
+      transitionTimeoutRef.current = null;
+    }
+    if (transitionFrameRef.current !== null) {
+      window.cancelAnimationFrame(transitionFrameRef.current);
+      transitionFrameRef.current = null;
+    }
+    setIsSwitching(false);
+
     setFeaturedIds((currentIds) => {
       const validIds = currentIds.filter((id) => listings.some((listing) => listing.id === id)).slice(0, desiredCount);
       if (validIds.length === desiredCount) return validIds;
@@ -77,6 +91,14 @@ export function FeaturedShowcase({ listings, locale, copy, onOpen }: FeaturedSho
     return () => document.removeEventListener("visibilitychange", handleVisibility);
   }, []);
 
+  useEffect(
+    () => () => {
+      if (transitionTimeoutRef.current !== null) window.clearTimeout(transitionTimeoutRef.current);
+      if (transitionFrameRef.current !== null) window.cancelAnimationFrame(transitionFrameRef.current);
+    },
+    [],
+  );
+
   const replaceFeaturedGroup = () => {
     const desiredCount = Math.min(SHOWCASE_SIZE, listings.length);
     const currentIdSet = new Set(featuredIds);
@@ -93,7 +115,7 @@ export function FeaturedShowcase({ listings, locale, copy, onOpen }: FeaturedSho
     setActiveIndex(0);
   };
 
-  const showNext = () => {
+  const applyNext = () => {
     if (featuredListings.length <= 1) return;
     if (activeIndex < featuredListings.length - 1) {
       setActiveIndex(activeIndex + 1);
@@ -102,10 +124,33 @@ export function FeaturedShowcase({ listings, locale, copy, onOpen }: FeaturedSho
     replaceFeaturedGroup();
   };
 
-  const showPrevious = () => {
+  const applyPrevious = () => {
     if (featuredListings.length <= 1) return;
     setActiveIndex((activeIndex - 1 + featuredListings.length) % featuredListings.length);
   };
+
+  const switchFeatured = (update: () => void) => {
+    if (isSwitching) return;
+    if (prefersReducedMotion) {
+      update();
+      return;
+    }
+
+    setIsSwitching(true);
+    transitionTimeoutRef.current = window.setTimeout(() => {
+      transitionTimeoutRef.current = null;
+      update();
+      transitionFrameRef.current = window.requestAnimationFrame(() => {
+        transitionFrameRef.current = window.requestAnimationFrame(() => {
+          transitionFrameRef.current = null;
+          setIsSwitching(false);
+        });
+      });
+    }, TRANSITION_MIDPOINT_MS);
+  };
+
+  const showNext = () => switchFeatured(applyNext);
+  const showPrevious = () => switchFeatured(applyPrevious);
 
   useEffect(() => {
     if (
@@ -114,14 +159,24 @@ export function FeaturedShowcase({ listings, locale, copy, onOpen }: FeaturedSho
       manuallyPaused ||
       pointerPaused ||
       focusPaused ||
-      documentHidden
+      documentHidden ||
+      isSwitching
     ) {
       return;
     }
 
     const timeoutId = window.setTimeout(showNext, ROTATION_INTERVAL_MS);
     return () => window.clearTimeout(timeoutId);
-  }, [activeIndex, documentHidden, featuredIds, focusPaused, manuallyPaused, pointerPaused, prefersReducedMotion]);
+  }, [
+    activeIndex,
+    documentHidden,
+    featuredIds,
+    focusPaused,
+    isSwitching,
+    manuallyPaused,
+    pointerPaused,
+    prefersReducedMotion,
+  ]);
 
   if (orderedListings.length === 0) return null;
 
@@ -137,9 +192,10 @@ export function FeaturedShowcase({ listings, locale, copy, onOpen }: FeaturedSho
 
   return (
     <section
-      className="featured-showcase"
+      className={`featured-showcase${isSwitching ? " is-switching" : ""}`}
       aria-label={copy.featuredShowcase}
       aria-roledescription="carousel"
+      aria-busy={isSwitching}
       onMouseEnter={() => setPointerPaused(true)}
       onMouseLeave={() => setPointerPaused(false)}
       onFocusCapture={() => setFocusPaused(true)}
@@ -198,7 +254,7 @@ export function FeaturedShowcase({ listings, locale, copy, onOpen }: FeaturedSho
         <div className="featured-showcase__controls">
           <span>{copy.featuredLogic}</span>
           <div role="group" aria-label={copy.featuredControls}>
-            <button type="button" aria-label={copy.previousFeatured} onClick={showPrevious}>
+            <button type="button" aria-label={copy.previousFeatured} aria-disabled={isSwitching} onClick={showPrevious}>
               <span aria-hidden="true">←</span>
             </button>
             <button
@@ -223,7 +279,7 @@ export function FeaturedShowcase({ listings, locale, copy, onOpen }: FeaturedSho
                     : copy.pauseFeatured}
               </span>
             </button>
-            <button type="button" aria-label={copy.nextFeatured} onClick={showNext}>
+            <button type="button" aria-label={copy.nextFeatured} aria-disabled={isSwitching} onClick={showNext}>
               <span aria-hidden="true">→</span>
             </button>
           </div>
