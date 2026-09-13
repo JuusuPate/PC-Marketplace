@@ -31,9 +31,7 @@ export function CategoryHero({ page, copy, listingCount, onHome, onSell }: Categ
             <span aria-hidden="true">/</span>
             <strong>{title}</strong>
           </nav>
-          <span className="category-route-eyebrow">
-            {copy.categoryPageEyebrow} <i /> 🇫🇮 FI
-          </span>
+          <span className="category-route-eyebrow">{copy.categoryPageEyebrow}</span>
           <h1 id="category-page-title" tabIndex={-1}>
             {title}
           </h1>
@@ -45,7 +43,9 @@ export function CategoryHero({ page, copy, listingCount, onHome, onSell }: Categ
         </div>
 
         <div className="category-route-card" aria-hidden="true">
-          <span className="category-route-card-status">FINLAND / LIVE</span>
+          <span className="category-route-card-status">
+            {copy.marketplace} / {copy.live}
+          </span>
           <strong className="category-route-glyph">{page.glyph}</strong>
           <div>
             <strong>{listingCount}</strong>

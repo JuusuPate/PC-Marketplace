@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { COUNTRY_FLAGS, MARKETS, PUBLIC_MARKETS } from "../../config/markets";
+import { MARKETS, PUBLIC_MARKETS } from "../../config/markets";
 import type { Messages } from "../../i18n/messages/fi";
 import type { Category, Condition, CountryCode, DemoUser, Listing, Locale } from "../../types";
 import { Icon } from "../../components/Icon";
@@ -90,9 +90,7 @@ export function SellModal({ copy, locale, market, user, onClose, onPublish }: Se
   return (
     <ModalShell title={copy.sellTitle} onClose={onClose}>
       <div className="sell-wrap">
-        <div className="modal-kicker">
-          SELL / {MARKETS[market].countryCode} / {MARKETS[market].currency}
-        </div>
+        <div className="modal-kicker">SELL / {MARKETS[market].currency}</div>
         <h2>{copy.sellTitle}</h2>
         <p className="modal-lead">{backendMode === "supabase" ? runtimeCopy.connectedNotice : copy.demoNotice}</p>
         <form className="stack-form sell-form" onSubmit={submit}>
@@ -144,7 +142,7 @@ export function SellModal({ copy, locale, market, user, onClose, onPublish }: Se
             <div className="shipping-scope-fixed">
               {PUBLIC_MARKETS.map((country) => (
                 <span key={country}>
-                  {COUNTRY_FLAGS[country]} {country} · {copy.shippingArea}
+                  {MARKETS[country].flag} {copy.shippingArea}
                 </span>
               ))}
             </div>

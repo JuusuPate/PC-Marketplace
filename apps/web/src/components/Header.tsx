@@ -1,13 +1,12 @@
 import type { MouseEvent } from "react";
-import { COUNTRY_FLAGS, LOCALE_LABELS, MARKETS, PUBLIC_LOCALES } from "../config/markets";
+import { LOCALE_LABELS, PUBLIC_LOCALES } from "../config/markets";
 import type { Messages } from "../i18n/messages/fi";
-import type { CountryCode, DemoUser, Locale } from "../types";
+import type { DemoUser, Locale } from "../types";
 import { Icon } from "./Icon";
 
 interface HeaderProps {
   copy: Messages;
   locale: Locale;
-  market: CountryCode;
   user: DemoUser | null;
   onHome: (hash?: string) => void;
   onLocale: (locale: Locale) => void;
@@ -16,7 +15,7 @@ interface HeaderProps {
   onAccount: () => void;
 }
 
-export function Header({ copy, locale, market, user, onHome, onLocale, onAuth, onSell, onAccount }: HeaderProps) {
+export function Header({ copy, locale, user, onHome, onLocale, onAuth, onSell, onAccount }: HeaderProps) {
   const navigateHome = (event: MouseEvent<HTMLAnchorElement>, hash?: string) => {
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     event.preventDefault();
@@ -48,10 +47,6 @@ export function Header({ copy, locale, market, user, onHome, onLocale, onAuth, o
       </nav>
 
       <div className="header-actions">
-        <div className="compact-select market-select market-select--fixed" aria-label="Market: Finland">
-          <span>{COUNTRY_FLAGS[market]}</span>
-          <strong>{MARKETS[market].countryCode}</strong>
-        </div>
         <label className="compact-select language-select" title="Language">
           <Icon name="globe" />
           <select value={locale} onChange={(event) => onLocale(event.target.value as Locale)} aria-label="Language">

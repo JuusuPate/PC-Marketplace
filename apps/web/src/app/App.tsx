@@ -246,7 +246,6 @@ export function App() {
       <Header
         copy={copy}
         locale={locale}
-        market={market}
         user={user}
         onHome={(hash) => navigateTo("/", hash)}
         onLocale={setLocale}
@@ -303,8 +302,8 @@ export function App() {
                     <span>inspection</span>
                   </div>
                   <div>
-                    <strong>1</strong>
-                    <span>{copy.launchMarket}</span>
+                    <strong>7</strong>
+                    <span>{copy.categoryNavigation}</span>
                   </div>
                 </div>
               </div>
@@ -339,7 +338,7 @@ export function App() {
                     <span>
                       <Icon name="shield" /> {copy.buyerProtection}
                     </span>
-                    <span>🇫🇮 FI</span>
+                    <span>{copy.shippingArea}</span>
                   </div>
                 </div>
                 <div className="hero-card hero-card--front">
@@ -389,7 +388,7 @@ export function App() {
               <h2>{catalogPage ? copy.categoryListings : copy.marketplace}</h2>
             </div>
             <span className="listing-count">
-              {visibleListings.length} {copy.listings} · {MARKETS[market].flag} {MARKETS[market].name}
+              {visibleListings.length} {copy.listings}
             </span>
           </div>
           <div className="market-toolbar">
@@ -538,7 +537,7 @@ export function App() {
               </div>
               <div className="cta-map cta-map--finland" aria-label={copy.shippingArea}>
                 <span className="map-country map-fi">
-                  FI<small>LIVE</small>
+                  ✓<small>{copy.live}</small>
                 </span>
               </div>
             </section>

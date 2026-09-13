@@ -112,7 +112,9 @@ export function ListingDrawer({
             <Icon name="truck" />
             <div>
               <strong>{copy.shipsTo}</strong>
-              <span>{listing.shipsTo.map((country) => `${COUNTRY_FLAGS[country]} ${country}`).join("  ·  ")}</span>
+              <span>
+                {listing.shipsTo.map((country) => `${COUNTRY_FLAGS[country]} ${copy.shippingArea}`).join("  ·  ")}
+              </span>
             </div>
           </div>
           <button className="report-button" type="button" onClick={() => setReported(true)}>

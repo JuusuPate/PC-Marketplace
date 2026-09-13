@@ -274,20 +274,6 @@ svg {
   height: 13px;
   pointer-events: none;
 }
-.market-select > span {
-  font-size: 15px;
-}
-.market-select select {
-  width: 26px;
-  color: transparent;
-}
-.market-select--fixed {
-  min-width: 70px;
-  justify-content: center;
-}
-.market-select--fixed strong {
-  font-size: 14px;
-}
 .language-select select {
   width: 52px;
 }
@@ -420,11 +406,6 @@ svg {
   font-weight: 900;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-}
-.category-route-eyebrow i {
-  width: 28px;
-  height: 1px;
-  background: #96a09d;
 }
 .category-route-copy h1 {
   margin: 14px 0 22px;
@@ -2805,9 +2786,6 @@ svg {
   .header-sell,
   .language-select {
     display: none;
-  }
-  .market-select {
-    margin-left: auto;
   }
   .account-button {
     padding-inline: 12px;
