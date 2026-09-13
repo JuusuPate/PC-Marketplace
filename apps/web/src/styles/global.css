@@ -477,13 +477,9 @@ svg {
 .category-route-card > div strong {
   font-size: 30px;
 }
-.category-route-card > div span,
-.category-route-card > small {
+.category-route-card > div span {
   color: rgba(255, 255, 255, 0.62);
   font-size: 14px;
-}
-.category-route-card > small {
-  margin-top: 5px;
 }
 
 .hero {

@@ -10,7 +10,7 @@ export const fi = {
   accessories: "Oheislaitteet & muut",
   categoryPageEyebrow: "Tuotekategoria",
   categoryPageBody:
-    "Selaa Suomessa myynnissä olevia tarkistettuja ilmoituksia. Kaikki tuotteet hinnoitellaan euroissa ja toimitetaan vain Suomessa.",
+    "Selaa tarkistettuja ilmoituksia ja vertaile hintoja helposti. Kaikki tuotteet hinnoitellaan euroissa.",
   categoryListings: "Tämän kategorian ilmoitukset",
   marketplace: "Markkinapaikka",
   howItWorks: "Näin se toimii",
@@ -29,7 +29,6 @@ export const fi = {
   protectedPurchases: "Ostajansuojattua kauppaa",
   verifiedSellers: "Vahvistetut myyjät",
   marketShipping: "Toimitus Suomessa",
-  shippingArea: "Vain Suomi",
   launchMarket: "Suomen markkina",
   launchBadge: "SUOMI BETA / 2026",
   searchPlaceholder: "Hae esimerkiksi RTX 4070, AM5 tai pelikone…",

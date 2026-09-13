@@ -335,7 +335,6 @@ export function App() {
                     <span>
                       <Icon name="shield" /> {copy.buyerProtection}
                     </span>
-                    <span>{copy.shippingArea}</span>
                   </div>
                 </div>
                 <div className="hero-card hero-card--front">
@@ -368,7 +367,6 @@ export function App() {
                 <Icon name="truck" />
                 <span>
                   <strong>{copy.marketShipping}</strong>
-                  <small>{copy.shippingArea}</small>
                 </span>
               </div>
             </section>
@@ -532,7 +530,7 @@ export function App() {
                   <Icon name="arrow" />
                 </button>
               </div>
-              <div className="cta-map cta-map--finland" aria-label={copy.shippingArea}>
+              <div className="cta-map cta-map--finland" aria-label={copy.marketShipping}>
                 <span className="map-country map-fi">✓</span>
               </div>
             </section>

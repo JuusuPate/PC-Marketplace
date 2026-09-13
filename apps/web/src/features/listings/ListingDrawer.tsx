@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { COUNTRY_FLAGS } from "../../config/markets";
+import { COUNTRY_FLAGS, MARKETS } from "../../config/markets";
 import type { Messages } from "../../i18n/messages/fi";
 import { formatMoney } from "../../lib/money";
 import type { Listing, Locale } from "../../types";
@@ -113,7 +113,7 @@ export function ListingDrawer({
             <div>
               <strong>{copy.shipsTo}</strong>
               <span>
-                {listing.shipsTo.map((country) => `${COUNTRY_FLAGS[country]} ${copy.shippingArea}`).join("  ·  ")}
+                {listing.shipsTo.map((country) => `${COUNTRY_FLAGS[country]} ${MARKETS[country].name}`).join("  ·  ")}
               </span>
             </div>
           </div>

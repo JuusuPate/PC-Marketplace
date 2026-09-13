@@ -11,8 +11,7 @@ export const nb = {
   components: "Komponenter",
   accessories: "Tilbehør og annet",
   categoryPageEyebrow: "Produktkategori",
-  categoryPageBody:
-    "Se verifiserte annonser i Finland. Alle produkter er priset i euro og leveres bare innenfor Finland.",
+  categoryPageBody: "Se verifiserte annonser og sammenlign priser enkelt. Alle produkter er priset i euro.",
   categoryListings: "Annonser i kategorien",
   marketplace: "Markedsplass",
   howItWorks: "Slik fungerer det",
@@ -31,7 +30,6 @@ export const nb = {
   protectedPurchases: "Kjøp med beskyttelse",
   verifiedSellers: "Verifiserte selgere",
   marketShipping: "Levering i Finland",
-  shippingArea: "Kun Finland",
   launchMarket: "Finlands marked",
   launchBadge: "FINLAND BETA / 2026",
   searchPlaceholder: "Søk for eksempel RTX 4070, AM5 eller gaming-PC…",

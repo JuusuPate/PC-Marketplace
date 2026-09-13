@@ -142,7 +142,7 @@ export function SellModal({ copy, locale, market, user, onClose, onPublish }: Se
             <div className="shipping-scope-fixed">
               {PUBLIC_MARKETS.map((country) => (
                 <span key={country}>
-                  {MARKETS[country].flag} {copy.shippingArea}
+                  {MARKETS[country].flag} {MARKETS[country].name}
                 </span>
               ))}
             </div>

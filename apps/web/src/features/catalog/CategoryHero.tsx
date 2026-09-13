@@ -49,7 +49,6 @@ export function CategoryHero({ page, copy, listingCount, onHome, onSell }: Categ
             <strong>{listingCount}</strong>
             <span>{copy.listings}</span>
           </div>
-          <small>{copy.shippingArea}</small>
         </div>
       </div>
     </section>

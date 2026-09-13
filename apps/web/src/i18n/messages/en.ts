@@ -11,8 +11,7 @@ export const en = {
   components: "Components",
   accessories: "Peripherals & more",
   categoryPageEyebrow: "Product category",
-  categoryPageBody:
-    "Browse verified listings available in Finland. Every item is priced in euros and ships within Finland only.",
+  categoryPageBody: "Browse verified listings and compare prices with ease. Every item is priced in euros.",
   categoryListings: "Listings in this category",
   marketplace: "Marketplace",
   howItWorks: "How it works",
@@ -31,7 +30,6 @@ export const en = {
   protectedPurchases: "Protected purchases",
   verifiedSellers: "Verified sellers",
   marketShipping: "Shipping in Finland",
-  shippingArea: "Finland only",
   launchMarket: "Finland market",
   launchBadge: "FINLAND BETA / 2026",
   searchPlaceholder: "Search RTX 4070, AM5 or a gaming PC…",
