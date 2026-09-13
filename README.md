@@ -8,6 +8,7 @@ Finland-first, Nordic-ready -demo käytettyjen PC-komponenttien ja pelikoneiden 
 - vain Suomen markkina, eurohinnoittelu ja toimitukset Suomessa
 - Ruotsin, Tanskan ja Norjan asetukset ovat rakenteessa valmiina mutta pois käytöstä
 - ilmoitusten haku, lajittelu sekä omat URL-sivut komponenteille, pelikoneille ja muille pääkategorioille
+- pääsivun kolmen ilmoituksen vaihtuva nosto, manuaaliset hallintapainikkeet ja suoraan ilmoitussivuille vievät kortit
 - tuotesivu, myyjän maine, testitiedot, sarjanumeron vahvistus ja ostajansuoja
 - paikallinen demo-kirjautuminen tai valinnainen Supabase Auth sähköpostivahvistuksella
 - oma ilmoituksenluontisivu, pakollisten kenttien merkinnät, tuotetyypin mukaan vaihtuvat tekniset tiedot, tarkempi kuvaus ja enintään viisi tuotekuvaa
@@ -60,6 +61,12 @@ Admin voi avata Käyttöehdot-, Tietosuoja- tai Saavutettavuus-sivun ja valita *
 ## Julkaisumarkkina
 
 Julkinen beta toimii vain Suomessa: käyttäjämaa ja ilmoitusmarkkina ovat `FI`, valuutta on `EUR` ja toimitusmaa on `FI`. Selain näyttää kieliksi suomen, ruotsin ja englannin. Pohjoismaiset maa-, valuutta- ja lokalisointityypit säilyvät lähdekoodissa myöhempää laajentumista varten, mutta niitä ei voi ottaa käyttöön pelkällä käyttöliittymämuutoksella — myös tietokantamigraation turvarajat on silloin päivitettävä hallitusti.
+
+## Pääsivun nostojen valinta
+
+Esittely näyttää kolme ilmoitusta kerrallaan. Kaksi paikkaa valitaan painottaen viimeisen seitsemän päivän anonyymejä katseluja ja tallennuksia, ja yksi paikka valitaan satunnaisesti. Näin kiinnostavat tuotteet saavat näkyvyyttä, mutta myös uusi ilmoitus voi nousta esiin ennen kuin sille on kertynyt tilastoja. Samassa kolmikossa ei ole duplikaatteja, ja uuden kierroksen alkaessa juuri näytetty kolmikko ohitetaan aina kun ilmoituksia on riittävästi.
+
+Demoversio käyttää erillistä esimerkkisignaalien karttaa. Tuotannossa luvut tuodaan palvelimelta aggregoituina, myyjän omat katselut ja toistuva liikenne suodatetaan pois eikä yksittäisen käyttäjän suosikkeja käytetä yleisen suosion mittarina. Pääkortti vaihtuu 7,5 sekunnin välein; vaihtumisen voi pysäyttää, ja se pysähtyy automaattisesti osoittimen, näppäimistökohdistuksen, taustavälilehden tai vähennetyn liikkeen asetuksen ajaksi.
 
 ## Rakenne
 

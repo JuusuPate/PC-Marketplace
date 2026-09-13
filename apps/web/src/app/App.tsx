@@ -12,6 +12,7 @@ import { AccountModal } from "../features/account/AccountModal";
 import { AuthModal } from "../features/auth/AuthModal";
 import { CategoryHero } from "../features/catalog/CategoryHero";
 import { CheckoutModal } from "../features/checkout/CheckoutModal";
+import { FeaturedShowcase } from "../features/home/FeaturedShowcase";
 import { ListingDetailPage } from "../features/listings/ListingDetailPage";
 import { LegalPage } from "../features/legal/LegalPage";
 import { CreateListingPage } from "../features/sell/CreateListingPage";
@@ -20,7 +21,6 @@ import { authService } from "../lib/auth-service";
 import { demoStorage } from "../lib/demo-storage";
 import type { PreparedListingImage } from "../lib/listing-images";
 import { listingService } from "../lib/listing-service";
-import { formatMoney } from "../lib/money";
 import { getRuntimeCopy } from "../lib/runtime-copy";
 import { backendMode } from "../lib/supabase";
 import type { Category, DemoOrder, DemoUser, Listing, Locale, PrivatePickupAddress } from "../types";
@@ -449,47 +449,13 @@ export function App() {
                     </div>
                   </div>
                 </div>
-                <div className="hero-art" aria-label="Esimerkkituotteen kortti">
-                  <div className="hero-glow" />
-                  <div className="hero-card hero-card--back">
-                    <span>PRICE INTELLIGENCE</span>
-                    <strong>−8.4%</strong>
-                    <small>vs. 30 day median</small>
-                  </div>
-                  <div className="hero-product">
-                    <div className="hero-product-top">
-                      <span>VERIFIED HARDWARE</span>
-                      <Icon name="check" />
-                    </div>
-                    <div className="hero-gpu">
-                      <span>GEFORCE</span>
-                      <strong>RTX</strong>
-                      <small>4070 SUPER</small>
-                      <i />
-                      <i />
-                      <i />
-                    </div>
-                    <div className="hero-product-copy">
-                      <div>
-                        <small>ASUS TUF GAMING</small>
-                        <strong>RTX 4070 SUPER OC</strong>
-                      </div>
-                      <strong>{formatMoney(48900, "EUR", locale)}</strong>
-                    </div>
-                    <div className="hero-product-foot">
-                      <span>
-                        <Icon name="shield" /> {copy.buyerProtection}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="hero-card hero-card--front">
-                    <span className="pulse" />
-                    <div>
-                      <small>MARKET SIGNAL</small>
-                      <strong>{copy.great}</strong>
-                    </div>
-                    <span>↑ 94</span>
-                  </div>
+                <div className="hero-art">
+                  <FeaturedShowcase
+                    listings={listings}
+                    locale={locale}
+                    copy={copy}
+                    onOpen={(listing) => navigateTo(getListingPath(listing.id))}
+                  />
                 </div>
               </section>
 
