@@ -1,5 +1,4 @@
 import type { MouseEvent } from "react";
-import { COUNTRY_FLAGS } from "../config/markets";
 import type { Messages } from "../i18n/messages/fi";
 import { formatMoney } from "../lib/money";
 import type { Listing, Locale } from "../types";
@@ -79,7 +78,6 @@ export function ListingCard({ listing, locale, copy, favourite, href, onFavourit
             <Icon name="star" fill="currentColor" />
             {listing.seller.reviewCount > 0 ? listing.seller.rating.toFixed(1) : "—"}
           </span>
-          <span className="ship-flags">{listing.shipsTo.map((country) => COUNTRY_FLAGS[country]).join(" ")}</span>
         </div>
       </div>
     </article>

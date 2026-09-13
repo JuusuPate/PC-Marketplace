@@ -4,7 +4,7 @@ import type { Messages } from "../../i18n/messages/fi";
 import type { CountryCode, DemoUser, Locale } from "../../types";
 import { Icon } from "../../components/Icon";
 import { ModalShell } from "../../components/ModalShell";
-import { authService } from "../../lib/auth-service";
+import { authService, DEMO_ADMIN_EMAIL } from "../../lib/auth-service";
 import { getRuntimeCopy } from "../../lib/runtime-copy";
 
 interface AuthModalProps {
@@ -25,8 +25,8 @@ export function AuthModal({ copy, locale, market, onClose, onComplete }: AuthMod
   const [busy, setBusy] = useState(false);
   const runtimeCopy = getRuntimeCopy(locale);
 
-  const complete = (nextName: string, nextEmail: string) => {
-    onComplete({ id: `demo-${Date.now()}`, name: nextName, email: nextEmail, countryCode: market, locale });
+  const complete = (nextName: string, nextEmail: string, role: DemoUser["role"] = "user") => {
+    onComplete({ id: `demo-${Date.now()}`, name: nextName, email: nextEmail, countryCode: market, locale, role });
   };
 
   const submit = async (event: FormEvent) => {
@@ -161,6 +161,13 @@ export function AuthModal({ copy, locale, market, onClose, onComplete }: AuthMod
                 onClick={() => complete("Demo User", "demo@pcmarket.fi")}
               >
                 {copy.useDemo}
+              </button>
+              <button
+                className="button button--dark button--full"
+                type="button"
+                onClick={() => complete("Demo Admin", DEMO_ADMIN_EMAIL, "admin")}
+              >
+                {locale === "fi" ? "Käytä admin-demotunnusta" : "Use admin demo account"}
               </button>
             </>
           )}

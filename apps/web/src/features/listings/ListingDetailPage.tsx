@@ -1,7 +1,7 @@
 import { useEffect, useState, type MouseEvent } from "react";
 import { Icon } from "../../components/Icon";
 import { getSafeListingImageUrl, ListingVisual } from "../../components/ListingVisual";
-import { COUNTRY_FLAGS, MARKETS } from "../../config/markets";
+import { MARKETS } from "../../config/markets";
 import type { Messages } from "../../i18n/messages/fi";
 import { formatMoney } from "../../lib/money";
 import type { Listing, Locale } from "../../types";
@@ -33,7 +33,7 @@ export function ListingDetailPage({
   const activeImage = images[activeImageIndex] ?? images[0];
   const conditionLabel = listing.condition === "fair" ? copy.conditionFair : copy[listing.condition];
   const categoryLabel = copy[listing.category];
-  const sellerCountry = `${COUNTRY_FLAGS[listing.seller.countryCode]} ${MARKETS[listing.seller.countryCode].name}`;
+  const sellerCountry = MARKETS[listing.seller.countryCode].name;
 
   useEffect(() => {
     setActiveImageIndex(0);
@@ -129,10 +129,12 @@ export function ListingDetailPage({
                     <dt>{copy.category}</dt>
                     <dd>{categoryLabel}</dd>
                   </div>
-                  <div>
-                    <dt>{copy.brand}</dt>
-                    <dd>{listing.brand}</dd>
-                  </div>
+                  {listing.brand && (
+                    <div>
+                      <dt>{copy.brand}</dt>
+                      <dd>{listing.brand}</dd>
+                    </div>
+                  )}
                   <div>
                     <dt>{copy.condition}</dt>
                     <dd>{conditionLabel}</dd>
@@ -144,17 +146,19 @@ export function ListingDetailPage({
                 </dl>
               </section>
 
-              <section className="detail-section">
-                <h2>{copy.specs}</h2>
-                <dl>
-                  {Object.entries(listing.specs).map(([label, value]) => (
-                    <div key={label}>
-                      <dt>{label}</dt>
-                      <dd>{value}</dd>
-                    </div>
-                  ))}
-                </dl>
-              </section>
+              {Object.keys(listing.specs).length > 0 && (
+                <section className="detail-section">
+                  <h2>{copy.specs}</h2>
+                  <dl>
+                    {Object.entries(listing.specs).map(([label, value]) => (
+                      <div key={label}>
+                        <dt>{label}</dt>
+                        <dd>{value}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </section>
+              )}
 
               <section className="detail-section">
                 <h2>{copy.description}</h2>
@@ -190,9 +194,6 @@ export function ListingDetailPage({
                   </span>
                   <span>{sellerCountry}</span>
                 </div>
-                <div className="seller-country" aria-hidden="true">
-                  {COUNTRY_FLAGS[listing.seller.countryCode]}
-                </div>
               </section>
 
               <aside className="listing-detail-page__privacy">
@@ -207,11 +208,7 @@ export function ListingDetailPage({
                 <Icon name="truck" />
                 <div>
                   <strong>{copy.shipsTo}</strong>
-                  <span>
-                    {listing.shipsTo
-                      .map((country) => `${COUNTRY_FLAGS[country]} ${MARKETS[country].name}`)
-                      .join("  ·  ")}
-                  </span>
+                  <span>{listing.shipsTo.map((country) => MARKETS[country].name).join("  ·  ")}</span>
                 </div>
               </div>
 

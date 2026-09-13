@@ -4,6 +4,8 @@ export type CountryCode = "FI" | "SE" | "DK" | "NO";
 export type Category = "gpu" | "cpu" | "memory" | "motherboard" | "pc" | "other";
 export type Condition = "new" | "excellent" | "good" | "fair";
 export type PriceSignal = "great" | "fair" | "high";
+export type UserRole = "user" | "admin";
+export type LegalPageSlug = "terms" | "privacy" | "accessibility";
 
 export interface Market {
   countryCode: CountryCode;
@@ -79,8 +81,18 @@ export interface DemoUser {
   email: string;
   countryCode: CountryCode;
   locale: Locale;
+  role: UserRole;
   /** Convenience default for the seller form; never copy this onto a public Listing. */
   pickupAddress?: PrivatePickupAddress;
+}
+
+export interface LegalPageContent {
+  slug: LegalPageSlug;
+  locale: Locale;
+  title: string;
+  summary: string;
+  body: string;
+  updatedAt: string | null;
 }
 
 export interface DemoOrder {

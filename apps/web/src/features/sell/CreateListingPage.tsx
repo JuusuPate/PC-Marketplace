@@ -17,6 +17,7 @@ import type {
   Seller,
 } from "../../types";
 import { ImagePicker } from "./ImagePicker";
+import { getGuidedSpecificationFields, specificationCopy } from "./specification-fields";
 
 interface SpecificationRow {
   id: string;
@@ -51,6 +52,31 @@ const visualByCategory: Record<Category, Listing["visual"]> = {
   other: "pink",
 };
 
+interface FieldLabelProps {
+  label: string;
+  requiredText: string;
+  optionalText?: string;
+  required?: boolean;
+}
+
+function FieldLabel({ label, requiredText, optionalText, required = false }: FieldLabelProps) {
+  return (
+    <span className="field-label">
+      <span>{label}</span>
+      {required ? (
+        <>
+          <span className="required-mark" aria-hidden="true">
+            *
+          </span>
+          <span className="sr-only"> ({requiredText})</span>
+        </>
+      ) : optionalText ? (
+        <small>{optionalText}</small>
+      ) : null}
+    </span>
+  );
+}
+
 export function CreateListingPage({ copy, locale, market, user, seller, onCancel, onPublish }: CreateListingPageProps) {
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState<Category>("gpu");
@@ -58,7 +84,9 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
   const [price, setPrice] = useState("");
   const [brand, setBrand] = useState("");
   const [model, setModel] = useState("");
-  const [specifications, setSpecifications] = useState<SpecificationRow[]>([newSpecification()]);
+  const [guidedSpecifications, setGuidedSpecifications] = useState<Record<string, string>>({});
+  const [specifications, setSpecifications] = useState<SpecificationRow[]>([]);
+  const [technicalDetailsUnknown, setTechnicalDetailsUnknown] = useState(false);
   const [description, setDescription] = useState("");
   const [images, setImages] = useState<PreparedListingImage[]>([]);
   const [city, setCity] = useState(user.pickupAddress?.city ?? "");
@@ -67,6 +95,12 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const runtimeCopy = getRuntimeCopy(locale);
+  const formCopy = specificationCopy[locale];
+  const guidedFields = getGuidedSpecificationFields(category, locale);
+  const technicalSectionTitle =
+    category === "pc" ? formCopy.pcTitle : category === "other" ? formCopy.optionalTitle : formCopy.componentTitle;
+  const technicalSectionHelp =
+    category === "pc" ? formCopy.pcHelp : category === "other" ? formCopy.optionalHelp : formCopy.componentHelp;
   const numericPrice = Number(price.replace(",", "."));
   const formattedPrice =
     Number.isFinite(numericPrice) && numericPrice > 0
@@ -92,18 +126,17 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
   };
 
   const removeSpecification = (id: string) => {
-    setSpecifications((rows) => {
-      const remaining = rows.filter((row) => row.id !== id);
-      return remaining.length > 0 ? remaining : [newSpecification()];
-    });
+    setSpecifications((rows) => rows.filter((row) => row.id !== id));
   };
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const incompleteSpecification = specifications.some(
-      (row) => (row.name.trim().length > 0 || row.value.trim().length > 0) && (!row.name.trim() || !row.value.trim()),
-    );
+    const incompleteSpecification =
+      !technicalDetailsUnknown &&
+      specifications.some(
+        (row) => (row.name.trim().length > 0 || row.value.trim().length > 0) && (!row.name.trim() || !row.value.trim()),
+      );
     if (incompleteSpecification) {
       setError(copy.specIncomplete);
       return;
@@ -111,8 +144,6 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
 
     if (
       title.trim().length < 5 ||
-      brand.trim().length < 2 ||
-      model.trim().length < 2 ||
       description.trim().length < 20 ||
       !city.trim() ||
       streetAddress.trim().length < 5 ||
@@ -123,22 +154,38 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
       setError(copy.formIncomplete);
       return;
     }
+    if (images.length === 0) {
+      setError(formCopy.photoRequired);
+      return;
+    }
 
     const conditionLabel = copy[condition === "fair" ? "conditionFair" : condition];
     const reservedSpecificationNames = new Set([copy.brand.toLocaleLowerCase(), copy.model.toLocaleLowerCase()]);
-    const technicalSpecifications = Object.fromEntries(
-      specifications
-        .filter(
-          (row) =>
-            row.name.trim() && row.value.trim() && !reservedSpecificationNames.has(row.name.trim().toLocaleLowerCase()),
-        )
-        .map((row) => [row.name.trim(), row.value.trim()]),
-    );
+    const technicalSpecifications = technicalDetailsUnknown
+      ? {}
+      : Object.fromEntries(
+          specifications
+            .filter(
+              (row) =>
+                row.name.trim() &&
+                row.value.trim() &&
+                !reservedSpecificationNames.has(row.name.trim().toLocaleLowerCase()),
+            )
+            .map((row) => [row.name.trim(), row.value.trim()]),
+        );
+    const guidedTechnicalSpecifications = technicalDetailsUnknown
+      ? { [copy.technicalDetails]: formCopy.unknown }
+      : Object.fromEntries(
+          guidedFields
+            .map((field) => [field.label, guidedSpecifications[field.key]?.trim()] as const)
+            .filter((entry): entry is readonly [string, string] => Boolean(entry[1])),
+        );
+    const identity = [brand.trim(), model.trim()].filter(Boolean).join(" ");
 
     const listing: Listing = {
       id: `listing-${Date.now()}`,
       title: title.trim(),
-      subtitle: `${brand.trim()} ${model.trim()} · ${conditionLabel}`,
+      subtitle: `${identity || copy[category]} · ${conditionLabel}`,
       category,
       brand: brand.trim(),
       priceMinor: Math.round(numericPrice * 100),
@@ -158,8 +205,9 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
       },
       shipsTo: [market],
       specs: {
-        [copy.brand]: brand.trim(),
-        [copy.model]: model.trim(),
+        ...(brand.trim() ? { [copy.brand]: brand.trim() } : {}),
+        ...(model.trim() ? { [copy.model]: model.trim() } : {}),
+        ...guidedTechnicalSpecifications,
         ...technicalSpecifications,
       },
       description: description.trim(),
@@ -205,6 +253,9 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
 
       <form className="create-listing-form" onSubmit={submit} noValidate>
         <div className="create-listing-form__main">
+          <p className="required-fields-note">
+            <span aria-hidden="true">*</span> {formCopy.required}
+          </p>
           <section className="create-listing-section" aria-labelledby="product-details-title">
             <div className="create-listing-section__heading">
               <span className="create-listing-section__number">01</span>
@@ -215,7 +266,7 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
             </div>
             <div className="create-listing-fields">
               <label className="field-wide">
-                {copy.productTitle}
+                <FieldLabel label={copy.productTitle} required requiredText={formCopy.required} />
                 <input
                   required
                   minLength={5}
@@ -226,8 +277,16 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
                 />
               </label>
               <label>
-                {copy.category}
-                <select value={category} onChange={(event) => setCategory(event.target.value as Category)}>
+                <FieldLabel label={copy.category} required requiredText={formCopy.required} />
+                <select
+                  required
+                  value={category}
+                  onChange={(event) => {
+                    const nextCategory = event.target.value as Category;
+                    setCategory(nextCategory);
+                    if (nextCategory !== "pc") setTechnicalDetailsUnknown(false);
+                  }}
+                >
                   {(["gpu", "cpu", "memory", "motherboard", "pc", "other"] as Category[]).map((item) => (
                     <option key={item} value={item}>
                       {copy[item]}
@@ -236,8 +295,8 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
                 </select>
               </label>
               <label>
-                {copy.condition}
-                <select value={condition} onChange={(event) => setCondition(event.target.value as Condition)}>
+                <FieldLabel label={copy.condition} required requiredText={formCopy.required} />
+                <select required value={condition} onChange={(event) => setCondition(event.target.value as Condition)}>
                   {(["new", "excellent", "good", "fair"] as Condition[]).map((item) => (
                     <option key={item} value={item}>
                       {copy[item === "fair" ? "conditionFair" : item]}
@@ -246,7 +305,11 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
                 </select>
               </label>
               <label>
-                {copy.price} ({MARKETS[market].currency})
+                <FieldLabel
+                  label={`${copy.price} (${MARKETS[market].currency})`}
+                  required
+                  requiredText={formCopy.required}
+                />
                 <input
                   required
                   inputMode="decimal"
@@ -256,13 +319,12 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
                 />
               </label>
               <label>
-                {copy.brand}
-                <input required value={brand} onChange={(event) => setBrand(event.target.value)} placeholder="ASUS" />
+                <FieldLabel label={copy.brand} requiredText={formCopy.required} optionalText={formCopy.optional} />
+                <input value={brand} onChange={(event) => setBrand(event.target.value)} placeholder="ASUS" />
               </label>
               <label>
-                {copy.model}
+                <FieldLabel label={copy.model} requiredText={formCopy.required} optionalText={formCopy.optional} />
                 <input
-                  required
                   value={model}
                   onChange={(event) => setModel(event.target.value)}
                   placeholder="TUF-RTX4070S-O12G-GAMING"
@@ -275,55 +337,93 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
             <div className="create-listing-section__heading">
               <span className="create-listing-section__number">02</span>
               <div>
-                <h2 id="technical-details-title">{copy.technicalDetails}</h2>
-                <p>{copy.technicalDetailsHelp}</p>
+                <h2 id="technical-details-title">{technicalSectionTitle}</h2>
+                <p>{technicalSectionHelp}</p>
               </div>
             </div>
-            <div className="specification-editor">
-              {specifications.map((row, index) => (
-                <div className="specification-editor__row" key={row.id}>
-                  <label>
-                    {copy.specName}
-                    <input
-                      value={row.name}
-                      onChange={(event) => updateSpecification(row.id, "name", event.target.value)}
-                      placeholder={index === 0 ? copy.memory : "PCIe"}
-                    />
-                  </label>
-                  <label>
-                    {copy.specValue}
-                    <input
-                      value={row.value}
-                      onChange={(event) => updateSpecification(row.id, "value", event.target.value)}
-                      placeholder={index === 0 ? "12 GB GDDR6X" : "4.0"}
-                    />
-                  </label>
+            {category === "pc" && (
+              <label className={`unknown-details-toggle${technicalDetailsUnknown ? " is-selected" : ""}`}>
+                <input
+                  type="checkbox"
+                  checked={technicalDetailsUnknown}
+                  onChange={(event) => setTechnicalDetailsUnknown(event.target.checked)}
+                />
+                <span>
+                  <strong>{formCopy.unknown}</strong>
+                  <small>{formCopy.unknownHelp}</small>
+                </span>
+              </label>
+            )}
+
+            {!technicalDetailsUnknown && (
+              <div className="specification-editor">
+                {guidedFields.length > 0 && (
+                  <div className={`guided-specifications${category === "pc" ? " guided-specifications--pc" : ""}`}>
+                    {guidedFields.map((field) => (
+                      <label key={field.key}>
+                        <FieldLabel label={field.label} requiredText={formCopy.required} />
+                        <input
+                          value={guidedSpecifications[field.key] ?? ""}
+                          onChange={(event) =>
+                            setGuidedSpecifications((values) => ({ ...values, [field.key]: event.target.value }))
+                          }
+                          placeholder={field.placeholder}
+                        />
+                      </label>
+                    ))}
+                  </div>
+                )}
+
+                <div className="custom-specifications">
+                  {specifications.length > 0 && <h3>{formCopy.customDetails}</h3>}
+                  {specifications.map((row, index) => (
+                    <div className="specification-editor__row" key={row.id}>
+                      <label>
+                        {copy.specName}
+                        <input
+                          value={row.name}
+                          onChange={(event) => updateSpecification(row.id, "name", event.target.value)}
+                          placeholder={index === 0 ? copy.memory : "PCIe"}
+                        />
+                      </label>
+                      <label>
+                        {copy.specValue}
+                        <input
+                          value={row.value}
+                          onChange={(event) => updateSpecification(row.id, "value", event.target.value)}
+                          placeholder={index === 0 ? "12 GB GDDR6X" : "4.0"}
+                        />
+                      </label>
+                      <button
+                        className="specification-editor__remove"
+                        type="button"
+                        aria-label={`${copy.remove}: ${index + 1}`}
+                        onClick={() => removeSpecification(row.id)}
+                      >
+                        <Icon name="close" />
+                      </button>
+                    </div>
+                  ))}
                   <button
-                    className="specification-editor__remove"
+                    className="button button--outline specification-editor__add"
                     type="button"
-                    aria-label={`${copy.remove}: ${index + 1}`}
-                    onClick={() => removeSpecification(row.id)}
+                    onClick={() => setSpecifications((rows) => [...rows, newSpecification()])}
                   >
-                    <Icon name="close" />
+                    <Icon name="plus" />
+                    {copy.addSpec}
                   </button>
                 </div>
-              ))}
-              <button
-                className="button button--outline specification-editor__add"
-                type="button"
-                onClick={() => setSpecifications((rows) => [...rows, newSpecification()])}
-              >
-                <Icon name="plus" />
-                {copy.addSpec}
-              </button>
-            </div>
+              </div>
+            )}
           </section>
 
           <section className="create-listing-section" aria-labelledby="description-title">
             <div className="create-listing-section__heading">
               <span className="create-listing-section__number">03</span>
               <div>
-                <h2 id="description-title">{copy.description}</h2>
+                <h2 id="description-title">
+                  <FieldLabel label={copy.description} required requiredText={formCopy.required} />
+                </h2>
                 <p>{copy.descriptionHelp}</p>
               </div>
             </div>
@@ -346,7 +446,9 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
             <div className="create-listing-section__heading">
               <span className="create-listing-section__number">04</span>
               <div>
-                <h2 id="photos-title">{copy.photos}</h2>
+                <h2 id="photos-title">
+                  <FieldLabel label={copy.photos} required requiredText={formCopy.required} />
+                </h2>
                 <p>{copy.photoHelp}</p>
               </div>
             </div>
@@ -383,11 +485,11 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
                 </div>
               </div>
               <label className="field-wide">
-                {copy.name}
+                <FieldLabel label={copy.name} required requiredText={formCopy.required} />
                 <input value={user.name} readOnly aria-readonly="true" />
               </label>
               <label>
-                {copy.publicLocation}
+                <FieldLabel label={copy.publicLocation} required requiredText={formCopy.required} />
                 <input
                   required
                   autoComplete="address-level2"
@@ -398,7 +500,7 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
                 <small>{copy.publicLocationHelp}</small>
               </label>
               <label>
-                {copy.postalCode}
+                <FieldLabel label={copy.postalCode} required requiredText={formCopy.required} />
                 <input
                   required
                   inputMode="numeric"
@@ -412,7 +514,7 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
                 />
               </label>
               <label className="field-wide">
-                {copy.streetAddress}
+                <FieldLabel label={copy.streetAddress} required requiredText={formCopy.required} />
                 <input
                   required
                   autoComplete="street-address"

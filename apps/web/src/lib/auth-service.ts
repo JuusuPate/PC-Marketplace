@@ -4,16 +4,27 @@ import type { CountryCode, DemoUser, Locale } from "../types";
 import { backendMode, supabase } from "./supabase";
 
 const locales: Locale[] = ["fi", "sv", "da", "nb", "en"];
+export const DEMO_ADMIN_EMAIL = "admin@pcmarket.fi";
 
 function isLocale(value: unknown): value is Locale {
   return locales.includes(value as Locale);
 }
 
-function mapUser(user: User): DemoUser {
+async function mapUser(user: User): Promise<DemoUser> {
   const metadata = user.user_metadata;
   const countryCode = LAUNCH_MARKET;
   const locale = isLocale(metadata.locale) ? metadata.locale : MARKETS[countryCode].defaultLocale;
   const email = user.email ?? "";
+  let role: DemoUser["role"] = "user";
+
+  if (supabase) {
+    try {
+      const { data, error } = await supabase.rpc("is_current_user_admin");
+      if (!error && data === true) role = "admin";
+    } catch {
+      role = "user";
+    }
+  }
 
   return {
     id: user.id,
@@ -24,6 +35,7 @@ function mapUser(user: User): DemoUser {
     email,
     countryCode,
     locale,
+    role,
   };
 }
 
@@ -44,6 +56,7 @@ export const authService = {
           email,
           countryCode,
           locale,
+          role: email === DEMO_ADMIN_EMAIL ? "admin" : "user",
         },
         confirmationRequired: false,
       };
@@ -52,7 +65,7 @@ export const authService = {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
 
-    return { user: mapUser(data.user), confirmationRequired: false };
+    return { user: await mapUser(data.user), confirmationRequired: false };
   },
 
   async signUp(
@@ -64,7 +77,7 @@ export const authService = {
   ): Promise<AuthResult> {
     if (!supabase) {
       return {
-        user: { id: `demo-${Date.now()}`, name, email, countryCode, locale },
+        user: { id: `demo-${Date.now()}`, name, email, countryCode, locale, role: "user" },
         confirmationRequired: false,
       };
     }
@@ -85,7 +98,7 @@ export const authService = {
     if (error) throw error;
 
     return {
-      user: data.session && data.user ? mapUser(data.user) : null,
+      user: data.session && data.user ? await mapUser(data.user) : null,
       confirmationRequired: !data.session,
     };
   },
@@ -93,8 +106,19 @@ export const authService = {
   subscribe(listener: (user: DemoUser | null) => void) {
     if (!supabase) return () => undefined;
 
+    let requestId = 0;
     const { data } = supabase.auth.onAuthStateChange((_event, session) => {
-      listener(session?.user ? mapUser(session.user) : null);
+      const currentRequest = ++requestId;
+      if (!session?.user) {
+        listener(null);
+        return;
+      }
+
+      window.setTimeout(() => {
+        void mapUser(session.user).then((mappedUser) => {
+          if (currentRequest === requestId) listener(mappedUser);
+        });
+      }, 0);
     });
 
     return () => data.subscription.unsubscribe();

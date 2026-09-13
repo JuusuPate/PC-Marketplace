@@ -4,6 +4,7 @@ import { Header } from "../components/Header";
 import { Icon } from "../components/Icon";
 import { ListingCard } from "../components/ListingCard";
 import { getCatalogPage } from "../config/catalog";
+import { getLegalPath, getLegalRoute } from "../config/legal-routes";
 import { getListingId, getListingPath } from "../config/listing-routes";
 import { LAUNCH_MARKET, MARKETS } from "../config/markets";
 import { DEMO_LISTINGS } from "../data/demo-listings";
@@ -12,6 +13,7 @@ import { AuthModal } from "../features/auth/AuthModal";
 import { CategoryHero } from "../features/catalog/CategoryHero";
 import { CheckoutModal } from "../features/checkout/CheckoutModal";
 import { ListingDetailPage } from "../features/listings/ListingDetailPage";
+import { LegalPage } from "../features/legal/LegalPage";
 import { CreateListingPage } from "../features/sell/CreateListingPage";
 import { getMessages } from "../i18n";
 import { authService } from "../lib/auth-service";
@@ -53,6 +55,7 @@ export function App() {
   const [locale, setLocale] = useState<Locale>("fi");
   const market = LAUNCH_MARKET;
   const [catalogPage, setCatalogPage] = useState(() => getCatalogPage(window.location.pathname));
+  const [legalRoute, setLegalRoute] = useState(() => getLegalRoute(window.location.pathname));
   const [createListingPage, setCreateListingPage] = useState(() => isCreateListingPath(window.location.pathname));
   const [listingPageId, setListingPageId] = useState(() => getListingId(window.location.pathname));
   const [routeListing, setRouteListing] = useState<Listing | null>(null);
@@ -110,6 +113,7 @@ export function App() {
     const syncRoute = () => {
       const nextListingId = getListingId(window.location.pathname);
       setCatalogPage(getCatalogPage(window.location.pathname));
+      setLegalRoute(getLegalRoute(window.location.pathname));
       setCreateListingPage(isCreateListingPath(window.location.pathname));
       setListingPageId(nextListingId);
       setListingRouteLoading(Boolean(nextListingId));
@@ -152,16 +156,18 @@ export function App() {
 
   useEffect(() => {
     document.documentElement.lang = locale;
-    document.title = activeListing
-      ? `${activeListing.title} | PC Market`
-      : listingPageId
-        ? `${copy.noResults} | PC Market`
-        : createListingPage
-          ? `${copy.sellTitle} | PC Market`
-          : catalogPage
-            ? `${copy[catalogPage.labelKey]} | PC Market`
-            : copy.siteTitle;
-  }, [activeListing, catalogPage, copy, createListingPage, listingPageId, locale]);
+    document.title = legalRoute
+      ? `${copy[legalRoute.labelKey]} | PC Market`
+      : activeListing
+        ? `${activeListing.title} | PC Market`
+        : listingPageId
+          ? `${copy.noResults} | PC Market`
+          : createListingPage
+            ? `${copy.sellTitle} | PC Market`
+            : catalogPage
+              ? `${copy[catalogPage.labelKey]} | PC Market`
+              : copy.siteTitle;
+  }, [activeListing, catalogPage, copy, createListingPage, legalRoute, listingPageId, locale]);
 
   useEffect(() => {
     if (!createListingPage) return;
@@ -218,8 +224,10 @@ export function App() {
     }
 
     const nextPage = getCatalogPage(path);
+    const nextLegalRoute = getLegalRoute(path);
     const nextListingId = getListingId(path);
     setCatalogPage(nextPage);
+    setLegalRoute(nextLegalRoute);
     setCreateListingPage(isCreateListingPath(path));
     setListingPageId(nextListingId);
     setListingRouteLoading(Boolean(nextListingId && !listings.some((listing) => listing.id === nextListingId)));
@@ -234,6 +242,7 @@ export function App() {
       window.scrollTo({ top: 0, behavior: "smooth" });
       if (nextPage) document.querySelector<HTMLElement>("#category-page-title")?.focus({ preventScroll: true });
       if (nextListingId) document.querySelector<HTMLElement>("#listing-page-title")?.focus({ preventScroll: true });
+      if (nextLegalRoute) document.querySelector<HTMLElement>("#legal-page-title")?.focus({ preventScroll: true });
     }, 0);
   };
 
@@ -341,6 +350,10 @@ export function App() {
       <CategoryNavigation copy={copy} activePageId={catalogPage?.id ?? null} onNavigate={(path) => navigateTo(path)} />
 
       <main>
+        {legalRoute && (
+          <LegalPage route={legalRoute} locale={locale} copy={copy} user={user} onHome={() => navigateTo("/")} />
+        )}
+
         {createListingPage && user && (
           <CreateListingPage
             copy={copy}
@@ -386,7 +399,8 @@ export function App() {
             </section>
           ))}
 
-        {!listingPageId &&
+        {!legalRoute &&
+          !listingPageId &&
           (!createListingPage || !user) &&
           (catalogPage ? (
             <CategoryHero
@@ -504,7 +518,7 @@ export function App() {
             </>
           ))}
 
-        {!listingPageId && (!createListingPage || !user) && (
+        {!legalRoute && !listingPageId && (!createListingPage || !user) && (
           <section
             className={`marketplace-section section-shell${catalogPage ? " marketplace-section--category" : ""}`}
             id="marketplace"
@@ -586,7 +600,7 @@ export function App() {
           </section>
         )}
 
-        {!listingPageId && (!createListingPage || !user) && !catalogPage && (
+        {!legalRoute && !listingPageId && (!createListingPage || !user) && !catalogPage && (
           <>
             <section className="protection-section" id="safety">
               <div className="section-shell protection-inner">
@@ -691,9 +705,22 @@ export function App() {
           </span>
         </a>
         <div>
-          <a href="#terms">{copy.terms}</a>
-          <a href="#privacy">{copy.privacy}</a>
-          <a href="#accessibility">{copy.accessibility}</a>
+          {(["terms", "privacy", "accessibility"] as const).map((slug) => {
+            const path = getLegalPath(slug);
+            return (
+              <a
+                href={path}
+                key={slug}
+                onClick={(event) => {
+                  if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+                  event.preventDefault();
+                  navigateTo(path);
+                }}
+              >
+                {copy[slug]}
+              </a>
+            );
+          })}
         </div>
         <span>© 2026 PC Market Demo</span>
       </footer>
@@ -730,6 +757,10 @@ export function App() {
           ownListings={customListings.filter((listing) => listing.seller.id === user.id)}
           onClose={() => setAccountOpen(false)}
           onLogout={logout}
+          onManageLegal={() => {
+            setAccountOpen(false);
+            navigateTo(getLegalPath("terms"));
+          }}
         />
       )}
       {toast && (

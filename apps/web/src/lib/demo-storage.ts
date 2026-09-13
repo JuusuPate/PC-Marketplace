@@ -1,10 +1,11 @@
-import type { DemoOrder, DemoUser, Listing, PrivatePickupAddress } from "../types";
+import type { DemoOrder, DemoUser, LegalPageContent, Listing, PrivatePickupAddress } from "../types";
 
 const SESSION_KEY = "pc-marketplace.demo-session";
 const LISTINGS_KEY = "pc-marketplace.demo-listings";
 const ORDERS_KEY = "pc-marketplace.demo-orders";
 const FAVOURITES_KEY = "pc-marketplace.demo-favourites";
 const PICKUP_ADDRESSES_KEY = "pc-marketplace.demo-private-pickup-addresses";
+const LEGAL_PAGES_KEY = "pc-marketplace.demo-legal-pages";
 
 export const DEMO_LISTINGS_MAX_SERIALIZED_CHARACTERS = 3_000_000;
 
@@ -49,7 +50,11 @@ function write<T>(key: string, value: T) {
 }
 
 export const demoStorage = {
-  getSession: () => read<DemoUser | null>(SESSION_KEY, null),
+  getSession: () => {
+    const user = read<DemoUser | null>(SESSION_KEY, null);
+    if (!user) return null;
+    return { ...user, role: user.role === "admin" ? "admin" : "user" } satisfies DemoUser;
+  },
   setSession: (user: DemoUser | null) =>
     user ? write(SESSION_KEY, user) : window.localStorage.removeItem(SESSION_KEY),
   getListings: () => read<Listing[]>(LISTINGS_KEY, []),
@@ -58,6 +63,15 @@ export const demoStorage = {
   setOrders: (orders: DemoOrder[]) => write(ORDERS_KEY, orders),
   getFavourites: () => read<string[]>(FAVOURITES_KEY, []),
   setFavourites: (ids: string[]) => write(FAVOURITES_KEY, ids),
+  getLegalPage(slug: LegalPageContent["slug"], locale: LegalPageContent["locale"]) {
+    const pages = read<Record<string, LegalPageContent>>(LEGAL_PAGES_KEY, {});
+    return pages[`${slug}:${locale}`] ?? null;
+  },
+  setLegalPage(page: LegalPageContent, user: DemoUser) {
+    if (user.role !== "admin") throw new Error("Vain admin-käyttäjä voi muokata sisältösivuja.");
+    const pages = read<Record<string, LegalPageContent>>(LEGAL_PAGES_KEY, {});
+    write(LEGAL_PAGES_KEY, { ...pages, [`${page.slug}:${page.locale}`]: page });
+  },
   getPrivatePickupAddress(listingId: string) {
     const addresses = read<Record<string, DemoPrivatePickupAddress>>(PICKUP_ADDRESSES_KEY, {});
     const stored = addresses[listingId];

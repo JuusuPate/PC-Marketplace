@@ -15,9 +15,19 @@ interface AccountModalProps {
   ownListings: Listing[];
   onClose: () => void;
   onLogout: () => void;
+  onManageLegal: () => void;
 }
 
-export function AccountModal({ copy, locale, user, orders, ownListings, onClose, onLogout }: AccountModalProps) {
+export function AccountModal({
+  copy,
+  locale,
+  user,
+  orders,
+  ownListings,
+  onClose,
+  onLogout,
+  onManageLegal,
+}: AccountModalProps) {
   const runtimeCopy = getRuntimeCopy(locale);
 
   return (
@@ -27,6 +37,7 @@ export function AccountModal({ copy, locale, user, orders, ownListings, onClose,
           <div className="account-avatar">{user.name.slice(0, 2).toUpperCase()}</div>
           <h2>{user.name}</h2>
           <p>{user.email}</p>
+          {user.role === "admin" && <span className="admin-badge">ADMIN</span>}
           <span className="demo-pill">{backendMode === "supabase" ? runtimeCopy.connectedBadge : copy.demoBadge}</span>
           <button className="button button--outline button--full" type="button" onClick={onLogout}>
             {copy.logout}
@@ -89,28 +100,33 @@ export function AccountModal({ copy, locale, user, orders, ownListings, onClose,
               </div>
             )}
           </section>
-          <section>
-            <div className="section-heading-mini">
-              <h3>{copy.marketAdmin}</h3>
-              <span>ADMIN PREVIEW</span>
-            </div>
-            <div className="market-status-grid">
-              {PUBLIC_MARKETS.map((countryCode) => {
-                const market = MARKETS[countryCode];
-                return (
-                  <article key={market.countryCode}>
-                    <span>{market.flag}</span>
-                    <div>
-                      <strong>{market.name}</strong>
-                      <small>
-                        {market.currency} · {market.feePercent}% fee
-                      </small>
-                    </div>
-                  </article>
-                );
-              })}
-            </div>
-          </section>
+          {user.role === "admin" && (
+            <section>
+              <div className="section-heading-mini">
+                <h3>{copy.marketAdmin}</h3>
+                <span>ADMIN</span>
+              </div>
+              <div className="market-status-grid">
+                {PUBLIC_MARKETS.map((countryCode) => {
+                  const market = MARKETS[countryCode];
+                  return (
+                    <article key={market.countryCode}>
+                      <span aria-hidden="true">✓</span>
+                      <div>
+                        <strong>{market.name}</strong>
+                        <small>
+                          {market.currency} · {market.feePercent}% fee
+                        </small>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+              <button className="button button--dark button--full" type="button" onClick={onManageLegal}>
+                {locale === "fi" ? "Muokkaa sisältösivuja" : "Manage content pages"}
+              </button>
+            </section>
+          )}
         </div>
       </div>
     </ModalShell>
