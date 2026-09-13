@@ -19,7 +19,7 @@ export const fi = {
   login: "Kirjaudu",
   logout: "Kirjaudu ulos",
   account: "Oma tili",
-  heroEyebrow: "Rakennettu PC-harrastajille",
+  heroEyebrow: "Rakennettu Harrastajalta harrastajille",
   heroTitleA: "Hyvät osat ansaitsevat",
   heroTitleB: "uuden kokoonpanon.",
   heroBody:
