@@ -30,7 +30,6 @@ export function FeaturedShowcase({ listings, locale, copy, onOpen }: FeaturedSho
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(
     () => window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false,
   );
-  const [manuallyPaused, setManuallyPaused] = useState(false);
   const [pointerPaused, setPointerPaused] = useState(false);
   const [focusPaused, setFocusPaused] = useState(false);
   const [documentHidden, setDocumentHidden] = useState(document.hidden);
@@ -156,7 +155,6 @@ export function FeaturedShowcase({ listings, locale, copy, onOpen }: FeaturedSho
     if (
       featuredListings.length <= 1 ||
       prefersReducedMotion ||
-      manuallyPaused ||
       pointerPaused ||
       focusPaused ||
       documentHidden ||
@@ -167,16 +165,7 @@ export function FeaturedShowcase({ listings, locale, copy, onOpen }: FeaturedSho
 
     const timeoutId = window.setTimeout(showNext, ROTATION_INTERVAL_MS);
     return () => window.clearTimeout(timeoutId);
-  }, [
-    activeIndex,
-    documentHidden,
-    featuredIds,
-    focusPaused,
-    isSwitching,
-    manuallyPaused,
-    pointerPaused,
-    prefersReducedMotion,
-  ]);
+  }, [activeIndex, documentHidden, featuredIds, focusPaused, isSwitching, pointerPaused, prefersReducedMotion]);
 
   if (orderedListings.length === 0) return null;
 
@@ -256,28 +245,6 @@ export function FeaturedShowcase({ listings, locale, copy, onOpen }: FeaturedSho
           <div role="group" aria-label={copy.featuredControls}>
             <button type="button" aria-label={copy.previousFeatured} aria-disabled={isSwitching} onClick={showPrevious}>
               <span aria-hidden="true">←</span>
-            </button>
-            <button
-              className="featured-showcase__pause"
-              type="button"
-              aria-label={
-                prefersReducedMotion
-                  ? copy.reducedMotionFeatured
-                  : manuallyPaused
-                    ? copy.resumeFeatured
-                    : copy.pauseFeatured
-              }
-              disabled={prefersReducedMotion}
-              onClick={() => setManuallyPaused((paused) => !paused)}
-            >
-              <span aria-hidden="true">{prefersReducedMotion ? "Ⅱ" : manuallyPaused ? "▶" : "Ⅱ"}</span>
-              <span>
-                {prefersReducedMotion
-                  ? copy.reducedMotionFeatured
-                  : manuallyPaused
-                    ? copy.resumeFeatured
-                    : copy.pauseFeatured}
-              </span>
             </button>
             <button type="button" aria-label={copy.nextFeatured} aria-disabled={isSwitching} onClick={showNext}>
               <span aria-hidden="true">→</span>

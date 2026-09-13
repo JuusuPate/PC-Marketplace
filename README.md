@@ -66,7 +66,7 @@ Julkinen beta toimii vain Suomessa: käyttäjämaa ja ilmoitusmarkkina ovat `FI`
 
 Esittely näyttää kolme ilmoitusta kerrallaan. Kaksi paikkaa valitaan painottaen viimeisen seitsemän päivän anonyymejä katseluja ja tallennuksia, ja yksi paikka valitaan satunnaisesti. Näin kiinnostavat tuotteet saavat näkyvyyttä, mutta myös uusi ilmoitus voi nousta esiin ennen kuin sille on kertynyt tilastoja. Samassa kolmikossa ei ole duplikaatteja, ja uuden kierroksen alkaessa juuri näytetty kolmikko ohitetaan aina kun ilmoituksia on riittävästi.
 
-Demoversio käyttää erillistä esimerkkisignaalien karttaa. Tuotannossa luvut tuodaan palvelimelta aggregoituina, myyjän omat katselut ja toistuva liikenne suodatetaan pois eikä yksittäisen käyttäjän suosikkeja käytetä yleisen suosion mittarina. Pääkortti vaihtuu 7,5 sekunnin välein; vaihtumisen voi pysäyttää, ja se pysähtyy automaattisesti osoittimen, näppäimistökohdistuksen, taustavälilehden tai vähennetyn liikkeen asetuksen ajaksi.
+Demoversio käyttää erillistä esimerkkisignaalien karttaa. Tuotannossa luvut tuodaan palvelimelta aggregoituina, myyjän omat katselut ja toistuva liikenne suodatetaan pois eikä yksittäisen käyttäjän suosikkeja käytetä yleisen suosion mittarina. Pääkortti vaihtuu 7,5 sekunnin välein. Vaihto pysähtyy automaattisesti osoittimen, näppäimistökohdistuksen, taustavälilehden tai vähennetyn liikkeen asetuksen ajaksi.
 
 ## Rakenne
 

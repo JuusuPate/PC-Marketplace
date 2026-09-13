@@ -16,7 +16,6 @@ export function CategoryNavigation({ copy, activePageId, onNavigate }: CategoryN
   return (
     <div className="category-navigation-wrap">
       <nav className="category-navigation section-shell" aria-label={copy.categoryNavigation}>
-        <span className="category-navigation-label">{copy.categoryNavigation}</span>
         <div className="category-navigation-links">
           {CATALOG_PAGES.map((page) => (
             <a
