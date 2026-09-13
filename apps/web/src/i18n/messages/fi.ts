@@ -106,7 +106,6 @@ export const fi = {
   paid: "Maksettu",
   shippingStatus: "Matkalla",
   inspection: "Tarkastuksessa",
-  live: "Auki",
   beta: "Beta",
   soon: "Tulossa",
   howTitle: "Turvallisempi tapa kierrättää tehoa",

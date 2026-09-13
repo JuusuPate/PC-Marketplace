@@ -107,7 +107,6 @@ export const da = {
   paid: "Betalt",
   shippingStatus: "På vej",
   inspection: "Under kontrol",
-  live: "Åben",
   beta: "Beta",
   soon: "Kommer snart",
   howTitle: "En tryggere måde at genbruge ydeevne",

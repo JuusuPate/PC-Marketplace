@@ -107,7 +107,6 @@ export const nb = {
   paid: "Betalt",
   shippingStatus: "På vei",
   inspection: "Under inspeksjon",
-  live: "Åpen",
   beta: "Beta",
   soon: "Kommer snart",
   howTitle: "En tryggere måte å gjenbruke ytelse",

@@ -107,7 +107,6 @@ export const sv = {
   paid: "Betald",
   shippingStatus: "På väg",
   inspection: "Under inspektion",
-  live: "Öppen",
   beta: "Beta",
   soon: "Kommer snart",
   howTitle: "Ett tryggare sätt att återanvända prestanda",

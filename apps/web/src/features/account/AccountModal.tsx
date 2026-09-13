@@ -106,7 +106,6 @@ export function AccountModal({ copy, locale, user, orders, ownListings, onClose,
                         {market.currency} · {market.feePercent}% fee
                       </small>
                     </div>
-                    <span className={`status-chip status--${market.status}`}>{copy[market.status]}</span>
                   </article>
                 );
               })}

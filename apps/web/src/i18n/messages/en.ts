@@ -107,7 +107,6 @@ export const en = {
   paid: "Paid",
   shippingStatus: "In transit",
   inspection: "In inspection",
-  live: "Live",
   beta: "Beta",
   soon: "Coming soon",
   howTitle: "A safer way to reuse performance",

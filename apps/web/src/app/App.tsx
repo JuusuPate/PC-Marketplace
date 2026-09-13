@@ -272,9 +272,6 @@ export function App() {
                 <div className="eyebrow">
                   <span className="eyebrow-dot" />
                   {copy.heroEyebrow}
-                  <span className="eyebrow-market">
-                    {MARKETS[market].flag} {MARKETS[market].status.toUpperCase()}
-                  </span>
                 </div>
                 <h1>
                   {copy.heroTitleA}
@@ -536,9 +533,7 @@ export function App() {
                 </button>
               </div>
               <div className="cta-map cta-map--finland" aria-label={copy.shippingArea}>
-                <span className="map-country map-fi">
-                  ✓<small>{copy.live}</small>
-                </span>
+                <span className="map-country map-fi">✓</span>
               </div>
             </section>
           </>

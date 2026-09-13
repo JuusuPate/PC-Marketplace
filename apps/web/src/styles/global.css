@@ -517,12 +517,6 @@ svg {
   border-radius: 50%;
   box-shadow: 0 0 0 5px rgba(135, 183, 25, 0.12);
 }
-.eyebrow-market {
-  margin-left: 7px;
-  padding-left: 14px;
-  border-left: 1px solid var(--line);
-  color: var(--ink);
-}
 .hero h1 {
   margin: 0;
   max-width: 750px;

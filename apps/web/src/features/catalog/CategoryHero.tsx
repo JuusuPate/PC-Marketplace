@@ -43,9 +43,7 @@ export function CategoryHero({ page, copy, listingCount, onHome, onSell }: Categ
         </div>
 
         <div className="category-route-card" aria-hidden="true">
-          <span className="category-route-card-status">
-            {copy.marketplace} / {copy.live}
-          </span>
+          <span className="category-route-card-status">{copy.marketplace}</span>
           <strong className="category-route-glyph">{page.glyph}</strong>
           <div>
             <strong>{listingCount}</strong>
