@@ -1,7 +1,19 @@
 import type { Messages } from "./fi";
 
 export const sv = {
+  siteTitle: "PC Market — begagnade PC-delar tryggt",
   brandTagline: "Finlands PC-marknad",
+  home: "Startsida",
+  breadcrumbs: "Sidans plats",
+  primaryNavigation: "Huvudnavigering",
+  categoryNavigation: "Kategorier",
+  allProducts: "Alla produkter",
+  components: "Komponenter",
+  accessories: "Tillbehör & övrigt",
+  categoryPageEyebrow: "Produktkategori",
+  categoryPageBody:
+    "Utforska verifierade annonser i Finland. Alla produkter prissätts i euro och levereras endast inom Finland.",
+  categoryListings: "Annonser i kategorin",
   marketplace: "Marknadsplats",
   howItWorks: "Så fungerar det",
   safety: "Säkerhet",

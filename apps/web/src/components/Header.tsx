@@ -1,3 +1,4 @@
+import type { MouseEvent } from "react";
 import { COUNTRY_FLAGS, LOCALE_LABELS, MARKETS, PUBLIC_LOCALES } from "../config/markets";
 import type { Messages } from "../i18n/messages/fi";
 import type { CountryCode, DemoUser, Locale } from "../types";
@@ -8,16 +9,23 @@ interface HeaderProps {
   locale: Locale;
   market: CountryCode;
   user: DemoUser | null;
+  onHome: (hash?: string) => void;
   onLocale: (locale: Locale) => void;
   onAuth: () => void;
   onSell: () => void;
   onAccount: () => void;
 }
 
-export function Header({ copy, locale, market, user, onLocale, onAuth, onSell, onAccount }: HeaderProps) {
+export function Header({ copy, locale, market, user, onHome, onLocale, onAuth, onSell, onAccount }: HeaderProps) {
+  const navigateHome = (event: MouseEvent<HTMLAnchorElement>, hash?: string) => {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    onHome(hash);
+  };
+
   return (
     <header className="site-header">
-      <a className="brand" href="#top" aria-label="PC Market etusivu">
+      <a className="brand" href="/" aria-label={`PC Market — ${copy.home}`} onClick={(event) => navigateHome(event)}>
         <span className="brand-mark">
           <span />
         </span>
@@ -27,10 +35,16 @@ export function Header({ copy, locale, market, user, onLocale, onAuth, onSell, o
         </span>
       </a>
 
-      <nav className="desktop-nav" aria-label="Päänavigaatio">
-        <a href="#marketplace">{copy.marketplace}</a>
-        <a href="#how-it-works">{copy.howItWorks}</a>
-        <a href="#safety">{copy.safety}</a>
+      <nav className="desktop-nav" aria-label={copy.primaryNavigation}>
+        <a href="/#marketplace" onClick={(event) => navigateHome(event, "#marketplace")}>
+          {copy.marketplace}
+        </a>
+        <a href="/#how-it-works" onClick={(event) => navigateHome(event, "#how-it-works")}>
+          {copy.howItWorks}
+        </a>
+        <a href="/#safety" onClick={(event) => navigateHome(event, "#safety")}>
+          {copy.safety}
+        </a>
       </nav>
 
       <div className="header-actions">

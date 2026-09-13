@@ -1,5 +1,17 @@
 export const fi = {
+  siteTitle: "PC Market — käytetyt PC-osat turvallisesti",
   brandTagline: "Suomalainen PC-markkina",
+  home: "Etusivu",
+  breadcrumbs: "Sivun sijainti",
+  primaryNavigation: "Päänavigaatio",
+  categoryNavigation: "Kategoriat",
+  allProducts: "Kaikki tuotteet",
+  components: "Komponentit",
+  accessories: "Oheislaitteet & muut",
+  categoryPageEyebrow: "Tuotekategoria",
+  categoryPageBody:
+    "Selaa Suomessa myynnissä olevia tarkistettuja ilmoituksia. Kaikki tuotteet hinnoitellaan euroissa ja toimitetaan vain Suomessa.",
+  categoryListings: "Tämän kategorian ilmoitukset",
   marketplace: "Markkinapaikka",
   howItWorks: "Näin se toimii",
   safety: "Turvallisuus",

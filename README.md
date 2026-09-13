@@ -7,7 +7,7 @@ Finland-first, Nordic-ready -demo käytettyjen PC-komponenttien ja pelikoneiden 
 - suomen-, ruotsin- ja englanninkielinen käyttöliittymä Suomen käyttäjille
 - vain Suomen markkina, eurohinnoittelu ja toimitukset Suomessa
 - Ruotsin, Tanskan ja Norjan asetukset ovat rakenteessa valmiina mutta pois käytöstä
-- ilmoitusten haku, kategoriat, lajittelu ja markkinakohtainen toimitussuodatus
+- ilmoitusten haku, lajittelu sekä omat URL-sivut komponenteille, pelikoneille ja muille pääkategorioille
 - tuotesivu, myyjän maine, testitiedot, sarjanumeron vahvistus ja ostajansuoja
 - paikallinen demo-kirjautuminen tai valinnainen Supabase Auth sähköpostivahvistuksella
 - ilmoituksen luonti paikallisesti tai Supabase-tietokantaan, suosikit ja demo-osto
