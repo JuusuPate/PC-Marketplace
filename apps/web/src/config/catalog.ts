@@ -1,3 +1,9 @@
+import allProductsImage from "../assets/categories/all-products.png";
+import componentsImage from "../assets/categories/components.png";
+import cpuImage from "../assets/categories/cpu.png";
+import gamingPcImage from "../assets/categories/gaming-pc.png";
+import gpuImage from "../assets/categories/gpu.png";
+import peripheralsImage from "../assets/categories/peripherals.jpg";
 import type { Category } from "../types";
 
 export type CatalogPageId = "all" | "components" | Category;
@@ -8,6 +14,7 @@ export interface CatalogPage {
   path: string;
   labelKey: CatalogLabelKey;
   glyph: string;
+  image: string;
   categories: readonly Category[] | null;
 }
 
@@ -17,6 +24,7 @@ export const CATALOG_PAGES: CatalogPage[] = [
     path: "/kategoriat/kaikki",
     labelKey: "allProducts",
     glyph: "⌁",
+    image: allProductsImage,
     categories: null,
   },
   {
@@ -24,6 +32,7 @@ export const CATALOG_PAGES: CatalogPage[] = [
     path: "/kategoriat/komponentit",
     labelKey: "components",
     glyph: "▦",
+    image: componentsImage,
     categories: ["gpu", "cpu", "memory", "motherboard"],
   },
   {
@@ -31,6 +40,7 @@ export const CATALOG_PAGES: CatalogPage[] = [
     path: "/kategoriat/pelitietokoneet",
     labelKey: "pc",
     glyph: "▣",
+    image: gamingPcImage,
     categories: ["pc"],
   },
   {
@@ -38,6 +48,7 @@ export const CATALOG_PAGES: CatalogPage[] = [
     path: "/kategoriat/naytonohjaimet",
     labelKey: "gpu",
     glyph: "▰",
+    image: gpuImage,
     categories: ["gpu"],
   },
   {
@@ -45,6 +56,7 @@ export const CATALOG_PAGES: CatalogPage[] = [
     path: "/kategoriat/prosessorit",
     labelKey: "cpu",
     glyph: "◆",
+    image: cpuImage,
     categories: ["cpu"],
   },
   {
@@ -52,6 +64,7 @@ export const CATALOG_PAGES: CatalogPage[] = [
     path: "/kategoriat/muistit",
     labelKey: "memory",
     glyph: "▥",
+    image: componentsImage,
     categories: ["memory"],
   },
   {
@@ -59,6 +72,7 @@ export const CATALOG_PAGES: CatalogPage[] = [
     path: "/kategoriat/emolevyt",
     labelKey: "motherboard",
     glyph: "▦",
+    image: componentsImage,
     categories: ["motherboard"],
   },
   {
@@ -66,6 +80,7 @@ export const CATALOG_PAGES: CatalogPage[] = [
     path: "/kategoriat/oheislaitteet-ja-muut",
     labelKey: "accessories",
     glyph: "⌨",
+    image: peripheralsImage,
     categories: ["other"],
   },
 ];

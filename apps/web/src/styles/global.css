@@ -435,7 +435,7 @@ svg {
   line-height: 1.65;
 }
 .category-route-card {
-  min-height: 300px;
+  min-height: 330px;
   padding: 28px;
   display: flex;
   flex-direction: column;
@@ -447,6 +447,31 @@ svg {
   box-shadow: var(--shadow);
   transform: rotate(1.5deg);
 }
+.category-route-card-image {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  object-fit: cover;
+  transform: scale(1.015);
+}
+.category-route-card-image--memory {
+  transform: scale(1.85);
+  transform-origin: 18% 52%;
+}
+.category-route-card-image--motherboard {
+  transform: scale(1.55);
+  transform-origin: 80% 76%;
+}
+.category-route-card-shade {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(5, 15, 14, 0.78) 0%, rgba(5, 15, 14, 0.04) 34%, rgba(5, 15, 14, 0.12) 55%),
+    linear-gradient(0deg, rgba(5, 15, 14, 0.9) 0%, transparent 46%);
+}
 .category-route-card::before {
   content: "";
   width: 220px;
@@ -454,6 +479,7 @@ svg {
   position: absolute;
   top: 42px;
   right: -74px;
+  z-index: 1;
   border: 1px solid rgba(200, 255, 72, 0.28);
   border-radius: 50%;
   box-shadow:
@@ -462,27 +488,37 @@ svg {
 }
 .category-route-card-status {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   color: var(--lime);
   font-size: 12px;
   font-weight: 900;
   letter-spacing: 0.12em;
 }
 .category-route-glyph {
-  margin-block: auto;
-  position: relative;
-  z-index: 1;
+  width: 48px;
+  height: 48px;
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
   color: var(--lime);
-  font-size: 84px;
+  background: rgba(5, 15, 14, 0.7);
+  border: 1px solid rgba(200, 255, 72, 0.32);
+  border-radius: 9px;
+  backdrop-filter: blur(8px);
+  font-size: 26px;
   font-weight: 400;
   line-height: 1;
 }
 .category-route-card > div {
+  margin-top: auto;
   display: flex;
   align-items: baseline;
   gap: 8px;
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 .category-route-card > div strong {
   font-size: 30px;
@@ -3279,7 +3315,9 @@ svg {
     grid-template-columns: 1fr;
   }
   .category-route-card {
-    display: none;
+    width: min(100%, 520px);
+    min-height: 320px;
+    transform: none;
   }
   .brand small,
   .header-sell,
@@ -3403,6 +3441,17 @@ svg {
   }
   .category-route-copy h1 {
     font-size: 45px;
+  }
+  .category-route-hero-inner {
+    gap: 32px;
+  }
+  .category-route-card {
+    min-height: 270px;
+    padding: 22px;
+  }
+  .category-route-glyph {
+    top: 17px;
+    right: 17px;
   }
   .create-listing-page {
     width: calc(100% - 24px);

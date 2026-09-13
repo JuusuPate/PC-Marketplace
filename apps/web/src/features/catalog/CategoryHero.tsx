@@ -42,9 +42,22 @@ export function CategoryHero({ page, copy, listingCount, onHome, onSell }: Categ
           </button>
         </div>
 
-        <div className="category-route-card" aria-hidden="true">
+        <div className="category-route-card">
+          <img
+            className={`category-route-card-image category-route-card-image--${page.id}`}
+            src={page.image}
+            alt=""
+            width="1024"
+            height="1024"
+            loading="eager"
+            decoding="async"
+            fetchPriority="high"
+          />
+          <span className="category-route-card-shade" aria-hidden="true" />
           <span className="category-route-card-status">{copy.marketplace}</span>
-          <strong className="category-route-glyph">{page.glyph}</strong>
+          <strong className="category-route-glyph" aria-hidden="true">
+            {page.glyph}
+          </strong>
           <div>
             <strong>{listingCount}</strong>
             <span>{copy.listings}</span>

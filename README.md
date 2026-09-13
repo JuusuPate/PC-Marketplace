@@ -71,7 +71,8 @@ PC-Marketplace/
 └── .github/workflows/        # Automaattinen build-tarkistus
 ```
 
-Lisätiedot: [arkkitehtuuri](docs/architecture.md) ja [MVP-rajaus](docs/mvp-scope.md).
+Lisätiedot: [arkkitehtuuri](docs/architecture.md), [MVP-rajaus](docs/mvp-scope.md) ja
+[kategoriakuvien lähteet](docs/image-credits.md).
 
 ## Tärkeä tuotantoraja
 
