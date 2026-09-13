@@ -4,6 +4,8 @@
 
 Suomi on ensimmäinen markkina, ei järjestelmän kiinteä oletus. Sama domain-malli, komponenttitietokanta ja kaupankäyntiketju palvelevat kaikkia markkinoita.
 
+Nykyinen julkaisurajaus on kuitenkin yksiselitteisesti Suomi: julkisessa käyttöliittymässä on vain `FI`, `EUR` ja toimitus Suomessa. Muut markkinat ovat mallinnettuja laajennuskohteita, eivät avattuja markkinoita.
+
 ```text
 Web / myöhemmin mobiili ja admin
           │
@@ -63,3 +65,5 @@ Web-sovellus valitsee käynnistyksessä toimintatilan ympäristömuuttujien peru
 - `supabase`: autentikointi ja käyttäjän julkaisemien ilmoitusten tallennus käyttävät Supabasea; muut virrat säilyvät vielä demona
 
 Selain käyttää vain Supabasen julkista publishable key -avainta. Tietokanta luo profiilin Auth-käyttäjälle triggerillä. RLS-käytännöt ja erikseen rajatut tauluoikeudet suojaavat selaimelle näkyvän datan, eikä selain saa suoraa kirjoitusoikeutta profiili- tai ilmoitustauluihin. Ilmoitus ja toimitusmaat luodaan yhdessä tarkastetussa tietokantafunktiossa, jolloin osittain tallentunutta ilmoitusta ei synny.
+
+Migraatio `0003_finland_only_launch.sql` asettaa muut markkinat pois käytöstä ja estää tietokantatasolla muiden maiden profiilit, julkaistut ilmoitukset sekä toimitusmaat. Kun seuraava maa avataan, selainkonfiguraatio ja tämä tietokantaraja päivitetään samassa versioidussa muutoksessa.

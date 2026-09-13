@@ -209,6 +209,13 @@ svg {
   width: 26px;
   color: transparent;
 }
+.market-select--fixed {
+  min-width: 70px;
+  justify-content: center;
+}
+.market-select--fixed strong {
+  font-size: 14px;
+}
 .language-select select {
   width: 52px;
 }
@@ -1469,6 +1476,36 @@ svg {
   top: 42%;
   background-color: var(--lime);
 }
+.cta-map--finland {
+  display: grid;
+  place-items: center;
+}
+.cta-map--finland::before,
+.cta-map--finland::after {
+  content: "";
+  position: absolute;
+  border: 1px solid rgba(255, 255, 255, 0.36);
+  border-radius: 50%;
+}
+.cta-map--finland::before {
+  width: 215px;
+  height: 215px;
+}
+.cta-map--finland::after {
+  width: 290px;
+  height: 290px;
+  border-style: dashed;
+  opacity: 0.55;
+}
+.cta-map--finland .map-fi {
+  width: 112px;
+  height: 112px;
+  position: relative;
+  z-index: 2;
+  left: auto;
+  top: auto;
+  font-size: 28px;
+}
 .map-se {
   left: 57%;
   top: 16%;
@@ -2098,6 +2135,15 @@ svg {
 .shipping-field input {
   width: auto;
   margin: 0;
+}
+.shipping-scope-fixed span {
+  padding: 11px 14px;
+  color: #3d530a;
+  background: #efffc9;
+  border: 1px solid #bde448;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 850;
 }
 
 .account-wrap {

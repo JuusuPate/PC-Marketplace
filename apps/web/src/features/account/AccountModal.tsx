@@ -1,4 +1,4 @@
-import { MARKETS } from "../../config/markets";
+import { MARKETS, PUBLIC_MARKETS } from "../../config/markets";
 import type { Messages } from "../../i18n/messages/fi";
 import { formatMoney } from "../../lib/money";
 import type { DemoOrder, DemoUser, Listing, Locale } from "../../types";
@@ -95,18 +95,21 @@ export function AccountModal({ copy, locale, user, orders, ownListings, onClose,
               <span>ADMIN PREVIEW</span>
             </div>
             <div className="market-status-grid">
-              {Object.values(MARKETS).map((market) => (
-                <article key={market.countryCode}>
-                  <span>{market.flag}</span>
-                  <div>
-                    <strong>{market.name}</strong>
-                    <small>
-                      {market.currency} · {market.feePercent}% fee
-                    </small>
-                  </div>
-                  <span className={`status-chip status--${market.status}`}>{copy[market.status]}</span>
-                </article>
-              ))}
+              {PUBLIC_MARKETS.map((countryCode) => {
+                const market = MARKETS[countryCode];
+                return (
+                  <article key={market.countryCode}>
+                    <span>{market.flag}</span>
+                    <div>
+                      <strong>{market.name}</strong>
+                      <small>
+                        {market.currency} · {market.feePercent}% fee
+                      </small>
+                    </div>
+                    <span className={`status-chip status--${market.status}`}>{copy[market.status]}</span>
+                  </article>
+                );
+              })}
             </div>
           </section>
         </div>

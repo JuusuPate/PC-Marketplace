@@ -57,3 +57,8 @@ export const COUNTRY_FLAGS: Record<CountryCode, string> = {
   DK: "🇩🇰",
   NO: "🇳🇴",
 };
+
+// The domain model remains Nordic-ready, while the public launch is deliberately Finland-only.
+export const LAUNCH_MARKET = "FI" as const satisfies CountryCode;
+export const PUBLIC_MARKETS: CountryCode[] = [LAUNCH_MARKET];
+export const PUBLIC_LOCALES: Locale[] = ["fi", "sv", "en"];

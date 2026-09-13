@@ -1,14 +1,9 @@
 import type { User } from "@supabase/supabase-js";
-import { MARKETS } from "../config/markets";
+import { LAUNCH_MARKET, MARKETS } from "../config/markets";
 import type { CountryCode, DemoUser, Locale } from "../types";
 import { backendMode, supabase } from "./supabase";
 
-const countries: CountryCode[] = ["FI", "SE", "DK", "NO"];
 const locales: Locale[] = ["fi", "sv", "da", "nb", "en"];
-
-function isCountryCode(value: unknown): value is CountryCode {
-  return countries.includes(value as CountryCode);
-}
 
 function isLocale(value: unknown): value is Locale {
   return locales.includes(value as Locale);
@@ -16,7 +11,7 @@ function isLocale(value: unknown): value is Locale {
 
 function mapUser(user: User): DemoUser {
   const metadata = user.user_metadata;
-  const countryCode = isCountryCode(metadata.country_code) ? metadata.country_code : "FI";
+  const countryCode = LAUNCH_MARKET;
   const locale = isLocale(metadata.locale) ? metadata.locale : MARKETS[countryCode].defaultLocale;
   const email = user.email ?? "";
 

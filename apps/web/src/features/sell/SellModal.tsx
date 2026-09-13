@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { COUNTRY_FLAGS, MARKETS } from "../../config/markets";
+import { COUNTRY_FLAGS, MARKETS, PUBLIC_MARKETS } from "../../config/markets";
 import type { Messages } from "../../i18n/messages/fi";
 import type { Category, Condition, CountryCode, DemoUser, Listing, Locale } from "../../types";
 import { Icon } from "../../components/Icon";
@@ -23,15 +23,10 @@ export function SellModal({ copy, locale, market, user, onClose, onPublish }: Se
   const [condition, setCondition] = useState<Condition>("good");
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
-  const [shipsTo, setShipsTo] = useState<CountryCode[]>([market]);
+  const shipsTo: CountryCode[] = [market];
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const runtimeCopy = getRuntimeCopy(locale);
-
-  const toggleCountry = (country: CountryCode) =>
-    setShipsTo((current) =>
-      current.includes(country) ? current.filter((item) => item !== country) : [...current, country],
-    );
 
   const submit = async (event: FormEvent) => {
     event.preventDefault();
@@ -146,12 +141,11 @@ export function SellModal({ copy, locale, market, user, onClose, onPublish }: Se
           </label>
           <fieldset className="field-wide shipping-field">
             <legend>{copy.shipsTo}</legend>
-            <div>
-              {(Object.keys(MARKETS) as CountryCode[]).map((country) => (
-                <label key={country} className={shipsTo.includes(country) ? "selected" : ""}>
-                  <input type="checkbox" checked={shipsTo.includes(country)} onChange={() => toggleCountry(country)} />
-                  {COUNTRY_FLAGS[country]} {country}
-                </label>
+            <div className="shipping-scope-fixed">
+              {PUBLIC_MARKETS.map((country) => (
+                <span key={country}>
+                  {COUNTRY_FLAGS[country]} {country} · {copy.shippingArea}
+                </span>
               ))}
             </div>
           </fieldset>

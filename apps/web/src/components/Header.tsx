@@ -1,4 +1,4 @@
-import { COUNTRY_FLAGS, LOCALE_LABELS, MARKETS } from "../config/markets";
+import { COUNTRY_FLAGS, LOCALE_LABELS, MARKETS, PUBLIC_LOCALES } from "../config/markets";
 import type { Messages } from "../i18n/messages/fi";
 import type { CountryCode, DemoUser, Locale } from "../types";
 import { Icon } from "./Icon";
@@ -9,13 +9,12 @@ interface HeaderProps {
   market: CountryCode;
   user: DemoUser | null;
   onLocale: (locale: Locale) => void;
-  onMarket: (market: CountryCode) => void;
   onAuth: () => void;
   onSell: () => void;
   onAccount: () => void;
 }
 
-export function Header({ copy, locale, market, user, onLocale, onMarket, onAuth, onSell, onAccount }: HeaderProps) {
+export function Header({ copy, locale, market, user, onLocale, onAuth, onSell, onAccount }: HeaderProps) {
   return (
     <header className="site-header">
       <a className="brand" href="#top" aria-label="PC Market etusivu">
@@ -35,23 +34,16 @@ export function Header({ copy, locale, market, user, onLocale, onMarket, onAuth,
       </nav>
 
       <div className="header-actions">
-        <label className="compact-select market-select" title="Market">
+        <div className="compact-select market-select market-select--fixed" aria-label="Market: Finland">
           <span>{COUNTRY_FLAGS[market]}</span>
-          <select value={market} onChange={(event) => onMarket(event.target.value as CountryCode)} aria-label="Market">
-            {Object.values(MARKETS).map((item) => (
-              <option key={item.countryCode} value={item.countryCode}>
-                {item.flag} {item.name}
-              </option>
-            ))}
-          </select>
-          <Icon name="chevron" />
-        </label>
+          <strong>{MARKETS[market].countryCode}</strong>
+        </div>
         <label className="compact-select language-select" title="Language">
           <Icon name="globe" />
           <select value={locale} onChange={(event) => onLocale(event.target.value as Locale)} aria-label="Language">
-            {Object.entries(LOCALE_LABELS).map(([code, label]) => (
+            {PUBLIC_LOCALES.map((code) => (
               <option key={code} value={code}>
-                {label}
+                {LOCALE_LABELS[code]}
               </option>
             ))}
           </select>

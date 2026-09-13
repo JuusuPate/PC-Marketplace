@@ -6,7 +6,9 @@
 2. Käyttäjä näkee standardoidun tuotetiedon, myyjän historian, toimitusmaat ja turvasignaalit.
 3. Käyttäjä kirjautuu demotilille tai Supabase Authilla, tallentaa suosikin tai julkaisee ilmoituksen.
 4. Käyttäjä tekee demo-oston ja näkee sen omalla tilillään.
-5. Admin-esikatselu näyttää markkinan tilan, valuutan ja provision.
+5. Admin-esikatselu näyttää Suomen markkinan tilan, valuutan ja provision.
+
+Julkinen MVP on rajattu Suomeen (`FI`, `EUR`, kotimaan toimitus). Muiden Pohjoismaiden rakenteet ovat valmiina myöhempää, erikseen avattavaa laajennusta varten.
 
 ## Rakenteilla ensimmäiseen oikeaan betaan
 

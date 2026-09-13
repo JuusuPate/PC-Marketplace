@@ -4,8 +4,9 @@ Finland-first, Nordic-ready -demo käytettyjen PC-komponenttien ja pelikoneiden 
 
 ## Mitä demossa toimii
 
-- suomen-, ruotsin-, tanskan-, norjan- ja englanninkielinen käyttöliittymä
-- Suomi-, Ruotsi-, Tanska- ja Norja-markkinoiden asetukset ja valuutat
+- suomen-, ruotsin- ja englanninkielinen käyttöliittymä Suomen käyttäjille
+- vain Suomen markkina, eurohinnoittelu ja toimitukset Suomessa
+- Ruotsin, Tanskan ja Norjan asetukset ovat rakenteessa valmiina mutta pois käytöstä
 - ilmoitusten haku, kategoriat, lajittelu ja markkinakohtainen toimitussuodatus
 - tuotesivu, myyjän maine, testitiedot, sarjanumeron vahvistus ja ostajansuoja
 - paikallinen demo-kirjautuminen tai valinnainen Supabase Auth sähköpostivahvistuksella
@@ -35,13 +36,17 @@ npm run build
 ## Supabase-kirjautumisen ja tietokannan käyttöönotto
 
 1. Luo Supabase-projekti.
-2. Suorita SQL-editorissa tiedostot `supabase/migrations/0001_initial.sql` ja `0002_auth_and_listing_persistence.sql` tässä järjestyksessä. Vaihtoehtoisesti linkitä paikallinen Supabase CLI -projekti ja suorita `supabase db push`.
+2. Suorita SQL-editorissa `supabase/migrations`-hakemiston migraatiot numerojärjestyksessä (`0001`, `0002`, `0003`). Vaihtoehtoisesti linkitä paikallinen Supabase CLI -projekti ja suorita `supabase db push`.
 3. Kopioi `apps/web/.env.example` tiedostoksi `apps/web/.env.local`.
 4. Lisää ympäristötiedostoon projektin URL ja publishable key. Älä koskaan lisää selaimeen service role- tai secret key -avainta.
 5. Lisää Supabasen Authentication → URL Configuration -asetuksiin kehityksessä `http://localhost:4173` ja tuotannossa palvelun HTTPS-osoite sekä sallitut redirect-osoitteet.
 6. Käynnistä kehityspalvelin uudelleen komennolla `npm run dev`.
 
 Kun molemmat `VITE_SUPABASE_*`-arvot löytyvät, yläpalkissa näkyy `SUPABASE BETA`. Muussa tapauksessa sovellus käyttää automaattisesti paikallista demotilaa.
+
+## Julkaisumarkkina
+
+Julkinen beta toimii vain Suomessa: käyttäjämaa ja ilmoitusmarkkina ovat `FI`, valuutta on `EUR` ja toimitusmaa on `FI`. Selain näyttää kieliksi suomen, ruotsin ja englannin. Pohjoismaiset maa-, valuutta- ja lokalisointityypit säilyvät lähdekoodissa myöhempää laajentumista varten, mutta niitä ei voi ottaa käyttöön pelkällä käyttöliittymämuutoksella — myös tietokantamigraation turvarajat on silloin päivitettävä hallitusti.
 
 ## Rakenne
 

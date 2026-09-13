@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Header } from "../components/Header";
 import { Icon } from "../components/Icon";
 import { ListingCard } from "../components/ListingCard";
-import { MARKETS } from "../config/markets";
+import { LAUNCH_MARKET, MARKETS } from "../config/markets";
 import { DEMO_LISTINGS } from "../data/demo-listings";
 import { AccountModal } from "../features/account/AccountModal";
 import { AuthModal } from "../features/auth/AuthModal";
@@ -16,7 +16,7 @@ import { listingService } from "../lib/listing-service";
 import { formatMoney } from "../lib/money";
 import { getRuntimeCopy } from "../lib/runtime-copy";
 import { backendMode } from "../lib/supabase";
-import type { Category, CountryCode, DemoOrder, DemoUser, Listing, Locale } from "../types";
+import type { Category, DemoOrder, DemoUser, Listing, Locale } from "../types";
 
 type SortOption = "newest" | "priceLow" | "bestDeals";
 
@@ -31,7 +31,7 @@ const categories: Array<{ key: "all" | Category; glyph: string }> = [
 
 export function App() {
   const [locale, setLocale] = useState<Locale>("fi");
-  const [market, setMarket] = useState<CountryCode>("FI");
+  const market = LAUNCH_MARKET;
   const [user, setUser] = useState<DemoUser | null>(() => (backendMode === "demo" ? demoStorage.getSession() : null));
   const [customListings, setCustomListings] = useState<Listing[]>(() =>
     backendMode === "demo" ? demoStorage.getListings() : [],
@@ -52,7 +52,18 @@ export function App() {
 
   const copy = getMessages(locale);
   const runtimeCopy = getRuntimeCopy(locale);
-  const listings = useMemo(() => [...customListings, ...DEMO_LISTINGS], [customListings]);
+  const listings = useMemo(
+    () =>
+      [...customListings, ...DEMO_LISTINGS]
+        .filter(
+          (listing) =>
+            listing.seller.countryCode === LAUNCH_MARKET &&
+            listing.currency === MARKETS[LAUNCH_MARKET].currency &&
+            listing.shipsTo.includes(LAUNCH_MARKET),
+        )
+        .map((listing) => ({ ...listing, shipsTo: [LAUNCH_MARKET] })),
+    [customListings],
+  );
 
   useEffect(() => authService.subscribe(setUser), []);
 
@@ -96,11 +107,6 @@ export function App() {
   const showToast = (message: string) => {
     setToast(message);
     window.setTimeout(() => setToast(null), 3200);
-  };
-
-  const updateMarket = (nextMarket: CountryCode) => {
-    setMarket(nextMarket);
-    setLocale(MARKETS[nextMarket].defaultLocale);
   };
 
   const completeAuth = (nextUser: DemoUser) => {
@@ -187,7 +193,6 @@ export function App() {
         market={market}
         user={user}
         onLocale={setLocale}
-        onMarket={updateMarket}
         onAuth={() => setAuthOpen(true)}
         onSell={requireSellAuth}
         onAccount={() => setAccountOpen(true)}
@@ -229,8 +234,8 @@ export function App() {
                 <span>inspection</span>
               </div>
               <div>
-                <strong>4</strong>
-                <span>Nordic markets</span>
+                <strong>1</strong>
+                <span>{copy.launchMarket}</span>
               </div>
             </div>
           </div>
@@ -265,7 +270,7 @@ export function App() {
                 <span>
                   <Icon name="shield" /> {copy.buyerProtection}
                 </span>
-                <span>🇫🇮 → 🇸🇪</span>
+                <span>🇫🇮 FI</span>
               </div>
             </div>
             <div className="hero-card hero-card--front">
@@ -297,8 +302,8 @@ export function App() {
           <div>
             <Icon name="truck" />
             <span>
-              <strong>{copy.nordicShipping}</strong>
-              <small>FI · SE · DK · NO</small>
+              <strong>{copy.marketShipping}</strong>
+              <small>{copy.shippingArea}</small>
             </span>
           </div>
         </section>
@@ -441,7 +446,7 @@ export function App() {
 
         <section className="cta-section section-shell">
           <div>
-            <span className="section-index section-index--light">NORDIC BETA / 2026</span>
+            <span className="section-index section-index--light">{copy.launchBadge}</span>
             <h2>{copy.ctaTitle}</h2>
             <p>{copy.ctaBody}</p>
             <button
@@ -453,20 +458,9 @@ export function App() {
               <Icon name="arrow" />
             </button>
           </div>
-          <div className="cta-map">
+          <div className="cta-map cta-map--finland" aria-label={copy.shippingArea}>
             <span className="map-country map-fi">
               FI<small>LIVE</small>
-            </span>
-            <span className="map-line line-one" />
-            <span className="map-country map-se">
-              SE<small>BETA</small>
-            </span>
-            <span className="map-line line-two" />
-            <span className="map-country map-dk">
-              DK<small>SOON</small>
-            </span>
-            <span className="map-country map-no">
-              NO<small>SOON</small>
             </span>
           </div>
         </section>
