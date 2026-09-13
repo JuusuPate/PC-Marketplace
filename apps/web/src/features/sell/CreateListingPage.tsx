@@ -96,6 +96,7 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
   const [busy, setBusy] = useState(false);
   const runtimeCopy = getRuntimeCopy(locale);
   const formCopy = specificationCopy[locale];
+  const photosRequired = backendMode !== "demo";
   const guidedFields = getGuidedSpecificationFields(category, locale);
   const technicalSectionTitle =
     category === "pc" ? formCopy.pcTitle : category === "other" ? formCopy.optionalTitle : formCopy.componentTitle;
@@ -154,7 +155,7 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
       setError(copy.formIncomplete);
       return;
     }
-    if (images.length === 0) {
+    if (photosRequired && images.length === 0) {
       setError(formCopy.photoRequired);
       return;
     }
@@ -447,7 +448,12 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
               <span className="create-listing-section__number">04</span>
               <div>
                 <h2 id="photos-title">
-                  <FieldLabel label={copy.photos} required requiredText={formCopy.required} />
+                  <FieldLabel
+                    label={copy.photos}
+                    required={photosRequired}
+                    requiredText={formCopy.required}
+                    optionalText={photosRequired ? undefined : formCopy.optional}
+                  />
                 </h2>
                 <p>{copy.photoHelp}</p>
               </div>
