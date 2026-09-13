@@ -1,3 +1,4 @@
+import type { MouseEvent } from "react";
 import { COUNTRY_FLAGS } from "../config/markets";
 import type { Messages } from "../i18n/messages/fi";
 import { formatMoney } from "../lib/money";
@@ -10,22 +11,30 @@ interface ListingCardProps {
   locale: Locale;
   copy: Messages;
   favourite: boolean;
+  href: string;
   onFavourite: () => void;
   onOpen: () => void;
 }
 
-export function ListingCard({ listing, locale, copy, favourite, onFavourite, onOpen }: ListingCardProps) {
+export function ListingCard({ listing, locale, copy, favourite, href, onFavourite, onOpen }: ListingCardProps) {
   const conditionLabel = listing.condition === "fair" ? copy.conditionFair : copy[listing.condition];
+  const handleOpen = (event: MouseEvent<HTMLAnchorElement>) => {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    onOpen();
+  };
+
   return (
     <article className="listing-card">
-      <div
-        className="card-media"
-        onClick={onOpen}
-        role="button"
-        tabIndex={0}
-        onKeyDown={(event) => event.key === "Enter" && onOpen()}
-      >
-        <ListingVisual listing={listing} />
+      <div className="card-media">
+        <a
+          className="card-media-link"
+          href={href}
+          aria-label={`${copy.viewItem}: ${listing.title}`}
+          onClick={handleOpen}
+        >
+          <ListingVisual listing={listing} />
+        </a>
         <span className={`price-signal signal--${listing.priceSignal}`}>{copy[listing.priceSignal]}</span>
         <button
           className={`favourite-button ${favourite ? "is-active" : ""}`}
@@ -46,9 +55,9 @@ export function ListingCard({ listing, locale, copy, favourite, onFavourite, onO
           <span>{listing.city}</span>
           <span className="card-time">{listing.createdLabel}</span>
         </div>
-        <button className="card-title" type="button" onClick={onOpen}>
+        <a className="card-title" href={href} onClick={handleOpen}>
           {listing.title}
-        </button>
+        </a>
         <p>{listing.subtitle}</p>
         <div className="card-price-row">
           <strong>{formatMoney(listing.priceMinor, listing.currency, locale)}</strong>

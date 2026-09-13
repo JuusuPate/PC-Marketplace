@@ -4,6 +4,8 @@ import { MAX_LISTING_IMAGES, type PreparedListingImage } from "./listing-images"
 import { backendMode, supabase } from "./supabase";
 
 const LISTING_IMAGES_BUCKET = "listing-images";
+const LISTING_SELECT =
+  "id,title,description,category,condition,price_minor,currency,city,specs,created_at,seller:profiles!listings_seller_id_fkey(id,display_name,country_code,joined_at,reviews:reviews!reviews_subject_id_fkey(rating)),destinations:listing_shipping_countries(country_code),images:listing_images(id,storage_path,alt_text,width,height,sort_order)";
 
 interface DbListingImage {
   id: string;
@@ -133,15 +135,27 @@ export const listingService = {
 
     const { data, error } = await supabase
       .from("listings")
-      .select(
-        "id,title,description,category,condition,price_minor,currency,city,specs,created_at,seller:profiles!listings_seller_id_fkey(id,display_name,country_code,joined_at,reviews:reviews!reviews_subject_id_fkey(rating)),destinations:listing_shipping_countries(country_code),images:listing_images(id,storage_path,alt_text,width,height,sort_order)",
-      )
+      .select(LISTING_SELECT)
       .eq("status", "active")
       .order("published_at", { ascending: false })
       .limit(60);
 
     if (error) throw error;
     return ((data ?? []) as unknown as DbListing[]).map(mapListing);
+  },
+
+  async getActiveById(id: string): Promise<Listing | null> {
+    if (!supabase) return demoStorage.getListings().find((listing) => listing.id === id) ?? null;
+
+    const { data, error } = await supabase
+      .from("listings")
+      .select(LISTING_SELECT)
+      .eq("status", "active")
+      .eq("id", id)
+      .maybeSingle();
+
+    if (error) throw error;
+    return data ? mapListing(data as unknown as DbListing) : null;
   },
 
   async create(

@@ -4,13 +4,14 @@ import { Header } from "../components/Header";
 import { Icon } from "../components/Icon";
 import { ListingCard } from "../components/ListingCard";
 import { getCatalogPage } from "../config/catalog";
+import { getListingId, getListingPath } from "../config/listing-routes";
 import { LAUNCH_MARKET, MARKETS } from "../config/markets";
 import { DEMO_LISTINGS } from "../data/demo-listings";
 import { AccountModal } from "../features/account/AccountModal";
 import { AuthModal } from "../features/auth/AuthModal";
 import { CategoryHero } from "../features/catalog/CategoryHero";
 import { CheckoutModal } from "../features/checkout/CheckoutModal";
-import { ListingDrawer } from "../features/listings/ListingDrawer";
+import { ListingDetailPage } from "../features/listings/ListingDetailPage";
 import { CreateListingPage } from "../features/sell/CreateListingPage";
 import { getMessages } from "../i18n";
 import { authService } from "../lib/auth-service";
@@ -30,6 +31,14 @@ function isCreateListingPath(pathname: string) {
   return (pathname.replace(/\/+$/, "") || "/") === CREATE_LISTING_PATH;
 }
 
+function isLaunchListing(listing: Listing) {
+  return (
+    listing.seller.countryCode === LAUNCH_MARKET &&
+    listing.currency === MARKETS[LAUNCH_MARKET].currency &&
+    listing.shipsTo.includes(LAUNCH_MARKET)
+  );
+}
+
 const categories: Array<{ key: "all" | Category; glyph: string }> = [
   { key: "all", glyph: "⌁" },
   { key: "gpu", glyph: "▰" },
@@ -45,6 +54,9 @@ export function App() {
   const market = LAUNCH_MARKET;
   const [catalogPage, setCatalogPage] = useState(() => getCatalogPage(window.location.pathname));
   const [createListingPage, setCreateListingPage] = useState(() => isCreateListingPath(window.location.pathname));
+  const [listingPageId, setListingPageId] = useState(() => getListingId(window.location.pathname));
+  const [routeListing, setRouteListing] = useState<Listing | null>(null);
+  const [listingRouteLoading, setListingRouteLoading] = useState(() => Boolean(getListingId(window.location.pathname)));
   const [user, setUser] = useState<DemoUser | null>(() => (backendMode === "demo" ? demoStorage.getSession() : null));
   const [customListings, setCustomListings] = useState<Listing[]>(() =>
     backendMode === "demo" ? demoStorage.getListings() : [],
@@ -54,7 +66,6 @@ export function App() {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<"all" | Category>("all");
   const [sort, setSort] = useState<SortOption>("newest");
-  const [selectedListing, setSelectedListing] = useState<Listing | null>(null);
   const [checkoutListing, setCheckoutListing] = useState<Listing | null>(null);
   const [authOpen, setAuthOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
@@ -67,15 +78,18 @@ export function App() {
   const listings = useMemo(
     () =>
       [...customListings, ...DEMO_LISTINGS]
-        .filter(
-          (listing) =>
-            listing.seller.countryCode === LAUNCH_MARKET &&
-            listing.currency === MARKETS[LAUNCH_MARKET].currency &&
-            listing.shipsTo.includes(LAUNCH_MARKET),
-        )
+        .filter(isLaunchListing)
         .map((listing) => ({ ...listing, shipsTo: [LAUNCH_MARKET] })),
     [customListings],
   );
+
+  const activeListing = useMemo(() => {
+    if (!listingPageId) return null;
+    return (
+      listings.find((listing) => listing.id === listingPageId) ??
+      (routeListing?.id === listingPageId ? routeListing : null)
+    );
+  }, [listingPageId, listings, routeListing]);
 
   const catalogListings = useMemo(() => {
     if (!catalogPage?.categories) return listings;
@@ -94,8 +108,11 @@ export function App() {
 
   useEffect(() => {
     const syncRoute = () => {
+      const nextListingId = getListingId(window.location.pathname);
       setCatalogPage(getCatalogPage(window.location.pathname));
       setCreateListingPage(isCreateListingPath(window.location.pathname));
+      setListingPageId(nextListingId);
+      setListingRouteLoading(Boolean(nextListingId));
       setCategory("all");
       setQuery("");
     };
@@ -105,13 +122,46 @@ export function App() {
   }, []);
 
   useEffect(() => {
+    if (!listingPageId || listings.some((listing) => listing.id === listingPageId)) {
+      setRouteListing(null);
+      setListingRouteLoading(false);
+      return;
+    }
+
+    let isCurrent = true;
+    setRouteListing(null);
+    setListingRouteLoading(true);
+
+    listingService
+      .getActiveById(listingPageId)
+      .then((listing) => {
+        if (!isCurrent) return;
+        setRouteListing(listing && isLaunchListing(listing) ? { ...listing, shipsTo: [LAUNCH_MARKET] } : null);
+      })
+      .catch(() => {
+        if (isCurrent) showToast(getRuntimeCopy(locale).listingError);
+      })
+      .finally(() => {
+        if (isCurrent) setListingRouteLoading(false);
+      });
+
+    return () => {
+      isCurrent = false;
+    };
+  }, [listingPageId, listings]);
+
+  useEffect(() => {
     document.documentElement.lang = locale;
-    document.title = createListingPage
-      ? `${copy.sellTitle} | PC Market`
-      : catalogPage
-        ? `${copy[catalogPage.labelKey]} | PC Market`
-        : copy.siteTitle;
-  }, [catalogPage, copy, createListingPage, locale]);
+    document.title = activeListing
+      ? `${activeListing.title} | PC Market`
+      : listingPageId
+        ? `${copy.noResults} | PC Market`
+        : createListingPage
+          ? `${copy.sellTitle} | PC Market`
+          : catalogPage
+            ? `${copy[catalogPage.labelKey]} | PC Market`
+            : copy.siteTitle;
+  }, [activeListing, catalogPage, copy, createListingPage, listingPageId, locale]);
 
   useEffect(() => {
     if (!createListingPage) return;
@@ -168,8 +218,11 @@ export function App() {
     }
 
     const nextPage = getCatalogPage(path);
+    const nextListingId = getListingId(path);
     setCatalogPage(nextPage);
     setCreateListingPage(isCreateListingPath(path));
+    setListingPageId(nextListingId);
+    setListingRouteLoading(Boolean(nextListingId && !listings.some((listing) => listing.id === nextListingId)));
     setCategory("all");
     setQuery("");
 
@@ -180,6 +233,7 @@ export function App() {
       }
       window.scrollTo({ top: 0, behavior: "smooth" });
       if (nextPage) document.querySelector<HTMLElement>("#category-page-title")?.focus({ preventScroll: true });
+      if (nextListingId) document.querySelector<HTMLElement>("#listing-page-title")?.focus({ preventScroll: true });
     }, 0);
   };
 
@@ -193,7 +247,6 @@ export function App() {
     if (backendMode === "demo") demoStorage.setSession(nextUser);
     setAuthOpen(false);
     if (pendingCheckout) {
-      setSelectedListing(null);
       setCheckoutListing(pendingCheckout);
       setPendingCheckout(null);
     } else if (pendingSell) {
@@ -213,7 +266,6 @@ export function App() {
   const beginCheckout = (listing: Listing) => {
     if (user?.id === listing.seller.id) return;
     if (user) {
-      setSelectedListing(null);
       setCheckoutListing(listing);
     } else {
       setPendingCheckout(listing);
@@ -239,8 +291,7 @@ export function App() {
     setCustomListings(nextListings);
     setCategory("all");
     showToast(copy.published);
-    navigateTo("/kategoriat/kaikki", "#marketplace");
-    setSelectedListing(savedListing);
+    navigateTo(getListingPath(savedListing.id));
   };
 
   const completeOrder = (order: DemoOrder) => {
@@ -302,7 +353,41 @@ export function App() {
           />
         )}
 
-        {(!createListingPage || !user) &&
+        {listingPageId &&
+          (activeListing ? (
+            <ListingDetailPage
+              listing={activeListing}
+              copy={copy}
+              locale={locale}
+              favourite={favourites.includes(activeListing.id)}
+              canBuy={!user || user.id !== activeListing.seller.id}
+              onBack={(event) => {
+                event.preventDefault();
+                navigateTo("/kategoriat/kaikki");
+              }}
+              onFavourite={() => toggleFavourite(activeListing.id)}
+              onBuy={() => beginCheckout(activeListing)}
+            />
+          ) : (
+            <section className="listing-page-state section-shell" aria-busy={listingRouteLoading}>
+              <div aria-hidden="true">{listingRouteLoading ? "…" : "⌁"}</div>
+              <h1 id="listing-page-title" tabIndex={-1}>
+                {listingRouteLoading ? copy.marketplace : copy.noResults}
+              </h1>
+              {!listingRouteLoading && (
+                <button
+                  className="button button--outline"
+                  type="button"
+                  onClick={() => navigateTo("/kategoriat/kaikki")}
+                >
+                  {copy.allProducts}
+                </button>
+              )}
+            </section>
+          ))}
+
+        {!listingPageId &&
+          (!createListingPage || !user) &&
           (catalogPage ? (
             <CategoryHero
               page={catalogPage}
@@ -419,7 +504,7 @@ export function App() {
             </>
           ))}
 
-        {(!createListingPage || !user) && (
+        {!listingPageId && (!createListingPage || !user) && (
           <section
             className={`marketplace-section section-shell${catalogPage ? " marketplace-section--category" : ""}`}
             id="marketplace"
@@ -476,8 +561,9 @@ export function App() {
                     locale={locale}
                     copy={copy}
                     favourite={favourites.includes(listing.id)}
+                    href={getListingPath(listing.id)}
                     onFavourite={() => toggleFavourite(listing.id)}
-                    onOpen={() => setSelectedListing(listing)}
+                    onOpen={() => navigateTo(getListingPath(listing.id))}
                   />
                 ))}
               </div>
@@ -500,7 +586,7 @@ export function App() {
           </section>
         )}
 
-        {(!createListingPage || !user) && !catalogPage && (
+        {!listingPageId && (!createListingPage || !user) && !catalogPage && (
           <>
             <section className="protection-section" id="safety">
               <div className="section-shell protection-inner">
@@ -612,18 +698,6 @@ export function App() {
         <span>© 2026 PC Market Demo</span>
       </footer>
 
-      {selectedListing && (
-        <ListingDrawer
-          listing={selectedListing}
-          copy={copy}
-          locale={locale}
-          favourite={favourites.includes(selectedListing.id)}
-          canBuy={!user || user.id !== selectedListing.seller.id}
-          onFavourite={() => toggleFavourite(selectedListing.id)}
-          onBuy={() => beginCheckout(selectedListing)}
-          onClose={() => setSelectedListing(null)}
-        />
-      )}
       {authOpen && (
         <AuthModal
           copy={copy}

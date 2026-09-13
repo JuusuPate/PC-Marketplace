@@ -1,12 +1,12 @@
 :root {
   color: #111b1b;
-  background: #f4f4ef;
+  background: #fff;
   font-family: Inter, Aptos, "Segoe UI", sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   --ink: #0a1515;
   --ink-soft: #475452;
-  --paper: #f4f4ef;
+  --paper: #fff;
   --paper-2: #e8e9e2;
   --white: #fffefa;
   --lime: #c8ff48;
@@ -102,7 +102,7 @@ svg {
   position: sticky;
   top: 0;
   z-index: 40;
-  background: rgba(244, 244, 239, 0.88);
+  background: rgba(255, 255, 255, 0.92);
   border-bottom: 1px solid var(--line);
   backdrop-filter: blur(18px);
 }
@@ -371,9 +371,7 @@ svg {
 
 .category-route-hero {
   overflow: hidden;
-  background:
-    radial-gradient(circle at 78% 30%, rgba(200, 255, 72, 0.22), transparent 23%),
-    linear-gradient(135deg, #eef0e7 0%, var(--paper) 58%);
+  background: radial-gradient(circle at 78% 30%, rgba(200, 255, 72, 0.22), transparent 23%), #fff;
   border-bottom: 1px solid var(--line);
 }
 .category-route-hero-inner {
@@ -1033,7 +1031,15 @@ svg {
 .card-media {
   padding: 9px;
   position: relative;
-  cursor: pointer;
+}
+.card-media-link {
+  display: block;
+  border-radius: 7px;
+}
+.card-media-link:focus-visible,
+.card-title:focus-visible {
+  outline: 3px solid var(--lime-dark);
+  outline-offset: 3px;
 }
 .listing-visual {
   height: 197px;
@@ -2053,6 +2059,58 @@ svg {
   color: #709600;
 }
 
+.listing-detail-page {
+  min-height: 680px;
+  padding: 42px 0 90px;
+  background: #fff;
+}
+.listing-detail-page__inner {
+  width: min(1320px, calc(100% - 80px));
+  margin-inline: auto;
+}
+.listing-detail-page__back {
+  min-height: 44px;
+  margin-bottom: 18px;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: #4d5956;
+  font-size: 14px;
+  font-weight: 800;
+}
+.listing-detail-page__back:hover {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--lime-dark);
+  text-underline-offset: 4px;
+}
+.listing-detail-page__card {
+  overflow: hidden;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: 0 24px 70px rgba(10, 21, 21, 0.1);
+}
+.listing-page-state {
+  min-height: 620px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 18px;
+  text-align: center;
+}
+.listing-page-state > div {
+  color: #89938f;
+  font-size: 64px;
+}
+.listing-page-state h1 {
+  margin: 0;
+  font-size: clamp(30px, 5vw, 52px);
+}
+.listing-page-state h1:focus,
+#listing-page-title:focus {
+  outline: none;
+}
 .detail-layout {
   display: grid;
   grid-template-columns: 1fr 0.9fr;
@@ -2122,7 +2180,7 @@ svg {
 .detail-content {
   padding: 48px 42px;
 }
-.detail-content h2 {
+.detail-content > h1 {
   margin: 13px 0 4px;
   font-size: 29px;
   line-height: 1.03;
@@ -2156,6 +2214,7 @@ svg {
   padding: 21px 0;
   border-top: 1px solid var(--line);
 }
+.detail-section h2,
 .detail-section h3 {
   margin: 0 0 14px;
   font-size: 10px;
@@ -2231,6 +2290,30 @@ svg {
 .seller-country {
   margin-left: auto;
   font-size: 22px;
+}
+.listing-detail-page__privacy {
+  margin-top: 11px;
+  padding: 14px 15px;
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  color: #40504c;
+  background: #f4f7ed;
+  border: 1px solid #dce9bd;
+  border-radius: 8px;
+}
+.listing-detail-page__privacy > svg {
+  flex: 0 0 auto;
+  color: #6c920d;
+}
+.listing-detail-page__privacy strong {
+  font-size: 12px;
+}
+.listing-detail-page__privacy p {
+  margin: 3px 0 0;
+  color: #5c6966;
+  font-size: 12px;
+  line-height: 1.5;
 }
 .detail-shipping {
   margin-top: 11px;
@@ -3189,6 +3272,7 @@ svg {
 .detail-section dl div {
   font-size: 12px;
 }
+.detail-section h2,
 .detail-section h3 {
   font-size: 13px;
 }
@@ -3401,6 +3485,18 @@ svg {
 }
 
 @media (max-width: 580px) {
+  .listing-detail-page {
+    padding-block: 24px 64px;
+  }
+  .listing-detail-page__inner {
+    width: calc(100% - 24px);
+  }
+  .listing-detail-page__back {
+    margin-bottom: 10px;
+  }
+  .listing-detail-page__card {
+    border-radius: 12px;
+  }
   .site-header .brand strong {
     font-size: 13px;
   }
@@ -3637,7 +3733,7 @@ svg {
     padding: 38px 22px 28px;
   }
   .detail-media-column {
-    padding: 40px 14px 14px;
+    padding: 14px;
   }
   .listing-visual--large {
     height: 310px;
@@ -3656,6 +3752,13 @@ svg {
   }
   .detail-actions {
     grid-template-columns: 1fr;
+  }
+  .seller-panel {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .seller-country {
+    margin-left: 0;
   }
   .sell-form {
     grid-template-columns: 1fr;
