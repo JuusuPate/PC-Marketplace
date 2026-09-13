@@ -67,7 +67,8 @@ export function ListingCard({ listing, locale, copy, favourite, onFavourite, onO
             </span>
           )}
           <span className="seller-rating">
-            <Icon name="star" fill="currentColor" /> {listing.seller.rating}
+            <Icon name="star" fill="currentColor" />
+            {listing.seller.reviewCount > 0 ? listing.seller.rating.toFixed(1) : "—"}
           </span>
           <span className="ship-flags">{listing.shipsTo.map((country) => COUNTRY_FLAGS[country]).join(" ")}</span>
         </div>

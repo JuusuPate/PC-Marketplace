@@ -28,6 +28,28 @@ export interface Seller {
   joinedYear: number;
 }
 
+export interface ListingImage {
+  id: string;
+  url: string;
+  alt: string;
+  width: number;
+  height: number;
+  sortOrder: number;
+  /** Supabase Storage object path. Demo images intentionally omit this. */
+  storagePath?: string;
+}
+
+/**
+ * Private fulfilment data. Never expose this through a public Listing or Seller.
+ * The public listing location remains the municipality-level `Listing.city`.
+ */
+export interface PrivatePickupAddress {
+  streetAddress: string;
+  postalCode: string;
+  city: string;
+  countryCode: CountryCode;
+}
+
 export interface Listing {
   id: string;
   title: string;
@@ -47,6 +69,8 @@ export interface Listing {
   serialVerified: boolean;
   createdLabel: string;
   visual: "lime" | "blue" | "violet" | "orange" | "silver" | "pink";
+  /** Optional for backwards compatibility with previously saved demo listings. */
+  images?: ListingImage[];
 }
 
 export interface DemoUser {
@@ -55,6 +79,8 @@ export interface DemoUser {
   email: string;
   countryCode: CountryCode;
   locale: Locale;
+  /** Convenience default for the seller form; never copy this onto a public Listing. */
+  pickupAddress?: PrivatePickupAddress;
 }
 
 export interface DemoOrder {

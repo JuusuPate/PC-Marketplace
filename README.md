@@ -10,7 +10,8 @@ Finland-first, Nordic-ready -demo käytettyjen PC-komponenttien ja pelikoneiden 
 - ilmoitusten haku, lajittelu sekä omat URL-sivut komponenteille, pelikoneille ja muille pääkategorioille
 - tuotesivu, myyjän maine, testitiedot, sarjanumeron vahvistus ja ostajansuoja
 - paikallinen demo-kirjautuminen tai valinnainen Supabase Auth sähköpostivahvistuksella
-- ilmoituksen luonti paikallisesti tai Supabase-tietokantaan, suosikit ja demo-osto
+- oma ilmoituksenluontisivu, eritellyt tuotetiedot, tarkempi kuvaus ja enintään viisi tuotekuvaa
+- ilmoituksen luonti paikallisesti tai Supabase-tietokantaan, yksityinen nouto-osoite, suosikit ja demo-osto
 - oma tili, tilaukset, omat ilmoitukset ja markkinoiden admin-esikatselu
 - mobiiliin mukautuva käyttöliittymä
 
@@ -36,7 +37,7 @@ npm run build
 ## Supabase-kirjautumisen ja tietokannan käyttöönotto
 
 1. Luo Supabase-projekti.
-2. Suorita SQL-editorissa `supabase/migrations`-hakemiston migraatiot numerojärjestyksessä (`0001`, `0002`, `0003`). Vaihtoehtoisesti linkitä paikallinen Supabase CLI -projekti ja suorita `supabase db push`.
+2. Suorita SQL-editorissa `supabase/migrations`-hakemiston migraatiot numerojärjestyksessä (`0001`–`0004`). Vaihtoehtoisesti linkitä paikallinen Supabase CLI -projekti ja suorita `supabase db push`. Neljäs migraatio lisää ilmoituskuvat ja myyjän yksityisen nouto-osoitteen.
 3. Kopioi `apps/web/.env.example` tiedostoksi `apps/web/.env.local`.
 4. Lisää ympäristötiedostoon projektin URL ja publishable key. Älä koskaan lisää selaimeen service role- tai secret key -avainta.
 5. Lisää Supabasen Authentication → URL Configuration -asetuksiin kehityksessä `http://localhost:4173` ja tuotannossa palvelun HTTPS-osoite sekä sallitut redirect-osoitteet.

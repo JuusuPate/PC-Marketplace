@@ -11,17 +11,24 @@ import { AuthModal } from "../features/auth/AuthModal";
 import { CategoryHero } from "../features/catalog/CategoryHero";
 import { CheckoutModal } from "../features/checkout/CheckoutModal";
 import { ListingDrawer } from "../features/listings/ListingDrawer";
-import { SellModal } from "../features/sell/SellModal";
+import { CreateListingPage } from "../features/sell/CreateListingPage";
 import { getMessages } from "../i18n";
 import { authService } from "../lib/auth-service";
 import { demoStorage } from "../lib/demo-storage";
+import type { PreparedListingImage } from "../lib/listing-images";
 import { listingService } from "../lib/listing-service";
 import { formatMoney } from "../lib/money";
 import { getRuntimeCopy } from "../lib/runtime-copy";
 import { backendMode } from "../lib/supabase";
-import type { Category, DemoOrder, DemoUser, Listing, Locale } from "../types";
+import type { Category, DemoOrder, DemoUser, Listing, Locale, PrivatePickupAddress } from "../types";
 
 type SortOption = "newest" | "priceLow" | "bestDeals";
+
+const CREATE_LISTING_PATH = "/myy/uusi";
+
+function isCreateListingPath(pathname: string) {
+  return (pathname.replace(/\/+$/, "") || "/") === CREATE_LISTING_PATH;
+}
 
 const categories: Array<{ key: "all" | Category; glyph: string }> = [
   { key: "all", glyph: "⌁" },
@@ -37,6 +44,7 @@ export function App() {
   const [locale, setLocale] = useState<Locale>("fi");
   const market = LAUNCH_MARKET;
   const [catalogPage, setCatalogPage] = useState(() => getCatalogPage(window.location.pathname));
+  const [createListingPage, setCreateListingPage] = useState(() => isCreateListingPath(window.location.pathname));
   const [user, setUser] = useState<DemoUser | null>(() => (backendMode === "demo" ? demoStorage.getSession() : null));
   const [customListings, setCustomListings] = useState<Listing[]>(() =>
     backendMode === "demo" ? demoStorage.getListings() : [],
@@ -49,7 +57,6 @@ export function App() {
   const [selectedListing, setSelectedListing] = useState<Listing | null>(null);
   const [checkoutListing, setCheckoutListing] = useState<Listing | null>(null);
   const [authOpen, setAuthOpen] = useState(false);
-  const [sellOpen, setSellOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [pendingSell, setPendingSell] = useState(false);
   const [pendingCheckout, setPendingCheckout] = useState<Listing | null>(null);
@@ -88,6 +95,7 @@ export function App() {
   useEffect(() => {
     const syncRoute = () => {
       setCatalogPage(getCatalogPage(window.location.pathname));
+      setCreateListingPage(isCreateListingPath(window.location.pathname));
       setCategory("all");
       setQuery("");
     };
@@ -98,8 +106,23 @@ export function App() {
 
   useEffect(() => {
     document.documentElement.lang = locale;
-    document.title = catalogPage ? `${copy[catalogPage.labelKey]} | PC Market` : copy.siteTitle;
-  }, [catalogPage, copy, locale]);
+    document.title = createListingPage
+      ? `${copy.sellTitle} | PC Market`
+      : catalogPage
+        ? `${copy[catalogPage.labelKey]} | PC Market`
+        : copy.siteTitle;
+  }, [catalogPage, copy, createListingPage, locale]);
+
+  useEffect(() => {
+    if (!createListingPage) return;
+    if (user) {
+      setAuthOpen(false);
+      setPendingSell(false);
+      return;
+    }
+    setPendingSell(true);
+    setAuthOpen(true);
+  }, [createListingPage, user]);
 
   useEffect(() => {
     if (backendMode !== "supabase") return;
@@ -146,6 +169,7 @@ export function App() {
 
     const nextPage = getCatalogPage(path);
     setCatalogPage(nextPage);
+    setCreateListingPage(isCreateListingPath(path));
     setCategory("all");
     setQuery("");
 
@@ -173,13 +197,13 @@ export function App() {
       setCheckoutListing(pendingCheckout);
       setPendingCheckout(null);
     } else if (pendingSell) {
-      setSellOpen(true);
       setPendingSell(false);
+      navigateTo(CREATE_LISTING_PATH);
     }
   };
 
   const requireSellAuth = () => {
-    if (user) setSellOpen(true);
+    if (user) navigateTo(CREATE_LISTING_PATH);
     else {
       setPendingSell(true);
       setAuthOpen(true);
@@ -197,18 +221,26 @@ export function App() {
     }
   };
 
-  const publishListing = async (listing: Listing) => {
-    const savedListing = await listingService.create(listing, market);
-    setCustomListings((current) => {
-      const next = [savedListing, ...current];
-      if (backendMode === "demo") demoStorage.setListings(next);
-      return next;
-    });
-    setSellOpen(false);
+  const publishListing = async (
+    listing: Listing,
+    images: PreparedListingImage[],
+    pickupAddress: PrivatePickupAddress,
+  ) => {
+    const savedListing = await listingService.create(listing, market, images, pickupAddress);
+    const nextListings = [savedListing, ...customListings];
+    if (backendMode === "demo") {
+      try {
+        demoStorage.setListings(nextListings);
+      } catch (caught) {
+        demoStorage.removePrivatePickupAddress(savedListing.id, listing.seller.id);
+        throw caught;
+      }
+    }
+    setCustomListings(nextListings);
     setCategory("all");
     showToast(copy.published);
-    if (catalogPage) navigateTo("/kategoriat/kaikki", "#marketplace");
-    else window.setTimeout(() => document.querySelector("#marketplace")?.scrollIntoView({ behavior: "smooth" }), 50);
+    navigateTo("/kategoriat/kaikki", "#marketplace");
+    setSelectedListing(savedListing);
   };
 
   const completeOrder = (order: DemoOrder) => {
@@ -234,6 +266,7 @@ export function App() {
       setUser(null);
       if (backendMode === "demo") demoStorage.setSession(null);
       setAccountOpen(false);
+      if (createListingPage) navigateTo("/");
     }
   };
 
@@ -257,202 +290,217 @@ export function App() {
       <CategoryNavigation copy={copy} activePageId={catalogPage?.id ?? null} onNavigate={(path) => navigateTo(path)} />
 
       <main>
-        {catalogPage ? (
-          <CategoryHero
-            page={catalogPage}
+        {createListingPage && user && (
+          <CreateListingPage
             copy={copy}
-            listingCount={catalogListings.length}
-            onHome={() => navigateTo("/")}
-            onSell={requireSellAuth}
+            locale={locale}
+            market={market}
+            user={user}
+            seller={customListings.find((listing) => listing.seller.id === user.id)?.seller}
+            onCancel={() => navigateTo("/kategoriat/kaikki")}
+            onPublish={publishListing}
           />
-        ) : (
-          <>
-            <section className="hero section-shell">
-              <div className="hero-copy">
-                <div className="eyebrow">
-                  <span className="eyebrow-dot" />
-                  {copy.heroEyebrow}
-                </div>
-                <h1>
-                  {copy.heroTitleA}
-                  <br />
-                  <em>{copy.heroTitleB}</em>
-                </h1>
-                <p>{copy.heroBody}</p>
-                <div className="hero-actions">
-                  <a className="button button--primary" href="#marketplace">
-                    {copy.browseDeals}
-                    <Icon name="arrow" />
-                  </a>
-                  <button className="button button--outline" type="button" onClick={requireSellAuth}>
-                    <Icon name="plus" />
-                    {copy.listForSale}
-                  </button>
-                </div>
-                <div className="hero-proof">
-                  <div>
-                    <strong>1.5%</strong>
-                    <span>demo fee</span>
-                  </div>
-                  <div>
-                    <strong>48 h</strong>
-                    <span>inspection</span>
-                  </div>
-                  <div>
-                    <strong>7</strong>
-                    <span>{copy.categoryNavigation}</span>
-                  </div>
-                </div>
-              </div>
-              <div className="hero-art" aria-label="Esimerkkituotteen kortti">
-                <div className="hero-glow" />
-                <div className="hero-card hero-card--back">
-                  <span>PRICE INTELLIGENCE</span>
-                  <strong>−8.4%</strong>
-                  <small>vs. 30 day median</small>
-                </div>
-                <div className="hero-product">
-                  <div className="hero-product-top">
-                    <span>VERIFIED HARDWARE</span>
-                    <Icon name="check" />
-                  </div>
-                  <div className="hero-gpu">
-                    <span>GEFORCE</span>
-                    <strong>RTX</strong>
-                    <small>4070 SUPER</small>
-                    <i />
-                    <i />
-                    <i />
-                  </div>
-                  <div className="hero-product-copy">
-                    <div>
-                      <small>ASUS TUF GAMING</small>
-                      <strong>RTX 4070 SUPER OC</strong>
-                    </div>
-                    <strong>{formatMoney(48900, "EUR", locale)}</strong>
-                  </div>
-                  <div className="hero-product-foot">
-                    <span>
-                      <Icon name="shield" /> {copy.buyerProtection}
-                    </span>
-                  </div>
-                </div>
-                <div className="hero-card hero-card--front">
-                  <span className="pulse" />
-                  <div>
-                    <small>MARKET SIGNAL</small>
-                    <strong>{copy.great}</strong>
-                  </div>
-                  <span>↑ 94</span>
-                </div>
-              </div>
-            </section>
-
-            <section className="trust-strip">
-              <div>
-                <Icon name="shield" />
-                <span>
-                  <strong>{copy.protectedPurchases}</strong>
-                  <small>48 h inspection window</small>
-                </span>
-              </div>
-              <div>
-                <Icon name="check" />
-                <span>
-                  <strong>{copy.verifiedSellers}</strong>
-                  <small>Identity & trade history</small>
-                </span>
-              </div>
-              <div>
-                <Icon name="truck" />
-                <span>
-                  <strong>{copy.marketShipping}</strong>
-                </span>
-              </div>
-            </section>
-          </>
         )}
 
-        <section
-          className={`marketplace-section section-shell${catalogPage ? " marketplace-section--category" : ""}`}
-          id="marketplace"
-        >
-          <div className="section-heading">
-            <div>
-              <span className="section-index">{catalogPage ? "01 / CATEGORY" : "01 / MARKET"}</span>
-              <h2>{catalogPage ? copy.categoryListings : copy.marketplace}</h2>
-            </div>
-            <span className="listing-count">
-              {visibleListings.length} {copy.listings}
-            </span>
-          </div>
-          <div className="market-toolbar">
-            <label className="search-box">
-              <Icon name="search" />
-              <input
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                placeholder={copy.searchPlaceholder}
-              />
-              <kbd>⌘ K</kbd>
-            </label>
-            <label className="sort-select">
-              <select value={sort} onChange={(event) => setSort(event.target.value as SortOption)}>
-                <option value="newest">{copy.newest}</option>
-                <option value="priceLow">{copy.priceLow}</option>
-                <option value="bestDeals">{copy.bestDeals}</option>
-              </select>
-              <Icon name="chevron" />
-            </label>
-          </div>
-          {categoryFilters.length > 0 && (
-            <div className="category-row">
-              {categoryFilters.map((item) => (
-                <button
-                  key={item.key}
-                  type="button"
-                  className={category === item.key ? "active" : ""}
-                  onClick={() => setCategory(item.key)}
-                >
-                  <span>{item.glyph}</span>
-                  {copy[item.key]}
-                </button>
-              ))}
-            </div>
-          )}
-          {visibleListings.length > 0 ? (
-            <div className="listing-grid">
-              {visibleListings.map((listing) => (
-                <ListingCard
-                  key={listing.id}
-                  listing={listing}
-                  locale={locale}
-                  copy={copy}
-                  favourite={favourites.includes(listing.id)}
-                  onFavourite={() => toggleFavourite(listing.id)}
-                  onOpen={() => setSelectedListing(listing)}
-                />
-              ))}
-            </div>
+        {(!createListingPage || !user) &&
+          (catalogPage ? (
+            <CategoryHero
+              page={catalogPage}
+              copy={copy}
+              listingCount={catalogListings.length}
+              onHome={() => navigateTo("/")}
+              onSell={requireSellAuth}
+            />
           ) : (
-            <div className="empty-state">
-              <div>⌁</div>
-              <h3>{copy.noResults}</h3>
-              <button
-                className="button button--outline"
-                type="button"
-                onClick={() => {
-                  setQuery("");
-                  setCategory("all");
-                }}
-              >
-                {copy.resetFilters}
-              </button>
-            </div>
-          )}
-        </section>
+            <>
+              <section className="hero section-shell">
+                <div className="hero-copy">
+                  <div className="eyebrow">
+                    <span className="eyebrow-dot" />
+                    {copy.heroEyebrow}
+                  </div>
+                  <h1>
+                    {copy.heroTitleA}
+                    <br />
+                    <em>{copy.heroTitleB}</em>
+                  </h1>
+                  <p>{copy.heroBody}</p>
+                  <div className="hero-actions">
+                    <a className="button button--primary" href="#marketplace">
+                      {copy.browseDeals}
+                      <Icon name="arrow" />
+                    </a>
+                    <button className="button button--outline" type="button" onClick={requireSellAuth}>
+                      <Icon name="plus" />
+                      {copy.listForSale}
+                    </button>
+                  </div>
+                  <div className="hero-proof">
+                    <div>
+                      <strong>1.5%</strong>
+                      <span>demo fee</span>
+                    </div>
+                    <div>
+                      <strong>48 h</strong>
+                      <span>inspection</span>
+                    </div>
+                    <div>
+                      <strong>7</strong>
+                      <span>{copy.categoryNavigation}</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="hero-art" aria-label="Esimerkkituotteen kortti">
+                  <div className="hero-glow" />
+                  <div className="hero-card hero-card--back">
+                    <span>PRICE INTELLIGENCE</span>
+                    <strong>−8.4%</strong>
+                    <small>vs. 30 day median</small>
+                  </div>
+                  <div className="hero-product">
+                    <div className="hero-product-top">
+                      <span>VERIFIED HARDWARE</span>
+                      <Icon name="check" />
+                    </div>
+                    <div className="hero-gpu">
+                      <span>GEFORCE</span>
+                      <strong>RTX</strong>
+                      <small>4070 SUPER</small>
+                      <i />
+                      <i />
+                      <i />
+                    </div>
+                    <div className="hero-product-copy">
+                      <div>
+                        <small>ASUS TUF GAMING</small>
+                        <strong>RTX 4070 SUPER OC</strong>
+                      </div>
+                      <strong>{formatMoney(48900, "EUR", locale)}</strong>
+                    </div>
+                    <div className="hero-product-foot">
+                      <span>
+                        <Icon name="shield" /> {copy.buyerProtection}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="hero-card hero-card--front">
+                    <span className="pulse" />
+                    <div>
+                      <small>MARKET SIGNAL</small>
+                      <strong>{copy.great}</strong>
+                    </div>
+                    <span>↑ 94</span>
+                  </div>
+                </div>
+              </section>
 
-        {!catalogPage && (
+              <section className="trust-strip">
+                <div>
+                  <Icon name="shield" />
+                  <span>
+                    <strong>{copy.protectedPurchases}</strong>
+                    <small>48 h inspection window</small>
+                  </span>
+                </div>
+                <div>
+                  <Icon name="check" />
+                  <span>
+                    <strong>{copy.verifiedSellers}</strong>
+                    <small>Identity & trade history</small>
+                  </span>
+                </div>
+                <div>
+                  <Icon name="truck" />
+                  <span>
+                    <strong>{copy.marketShipping}</strong>
+                  </span>
+                </div>
+              </section>
+            </>
+          ))}
+
+        {(!createListingPage || !user) && (
+          <section
+            className={`marketplace-section section-shell${catalogPage ? " marketplace-section--category" : ""}`}
+            id="marketplace"
+          >
+            <div className="section-heading">
+              <div>
+                <span className="section-index">{catalogPage ? "01 / CATEGORY" : "01 / MARKET"}</span>
+                <h2>{catalogPage ? copy.categoryListings : copy.marketplace}</h2>
+              </div>
+              <span className="listing-count">
+                {visibleListings.length} {copy.listings}
+              </span>
+            </div>
+            <div className="market-toolbar">
+              <label className="search-box">
+                <Icon name="search" />
+                <input
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
+                  placeholder={copy.searchPlaceholder}
+                />
+                <kbd>⌘ K</kbd>
+              </label>
+              <label className="sort-select">
+                <select value={sort} onChange={(event) => setSort(event.target.value as SortOption)}>
+                  <option value="newest">{copy.newest}</option>
+                  <option value="priceLow">{copy.priceLow}</option>
+                  <option value="bestDeals">{copy.bestDeals}</option>
+                </select>
+                <Icon name="chevron" />
+              </label>
+            </div>
+            {categoryFilters.length > 0 && (
+              <div className="category-row">
+                {categoryFilters.map((item) => (
+                  <button
+                    key={item.key}
+                    type="button"
+                    className={category === item.key ? "active" : ""}
+                    onClick={() => setCategory(item.key)}
+                  >
+                    <span>{item.glyph}</span>
+                    {copy[item.key]}
+                  </button>
+                ))}
+              </div>
+            )}
+            {visibleListings.length > 0 ? (
+              <div className="listing-grid">
+                {visibleListings.map((listing) => (
+                  <ListingCard
+                    key={listing.id}
+                    listing={listing}
+                    locale={locale}
+                    copy={copy}
+                    favourite={favourites.includes(listing.id)}
+                    onFavourite={() => toggleFavourite(listing.id)}
+                    onOpen={() => setSelectedListing(listing)}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="empty-state">
+                <div>⌁</div>
+                <h3>{copy.noResults}</h3>
+                <button
+                  className="button button--outline"
+                  type="button"
+                  onClick={() => {
+                    setQuery("");
+                    setCategory("all");
+                  }}
+                >
+                  {copy.resetFilters}
+                </button>
+              </div>
+            )}
+          </section>
+        )}
+
+        {(!createListingPage || !user) && !catalogPage && (
           <>
             <section className="protection-section" id="safety">
               <div className="section-shell protection-inner">
@@ -583,20 +631,11 @@ export function App() {
           market={market}
           onClose={() => {
             setAuthOpen(false);
+            if (pendingSell && createListingPage) navigateTo("/");
             setPendingSell(false);
             setPendingCheckout(null);
           }}
           onComplete={completeAuth}
-        />
-      )}
-      {sellOpen && user && (
-        <SellModal
-          copy={copy}
-          locale={locale}
-          market={market}
-          user={user}
-          onClose={() => setSellOpen(false)}
-          onPublish={publishListing}
         />
       )}
       {checkoutListing && (

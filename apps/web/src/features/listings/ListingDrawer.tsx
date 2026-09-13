@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { COUNTRY_FLAGS, MARKETS } from "../../config/markets";
 import type { Messages } from "../../i18n/messages/fi";
 import { formatMoney } from "../../lib/money";
 import type { Listing, Locale } from "../../types";
 import { Icon } from "../../components/Icon";
-import { ListingVisual } from "../../components/ListingVisual";
+import { getSafeListingImageUrl, ListingVisual } from "../../components/ListingVisual";
 import { ModalShell } from "../../components/ModalShell";
 
 interface ListingDrawerProps {
@@ -29,12 +29,46 @@ export function ListingDrawer({
   onBuy,
 }: ListingDrawerProps) {
   const [reported, setReported] = useState(false);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const images = (listing.images ?? []).filter((image) => getSafeListingImageUrl(image));
+  const activeImage = images[activeImageIndex] ?? images[0];
   const conditionLabel = listing.condition === "fair" ? copy.conditionFair : copy[listing.condition];
+
+  useEffect(() => {
+    setActiveImageIndex(0);
+  }, [listing.id]);
+
   return (
     <ModalShell title={listing.title} onClose={onClose} size="wide">
       <div className="detail-layout">
         <div className="detail-media-column">
-          <ListingVisual listing={listing} large />
+          <ListingVisual listing={listing} image={activeImage} large />
+          {images.length > 1 && (
+            <div className="detail-thumbnails" role="group" aria-label={`${listing.title} (${images.length})`}>
+              {images.map((image, index) => {
+                const imageUrl = getSafeListingImageUrl(image);
+
+                return (
+                  <button
+                    className={`detail-thumbnail ${index === activeImageIndex ? "is-active" : ""}`}
+                    type="button"
+                    aria-label={`${listing.title}, ${index + 1} / ${images.length}`}
+                    aria-pressed={index === activeImageIndex}
+                    onClick={() => setActiveImageIndex(index)}
+                    key={image.id || `${image.url}-${index}`}
+                  >
+                    <img
+                      src={imageUrl ?? undefined}
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                      referrerPolicy="no-referrer"
+                    />
+                  </button>
+                );
+              })}
+            </div>
+          )}
           <div className="detail-proof-row">
             {listing.serialVerified && (
               <span>
@@ -102,8 +136,14 @@ export function ListingDrawer({
                 )}
               </strong>
               <span>
-                <Icon name="star" fill="currentColor" /> {listing.seller.rating} · {listing.seller.completedSales}{" "}
-                {copy.completedSales}
+                <Icon name="star" fill="currentColor" />
+                {listing.seller.reviewCount > 0
+                  ? `${listing.seller.rating.toFixed(1)} · ${listing.seller.reviewCount} ${copy.reviews}`
+                  : copy.noReviews}
+                {` · ${listing.seller.completedSales} ${copy.completedSales}`}
+              </span>
+              <span className="seller-location">
+                {copy.location}: {listing.city}
               </span>
             </div>
             <div className="seller-country">{COUNTRY_FLAGS[listing.seller.countryCode]}</div>
