@@ -10,3 +10,6 @@ export const HOME_HERO_BACKGROUND_IMAGE = "";
 
 /** Muuta tätä, jos kuvan tärkeä kohta tarvitsee eri rajauksen. */
 export const HOME_HERO_BACKGROUND_POSITION = "center center";
+
+/** "cover" täyttää koko alueen kuten esimerkin suuri pelikonekuva. */
+export const HOME_HERO_BACKGROUND_SIZE = "cover";

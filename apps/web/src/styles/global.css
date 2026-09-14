@@ -733,7 +733,9 @@ svg {
 .home-hero::before {
   background-image: var(--home-hero-background-image);
   background-position: var(--home-hero-background-position, center center);
-  background-size: cover;
+  background-repeat: no-repeat;
+  background-size: var(--home-hero-background-size, cover);
+  filter: saturate(0.92) contrast(1.06);
   opacity: 0;
   transform: scale(1.025);
 }
@@ -747,6 +749,7 @@ svg {
       rgba(4, 17, 16, 0.34) 62%,
       rgba(4, 17, 16, 0.86) 100%
     ),
+    radial-gradient(ellipse at 55% 48%, transparent 20%, rgba(4, 17, 16, 0.22) 58%, rgba(4, 17, 16, 0.92) 100%),
     linear-gradient(
       180deg,
       rgba(4, 17, 16, 0.88) 0%,

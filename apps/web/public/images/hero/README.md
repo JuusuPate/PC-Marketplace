@@ -8,4 +8,6 @@ Avaa sen jälkeen `apps/web/src/config/home-hero.ts` ja aseta `HOME_HERO_BACKGRO
 export const HOME_HERO_BACKGROUND_IMAGE = "/images/hero/oma-taustakuva.webp";
 ```
 
-Suositeltu kuvakoko on vähintään 1920 × 900 pikseliä. Kuvan reunoille ja tekstin taakse lisätään automaattisesti tumma häivytys.
+Suositeltu kuvakoko on vähintään 1920 × 900 pikseliä. Käytä mieluiten leveää kuvaa, jossa pelikone tai muu pääkohde on keskellä tai hieman oikealla. Kuvan reunoille ja tekstin taakse lisätään automaattisesti tumma vinjetti, jolloin kuva toimii koko alueen taustana esimerkin tavoin.
+
+Jos pääkohde rajautuu huonosti, muuta samassa asetustiedostossa `HOME_HERO_BACKGROUND_POSITION` esimerkiksi arvoon `"right center"`. `HOME_HERO_BACKGROUND_SIZE` kannattaa normaalisti jättää arvoon `"cover"`.

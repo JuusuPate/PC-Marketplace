@@ -12,7 +12,11 @@ import {
 } from "../config/catalog";
 import { getLegalPath, getLegalRoute } from "../config/legal-routes";
 import { getListingId, getListingPath } from "../config/listing-routes";
-import { HOME_HERO_BACKGROUND_IMAGE, HOME_HERO_BACKGROUND_POSITION } from "../config/home-hero";
+import {
+  HOME_HERO_BACKGROUND_IMAGE,
+  HOME_HERO_BACKGROUND_POSITION,
+  HOME_HERO_BACKGROUND_SIZE,
+} from "../config/home-hero";
 import { LAUNCH_MARKET, MARKETS } from "../config/markets";
 import { DEMO_LISTINGS } from "../data/demo-listings";
 import { AccountModal } from "../features/account/AccountModal";
@@ -43,6 +47,7 @@ const HOME_HERO_BACKGROUND_STYLE = HOME_HERO_BACKGROUND_IMAGE
   ? ({
       "--home-hero-background-image": `url(${JSON.stringify(HOME_HERO_BACKGROUND_IMAGE)})`,
       "--home-hero-background-position": HOME_HERO_BACKGROUND_POSITION,
+      "--home-hero-background-size": HOME_HERO_BACKGROUND_SIZE,
     } as CSSProperties)
   : undefined;
 
