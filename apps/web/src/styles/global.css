@@ -716,6 +716,79 @@ svg {
   font-size: 14px;
 }
 
+.home-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: white;
+}
+.home-hero::before,
+.home-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+}
+.home-hero::before {
+  background-image: var(--home-hero-background-image);
+  background-position: var(--home-hero-background-position, center center);
+  background-size: cover;
+  opacity: 0;
+  transform: scale(1.025);
+}
+.home-hero::after {
+  z-index: -1;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(4, 17, 16, 0.96) 0%,
+      rgba(4, 17, 16, 0.78) 26%,
+      rgba(4, 17, 16, 0.34) 62%,
+      rgba(4, 17, 16, 0.86) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(4, 17, 16, 0.88) 0%,
+      rgba(4, 17, 16, 0.08) 24%,
+      rgba(4, 17, 16, 0.12) 72%,
+      rgba(4, 17, 16, 0.92) 100%
+    );
+  opacity: 0;
+}
+.home-hero--with-background {
+  background: #041110;
+}
+.home-hero--with-background::before,
+.home-hero--with-background::after {
+  opacity: 1;
+}
+.home-hero--with-background .eyebrow,
+.home-hero--with-background .hero-copy > p,
+.home-hero--with-background .hero-proof span {
+  color: rgba(255, 255, 255, 0.76);
+}
+.home-hero--with-background .hero h1,
+.home-hero--with-background .hero-proof strong {
+  color: white;
+}
+.home-hero--with-background .hero h1 em {
+  -webkit-text-stroke-color: rgba(255, 255, 255, 0.76);
+}
+.home-hero--with-background .eyebrow-dot {
+  background: var(--lime);
+  box-shadow: 0 0 0 5px rgba(200, 255, 72, 0.16);
+}
+.home-hero--with-background .hero-actions .button--outline {
+  color: white;
+  background: rgba(4, 17, 16, 0.46);
+  border-color: rgba(255, 255, 255, 0.42);
+  backdrop-filter: blur(8px);
+}
+.home-hero--with-background .hero-art::before,
+.home-hero--with-background .hero-art::after {
+  border-color: rgba(255, 255, 255, 0.18);
+}
 .hero {
   min-height: 655px;
   padding-block: 64px 72px;

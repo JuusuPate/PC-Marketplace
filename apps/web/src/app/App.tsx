@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { CategoryNavigation } from "../components/CategoryNavigation";
 import { Header } from "../components/Header";
 import { Icon } from "../components/Icon";
@@ -12,6 +12,7 @@ import {
 } from "../config/catalog";
 import { getLegalPath, getLegalRoute } from "../config/legal-routes";
 import { getListingId, getListingPath } from "../config/listing-routes";
+import { HOME_HERO_BACKGROUND_IMAGE, HOME_HERO_BACKGROUND_POSITION } from "../config/home-hero";
 import { LAUNCH_MARKET, MARKETS } from "../config/markets";
 import { DEMO_LISTINGS } from "../data/demo-listings";
 import { AccountModal } from "../features/account/AccountModal";
@@ -38,6 +39,12 @@ type SortOption = "newest" | "oldest" | "priceLow" | "priceHigh" | "bestDeals";
 
 const CREATE_LISTING_PATH = "/myy/uusi";
 const MAX_NAVIGATION_PRICE_MINOR = 100_000_000;
+const HOME_HERO_BACKGROUND_STYLE = HOME_HERO_BACKGROUND_IMAGE
+  ? ({
+      "--home-hero-background-image": `url(${JSON.stringify(HOME_HERO_BACKGROUND_IMAGE)})`,
+      "--home-hero-background-position": HOME_HERO_BACKGROUND_POSITION,
+    } as CSSProperties)
+  : undefined;
 
 function toNavigationFilter(filter: CatalogRuntimeFilter): CatalogNavigationFilter | null {
   if (filter.kind === "price_max_minor") return { maxPriceMinor: filter.maxPriceMinor };
@@ -553,50 +560,55 @@ export function App() {
             />
           ) : (
             <>
-              <section className="hero section-shell">
-                <div className="hero-copy">
-                  <div className="eyebrow">
-                    <span className="eyebrow-dot" />
-                    {copy.heroEyebrow}
-                  </div>
-                  <h1>
-                    {copy.heroTitleA}
-                    <br />
-                    <em>{copy.heroTitleB}</em>
-                  </h1>
-                  <p>{copy.heroBody}</p>
-                  <div className="hero-actions">
-                    <a className="button button--primary" href="#marketplace">
-                      {copy.browseDeals}
-                      <Icon name="arrow" />
-                    </a>
-                    <button className="button button--outline" type="button" onClick={requireSellAuth}>
-                      <Icon name="plus" />
-                      {copy.listForSale}
-                    </button>
-                  </div>
-                  <div className="hero-proof">
-                    <div>
-                      <strong>1.5%</strong>
-                      <span>demo fee</span>
+              <section
+                className={`home-hero${HOME_HERO_BACKGROUND_STYLE ? " home-hero--with-background" : ""}`}
+                style={HOME_HERO_BACKGROUND_STYLE}
+              >
+                <div className="hero section-shell">
+                  <div className="hero-copy">
+                    <div className="eyebrow">
+                      <span className="eyebrow-dot" />
+                      {copy.heroEyebrow}
                     </div>
-                    <div>
-                      <strong>48 h</strong>
-                      <span>inspection</span>
+                    <h1>
+                      {copy.heroTitleA}
+                      <br />
+                      <em>{copy.heroTitleB}</em>
+                    </h1>
+                    <p>{copy.heroBody}</p>
+                    <div className="hero-actions">
+                      <a className="button button--primary" href="#marketplace">
+                        {copy.browseDeals}
+                        <Icon name="arrow" />
+                      </a>
+                      <button className="button button--outline" type="button" onClick={requireSellAuth}>
+                        <Icon name="plus" />
+                        {copy.listForSale}
+                      </button>
                     </div>
-                    <div>
-                      <strong>7</strong>
-                      <span>{copy.categoryNavigation}</span>
+                    <div className="hero-proof">
+                      <div>
+                        <strong>1.5%</strong>
+                        <span>demo fee</span>
+                      </div>
+                      <div>
+                        <strong>48 h</strong>
+                        <span>inspection</span>
+                      </div>
+                      <div>
+                        <strong>7</strong>
+                        <span>{copy.categoryNavigation}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="hero-art">
-                  <FeaturedShowcase
-                    listings={listings}
-                    locale={locale}
-                    copy={copy}
-                    onOpen={(listing) => navigateTo(getListingPath(listing.id))}
-                  />
+                  <div className="hero-art">
+                    <FeaturedShowcase
+                      listings={listings}
+                      locale={locale}
+                      copy={copy}
+                      onOpen={(listing) => navigateTo(getListingPath(listing.id))}
+                    />
+                  </div>
                 </div>
               </section>
 
