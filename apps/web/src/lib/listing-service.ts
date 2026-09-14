@@ -122,6 +122,7 @@ function mapListing(row: DbListing): Listing {
     buyerProtection: true,
     serialVerified: false,
     createdLabel: new Date(row.created_at).toLocaleDateString(),
+    createdAt: row.created_at,
     visual: visualFor(row.id),
     images: (row.images ?? []).sort((a, b) => a.sort_order - b.sort_order).map(mapImage),
   };

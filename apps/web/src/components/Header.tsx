@@ -1,4 +1,4 @@
-import type { MouseEvent } from "react";
+import type { FormEvent, MouseEvent } from "react";
 import { LOCALE_LABELS, PUBLIC_LOCALES } from "../config/markets";
 import type { Messages } from "../i18n/messages/fi";
 import type { DemoUser, Locale } from "../types";
@@ -12,14 +12,38 @@ interface HeaderProps {
   onLocale: (locale: Locale) => void;
   onAuth: () => void;
   onSell: () => void;
+  searchQuery: string;
+  onSearchQuery: (query: string) => void;
+  onSearch: (query: string) => void;
+  favouriteCount: number;
+  onFavourites: () => void;
   onAccount: () => void;
 }
 
-export function Header({ copy, locale, user, onHome, onLocale, onAuth, onSell, onAccount }: HeaderProps) {
+export function Header({
+  copy,
+  locale,
+  user,
+  onHome,
+  onLocale,
+  onAuth,
+  onSell,
+  searchQuery,
+  onSearchQuery,
+  onSearch,
+  favouriteCount,
+  onFavourites,
+  onAccount,
+}: HeaderProps) {
   const navigateHome = (event: MouseEvent<HTMLAnchorElement>, hash?: string) => {
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     event.preventDefault();
     onHome(hash);
+  };
+
+  const submitSearch = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    onSearch(searchQuery.trim());
   };
 
   return (
@@ -34,17 +58,19 @@ export function Header({ copy, locale, user, onHome, onLocale, onAuth, onSell, o
         </span>
       </a>
 
-      <nav className="desktop-nav" aria-label={copy.primaryNavigation}>
-        <a href="/#marketplace" onClick={(event) => navigateHome(event, "#marketplace")}>
-          {copy.marketplace}
-        </a>
-        <a href="/#how-it-works" onClick={(event) => navigateHome(event, "#how-it-works")}>
-          {copy.howItWorks}
-        </a>
-        <a href="/#safety" onClick={(event) => navigateHome(event, "#safety")}>
-          {copy.safety}
-        </a>
-      </nav>
+      <form className="header-search" role="search" onSubmit={submitSearch}>
+        <Icon name="search" />
+        <input
+          type="search"
+          value={searchQuery}
+          onChange={(event) => onSearchQuery(event.target.value)}
+          placeholder={copy.searchPlaceholder}
+          aria-label={copy.searchPlaceholder}
+        />
+        <button className="header-search__submit" type="submit" aria-label={copy.searchPlaceholder}>
+          <Icon name="arrow" />
+        </button>
+      </form>
 
       <div className="header-actions">
         <label className="compact-select language-select" title="Language">
@@ -60,6 +86,15 @@ export function Header({ copy, locale, user, onHome, onLocale, onAuth, onSell, o
         </label>
         <button className="button button--ghost header-sell" type="button" onClick={onSell}>
           <Icon name="plus" /> {copy.sell}
+        </button>
+        <button
+          className={`button button--ghost header-favourites-button ${favouriteCount > 0 ? "is-active" : ""}`}
+          type="button"
+          onClick={onFavourites}
+          aria-label={`${copy.favourites}: ${favouriteCount}`}
+        >
+          <Icon name="heart" fill={favouriteCount > 0 ? "currentColor" : "none"} />
+          {favouriteCount > 0 ? <span className="header-favourites-count">{favouriteCount}</span> : null}
         </button>
         <button className="button button--dark account-button" type="button" onClick={user ? onAccount : onAuth}>
           {user ? <span className="mini-avatar">{user.name.slice(0, 2).toUpperCase()}</span> : <Icon name="user" />}

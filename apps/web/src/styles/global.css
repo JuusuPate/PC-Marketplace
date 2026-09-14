@@ -98,7 +98,7 @@ svg {
   padding: 0 max(32px, calc((100vw - 1440px) / 2));
   display: flex;
   align-items: center;
-  gap: 40px;
+  gap: clamp(16px, 2.5vw, 40px);
   position: sticky;
   top: 0;
   z-index: 40;
@@ -164,19 +164,74 @@ svg {
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
-.desktop-nav {
+.header-search {
+  width: min(100%, 640px);
+  min-width: 180px;
+  height: 46px;
+  margin-inline: auto;
+  padding-left: 14px;
   display: flex;
   align-items: center;
-  gap: 30px;
-  margin-inline: auto;
+  flex: 1 1 420px;
+  gap: 10px;
+  color: #66736f;
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(10, 21, 21, 0.18);
+  border-radius: 10px;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    background 0.18s ease;
 }
-.desktop-nav a {
-  color: #44504e;
-  font-size: 13px;
-  font-weight: 700;
-}
-.desktop-nav a:hover {
+.header-search:focus-within {
   color: var(--ink);
+  background: white;
+  border-color: #7ba921;
+  box-shadow: 0 0 0 3px rgba(160, 214, 35, 0.18);
+}
+.header-search > svg {
+  width: 19px;
+  height: 19px;
+  flex: 0 0 auto;
+}
+.header-search input {
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  flex: 1;
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  outline: 0;
+  font-size: 15px;
+}
+.header-search input::placeholder {
+  overflow: hidden;
+  color: #66736f;
+  text-overflow: ellipsis;
+}
+.header-search input::-webkit-search-cancel-button {
+  cursor: pointer;
+}
+.header-search__submit {
+  width: 42px;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  color: var(--ink);
+  background: var(--lime);
+  border: 0;
+  border-left: 1px solid rgba(10, 21, 21, 0.12);
+  border-radius: 0 9px 9px 0;
+  cursor: pointer;
+}
+.header-search__submit:hover {
+  background: #d0ff63;
+}
+.header-search__submit:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: -4px;
 }
 .category-navigation-wrap {
   min-height: 58px;
@@ -243,6 +298,7 @@ svg {
 .header-actions {
   display: flex;
   align-items: center;
+  flex: 0 0 auto;
   gap: 8px;
 }
 .compact-select,
@@ -342,6 +398,34 @@ svg {
 }
 .account-button {
   max-width: 128px;
+}
+.header-favourites-button {
+  width: 46px;
+  padding: 0;
+  position: relative;
+  flex: 0 0 auto;
+}
+.header-favourites-button.is-active {
+  color: var(--ink);
+  border-color: #9ed01d;
+  background: #f4ffda;
+}
+.header-favourites-count {
+  min-width: 18px;
+  height: 18px;
+  padding-inline: 4px;
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  display: grid;
+  place-items: center;
+  color: var(--ink);
+  background: var(--lime);
+  border: 2px solid white;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 900;
+  line-height: 1;
 }
 .account-button > span:last-child {
   overflow: hidden;
@@ -3587,16 +3671,11 @@ svg {
   }
   .site-header {
     padding-inline: 24px;
-  }
-  .desktop-nav {
-    display: none;
+    gap: 18px;
   }
   .category-route-hero-inner {
     grid-template-columns: minmax(0, 1fr) 290px;
     gap: 38px;
-  }
-  .header-actions {
-    margin-left: auto;
   }
   .hero {
     grid-template-columns: 1fr 0.9fr;
@@ -3646,6 +3725,10 @@ svg {
     height: 68px;
     padding-inline: 16px;
     gap: 10px;
+  }
+  .header-search {
+    min-width: 120px;
+    height: 44px;
   }
   .category-navigation-wrap {
     top: 68px;
@@ -3774,6 +3857,9 @@ svg {
   .account-button {
     width: 42px;
     padding: 0;
+  }
+  .header-favourites-button {
+    width: 42px;
   }
   .account-button > span:last-child {
     display: none;
@@ -4088,6 +4174,38 @@ svg {
   .legal-editor__actions {
     align-items: stretch;
     flex-direction: column-reverse;
+  }
+}
+
+@media (max-width: 480px) {
+  .site-header {
+    padding-inline: 12px;
+    gap: 6px;
+  }
+  .brand {
+    gap: 0;
+  }
+  .brand > span:last-child,
+  .language-select {
+    display: none;
+  }
+  .header-search {
+    min-width: 0;
+    padding-left: 9px;
+    gap: 7px;
+  }
+  .header-search > svg {
+    width: 17px;
+    height: 17px;
+  }
+  .header-search input {
+    font-size: 14px;
+  }
+  .header-search__submit {
+    width: 36px;
+  }
+  .header-actions {
+    gap: 5px;
   }
 }
 

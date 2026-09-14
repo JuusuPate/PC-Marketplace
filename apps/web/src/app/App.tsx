@@ -12,6 +12,7 @@ import { AccountModal } from "../features/account/AccountModal";
 import { AuthModal } from "../features/auth/AuthModal";
 import { CategoryHero } from "../features/catalog/CategoryHero";
 import { CheckoutModal } from "../features/checkout/CheckoutModal";
+import { FavouritesModal } from "../features/favourites/FavouritesModal";
 import { FeaturedShowcase } from "../features/home/FeaturedShowcase";
 import { ListingDetailPage } from "../features/listings/ListingDetailPage";
 import { LegalPage } from "../features/legal/LegalPage";
@@ -25,7 +26,7 @@ import { getRuntimeCopy } from "../lib/runtime-copy";
 import { backendMode } from "../lib/supabase";
 import type { Category, DemoOrder, DemoUser, Listing, Locale, PrivatePickupAddress } from "../types";
 
-type SortOption = "newest" | "priceLow" | "bestDeals";
+type SortOption = "newest" | "oldest" | "priceLow" | "priceHigh" | "bestDeals";
 
 const CREATE_LISTING_PATH = "/myy/uusi";
 
@@ -72,6 +73,7 @@ export function App() {
   const [checkoutListing, setCheckoutListing] = useState<Listing | null>(null);
   const [authOpen, setAuthOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
+  const [favouritesOpen, setFavouritesOpen] = useState(false);
   const [pendingSell, setPendingSell] = useState(false);
   const [pendingCheckout, setPendingCheckout] = useState<Listing | null>(null);
   const [toast, setToast] = useState<string | null>(null);
@@ -98,6 +100,11 @@ export function App() {
     if (!catalogPage?.categories) return listings;
     return listings.filter((listing) => catalogPage.categories?.includes(listing.category));
   }, [catalogPage, listings]);
+
+  const favouriteListings = useMemo(
+    () => listings.filter((listing) => favourites.includes(listing.id)),
+    [favourites, listings],
+  );
 
   const categoryFilters = useMemo(() => {
     if (!catalogPage || catalogPage.id === "all") return categories;
@@ -211,7 +218,19 @@ export function App() {
         (!normalizedQuery || haystack.includes(normalizedQuery))
       );
     });
+    if (sort === "newest" || sort === "oldest") {
+      const timestamps = new Map(
+        matches.map((listing, index) => {
+          const parsedTimestamp = listing.createdAt ? Date.parse(listing.createdAt) : Number.NaN;
+          const timestamp = Number.isFinite(parsedTimestamp) ? parsedTimestamp : Number.MAX_SAFE_INTEGER - index;
+          return [listing.id, timestamp] as const;
+        }),
+      );
+      const direction = sort === "newest" ? -1 : 1;
+      return matches.sort((a, b) => direction * ((timestamps.get(a.id) ?? 0) - (timestamps.get(b.id) ?? 0)));
+    }
     if (sort === "priceLow") return matches.sort((a, b) => a.priceMinor - b.priceMinor);
+    if (sort === "priceHigh") return matches.sort((a, b) => b.priceMinor - a.priceMinor);
     if (sort === "bestDeals")
       return matches.sort((a, b) => Number(b.priceSignal === "great") - Number(a.priceSignal === "great"));
     return matches;
@@ -270,6 +289,11 @@ export function App() {
       setPendingSell(true);
       setAuthOpen(true);
     }
+  };
+
+  const searchCatalog = (searchQuery: string) => {
+    navigateTo("/kategoriat/kaikki", "#marketplace");
+    setQuery(searchQuery.trim());
   };
 
   const beginCheckout = (listing: Listing) => {
@@ -344,6 +368,11 @@ export function App() {
         onLocale={setLocale}
         onAuth={() => setAuthOpen(true)}
         onSell={requireSellAuth}
+        searchQuery={query}
+        onSearchQuery={setQuery}
+        onSearch={searchCatalog}
+        favouriteCount={favouriteListings.length}
+        onFavourites={() => setFavouritesOpen(true)}
         onAccount={() => setAccountOpen(true)}
       />
 
@@ -511,7 +540,9 @@ export function App() {
               <label className="sort-select">
                 <select value={sort} onChange={(event) => setSort(event.target.value as SortOption)}>
                   <option value="newest">{copy.newest}</option>
+                  <option value="oldest">{copy.oldest}</option>
                   <option value="priceLow">{copy.priceLow}</option>
+                  <option value="priceHigh">{copy.priceHigh}</option>
                   <option value="bestDeals">{copy.bestDeals}</option>
                 </select>
                 <Icon name="chevron" />
@@ -726,6 +757,23 @@ export function App() {
           onManageLegal={() => {
             setAccountOpen(false);
             navigateTo(getLegalPath("terms"));
+          }}
+        />
+      )}
+      {favouritesOpen && (
+        <FavouritesModal
+          copy={copy}
+          locale={locale}
+          listings={favouriteListings}
+          onClose={() => setFavouritesOpen(false)}
+          onOpenListing={(listing) => {
+            setFavouritesOpen(false);
+            navigateTo(getListingPath(listing.id));
+          }}
+          onRemoveFavourite={toggleFavourite}
+          onBrowseProducts={() => {
+            setFavouritesOpen(false);
+            navigateTo("/kategoriat/kaikki");
           }}
         />
       )}

@@ -1,4 +1,14 @@
 import type { Listing, Seller } from "../types";
+import b650eMotherboardImage from "../assets/listings/b650e-motherboard.png";
+import gamingPc4080Image from "../assets/listings/gaming-pc-4080.png";
+import keychronQ1HeImage from "../assets/listings/keychron-q1-he.png";
+import kingstonFuryDdr5Image from "../assets/listings/kingston-fury-ddr5.png";
+import rtx4070SuperImage from "../assets/listings/rtx-4070-super.png";
+import rx7900XtxImage from "../assets/listings/rx-7900-xtx.png";
+import ryzen7800X3dImage from "../assets/listings/ryzen-7800x3d.png";
+
+const DEMO_NOW = Date.now();
+const demoCreatedAt = (minutesAgo: number) => new Date(DEMO_NOW - minutesAgo * 60_000).toISOString();
 
 const sellers: Record<string, Seller> = {
   niko: {
@@ -67,7 +77,18 @@ export const DEMO_LISTINGS: Listing[] = [
     buyerProtection: true,
     serialVerified: true,
     createdLabel: "18 min",
+    createdAt: demoCreatedAt(18),
     visual: "lime",
+    images: [
+      {
+        id: "demo-rtx-4070-super",
+        url: rtx4070SuperImage,
+        alt: "Kolmen tuulettimen näytönohjain vaalealla taustalla",
+        width: 1536,
+        height: 1024,
+        sortOrder: 0,
+      },
+    ],
   },
   {
     id: "rx-7900-xtx",
@@ -87,7 +108,18 @@ export const DEMO_LISTINGS: Listing[] = [
     buyerProtection: true,
     serialVerified: true,
     createdLabel: "1 h",
+    createdAt: demoCreatedAt(60),
     visual: "pink",
+    images: [
+      {
+        id: "demo-rx-7900-xtx",
+        url: rx7900XtxImage,
+        alt: "Tumma kolmen tuulettimen näytönohjain vaalealla taustalla",
+        width: 1536,
+        height: 1024,
+        sortOrder: 0,
+      },
+    ],
   },
   {
     id: "ryzen-7800x3d",
@@ -107,7 +139,18 @@ export const DEMO_LISTINGS: Listing[] = [
     buyerProtection: true,
     serialVerified: false,
     createdLabel: "2 h",
+    createdAt: demoCreatedAt(120),
     visual: "orange",
+    images: [
+      {
+        id: "demo-ryzen-7800x3d",
+        url: ryzen7800X3dImage,
+        alt: "Suoritin suojakotelossa vaalealla taustalla",
+        width: 1536,
+        height: 1024,
+        sortOrder: 0,
+      },
+    ],
   },
   {
     id: "gaming-pc-4080",
@@ -127,7 +170,18 @@ export const DEMO_LISTINGS: Listing[] = [
     buyerProtection: true,
     serialVerified: true,
     createdLabel: "3 h",
+    createdAt: demoCreatedAt(180),
     visual: "blue",
+    images: [
+      {
+        id: "demo-gaming-pc-4080",
+        url: gamingPc4080Image,
+        alt: "Tehokas pelitietokone lasikyljellä vaalealla taustalla",
+        width: 1536,
+        height: 1024,
+        sortOrder: 0,
+      },
+    ],
   },
   {
     id: "kingston-fury-ddr5",
@@ -147,7 +201,18 @@ export const DEMO_LISTINGS: Listing[] = [
     buyerProtection: true,
     serialVerified: true,
     createdLabel: "3 h",
+    createdAt: demoCreatedAt(181),
     visual: "violet",
+    images: [
+      {
+        id: "demo-kingston-fury-ddr5",
+        url: kingstonFuryDdr5Image,
+        alt: "Kaksi DDR5-muistikampaa vaalealla taustalla",
+        width: 1536,
+        height: 1024,
+        sortOrder: 0,
+      },
+    ],
   },
   {
     id: "corsair-ddr5",
@@ -167,6 +232,7 @@ export const DEMO_LISTINGS: Listing[] = [
     buyerProtection: true,
     serialVerified: true,
     createdLabel: "4 h",
+    createdAt: demoCreatedAt(240),
     visual: "violet",
   },
   {
@@ -187,7 +253,18 @@ export const DEMO_LISTINGS: Listing[] = [
     buyerProtection: true,
     serialVerified: true,
     createdLabel: "eilen",
+    createdAt: demoCreatedAt(1_440),
     visual: "silver",
+    images: [
+      {
+        id: "demo-b650e-motherboard",
+        url: b650eMotherboardImage,
+        alt: "Hopeanvärisillä jäähdytyslevyillä varustettu emolevy vaalealla taustalla",
+        width: 1536,
+        height: 1024,
+        sortOrder: 0,
+      },
+    ],
   },
   {
     id: "keychron-q1-he",
@@ -207,7 +284,18 @@ export const DEMO_LISTINGS: Listing[] = [
     buyerProtection: true,
     serialVerified: false,
     createdLabel: "5 h",
+    createdAt: demoCreatedAt(300),
     visual: "silver",
+    images: [
+      {
+        id: "demo-keychron-q1-he",
+        url: keychronQ1HeImage,
+        alt: "Tumma kompakti mekaaninen näppäimistö vaalealla taustalla",
+        width: 1536,
+        height: 1024,
+        sortOrder: 0,
+      },
+    ],
   },
   {
     id: "rtx-3080-fe",
@@ -227,6 +315,7 @@ export const DEMO_LISTINGS: Listing[] = [
     buyerProtection: true,
     serialVerified: false,
     createdLabel: "eilen",
+    createdAt: demoCreatedAt(1_441),
     visual: "silver",
   },
   {
@@ -247,6 +336,7 @@ export const DEMO_LISTINGS: Listing[] = [
     buyerProtection: true,
     serialVerified: true,
     createdLabel: "2 pv",
+    createdAt: demoCreatedAt(2_880),
     visual: "blue",
   },
 ];

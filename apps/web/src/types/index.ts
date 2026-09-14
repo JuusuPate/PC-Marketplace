@@ -70,6 +70,8 @@ export interface Listing {
   buyerProtection: boolean;
   serialVerified: boolean;
   createdLabel: string;
+  /** ISO timestamp used for deterministic sorting. Optional for legacy locally saved demo listings. */
+  createdAt?: string;
   visual: "lime" | "blue" | "violet" | "orange" | "silver" | "pink";
   /** Optional for backwards compatibility with previously saved demo listings. */
   images?: ListingImage[];

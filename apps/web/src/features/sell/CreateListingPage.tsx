@@ -216,6 +216,7 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
       buyerProtection: true,
       serialVerified: false,
       createdLabel: copy.justNow,
+      createdAt: new Date().toISOString(),
       visual: visualByCategory[category],
       images: [],
     };
