@@ -3,7 +3,13 @@ import { CategoryNavigation } from "../components/CategoryNavigation";
 import { Header } from "../components/Header";
 import { Icon } from "../components/Icon";
 import { ListingCard } from "../components/ListingCard";
-import { getCatalogPage } from "../config/catalog";
+import {
+  CATALOG_PAGES,
+  getCatalogPage,
+  type CatalogNavigationFilter,
+  type CatalogPage,
+  type CatalogSubmenuItem,
+} from "../config/catalog";
 import { getLegalPath, getLegalRoute } from "../config/legal-routes";
 import { getListingId, getListingPath } from "../config/listing-routes";
 import { LAUNCH_MARKET, MARKETS } from "../config/markets";
@@ -19,6 +25,8 @@ import { LegalPage } from "../features/legal/LegalPage";
 import { CreateListingPage } from "../features/sell/CreateListingPage";
 import { getMessages } from "../i18n";
 import { authService } from "../lib/auth-service";
+import { applyCatalogNavigationFilter } from "../lib/catalog-filtering";
+import { catalogService, type CatalogNavigationCategory, type CatalogRuntimeFilter } from "../lib/catalog-service";
 import { demoStorage } from "../lib/demo-storage";
 import type { PreparedListingImage } from "../lib/listing-images";
 import { listingService } from "../lib/listing-service";
@@ -29,6 +37,72 @@ import type { Category, DemoOrder, DemoUser, Listing, Locale, PrivatePickupAddre
 type SortOption = "newest" | "oldest" | "priceLow" | "priceHigh" | "bestDeals";
 
 const CREATE_LISTING_PATH = "/myy/uusi";
+const MAX_NAVIGATION_PRICE_MINOR = 100_000_000;
+
+function toNavigationFilter(filter: CatalogRuntimeFilter): CatalogNavigationFilter | null {
+  if (filter.kind === "price_max_minor") return { maxPriceMinor: filter.maxPriceMinor };
+  if (filter.kind === "featured") return { featuredOnly: true };
+  if (
+    filter.kind === "spec_option" &&
+    filter.specKey === "gpu_chip_vendor" &&
+    (filter.optionKey === "nvidia" || filter.optionKey === "amd")
+  ) {
+    return { gpuChipVendor: filter.optionKey };
+  }
+  return null;
+}
+
+function mergeCatalogNavigation(categories: readonly CatalogNavigationCategory[]): CatalogPage[] {
+  const categoriesBySlug = new Map(categories.map((category) => [category.slug, category]));
+
+  return CATALOG_PAGES.map((page) => {
+    const runtimeCategory = categoriesBySlug.get(page.id);
+    if (!runtimeCategory) return page;
+
+    const submenu = runtimeCategory.items.flatMap((item): CatalogSubmenuItem[] => {
+      const filters = toNavigationFilter(item.filter);
+      return filters ? [{ id: item.id, label: item.label, href: item.href, filters }] : [];
+    });
+
+    return { ...page, submenu: submenu.length > 0 ? submenu : undefined };
+  });
+}
+
+function canonicalCatalogHref(pathname: string, search: string) {
+  const params = new URLSearchParams(search);
+  params.sort();
+  const normalizedSearch = params.toString();
+  return `${pathname}${normalizedSearch ? `?${normalizedSearch}` : ""}`;
+}
+
+function getCatalogNavigationFilter(pathname: string, search: string): CatalogNavigationFilter | null {
+  const page = getCatalogPage(pathname);
+  const entries = [...new URLSearchParams(search).entries()];
+  if (!page || entries.length !== 1) return null;
+
+  const [[key, value]] = entries;
+  if (page.id === "pc" && key === "maxPrice") {
+    if (!/^\d{1,7}(?:\.\d{1,2})?$/.test(value)) return null;
+    const euros = Number(value);
+    const maxPriceMinor = Math.round(euros * 100);
+    if (Number.isFinite(euros) && euros > 0 && maxPriceMinor <= MAX_NAVIGATION_PRICE_MINOR) {
+      return { maxPriceMinor };
+    }
+  }
+  if (page.id === "pc" && key === "featured" && value === "true") return { featuredOnly: true };
+  if (page.id === "gpu" && key === "chipVendor" && (value === "nvidia" || value === "amd")) {
+    return { gpuChipVendor: value };
+  }
+  return null;
+}
+
+function getCatalogRouteFilter(pathname: string, search: string) {
+  const filter = getCatalogNavigationFilter(pathname, search);
+  return {
+    filter,
+    activeHref: filter ? canonicalCatalogHref(pathname, search) : null,
+  };
+}
 
 function isCreateListingPath(pathname: string) {
   return (pathname.replace(/\/+$/, "") || "/") === CREATE_LISTING_PATH;
@@ -56,6 +130,13 @@ export function App() {
   const [locale, setLocale] = useState<Locale>("fi");
   const market = LAUNCH_MARKET;
   const [catalogPage, setCatalogPage] = useState(() => getCatalogPage(window.location.pathname));
+  const [catalogNavigationPages, setCatalogNavigationPages] = useState<readonly CatalogPage[]>(CATALOG_PAGES);
+  const [catalogNavigationFilter, setCatalogNavigationFilter] = useState<CatalogNavigationFilter | null>(
+    () => getCatalogRouteFilter(window.location.pathname, window.location.search).filter,
+  );
+  const [activeCatalogSubmenuHref, setActiveCatalogSubmenuHref] = useState<string | null>(
+    () => getCatalogRouteFilter(window.location.pathname, window.location.search).activeHref,
+  );
   const [legalRoute, setLegalRoute] = useState(() => getLegalRoute(window.location.pathname));
   const [createListingPage, setCreateListingPage] = useState(() => isCreateListingPath(window.location.pathname));
   const [listingPageId, setListingPageId] = useState(() => getListingId(window.location.pathname));
@@ -101,6 +182,11 @@ export function App() {
     return listings.filter((listing) => catalogPage.categories?.includes(listing.category));
   }, [catalogPage, listings]);
 
+  const navigationFilteredListings = useMemo(
+    () => applyCatalogNavigationFilter(catalogListings, catalogNavigationFilter),
+    [catalogListings, catalogNavigationFilter],
+  );
+
   const favouriteListings = useMemo(
     () => listings.filter((listing) => favourites.includes(listing.id)),
     [favourites, listings],
@@ -117,9 +203,22 @@ export function App() {
   useEffect(() => authService.subscribe(setUser), []);
 
   useEffect(() => {
+    let isCurrent = true;
+    catalogService.getNavigation(locale).then((result) => {
+      if (isCurrent) setCatalogNavigationPages(mergeCatalogNavigation(result.categories));
+    });
+    return () => {
+      isCurrent = false;
+    };
+  }, [locale]);
+
+  useEffect(() => {
     const syncRoute = () => {
       const nextListingId = getListingId(window.location.pathname);
+      const nextCatalogFilter = getCatalogRouteFilter(window.location.pathname, window.location.search);
       setCatalogPage(getCatalogPage(window.location.pathname));
+      setCatalogNavigationFilter(nextCatalogFilter.filter);
+      setActiveCatalogSubmenuHref(nextCatalogFilter.activeHref);
       setLegalRoute(getLegalRoute(window.location.pathname));
       setCreateListingPage(isCreateListingPath(window.location.pathname));
       setListingPageId(nextListingId);
@@ -209,7 +308,7 @@ export function App() {
 
   const visibleListings = useMemo(() => {
     const normalizedQuery = query.trim().toLocaleLowerCase();
-    const matches = catalogListings.filter((listing) => {
+    const matches = navigationFilteredListings.filter((listing) => {
       const haystack =
         `${listing.title} ${listing.subtitle} ${listing.brand} ${Object.values(listing.specs).join(" ")}`.toLocaleLowerCase();
       return (
@@ -234,28 +333,34 @@ export function App() {
     if (sort === "bestDeals")
       return matches.sort((a, b) => Number(b.priceSignal === "great") - Number(a.priceSignal === "great"));
     return matches;
-  }, [catalogListings, category, market, query, sort]);
+  }, [category, market, navigationFilteredListings, query, sort]);
 
   const navigateTo = (path: string, hash = "") => {
-    const target = `${path}${hash}`;
-    if (`${window.location.pathname}${window.location.hash}` !== target) {
+    const destination = new URL(path, window.location.origin);
+    if (hash) destination.hash = hash;
+    const { pathname, search } = destination;
+    const target = `${pathname}${search}${destination.hash}`;
+    if (`${window.location.pathname}${window.location.search}${window.location.hash}` !== target) {
       window.history.pushState({}, "", target);
     }
 
-    const nextPage = getCatalogPage(path);
-    const nextLegalRoute = getLegalRoute(path);
-    const nextListingId = getListingId(path);
+    const nextPage = getCatalogPage(pathname);
+    const nextCatalogFilter = getCatalogRouteFilter(pathname, search);
+    const nextLegalRoute = getLegalRoute(pathname);
+    const nextListingId = getListingId(pathname);
     setCatalogPage(nextPage);
+    setCatalogNavigationFilter(nextCatalogFilter.filter);
+    setActiveCatalogSubmenuHref(nextCatalogFilter.activeHref);
     setLegalRoute(nextLegalRoute);
-    setCreateListingPage(isCreateListingPath(path));
+    setCreateListingPage(isCreateListingPath(pathname));
     setListingPageId(nextListingId);
     setListingRouteLoading(Boolean(nextListingId && !listings.some((listing) => listing.id === nextListingId)));
     setCategory("all");
     setQuery("");
 
     window.setTimeout(() => {
-      if (hash) {
-        document.querySelector(hash)?.scrollIntoView({ behavior: "smooth" });
+      if (destination.hash) {
+        document.querySelector(destination.hash)?.scrollIntoView({ behavior: "smooth" });
         return;
       }
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -376,7 +481,14 @@ export function App() {
         onAccount={() => setAccountOpen(true)}
       />
 
-      <CategoryNavigation copy={copy} activePageId={catalogPage?.id ?? null} onNavigate={(path) => navigateTo(path)} />
+      <CategoryNavigation
+        copy={copy}
+        pages={catalogNavigationPages}
+        activePageId={catalogPage?.id ?? null}
+        activeSubmenuHref={activeCatalogSubmenuHref}
+        onNavigate={(path) => navigateTo(path)}
+        onFilterNavigate={(_page, item) => navigateTo(item.href, "#marketplace")}
+      />
 
       <main>
         {legalRoute && (
@@ -435,7 +547,7 @@ export function App() {
             <CategoryHero
               page={catalogPage}
               copy={copy}
-              listingCount={catalogListings.length}
+              listingCount={navigationFilteredListings.length}
               onHome={() => navigateTo("/")}
               onSell={requireSellAuth}
             />
@@ -586,6 +698,10 @@ export function App() {
                   className="button button--outline"
                   type="button"
                   onClick={() => {
+                    if (catalogNavigationFilter && catalogPage) {
+                      navigateTo(catalogPage.path, "#marketplace");
+                      return;
+                    }
                     setQuery("");
                     setCategory("all");
                   }}

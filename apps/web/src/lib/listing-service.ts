@@ -5,7 +5,7 @@ import { backendMode, supabase } from "./supabase";
 
 const LISTING_IMAGES_BUCKET = "listing-images";
 const LISTING_SELECT =
-  "id,title,description,category,condition,price_minor,currency,city,specs,created_at,seller:profiles!listings_seller_id_fkey(id,display_name,country_code,joined_at,reviews:reviews!reviews_subject_id_fkey(rating)),destinations:listing_shipping_countries(country_code),images:listing_images(id,storage_path,alt_text,width,height,sort_order)";
+  "id,title,description,category,condition,price_minor,currency,city,specs,is_featured,created_at,seller:profiles!listings_seller_id_fkey(id,display_name,country_code,joined_at,reviews:reviews!reviews_subject_id_fkey(rating)),destinations:listing_shipping_countries(country_code),images:listing_images(id,storage_path,alt_text,width,height,sort_order)";
 
 interface DbListingImage {
   id: string;
@@ -34,6 +34,7 @@ interface DbListing {
   currency: Currency;
   city: string;
   specs: Record<string, string> | null;
+  is_featured: boolean;
   created_at: string;
   seller: DbSeller | DbSeller[];
   destinations: Array<{ country_code: CountryCode }>;
@@ -119,6 +120,7 @@ function mapListing(row: DbListing): Listing {
     specs,
     description: row.description,
     priceSignal: "fair",
+    isFeatured: row.is_featured,
     buyerProtection: true,
     serialVerified: false,
     createdLabel: new Date(row.created_at).toLocaleDateString(),

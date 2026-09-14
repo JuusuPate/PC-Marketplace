@@ -9,6 +9,23 @@ import type { Category } from "../types";
 export type CatalogPageId = "all" | "components" | Category;
 export type CatalogLabelKey = "allProducts" | "components" | "accessories" | Exclude<Category, "other">;
 
+/**
+ * Navigation-level filters are intentionally independent from the data source.
+ * App can translate these to local demo filtering or to Supabase query clauses.
+ */
+export interface CatalogNavigationFilter {
+  maxPriceMinor?: number;
+  featuredOnly?: boolean;
+  gpuChipVendor?: "nvidia" | "amd";
+}
+
+export interface CatalogSubmenuItem {
+  id: string;
+  label: string;
+  href: string;
+  filters: CatalogNavigationFilter;
+}
+
 export interface CatalogPage {
   id: CatalogPageId;
   path: string;
@@ -16,6 +33,7 @@ export interface CatalogPage {
   glyph: string;
   image: string;
   categories: readonly Category[] | null;
+  submenu?: readonly CatalogSubmenuItem[];
 }
 
 export const CATALOG_PAGES: CatalogPage[] = [
@@ -42,6 +60,20 @@ export const CATALOG_PAGES: CatalogPage[] = [
     glyph: "▣",
     image: gamingPcImage,
     categories: ["pc"],
+    submenu: [
+      {
+        id: "pc-under-1000",
+        label: "Alle 1 000 €",
+        href: "/kategoriat/pelitietokoneet?maxPrice=1000",
+        filters: { maxPriceMinor: 100_000 },
+      },
+      {
+        id: "pc-featured",
+        label: "Nostetut",
+        href: "/kategoriat/pelitietokoneet?featured=true",
+        filters: { featuredOnly: true },
+      },
+    ],
   },
   {
     id: "gpu",
@@ -50,6 +82,20 @@ export const CATALOG_PAGES: CatalogPage[] = [
     glyph: "▰",
     image: gpuImage,
     categories: ["gpu"],
+    submenu: [
+      {
+        id: "gpu-nvidia",
+        label: "NVIDIA",
+        href: "/kategoriat/naytonohjaimet?chipVendor=nvidia",
+        filters: { gpuChipVendor: "nvidia" },
+      },
+      {
+        id: "gpu-amd",
+        label: "AMD",
+        href: "/kategoriat/naytonohjaimet?chipVendor=amd",
+        filters: { gpuChipVendor: "amd" },
+      },
+    ],
   },
   {
     id: "cpu",

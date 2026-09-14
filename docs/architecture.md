@@ -67,3 +67,21 @@ Web-sovellus valitsee käynnistyksessä toimintatilan ympäristömuuttujien peru
 Selain käyttää vain Supabasen julkista publishable key -avainta. Tietokanta luo profiilin Auth-käyttäjälle triggerillä. RLS-käytännöt ja erikseen rajatut tauluoikeudet suojaavat selaimelle näkyvän datan, eikä selain saa suoraa kirjoitusoikeutta profiili- tai ilmoitustauluihin. Ilmoitus ja toimitusmaat luodaan yhdessä tarkastetussa tietokantafunktiossa, jolloin osittain tallentunutta ilmoitusta ei synny.
 
 Migraatio `0003_finland_only_launch.sql` asettaa muut markkinat pois käytöstä ja estää tietokantatasolla muiden maiden profiilit, julkaistut ilmoitukset sekä toimitusmaat. Kun seuraava maa avataan, selainkonfiguraatio ja tämä tietokantaraja päivitetään samassa versioidussa muutoksessa.
+
+## Hallittava katalogi
+
+Migraatio `0006_catalog_taxonomy.sql` siirtää kategoriarakenteen hallittavaksi dataksi ilman erillistä taulua jokaiselle komponenttityypille:
+
+- `catalog_categories` kuvaa myytävät kategoriat ja mahdolliset ryhmät. Nykyinen `listings.category` viittaa kategorian vakaaseen `slug`-arvoon.
+- `catalog_market_categories` ottaa kategorian käyttöön tietyllä markkinalla ja määrittää sen järjestyksen. Julkinen luku palauttaa toistaiseksi vain käytössä olevat Suomen rivit.
+- `catalog_navigation_items` sisältää kategoriapalkin markkinakohtaiset alasvetovalinnat. Suodatin tallennetaan rajattuna JSON-konfiguraationa, ei suoritettavana SQL:nä tai adminin antamana URL-osoitteena.
+- `catalog_brands` ja `catalog_category_brands` rajaavat brändit niihin kategorioihin, joissa ne ovat käyttökelpoisia.
+- `catalog_spec_fields` ja `catalog_category_spec_fields` määrittävät kategoriakohtaiset tekniset kentät, järjestyksen, pakollisuuden ja mahdollisuuden valita ”en tiedä”. Kentillä on käännöksistä riippumattomat vakaat avaimet.
+
+GPU:n NVIDIA/AMD-rajaus mallinnetaan `gpu_chip_vendor`-teknisenä valintana. Se pidetään erillään varsinaisesta tuotemerkistä, koska esimerkiksi NVIDIA-piiriä käyttävän kortin tuotemerkki voi olla ASUS ja AMD-piiriä käyttävän Sapphire.
+
+Nykyiset ilmoitukset säilyttävät vielä tekniset tiedot vapaamuotoisessa `listings.specs`-JSON:ssa, ja selainversio voi käyttää vanhoissa riveissä lokalisoituja avaimia. Seuraava taaksepäin yhteensopiva vaihe on kirjoittaa uusille ilmoituksille rinnalle vakaat kenttäavaimet ja lukea siirtymän aikana molempia muotoja.
+
+Kaikki käyttäjälle näytettävät katalogin nimet tallennetaan `labels`-JSONB-kenttään kieliavaimilla `fi`, `sv`, `da`, `nb` ja `en`. Suomenkielinen nimi on pakollinen; muut kielet voidaan täydentää ennen kunkin markkinan avaamista.
+
+Anonyymi ja tavallinen kirjautunut käyttäjä saavat vain aktiivisen Suomen katalogin lukuoikeuden. Selainrooleilla ei ole suoraa kirjoitusoikeutta katalogitauluihin. Ensimmäinen rajattu admin-toiminto, navigaatiovalinnan tallennus, kulkee `save_catalog_navigation_item`-funktion kautta; se tarkistaa `user_roles`-taulun admin-roolin, hyväksyy vain ennalta määritetyt suodatintyypit ja tallentaa muutoksen `catalog_admin_changes`-audit-lokiin. Nostetun ilmoituksen tilan voi muuttaa vain vastaavasti suojatulla `set_listing_featured`-funktiolla. Tulevat kategoria-, brändi- ja kenttäeditorit käyttävät samaa RPC-, validointi- ja auditointimallia. Kohdat poistetaan näkyvistä `is_active`- tai `is_enabled`-lipulla, jotta vanhojen ilmoitusten viitteet säilyvät.

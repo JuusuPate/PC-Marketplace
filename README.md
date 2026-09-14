@@ -7,7 +7,7 @@ Finland-first, Nordic-ready -demo käytettyjen PC-komponenttien ja pelikoneiden 
 - suomen-, ruotsin- ja englanninkielinen käyttöliittymä Suomen käyttäjille
 - vain Suomen markkina, eurohinnoittelu ja toimitukset Suomessa
 - Ruotsin, Tanskan ja Norjan asetukset ovat rakenteessa valmiina mutta pois käytöstä
-- ilmoitusten haku, lajittelu sekä omat URL-sivut komponenteille, pelikoneille ja muille pääkategorioille
+- ilmoitusten haku, lajittelu, omat URL-sivut pääkategorioille sekä Pelikoneet- ja Näytönohjaimet-valikoiden jaettavat suodatinlinkit
 - pääsivun kolmen ilmoituksen vaihtuva nosto, manuaaliset hallintapainikkeet ja suoraan ilmoitussivuille vievät kortit
 - tuotesivu, myyjän maine, testitiedot, sarjanumeron vahvistus ja ostajansuoja
 - paikallinen demo-kirjautuminen tai valinnainen Supabase Auth sähköpostivahvistuksella
@@ -39,7 +39,7 @@ npm run build
 ## Supabase-kirjautumisen ja tietokannan käyttöönotto
 
 1. Luo Supabase-projekti.
-2. Suorita SQL-editorissa `supabase/migrations`-hakemiston migraatiot numerojärjestyksessä (`0001`–`0005`). Vaihtoehtoisesti linkitä paikallinen Supabase CLI -projekti ja suorita `supabase db push`. Neljäs migraatio lisää ilmoituskuvat ja myyjän yksityisen nouto-osoitteen; viides lisää sisältösivut ja admin-roolit.
+2. Suorita SQL-editorissa `supabase/migrations`-hakemiston migraatiot numerojärjestyksessä (`0001`–`0006`). Vaihtoehtoisesti linkitä paikallinen Supabase CLI -projekti ja suorita `supabase db push`. Neljäs migraatio lisää ilmoituskuvat ja myyjän yksityisen nouto-osoitteen, viides sisältösivut ja admin-roolit ja kuudes hallittavan komponenttikatalogin.
 3. Kopioi `apps/web/.env.example` tiedostoksi `apps/web/.env.local`.
 4. Lisää ympäristötiedostoon projektin URL ja publishable key. Älä koskaan lisää selaimeen service role- tai secret key -avainta.
 5. Lisää Supabasen Authentication → URL Configuration -asetuksiin kehityksessä `http://localhost:4173` ja tuotannossa palvelun HTTPS-osoite sekä sallitut redirect-osoitteet.
@@ -57,6 +57,8 @@ values ('KÄYTTÄJÄN_UUID', 'admin');
 ```
 
 Admin voi avata Käyttöehdot-, Tietosuoja- tai Saavutettavuus-sivun ja valita **Muokkaa sivua**. Julkinen sisältö on kaikkien luettavissa, mutta tallennus tarkistetaan aina Supabasen palvelinpuolella. Paikallisessa demotilassa toiminnon voi testata kirjautumisikkunan **Käytä admin-demotunnusta** -painikkeella; tämä paikallinen rooli on vain käyttöliittymädemo eikä tuotannon turvaraja.
+
+Migraatio `0006_catalog_taxonomy.sql` lisää kategoriat, kategoriakohtaiset brändit, teknisten tietojen määrittelyt ja kategoriapalkin suodatinvalinnat. Julkinen selain voi vain lukea aktiivisen Suomen katalogin. Navigaatiovalinnan lisääminen tai muokkaaminen tehdään admin-roolin tarkistavan `save_catalog_navigation_item`-funktion kautta ja muutos kirjataan audit-lokiin; selain ei saa suoraa kirjoitusoikeutta katalogitauluihin. Varsinainen `/admin/katalogi`-editori on seuraava käyttöliittymävaihe.
 
 ## Julkaisumarkkina
 

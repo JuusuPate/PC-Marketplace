@@ -67,6 +67,8 @@ export interface Listing {
   specs: Record<string, string>;
   description: string;
   priceSignal: PriceSignal;
+  /** Server-owned promotion flag. Demo data may set this explicitly for navigation previews. */
+  isFeatured?: boolean;
   buyerProtection: boolean;
   serialVerified: boolean;
   createdLabel: string;
