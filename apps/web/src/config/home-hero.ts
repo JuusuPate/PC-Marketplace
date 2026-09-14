@@ -6,7 +6,7 @@
  *    "/images/hero/oma-taustakuva.webp"
  * 3. Jätä arvo tyhjäksi (""), jos haluat käyttää alkuperäistä valkoista taustaa.
  */
-export const HOME_HERO_BACKGROUND_IMAGE = "";
+export const HOME_HERO_BACKGROUND_IMAGE = "/images/hero/PC-MarketPlace_Hero_PC.jpeg";
 
 /** Muuta tätä, jos kuvan tärkeä kohta tarvitsee eri rajauksen. */
 export const HOME_HERO_BACKGROUND_POSITION = "center center";
