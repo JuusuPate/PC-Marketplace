@@ -12,4 +12,4 @@ export const HOME_HERO_BACKGROUND_IMAGE = "/images/hero/PC-MarketPlace_Hero_PC.j
 export const HOME_HERO_BACKGROUND_POSITION = "center center";
 
 /** "cover" täyttää koko alueen kuten esimerkin suuri pelikonekuva. */
-export const HOME_HERO_BACKGROUND_SIZE = "80% auto";
+export const HOME_HERO_BACKGROUND_SIZE = "40% auto";
