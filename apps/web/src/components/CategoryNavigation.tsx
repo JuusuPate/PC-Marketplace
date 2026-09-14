@@ -148,9 +148,8 @@ export function CategoryNavigation({
                         if (isOpen) closeMenu();
                         else openMenu(page.id);
                       }}
-                    >
-                      <span aria-hidden="true">⌄</span>
-                    </button>
+                    />
+                    <span className="category-navigation-indicator" aria-hidden="true" />
                   </div>
                 ) : (
                   categoryLink
