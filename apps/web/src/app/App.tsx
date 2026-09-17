@@ -18,6 +18,7 @@ import {
   isAdminPath,
   isAdminUsersPath,
   isAdminListingsPath,
+  isAdminTransactionsPath,
 } from "../config/admin-routes";
 import {
   HOME_HERO_BACKGROUND_IMAGE,
@@ -532,6 +533,7 @@ export function App() {
             overview={isAdminOverviewPath(adminPath)}
             users={isAdminUsersPath(adminPath)}
             listings={isAdminListingsPath(adminPath)}
+            transactions={isAdminTransactionsPath(adminPath)}
             onLogin={() => setAuthOpen(true)}
             onNavigate={navigateTo}
           />

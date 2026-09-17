@@ -317,3 +317,135 @@ describe("admin listing directory", () => {
       );
   });
 });
+
+describe("admin transaction directory", () => {
+  const directory = (search = "", status = "", page = 0) =>
+    asRole(
+      "authenticated",
+      adminId,
+      `select public.get_admin_transactions('${search.replaceAll("'", "''")}', '${status.replaceAll("'", "''")}', ${page}) as directory`,
+    );
+  it("rejects anonymous, regular, absent and revoked admin identities", async () => {
+    for (const [role, identity] of [
+      ["anon", adminId],
+      ["authenticated", userId],
+      ["authenticated", null],
+      ["service_role", null],
+    ] as const)
+      await expect(asRole(role, identity, "select public.get_admin_transactions()")).rejects.toMatchObject({
+        code: "42501",
+      });
+    await directory();
+    await db.query("delete from public.user_roles where user_id = $1", [adminId]);
+    await expect(directory()).rejects.toMatchObject({ code: "42501" });
+  });
+  it("returns a genuine empty page without demo orders", async () => {
+    expect((await directory()).rows[0].directory).toMatchObject({
+      market: "FI",
+      currency: "EUR",
+      total: 0,
+      transactions: [],
+    });
+  });
+  it("filters every state and preserves the stored monetary breakdown", async () => {
+    const statuses = [
+      "pending_payment",
+      "paid",
+      "shipped",
+      "delivered",
+      "inspection",
+      "disputed",
+      "completed",
+      "refunded",
+      "cancelled",
+    ];
+    for (const status of statuses) await order(status, 12599, 251);
+    expect((await directory()).rows[0].directory).toMatchObject({ total: 9 });
+    for (const status of statuses) {
+      const data = (await directory("", status)).rows[0].directory as { transactions: Array<Record<string, unknown>> };
+      expect(data).toMatchObject({
+        total: 1,
+        transactions: [
+          {
+            status,
+            item_price_minor: 12599,
+            marketplace_fee_minor: 251,
+            payment_processing_minor: 100,
+            shipping_minor: 500,
+            total_minor: 13450,
+          },
+        ],
+      });
+      expect(Object.keys(data.transactions[0]).sort()).toEqual(
+        [
+          "id",
+          "listing_id",
+          "title",
+          "buyer_id",
+          "buyer_name",
+          "seller_id",
+          "seller_name",
+          "status",
+          "item_price_minor",
+          "marketplace_fee_minor",
+          "payment_processing_minor",
+          "shipping_minor",
+          "total_minor",
+          "created_at",
+        ].sort(),
+      );
+    }
+  });
+  it("excludes non-EUR and non-Finnish buyers, sellers and listings", async () => {
+    await order("completed", 1000, 20, "SEK");
+    await order("paid", 1000, 20);
+    await db.exec("update public.orders set buyer_country_code = 'SE' where status = 'paid'");
+    await order("shipped", 1000, 20);
+    await db.exec("update public.orders set seller_country_code = 'SE' where status = 'shipped'");
+    await order("refunded", 1000, 20);
+    await db.exec(`insert into public.catalog_market_categories (category_id, market_country_code, is_enabled)
+      select id, 'SE', true from public.catalog_categories where slug = 'pc'
+      on conflict (category_id, market_country_code) do update set is_enabled = true;`);
+    const foreignId = await listing("draft", "SE", "SEK");
+    await db.query("update public.orders set listing_id = $1 where status = 'refunded'", [foreignId]);
+    await order("cancelled", 1000, 20);
+    expect((await directory()).rows[0].directory).toMatchObject({ total: 1, transactions: [{ status: "cancelled" }] });
+  });
+  it("searches literal titles and exact order, listing, buyer and seller identifiers", async () => {
+    await order("paid", 1000, 0);
+    const row = (await db.query<{ id: string; listing_id: string }>("select id, listing_id from public.orders"))
+      .rows[0];
+    await db.query("update public.listings set title = 'Special 100%_PC' where id = $1", [row.listing_id]);
+    for (const search of ["special", "%_", row.id.toUpperCase(), row.listing_id, userId, adminId])
+      expect((await directory(search)).rows[0].directory).toMatchObject({ total: 1, transactions: [{ id: row.id }] });
+    expect((await directory("absent")).rows[0].directory).toMatchObject({ total: 0, transactions: [] });
+    expect((await directory("special", "completed")).rows[0].directory).toMatchObject({ total: 0 });
+  });
+  it("uses deterministic bounded pagination", async () => {
+    for (let i = 0; i < 27; i++) await order("paid", 1000, 0);
+    await db.exec("update public.orders set created_at = '2026-01-01'");
+    const first = (await directory()).rows[0].directory as { transactions: Array<{ id: string }> };
+    const second = (await directory("", "", 1)).rows[0].directory as { transactions: Array<{ id: string }> };
+    expect(first).toMatchObject({ total: 27 });
+    expect(first.transactions).toHaveLength(25);
+    expect(second.transactions).toHaveLength(2);
+    const ids = [...first.transactions, ...second.transactions].map((row) => row.id);
+    expect(new Set(ids).size).toBe(27);
+    expect(ids).toEqual([...ids].sort());
+    expect((await directory("", "", 2)).rows[0].directory).toMatchObject({ total: 27, transactions: [] });
+  });
+  it("bounds inputs at the database boundary", async () => {
+    for (const args of [
+      "'', '', -1",
+      "'', '', 1000001",
+      "'', '', null",
+      "null, '', 0",
+      "repeat('x', 101), '', 0",
+      "'', null, 0",
+      "'', 'unknown', 0",
+    ])
+      await expect(
+        asRole("authenticated", adminId, `select public.get_admin_transactions(${args})`),
+      ).rejects.toMatchObject({ code: "22023" });
+  });
+});
