@@ -53,15 +53,28 @@ RPC `get_admin_transactions` tarkistaa admin-roolin jokaisella kutsulla. Rajaus 
 
 82 automaattista testiä, tyyppitarkistus, muotoilutarkistus ja tuotantokäännös läpäisivät. Migraatio 0010 asennettiin yhdistettyyn Supabase-projektiin. Anonyymin, puuttuvan identiteetin ja ei-admin-identiteetin pääsy estettiin. Käyttäjän paikallisessa Supabaseen yhdistetyssä sovelluksessa tarkistettiin ylläpitäjän tilausnäkymä, haku, Valmis-suodatin ja tyhjä tulos. Tietokannassa ei ollut tilauksia; tietorivien summat ja sivutus tarkistettiin automaattisella testidatalla.
 
+## Vaihe 5: Revenue
+
+- [x] Suojattu `/admin/revenue`, vuosivalinta 2000–2100 ja 12 kuukauden erittely.
+- [x] Valmiiden kauppojen määrä, tuotteiden arvo ja palvelumaksut sentin tarkkuudella sekä vuosiyhteensä.
+- [x] Sama FI/EUR- ja completed-rajaus kuin yleiskatsauksessa. Hyvitykset, peruutukset ja demo-ostot eivät sisälly lukuihin.
+- [x] Suomen aikavyöhykkeen vuosi- ja kuukausirajat; tyhjät kuukaudet näytetään nollina.
+- [x] Suomi, ruotsi ja englanti, päivitys sekä lataus-, virhe-, tyhjä- ja pääsy estetty -tilat.
+
+Tietomallista puuttuu valmistumisajan kenttä. Siksi erittely perustuu **tilauksen luontiaikaan** (Europe/Helsinki) ja tilauksen nykyiseen completed-tilaan. Luvut eivät kuvaa valmistumis- tai tilityskuukautta, nettovoittoa tai kirjanpidon liikevaihtoa. Toimitusta ja maksunkäsittelyä ei lasketa palvelumaksuihin tai tuotteiden arvoon. Myöhemmin hyvitetty tilaus poistuu luvuista seuraavalla päivityksellä. Palautetaan vain aggregaatteja, ei henkilötietoja tai maksujen tunnisteita.
+
+Tarkistettu 18.9.2026: 100 testiä, tyyppitarkistus, muotoilu ja tuotantokäännös läpäisivät. Migraatio 0011 asennettiin yhdistettyyn Supabaseen. Anonyymin ja ei-admin-identiteetin pääsy estettiin. Paikallisessa sovelluksessa tarkistettiin ylläpitäjän näkymä ja vuosien 2025/2026 vaihtaminen. Oikeita valmiita kauppoja ei ollut; rahasummat, hyvitykset ja aikarajat testattiin automaattisilla tietokantatesteillä.
+
 ## Käyttöönotto
 
-1. Suorita olemassa olevaan Supabase-projektiin `supabase/migrations/0007_admin_overview.sql` , `supabase/migrations/0008_admin_users.sql` , `supabase/migrations/0009_admin_listings.sql` ja `supabase/migrations/0010_admin_transactions.sql` tässä järjestyksessä. Suorita vain vielä asentamattomat migraatiot. Uuden tietokannan kaikki migraatiot suoritetaan numerojärjestyksessä.
+1. Suorita olemassa olevaan Supabase-projektiin `supabase/migrations/0007_admin_overview.sql` , `supabase/migrations/0008_admin_users.sql` , `supabase/migrations/0009_admin_listings.sql` , `supabase/migrations/0010_admin_transactions.sql` ja `supabase/migrations/0011_admin_revenue.sql` tässä järjestyksessä. Suorita vain vielä asentamattomat migraatiot. Uuden tietokannan kaikki migraatiot suoritetaan numerojärjestyksessä.
 2. Varmista web-sovelluksen nykyiset Supabase-ympäristömuuttujat ja `user_roles`-tauluun ylläpitäjälle lisätty admin-rooli. Selaimeen tarvitaan vain julkinen avain.
 3. Kirjaudu ylläpitäjän tilille ja avaa **Oma tili → Admin Dashboard** tai `/admin`.
 4. Avaa `/admin/users`, tarkista haku näyttönimellä ja tunnisteella, sivutus sekä päivitys. Varmista tavallisella tilillä pääsyn estyminen.
 5. Avaa `/admin/listings` ja tarkista otsikko- ja tunnistehaku, kaikki tilasuodattimet, sivutus, tyhjä hakutulos ja päivitys. Varmista pääsyn esto tavallisella tilillä sekä oikeuden poistamisen jälkeen.
 6. Avaa `/admin/transactions` ja tarkista haku, tilasuodatus, sivutus, päivitys ja summien erittely. Demo-ostot eivät luo rivejä listalle.
-7. Vertaa mittareita oman testitietokannan riveihin ja tarkista päivitys. Maksuintegraation puuttuessa tietokannan tilausluvut voivat olla nollia, vaikka selaimessa olisi demo-ostoja.
+7. Avaa `/admin/revenue`, vaihda vuotta ja tarkista kuukausien ja vuosiyhteenvedon täsmäytys. Huomioi luontiaikaan perustuva ryhmittely.
+8. Vertaa mittareita oman testitietokannan riveihin ja tarkista päivitys. Maksuintegraation puuttuessa tietokannan tilausluvut voivat olla nollia, vaikka selaimessa olisi demo-ostoja.
 
 GitHubin PR ei suorita migraatiota yhdistettyyn Supabase-projektiin. Käyttöönotto tarvitsee tämän erillisen tietokantavaiheen.
 
@@ -97,8 +110,8 @@ npm run typecheck
 npm run build
 ```
 
-PostgreSQL-testit käyttävät PGliteä ja asentavat varsinaiset migraatiot `0001`–`0010` muuttamattomina. Supabasen tarjoamat Auth- ja Storage-taulut sekä roolit alustetaan testikohtaisessa ympäristössä. Testit kattavat anonyymin käyttäjän, tavallisen käyttäjän, puuttuvan identiteetin, väärennetyn roolimetatiedon, admin-oikeuden poistamisen, taulujen oikeudet, tyhjän datan, tilakohtaiset laskennat ja rahasummien rajaukset. Tämä ei korvaa yhdistetyn Supabase-projektin käyttöönoton tarkistamista.
+PostgreSQL-testit käyttävät PGliteä ja asentavat varsinaiset migraatiot `0001`–`0011` muuttamattomina. Supabasen tarjoamat Auth- ja Storage-taulut sekä roolit alustetaan testikohtaisessa ympäristössä. Testit kattavat anonyymin käyttäjän, tavallisen käyttäjän, puuttuvan identiteetin, väärennetyn roolimetatiedon, admin-oikeuden poistamisen, taulujen oikeudet, tyhjän datan, tilakohtaiset laskennat ja rahasummien rajaukset. Tämä ei korvaa yhdistetyn Supabase-projektin käyttöönoton tarkistamista.
 
 ## Seuraavat moduulit
 
-Toteuta ja testaa yksi moduuli kerrallaan: Revenue → Market Data → Reports/Disputes → Moderation → Marketing → System → Settings. Kunkin moduulin todellinen datalähde ja käyttöoikeusrajat tarkistetaan ennen toteutusta. Katalogieditori hyödyntää olemassa olevia suojattuja katalogifunktioita erillisessä vaiheessa.
+Toteuta ja testaa yksi moduuli kerrallaan: Market Data → Reports/Disputes → Moderation → Marketing → System → Settings. Kunkin moduulin todellinen datalähde ja käyttöoikeusrajat tarkistetaan ennen toteutusta. Katalogieditori hyödyntää olemassa olevia suojattuja katalogifunktioita erillisessä vaiheessa.

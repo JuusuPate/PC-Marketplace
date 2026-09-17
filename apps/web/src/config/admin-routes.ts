@@ -20,3 +20,7 @@ export function isAdminListingsPath(pathname: string) {
 export function isAdminTransactionsPath(pathname: string) {
   return pathname.replace(/\/+$/, "") === `${ADMIN_PATH}/transactions`;
 }
+
+export function isAdminRevenuePath(pathname: string) {
+  return pathname.replace(/\/+$/, "") === `${ADMIN_PATH}/revenue`;
+}

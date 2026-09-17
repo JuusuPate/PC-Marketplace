@@ -449,3 +449,107 @@ describe("admin transaction directory", () => {
       ).rejects.toMatchObject({ code: "22023" });
   });
 });
+
+describe("admin revenue", () => {
+  const revenue = (year = 2026) =>
+    asRole("authenticated", adminId, `select public.get_admin_revenue(${year}) as revenue`);
+  it("denies anonymous, regular, absent and revoked identities", async () => {
+    for (const [role, id] of [
+      ["anon", adminId],
+      ["authenticated", userId],
+      ["authenticated", null],
+      ["service_role", null],
+    ] as const)
+      await expect(asRole(role, id, "select public.get_admin_revenue(2026)")).rejects.toMatchObject({ code: "42501" });
+    await revenue();
+    await db.query("delete from public.user_roles where user_id=$1", [adminId]);
+    await expect(revenue()).rejects.toMatchObject({ code: "42501" });
+  });
+  it("returns twelve zero months for an empty year", async () => {
+    const data = (await revenue()).rows[0].revenue as { months: Array<{ month: number }> };
+    expect(data).toMatchObject({
+      year: 2026,
+      timezone: "Europe/Helsinki",
+      date_basis: "order_created_at",
+      totals: { completed_orders: 0, item_value_minor: 0, fees_minor: 0 },
+    });
+    expect(data.months.map((r) => r.month)).toEqual(Array.from({ length: 12 }, (_, i) => i + 1));
+    for (const row of data.months)
+      expect(row).toMatchObject({ completed_orders: 0, item_value_minor: 0, fees_minor: 0 });
+  });
+  it("matches Overview and excludes non-completed states and non-EUR orders", async () => {
+    await order("completed", 12599, 251);
+    await order("completed", 7500, 0);
+    for (const status of [
+      "pending_payment",
+      "paid",
+      "shipped",
+      "delivered",
+      "inspection",
+      "disputed",
+      "refunded",
+      "cancelled",
+    ])
+      await order(status, 99999, 999);
+    await order("completed", 99999, 999, "SEK");
+    await db.exec("update public.orders set created_at='2026-02-10T10:00:00Z'");
+    const data = (await revenue()).rows[0].revenue as { months: Array<unknown>; totals: unknown };
+    expect(data.totals).toEqual({ completed_orders: 2, item_value_minor: 20099, fees_minor: 251 });
+    expect(data.months[1]).toMatchObject({ month: 2, completed_orders: 2, item_value_minor: 20099, fees_minor: 251 });
+    expect((await asRole("authenticated", adminId)).rows[0].overview).toMatchObject({
+      orders: { completed: 2, completed_item_value_minor: 20099, completed_fees_minor: 251 },
+    });
+  });
+  it("uses Helsinki half-open year and month boundaries independent of session timezone", async () => {
+    const dates = [
+      "2025-12-31T21:59:59Z",
+      "2025-12-31T22:00:00Z",
+      "2026-01-31T21:59:59Z",
+      "2026-01-31T22:00:00Z",
+      "2026-03-31T20:59:59Z",
+      "2026-03-31T21:00:00Z",
+      "2026-12-31T21:59:59Z",
+      "2026-12-31T22:00:00Z",
+    ];
+    for (let i = 0; i < dates.length; i++) {
+      await order("completed", 1000 + i, 10 + i);
+      await db.query("update public.orders set created_at=$1 where item_price_minor=$2", [dates[i], 1000 + i]);
+    }
+    const data = (await revenue()).rows[0].revenue as { months: Array<{ completed_orders: number }> };
+    expect(data).toMatchObject({ totals: { completed_orders: 6 } });
+    expect(data.months.map((r) => r.completed_orders)).toEqual([2, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1]);
+    await db.exec("set timezone='America/New_York'");
+    expect((await revenue()).rows[0].revenue).toMatchObject({ months: data.months });
+    await db.exec("set timezone='UTC'");
+  });
+  it("excludes foreign buyers, sellers and listing markets", async () => {
+    await order("completed", 1000, 10);
+    await order("completed", 2000, 20);
+    await order("completed", 3000, 30);
+    await db.exec(
+      "update public.orders set created_at='2026-01-15'; update public.orders set buyer_country_code='SE' where item_price_minor=1000; update public.orders set seller_country_code='SE' where item_price_minor=2000;",
+    );
+    await db.exec(
+      `insert into public.catalog_market_categories (category_id, market_country_code, is_enabled) select id,'SE',true from public.catalog_categories where slug='pc' on conflict (category_id,market_country_code) do update set is_enabled=true;`,
+    );
+    const foreignId = await listing("draft", "SE", "SEK");
+    await db.query("update public.orders set listing_id=$1 where item_price_minor=3000", [foreignId]);
+    expect((await revenue()).rows[0].revenue).toMatchObject({
+      totals: { completed_orders: 0, item_value_minor: 0, fees_minor: 0 },
+    });
+  });
+  it("removes refunded orders on the next request", async () => {
+    await order("completed", 1000, 20);
+    await db.exec("update public.orders set created_at='2026-01-01'");
+    expect((await revenue()).rows[0].revenue).toMatchObject({ totals: { completed_orders: 1 } });
+    await db.exec("update public.orders set status='refunded'");
+    expect((await revenue()).rows[0].revenue).toMatchObject({ totals: { completed_orders: 0, fees_minor: 0 } });
+  });
+  it("rejects invalid year boundaries", async () => {
+    for (const value of ["null", "1999", "2101"])
+      await expect(asRole("authenticated", adminId, `select public.get_admin_revenue(${value})`)).rejects.toMatchObject(
+        { code: "22023" },
+      );
+    for (const year of [2000, 2100]) await expect(revenue(year)).resolves.toBeDefined();
+  });
+});

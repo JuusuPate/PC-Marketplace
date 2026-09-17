@@ -39,7 +39,7 @@ npm run build
 ## Supabase-kirjautumisen ja tietokannan käyttöönotto
 
 1. Luo Supabase-projekti.
-2. Suorita SQL-editorissa `supabase/migrations`-hakemiston migraatiot numerojärjestyksessä (`0001`–`0010`). Vaihtoehtoisesti linkitä paikallinen Supabase CLI -projekti ja suorita `supabase db push`. Neljäs migraatio lisää ilmoituskuvat ja myyjän yksityisen nouto-osoitteen, viides sisältösivut ja admin-roolit, kuudes hallittavan komponenttikatalogin seitsemäs admin-yleiskatsauksen, kahdeksas käyttäjälistan ja yhdeksäs ilmoituslistan ja kymmenes tilauslistan.
+2. Suorita SQL-editorissa `supabase/migrations`-hakemiston migraatiot numerojärjestyksessä (`0001`–`0011`). Vaihtoehtoisesti linkitä paikallinen Supabase CLI -projekti ja suorita `supabase db push`. Neljäs migraatio lisää ilmoituskuvat ja myyjän yksityisen nouto-osoitteen, viides sisältösivut ja admin-roolit, kuudes hallittavan komponenttikatalogin seitsemäs admin-yleiskatsauksen, kahdeksas käyttäjälistan ja yhdeksäs ilmoituslistan kymmenes tilauslistan ja yhdestoista tuottoseurannan.
 3. Kopioi `apps/web/.env.example` tiedostoksi `apps/web/.env.local`.
 4. Lisää ympäristötiedostoon projektin URL ja publishable key. Älä koskaan lisää selaimeen service role- tai secret key -avainta.
 5. Lisää Supabasen Authentication → URL Configuration -asetuksiin kehityksessä `http://localhost:4173` ja tuotannossa palvelun HTTPS-osoite sekä sallitut redirect-osoitteet.
@@ -60,11 +60,11 @@ Admin voi avata Käyttöehdot-, Tietosuoja- tai Saavutettavuus-sivun ja valita *
 
 Migraatio `0006_catalog_taxonomy.sql` lisää kategoriat, kategoriakohtaiset brändit, teknisten tietojen määrittelyt ja kategoriapalkin suodatinvalinnat. Julkinen selain voi vain lukea aktiivisen Suomen katalogin. Navigaatiovalinnan lisääminen tai muokkaaminen tehdään admin-roolin tarkistavan `save_catalog_navigation_item`-funktion kautta ja muutos kirjataan audit-lokiin; selain ei saa suoraa kirjoitusoikeutta katalogitauluihin. Varsinainen `/admin/katalogi`-editori toteutetaan erillisenä käyttöliittymämoduulina.
 
-### Admin Dashboard: vaiheet 1–4
+### Admin Dashboard: vaiheet 1–5
 
 Migraation `0007_admin_overview.sql` jälkeen ylläpitäjä voi avata oman tilin **Admin Dashboard** -painikkeen tai osoitteen `/admin`. Yleiskatsaus näyttää tietokannan käyttäjämäärän, viimeisen seitsemän päivän uudet käyttäjät, ilmoitusten tilat, tilausmäärät, avoimet raportit sekä valmiiden kauppojen tuotteiden arvon ja palvelumaksut sentin tarkkuudella.
 
-Luvut haetaan yhdellä admin-oikeuden tarkistavalla `get_admin_overview`-kutsulla. Paikalliset demoilmoitukset ja demo-ostot eivät sisälly mittareihin. Demotilassa Dashboard kertoo tarvittavasta palveluyhteydestä. Käyttäjälista on osoitteessa `/admin/users` ja ilmoituslista osoitteessa `/admin/listings`. Tilauslista on osoitteessa `/admin/transactions`: haku, tilasuodatus, sivutus ja summien erittely. Demo-ostot eivät sisälly tilauslistaan. Ilmoituslistassa on otsikko- ja tunnistehaku, tilasuodatus ja sivutus. Olemassa olevaan Supabase-projektiin suoritetaan vain vielä asentamattomat migraatiot `0007`–`0010` numerojärjestyksessä; aiempia migraatioita ei suoriteta uudelleen. GitHub-päivitys ei suorita migraatioita automaattisesti.
+Luvut haetaan yhdellä admin-oikeuden tarkistavalla `get_admin_overview`-kutsulla. Paikalliset demoilmoitukset ja demo-ostot eivät sisälly mittareihin. Demotilassa Dashboard kertoo tarvittavasta palveluyhteydestä. Käyttäjälista on osoitteessa `/admin/users` ja ilmoituslista osoitteessa `/admin/listings`. Tuottoseuranta on osoitteessa `/admin/revenue`: vuosivalinta sekä valmiiden kauppojen ja palvelumaksujen kuukausierittely tilauksen luontiajan mukaan. Tilauslista on osoitteessa `/admin/transactions`: haku, tilasuodatus, sivutus ja summien erittely. Demo-ostot eivät sisälly tilauslistaan. Ilmoituslistassa on otsikko- ja tunnistehaku, tilasuodatus ja sivutus. Olemassa olevaan Supabase-projektiin suoritetaan vain vielä asentamattomat migraatiot `0007`–`0011` numerojärjestyksessä; aiempia migraatioita ei suoriteta uudelleen. GitHub-päivitys ei suorita migraatioita automaattisesti.
 
 Toteutuksen rajaus, mittarien määritelmät ja seuraavat vaiheet: [Admin Dashboardin toteutus](docs/admin-dashboard.md).
 
