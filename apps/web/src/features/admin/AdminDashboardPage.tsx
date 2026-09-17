@@ -13,6 +13,8 @@ import { AdminListingsPanel } from "./AdminListingsPanel";
 import { getAdminListingsCopy } from "./admin-listings-copy";
 import { AdminTransactionsPanel } from "./AdminTransactionsPanel";
 import { getAdminTransactionsCopy } from "./admin-transactions-copy";
+import { AdminRevenuePanel } from "./AdminRevenuePanel";
+import { getAdminRevenueCopy } from "./admin-revenue-copy";
 import "./admin-dashboard.css";
 
 interface AdminDashboardPageProps {
@@ -23,6 +25,7 @@ interface AdminDashboardPageProps {
   users?: boolean;
   listings?: boolean;
   transactions?: boolean;
+  revenue?: boolean;
   onLogin: () => void;
   onNavigate: (path: string) => void;
 }
@@ -102,6 +105,7 @@ export function AdminDashboardPage({
   users = false,
   listings = false,
   transactions = false,
+  revenue = false,
   onLogin,
   onNavigate,
 }: AdminDashboardPageProps) {
@@ -156,7 +160,7 @@ export function AdminDashboardPage({
   if (backendMode !== "supabase") return renderState(copy.setupTitle, copy.setupBody);
   if (!user) return renderState(copy.loginTitle, copy.loginBody, { label: copy.login, run: onLogin });
   if (user.role !== "admin" || state.status === "denied") return renderState(copy.deniedTitle, copy.deniedBody);
-  if (!overview && !users && !listings && !transactions)
+  if (!overview && !users && !listings && !transactions && !revenue)
     return renderState(copy.notFoundTitle, copy.notFoundBody, {
       label: copy.overview,
       run: () => onNavigate(ADMIN_PATH),
@@ -212,6 +216,16 @@ export function AdminDashboardPage({
             {getAdminTransactionsCopy(locale).title}
           </a>
           <a
+            href={`${ADMIN_PATH}/revenue`}
+            aria-current={revenue ? "page" : undefined}
+            onClick={(event) => {
+              event.preventDefault();
+              onNavigate(`${ADMIN_PATH}/revenue`);
+            }}
+          >
+            {getAdminRevenueCopy(locale).title}
+          </a>
+          <a
             href={getLegalPath("terms")}
             onClick={(event) => {
               event.preventDefault();
@@ -231,7 +245,9 @@ export function AdminDashboardPage({
           </a>
         </nav>
       </aside>
-      {transactions ? (
+      {revenue ? (
+        <AdminRevenuePanel locale={locale} />
+      ) : transactions ? (
         <AdminTransactionsPanel locale={locale} />
       ) : listings ? (
         <AdminListingsPanel locale={locale} />
