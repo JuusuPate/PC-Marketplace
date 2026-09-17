@@ -7,6 +7,8 @@ import { formatMoney } from "../../lib/money";
 import { backendMode } from "../../lib/supabase";
 import type { DemoUser, Locale } from "../../types";
 import { getAdminCopy } from "./admin-copy";
+import { AdminUsersPanel } from "./AdminUsersPanel";
+import { getAdminUsersCopy } from "./admin-users-copy";
 import "./admin-dashboard.css";
 
 interface AdminDashboardPageProps {
@@ -14,6 +16,7 @@ interface AdminDashboardPageProps {
   user: DemoUser | null;
   authLoading: boolean;
   overview: boolean;
+  users?: boolean;
   onLogin: () => void;
   onNavigate: (path: string) => void;
 }
@@ -90,6 +93,7 @@ export function AdminDashboardPage({
   user,
   authLoading,
   overview,
+  users = false,
   onLogin,
   onNavigate,
 }: AdminDashboardPageProps) {
@@ -144,7 +148,7 @@ export function AdminDashboardPage({
   if (backendMode !== "supabase") return renderState(copy.setupTitle, copy.setupBody);
   if (!user) return renderState(copy.loginTitle, copy.loginBody, { label: copy.login, run: onLogin });
   if (user.role !== "admin" || state.status === "denied") return renderState(copy.deniedTitle, copy.deniedBody);
-  if (!overview)
+  if (!overview && !users)
     return renderState(copy.notFoundTitle, copy.notFoundBody, {
       label: copy.overview,
       run: () => onNavigate(ADMIN_PATH),
@@ -161,13 +165,23 @@ export function AdminDashboardPage({
         <nav aria-label={copy.navigation}>
           <a
             href={ADMIN_PATH}
-            aria-current="page"
+            aria-current={overview ? "page" : undefined}
             onClick={(event) => {
               event.preventDefault();
               onNavigate(ADMIN_PATH);
             }}
           >
             {copy.overview}
+          </a>
+          <a
+            href={`${ADMIN_PATH}/users`}
+            aria-current={users ? "page" : undefined}
+            onClick={(event) => {
+              event.preventDefault();
+              onNavigate(`${ADMIN_PATH}/users`);
+            }}
+          >
+            {getAdminUsersCopy(locale).title}
           </a>
           <a
             href={getLegalPath("terms")}
@@ -189,48 +203,52 @@ export function AdminDashboardPage({
           </a>
         </nav>
       </aside>
-      <section className="admin-content" aria-busy={state.status === "loading"}>
-        <header className="admin-heading">
-          <div>
-            <span className="admin-eyebrow">{copy.title}</span>
-            <h1 id="admin-page-title" tabIndex={-1}>
-              {copy.overview}
-            </h1>
-            <p>{copy.description}</p>
-          </div>
-          <button
-            className="button button--dark"
-            type="button"
-            disabled={state.status === "loading"}
-            onClick={() => {
-              setState({ status: "loading" });
-              setRefresh((value) => value + 1);
-            }}
-          >
-            {copy.refresh}
-          </button>
-        </header>
-        {state.status === "loading" && (
-          <p className="admin-loading" role="status">
-            {copy.loading}
-          </p>
-        )}
-        {state.status === "error" && (
-          <div className="admin-error" role="alert">
-            <h2>{copy.errorTitle}</h2>
-            <p>{copy.errorBody}</p>
-          </div>
-        )}
-        {state.status === "ready" && (
-          <>
-            <p className="admin-updated">
-              {copy.updated}:{" "}
-              <time dateTime={state.data.generatedAt}>{new Date(state.data.generatedAt).toLocaleString(locale)}</time>
+      {users ? (
+        <AdminUsersPanel locale={locale} />
+      ) : (
+        <section className="admin-content" aria-busy={state.status === "loading"}>
+          <header className="admin-heading">
+            <div>
+              <span className="admin-eyebrow">{copy.title}</span>
+              <h1 id="admin-page-title" tabIndex={-1}>
+                {copy.overview}
+              </h1>
+              <p>{copy.description}</p>
+            </div>
+            <button
+              className="button button--dark"
+              type="button"
+              disabled={state.status === "loading"}
+              onClick={() => {
+                setState({ status: "loading" });
+                setRefresh((value) => value + 1);
+              }}
+            >
+              {copy.refresh}
+            </button>
+          </header>
+          {state.status === "loading" && (
+            <p className="admin-loading" role="status">
+              {copy.loading}
             </p>
-            <AdminOverviewPanel data={state.data} locale={locale} />
-          </>
-        )}
-      </section>
+          )}
+          {state.status === "error" && (
+            <div className="admin-error" role="alert">
+              <h2>{copy.errorTitle}</h2>
+              <p>{copy.errorBody}</p>
+            </div>
+          )}
+          {state.status === "ready" && (
+            <>
+              <p className="admin-updated">
+                {copy.updated}:{" "}
+                <time dateTime={state.data.generatedAt}>{new Date(state.data.generatedAt).toLocaleString(locale)}</time>
+              </p>
+              <AdminOverviewPanel data={state.data} locale={locale} />
+            </>
+          )}
+        </section>
+      )}
     </div>
   );
 }

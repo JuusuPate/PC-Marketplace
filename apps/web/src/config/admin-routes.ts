@@ -8,3 +8,7 @@ export function isAdminPath(pathname: string) {
 export function isAdminOverviewPath(pathname: string) {
   return (pathname.replace(/\/+$/, "") || "/") === ADMIN_PATH;
 }
+
+export function isAdminUsersPath(pathname: string) {
+  return pathname.replace(/\/+$/, "") === `${ADMIN_PATH}/users`;
+}

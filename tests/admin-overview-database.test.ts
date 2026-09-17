@@ -170,3 +170,67 @@ describe("admin overview database metrics", () => {
     expect(JSON.stringify(result.rows[0].overview)).not.toContain(adminId);
   });
 });
+
+describe("admin user directory", () => {
+  const directory = (search = "", page = 0) =>
+    asRole(
+      "authenticated",
+      adminId,
+      `select public.get_admin_users('${search.replaceAll("'", "''")}', ${page}) as directory`,
+    );
+
+  it("rejects anonymous, regular, missing and revoked identities", async () => {
+    for (const [role, identity] of [
+      ["anon", adminId],
+      ["authenticated", userId],
+      ["authenticated", null],
+      ["service_role", null],
+    ] as const)
+      await expect(asRole(role, identity, "select public.get_admin_users()")).rejects.toMatchObject({ code: "42501" });
+    await directory();
+    await db.query("delete from public.user_roles where user_id = $1", [adminId]);
+    await expect(directory()).rejects.toMatchObject({ code: "42501" });
+  });
+
+  it("returns real profile fields and server roles without email or metadata", async () => {
+    const result = await directory();
+    const data = result.rows[0].directory as { users: Array<{ id: string; role: string }> };
+    expect(data).toMatchObject({ market: "FI", page: 0, page_size: 25, total: 2 });
+    expect(data.users.find((row) => row.id === adminId)?.role).toBe("admin");
+    expect(data.users.find((row) => row.id === userId)?.role).toBe("user");
+    for (const row of data.users)
+      expect(Object.keys(row).sort()).toEqual(["id", "display_name", "locale", "joined_at", "role"].sort());
+    expect(JSON.stringify(data)).not.toContain("example.test");
+  });
+
+  it("searches names literally and supports exact IDs in the Finland-only schema", async () => {
+    await db.query("update public.profiles set display_name = 'Boss 100%_PC' where id = $1", [adminId]);
+    await db.query("update public.profiles set country_code = 'SE' where id = $1", [userId]);
+    expect((await directory("boss")).rows[0].directory).toMatchObject({ total: 1 });
+    expect((await directory("%_")).rows[0].directory).toMatchObject({ total: 1 });
+    expect((await directory(adminId)).rows[0].directory).toMatchObject({ total: 1 });
+    expect((await directory(userId)).rows[0].directory).toMatchObject({ total: 1 });
+    expect((await directory("missing")).rows[0].directory).toMatchObject({ total: 0, users: [] });
+  });
+
+  it("bounds pages and sorts tied dates without duplicates", async () => {
+    await db.exec(`insert into auth.users (id, email) select ('00000000-0000-4000-8000-' || lpad(i::text, 12, '0'))::uuid,
+      'test' || i || '@example.test' from generate_series(3, 32) i;
+      update public.profiles set joined_at = '2026-01-01';`);
+    const first = (await directory()).rows[0].directory as { users: Array<{ id: string }> };
+    const second = (await directory("", 1)).rows[0].directory as { users: Array<{ id: string }> };
+    expect(first).toMatchObject({ total: 32 });
+    expect(first.users).toHaveLength(25);
+    expect(second.users).toHaveLength(7);
+    expect(new Set([...first.users, ...second.users].map((row) => row.id)).size).toBe(32);
+    expect(first.users[0].id).toBe(adminId);
+    expect((await directory("", 2)).rows[0].directory).toMatchObject({ total: 32, users: [] });
+  });
+
+  it("rejects invalid inputs at the database boundary", async () => {
+    for (const args of ["'', -1", "'', 1000001", "'', null", "null, 0", "repeat('a', 101), 0"])
+      await expect(asRole("authenticated", adminId, `select public.get_admin_users(${args})`)).rejects.toMatchObject({
+        code: "22023",
+      });
+  });
+});
