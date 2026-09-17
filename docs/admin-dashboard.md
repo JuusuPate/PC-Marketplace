@@ -39,14 +39,29 @@ Selaintarkistus yritettiin, mutta ympäristö esti paikallisen osoitteen avaamis
 
 Paikalliset testit, tyyppitarkistus, muotoilutarkistus ja tuotantokäännös on ajettu. Tuotannon Supabase-migraatioita ja oikealla ylläpitäjätilillä tehtävää selaintarkistusta ei ole suoritettu tässä vaiheessa.
 
+## Vaihe 4: Transactions
+
+- [x] Suojattu `/admin/transactions`, tilauslista, haku ja tilasuodatus.
+- [x] Ostajan ja myyjän näyttönimi sekä tunniste, tilaus- ja ilmoitustunniste, ilmoituksen nykyinen otsikko, tila ja luontiaika.
+- [x] Tietokantaan tallennettu kokonaissumma sekä tuotteen, palvelumaksun, maksunkäsittelyn ja toimituksen erittely sentin tarkkuudella.
+- [x] Kaikki yhdeksän tilaustilaa, 25 rivin palvelinpuolen sivutus, päivitys ja lataus-, virhe-, tyhjä- ja pääsy estetty -tilat.
+- [x] Suomi, ruotsi ja englanti. Paikalliset demo-ostot on rajattu pois.
+
+RPC `get_admin_transactions` tarkistaa admin-roolin jokaisella kutsulla. Rajaus vastaa yleiskatsauksen tilauksia: ostaja ja myyjä Suomessa, tilauksen valuutta EUR ja ilmoituksen markkina FI. Haku hyväksyy otsikon osan tai kokonaisen tilaus-, ilmoitus-, ostaja- tai myyjätunnisteen. Se ei palauta maksuviitteitä, osoitteita, sähköposteja tai toimituksen seurantatietoja eikä muuta tilauksia tai maksuja. Otsikko on ilmoituksen nykyinen otsikko; tietomalli ei sisällä erillistä ostohetken otsikkokopiota.
+
+### Vaiheen 4 tarkistus 17.9.2026
+
+82 automaattista testiä, tyyppitarkistus, muotoilutarkistus ja tuotantokäännös läpäisivät. Migraatio 0010 asennettiin yhdistettyyn Supabase-projektiin. Anonyymin, puuttuvan identiteetin ja ei-admin-identiteetin pääsy estettiin. Käyttäjän paikallisessa Supabaseen yhdistetyssä sovelluksessa tarkistettiin ylläpitäjän tilausnäkymä, haku, Valmis-suodatin ja tyhjä tulos. Tietokannassa ei ollut tilauksia; tietorivien summat ja sivutus tarkistettiin automaattisella testidatalla.
+
 ## Käyttöönotto
 
-1. Suorita olemassa olevaan Supabase-projektiin `supabase/migrations/0007_admin_overview.sql` , `supabase/migrations/0008_admin_users.sql` ja `supabase/migrations/0009_admin_listings.sql` tässä järjestyksessä. Uuden tietokannan kaikki migraatiot suoritetaan numerojärjestyksessä.
+1. Suorita olemassa olevaan Supabase-projektiin `supabase/migrations/0007_admin_overview.sql` , `supabase/migrations/0008_admin_users.sql` , `supabase/migrations/0009_admin_listings.sql` ja `supabase/migrations/0010_admin_transactions.sql` tässä järjestyksessä. Suorita vain vielä asentamattomat migraatiot. Uuden tietokannan kaikki migraatiot suoritetaan numerojärjestyksessä.
 2. Varmista web-sovelluksen nykyiset Supabase-ympäristömuuttujat ja `user_roles`-tauluun ylläpitäjälle lisätty admin-rooli. Selaimeen tarvitaan vain julkinen avain.
 3. Kirjaudu ylläpitäjän tilille ja avaa **Oma tili → Admin Dashboard** tai `/admin`.
 4. Avaa `/admin/users`, tarkista haku näyttönimellä ja tunnisteella, sivutus sekä päivitys. Varmista tavallisella tilillä pääsyn estyminen.
 5. Avaa `/admin/listings` ja tarkista otsikko- ja tunnistehaku, kaikki tilasuodattimet, sivutus, tyhjä hakutulos ja päivitys. Varmista pääsyn esto tavallisella tilillä sekä oikeuden poistamisen jälkeen.
-6. Vertaa mittareita oman testitietokannan riveihin ja tarkista päivitys. Maksuintegraation puuttuessa tietokannan tilausluvut voivat olla nollia, vaikka selaimessa olisi demo-ostoja.
+6. Avaa `/admin/transactions` ja tarkista haku, tilasuodatus, sivutus, päivitys ja summien erittely. Demo-ostot eivät luo rivejä listalle.
+7. Vertaa mittareita oman testitietokannan riveihin ja tarkista päivitys. Maksuintegraation puuttuessa tietokannan tilausluvut voivat olla nollia, vaikka selaimessa olisi demo-ostoja.
 
 GitHubin PR ei suorita migraatiota yhdistettyyn Supabase-projektiin. Käyttöönotto tarvitsee tämän erillisen tietokantavaiheen.
 
@@ -82,8 +97,8 @@ npm run typecheck
 npm run build
 ```
 
-PostgreSQL-testit käyttävät PGliteä ja asentavat varsinaiset migraatiot `0001`–`0009` muuttamattomina. Supabasen tarjoamat Auth- ja Storage-taulut sekä roolit alustetaan testikohtaisessa ympäristössä. Testit kattavat anonyymin käyttäjän, tavallisen käyttäjän, puuttuvan identiteetin, väärennetyn roolimetatiedon, admin-oikeuden poistamisen, taulujen oikeudet, tyhjän datan, tilakohtaiset laskennat ja rahasummien rajaukset. Tämä ei korvaa yhdistetyn Supabase-projektin käyttöönoton tarkistamista.
+PostgreSQL-testit käyttävät PGliteä ja asentavat varsinaiset migraatiot `0001`–`0010` muuttamattomina. Supabasen tarjoamat Auth- ja Storage-taulut sekä roolit alustetaan testikohtaisessa ympäristössä. Testit kattavat anonyymin käyttäjän, tavallisen käyttäjän, puuttuvan identiteetin, väärennetyn roolimetatiedon, admin-oikeuden poistamisen, taulujen oikeudet, tyhjän datan, tilakohtaiset laskennat ja rahasummien rajaukset. Tämä ei korvaa yhdistetyn Supabase-projektin käyttöönoton tarkistamista.
 
 ## Seuraavat moduulit
 
-Toteuta ja testaa yksi moduuli kerrallaan: Transactions → Revenue → Market Data → Reports/Disputes → Moderation → Marketing → System → Settings. Kunkin moduulin todellinen datalähde ja käyttöoikeusrajat tarkistetaan ennen toteutusta. Katalogieditori hyödyntää olemassa olevia suojattuja katalogifunktioita erillisessä vaiheessa.
+Toteuta ja testaa yksi moduuli kerrallaan: Revenue → Market Data → Reports/Disputes → Moderation → Marketing → System → Settings. Kunkin moduulin todellinen datalähde ja käyttöoikeusrajat tarkistetaan ennen toteutusta. Katalogieditori hyödyntää olemassa olevia suojattuja katalogifunktioita erillisessä vaiheessa.
