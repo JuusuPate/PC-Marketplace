@@ -39,7 +39,7 @@ npm run build
 ## Supabase-kirjautumisen ja tietokannan käyttöönotto
 
 1. Luo Supabase-projekti.
-2. Suorita SQL-editorissa `supabase/migrations`-hakemiston migraatiot numerojärjestyksessä (`0001`–`0006`). Vaihtoehtoisesti linkitä paikallinen Supabase CLI -projekti ja suorita `supabase db push`. Neljäs migraatio lisää ilmoituskuvat ja myyjän yksityisen nouto-osoitteen, viides sisältösivut ja admin-roolit ja kuudes hallittavan komponenttikatalogin.
+2. Suorita SQL-editorissa `supabase/migrations`-hakemiston migraatiot numerojärjestyksessä (`0001`–`0007`). Vaihtoehtoisesti linkitä paikallinen Supabase CLI -projekti ja suorita `supabase db push`. Neljäs migraatio lisää ilmoituskuvat ja myyjän yksityisen nouto-osoitteen, viides sisältösivut ja admin-roolit, kuudes hallittavan komponenttikatalogin ja seitsemäs admin-yleiskatsauksen.
 3. Kopioi `apps/web/.env.example` tiedostoksi `apps/web/.env.local`.
 4. Lisää ympäristötiedostoon projektin URL ja publishable key. Älä koskaan lisää selaimeen service role- tai secret key -avainta.
 5. Lisää Supabasen Authentication → URL Configuration -asetuksiin kehityksessä `http://localhost:4173` ja tuotannossa palvelun HTTPS-osoite sekä sallitut redirect-osoitteet.
@@ -58,7 +58,17 @@ values ('KÄYTTÄJÄN_UUID', 'admin');
 
 Admin voi avata Käyttöehdot-, Tietosuoja- tai Saavutettavuus-sivun ja valita **Muokkaa sivua**. Julkinen sisältö on kaikkien luettavissa, mutta tallennus tarkistetaan aina Supabasen palvelinpuolella. Paikallisessa demotilassa toiminnon voi testata kirjautumisikkunan **Käytä admin-demotunnusta** -painikkeella; tämä paikallinen rooli on vain käyttöliittymädemo eikä tuotannon turvaraja.
 
-Migraatio `0006_catalog_taxonomy.sql` lisää kategoriat, kategoriakohtaiset brändit, teknisten tietojen määrittelyt ja kategoriapalkin suodatinvalinnat. Julkinen selain voi vain lukea aktiivisen Suomen katalogin. Navigaatiovalinnan lisääminen tai muokkaaminen tehdään admin-roolin tarkistavan `save_catalog_navigation_item`-funktion kautta ja muutos kirjataan audit-lokiin; selain ei saa suoraa kirjoitusoikeutta katalogitauluihin. Varsinainen `/admin/katalogi`-editori on seuraava käyttöliittymävaihe.
+Migraatio `0006_catalog_taxonomy.sql` lisää kategoriat, kategoriakohtaiset brändit, teknisten tietojen määrittelyt ja kategoriapalkin suodatinvalinnat. Julkinen selain voi vain lukea aktiivisen Suomen katalogin. Navigaatiovalinnan lisääminen tai muokkaaminen tehdään admin-roolin tarkistavan `save_catalog_navigation_item`-funktion kautta ja muutos kirjataan audit-lokiin; selain ei saa suoraa kirjoitusoikeutta katalogitauluihin. Varsinainen `/admin/katalogi`-editori toteutetaan erillisenä käyttöliittymämoduulina.
+
+### Admin Dashboard: vaihe 1
+
+Migraation `0007_admin_overview.sql` jälkeen ylläpitäjä voi avata oman tilin **Admin Dashboard** -painikkeen tai osoitteen `/admin`. Yleiskatsaus näyttää tietokannan käyttäjämäärän, viimeisen seitsemän päivän uudet käyttäjät, ilmoitusten tilat, tilausmäärät, avoimet raportit sekä valmiiden kauppojen tuotteiden arvon ja palvelumaksut sentin tarkkuudella.
+
+Luvut haetaan yhdellä admin-oikeuden tarkistavalla `get_admin_overview`-kutsulla. Paikalliset demoilmoitukset ja demo-ostot eivät sisälly mittareihin. Demotilassa Dashboard kertoo tarvittavasta palveluyhteydestä. Olemassa olevan Supabase-projektin käyttöönottoon tarvitaan vain uusi `0007`-migraatio; aiempia migraatioita ei suoriteta uudelleen.
+
+Toteutuksen rajaus, mittarien määritelmät ja seuraavat vaiheet: [Admin Dashboardin toteutus](docs/admin-dashboard.md).
+
+Testit ajetaan komennolla `npm test`. Ne sisältävät koko migraatioketjun asentavat PostgreSQL-testit, palvelukutsun ja vastausvalidoinnin testit sekä näkymän ja istunnon käyttöoikeustestit. Testit eivät tarvitse tuotannon tunnuksia eivätkä muuta yhdistetyn Supabase-projektin dataa.
 
 ## Julkaisumarkkina
 
