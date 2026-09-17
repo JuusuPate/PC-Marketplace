@@ -39,7 +39,7 @@ npm run build
 ## Supabase-kirjautumisen ja tietokannan käyttöönotto
 
 1. Luo Supabase-projekti.
-2. Suorita SQL-editorissa `supabase/migrations`-hakemiston migraatiot numerojärjestyksessä (`0001`–`0007`). Vaihtoehtoisesti linkitä paikallinen Supabase CLI -projekti ja suorita `supabase db push`. Neljäs migraatio lisää ilmoituskuvat ja myyjän yksityisen nouto-osoitteen, viides sisältösivut ja admin-roolit, kuudes hallittavan komponenttikatalogin ja seitsemäs admin-yleiskatsauksen.
+2. Suorita SQL-editorissa `supabase/migrations`-hakemiston migraatiot numerojärjestyksessä (`0001`–`0009`). Vaihtoehtoisesti linkitä paikallinen Supabase CLI -projekti ja suorita `supabase db push`. Neljäs migraatio lisää ilmoituskuvat ja myyjän yksityisen nouto-osoitteen, viides sisältösivut ja admin-roolit, kuudes hallittavan komponenttikatalogin seitsemäs admin-yleiskatsauksen, kahdeksas käyttäjälistan ja yhdeksäs ilmoituslistan.
 3. Kopioi `apps/web/.env.example` tiedostoksi `apps/web/.env.local`.
 4. Lisää ympäristötiedostoon projektin URL ja publishable key. Älä koskaan lisää selaimeen service role- tai secret key -avainta.
 5. Lisää Supabasen Authentication → URL Configuration -asetuksiin kehityksessä `http://localhost:4173` ja tuotannossa palvelun HTTPS-osoite sekä sallitut redirect-osoitteet.
@@ -60,11 +60,11 @@ Admin voi avata Käyttöehdot-, Tietosuoja- tai Saavutettavuus-sivun ja valita *
 
 Migraatio `0006_catalog_taxonomy.sql` lisää kategoriat, kategoriakohtaiset brändit, teknisten tietojen määrittelyt ja kategoriapalkin suodatinvalinnat. Julkinen selain voi vain lukea aktiivisen Suomen katalogin. Navigaatiovalinnan lisääminen tai muokkaaminen tehdään admin-roolin tarkistavan `save_catalog_navigation_item`-funktion kautta ja muutos kirjataan audit-lokiin; selain ei saa suoraa kirjoitusoikeutta katalogitauluihin. Varsinainen `/admin/katalogi`-editori toteutetaan erillisenä käyttöliittymämoduulina.
 
-### Admin Dashboard: vaihe 1
+### Admin Dashboard: vaiheet 1–3
 
 Migraation `0007_admin_overview.sql` jälkeen ylläpitäjä voi avata oman tilin **Admin Dashboard** -painikkeen tai osoitteen `/admin`. Yleiskatsaus näyttää tietokannan käyttäjämäärän, viimeisen seitsemän päivän uudet käyttäjät, ilmoitusten tilat, tilausmäärät, avoimet raportit sekä valmiiden kauppojen tuotteiden arvon ja palvelumaksut sentin tarkkuudella.
 
-Luvut haetaan yhdellä admin-oikeuden tarkistavalla `get_admin_overview`-kutsulla. Paikalliset demoilmoitukset ja demo-ostot eivät sisälly mittareihin. Demotilassa Dashboard kertoo tarvittavasta palveluyhteydestä. Olemassa olevan Supabase-projektin käyttöönottoon tarvitaan vain uusi `0007`-migraatio; aiempia migraatioita ei suoriteta uudelleen.
+Luvut haetaan yhdellä admin-oikeuden tarkistavalla `get_admin_overview`-kutsulla. Paikalliset demoilmoitukset ja demo-ostot eivät sisälly mittareihin. Demotilassa Dashboard kertoo tarvittavasta palveluyhteydestä. Käyttäjälista on osoitteessa `/admin/users` ja ilmoituslista osoitteessa `/admin/listings`. Ilmoituslistassa on otsikko- ja tunnistehaku, tilasuodatus ja sivutus. Olemassa olevaan Supabase-projektiin suoritetaan vain vielä asentamattomat migraatiot `0007`–`0009` numerojärjestyksessä; aiempia migraatioita ei suoriteta uudelleen. GitHub-päivitys ei suorita migraatioita automaattisesti.
 
 Toteutuksen rajaus, mittarien määritelmät ja seuraavat vaiheet: [Admin Dashboardin toteutus](docs/admin-dashboard.md).
 

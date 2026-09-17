@@ -26,13 +26,27 @@ Toteutetut vaiheet ovat vain luku. Käyttäjien, ilmoitusten, raporttien tai til
 
 Selaintarkistus yritettiin, mutta ympäristö esti paikallisen osoitteen avaamisen (`ERR_BLOCKED_BY_CLIENT`). Automaattiset näkymätestit eivät korvaa oikealla Supabase-yhteydellä tehtävää selaintarkistusta.
 
+## Vaihe 3: Listings
+
+- [x] Suojattu `/admin/listings` ja linkki ylläpidon sivupalkissa.
+- [x] Suomen EUR-ilmoitukset kaikissa tiloissa: otsikko, tunniste, myyjän näyttönimi ja tunniste, tila, hinta sentin tarkkuudella ja luontipäivä.
+- [x] Otsikkohaku sekä tarkka ilmoitus- tai myyjätunnistehaku. Merkit `%` ja `_` käsitellään kirjaimellisesti.
+- [x] Tilasuodatus, 25 rivin palvelinpuolen sivutus, päivitys sekä lataus-, virhe-, pääsy estetty- ja tyhjätilat.
+- [x] Suomi, ruotsi ja englanti; uusin ensin ja tunniste tasatilanteen järjestyksenä.
+- [x] Käyttöoikeus-, tietokanta-, palvelu- ja näkymätestit: yhteensä 65 testiä.
+
+`get_admin_listings` tarkistaa ylläpitäjän roolin jokaisessa pyynnössä. Se ei palauta yksityistä nouto-osoitetta, sarjanumerotodisteita, sähköposteja tai maksutietoja. Taulujen käyttöoikeuksia ei laajenneta. Vaihe on vain luku; muokkaus, poistaminen ja muut moderointitoiminnot kuuluvat myöhempään Moderation-moduuliin.
+
+Paikalliset testit, tyyppitarkistus, muotoilutarkistus ja tuotantokäännös on ajettu. Tuotannon Supabase-migraatioita ja oikealla ylläpitäjätilillä tehtävää selaintarkistusta ei ole suoritettu tässä vaiheessa.
+
 ## Käyttöönotto
 
-1. Suorita olemassa olevaan Supabase-projektiin `supabase/migrations/0007_admin_overview.sql` ja sen jälkeen `supabase/migrations/0008_admin_users.sql`. Uuden tietokannan kaikki migraatiot suoritetaan numerojärjestyksessä.
+1. Suorita olemassa olevaan Supabase-projektiin `supabase/migrations/0007_admin_overview.sql` , `supabase/migrations/0008_admin_users.sql` ja `supabase/migrations/0009_admin_listings.sql` tässä järjestyksessä. Uuden tietokannan kaikki migraatiot suoritetaan numerojärjestyksessä.
 2. Varmista web-sovelluksen nykyiset Supabase-ympäristömuuttujat ja `user_roles`-tauluun ylläpitäjälle lisätty admin-rooli. Selaimeen tarvitaan vain julkinen avain.
 3. Kirjaudu ylläpitäjän tilille ja avaa **Oma tili → Admin Dashboard** tai `/admin`.
 4. Avaa `/admin/users`, tarkista haku näyttönimellä ja tunnisteella, sivutus sekä päivitys. Varmista tavallisella tilillä pääsyn estyminen.
-5. Vertaa mittareita oman testitietokannan riveihin ja tarkista päivitys. Maksuintegraation puuttuessa tietokannan tilausluvut voivat olla nollia, vaikka selaimessa olisi demo-ostoja.
+5. Avaa `/admin/listings` ja tarkista otsikko- ja tunnistehaku, kaikki tilasuodattimet, sivutus, tyhjä hakutulos ja päivitys. Varmista pääsyn esto tavallisella tilillä sekä oikeuden poistamisen jälkeen.
+6. Vertaa mittareita oman testitietokannan riveihin ja tarkista päivitys. Maksuintegraation puuttuessa tietokannan tilausluvut voivat olla nollia, vaikka selaimessa olisi demo-ostoja.
 
 GitHubin PR ei suorita migraatiota yhdistettyyn Supabase-projektiin. Käyttöönotto tarvitsee tämän erillisen tietokantavaiheen.
 
@@ -68,8 +82,8 @@ npm run typecheck
 npm run build
 ```
 
-PostgreSQL-testit käyttävät PGliteä ja asentavat varsinaiset migraatiot `0001`–`0008` muuttamattomina. Supabasen tarjoamat Auth- ja Storage-taulut sekä roolit alustetaan testikohtaisessa ympäristössä. Testit kattavat anonyymin käyttäjän, tavallisen käyttäjän, puuttuvan identiteetin, väärennetyn roolimetatiedon, admin-oikeuden poistamisen, taulujen oikeudet, tyhjän datan, tilakohtaiset laskennat ja rahasummien rajaukset. Tämä ei korvaa yhdistetyn Supabase-projektin käyttöönoton tarkistamista.
+PostgreSQL-testit käyttävät PGliteä ja asentavat varsinaiset migraatiot `0001`–`0009` muuttamattomina. Supabasen tarjoamat Auth- ja Storage-taulut sekä roolit alustetaan testikohtaisessa ympäristössä. Testit kattavat anonyymin käyttäjän, tavallisen käyttäjän, puuttuvan identiteetin, väärennetyn roolimetatiedon, admin-oikeuden poistamisen, taulujen oikeudet, tyhjän datan, tilakohtaiset laskennat ja rahasummien rajaukset. Tämä ei korvaa yhdistetyn Supabase-projektin käyttöönoton tarkistamista.
 
 ## Seuraavat moduulit
 
-Toteuta ja testaa yksi moduuli kerrallaan: Listings → Transactions → Revenue → Market Data → Reports/Disputes → Moderation → Marketing → System → Settings. Kunkin moduulin todellinen datalähde ja käyttöoikeusrajat tarkistetaan ennen toteutusta. Katalogieditori hyödyntää olemassa olevia suojattuja katalogifunktioita erillisessä vaiheessa.
+Toteuta ja testaa yksi moduuli kerrallaan: Transactions → Revenue → Market Data → Reports/Disputes → Moderation → Marketing → System → Settings. Kunkin moduulin todellinen datalähde ja käyttöoikeusrajat tarkistetaan ennen toteutusta. Katalogieditori hyödyntää olemassa olevia suojattuja katalogifunktioita erillisessä vaiheessa.

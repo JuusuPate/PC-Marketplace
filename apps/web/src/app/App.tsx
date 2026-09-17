@@ -12,7 +12,13 @@ import {
 } from "../config/catalog";
 import { getLegalPath, getLegalRoute } from "../config/legal-routes";
 import { getListingId, getListingPath } from "../config/listing-routes";
-import { ADMIN_PATH, isAdminOverviewPath, isAdminPath, isAdminUsersPath } from "../config/admin-routes";
+import {
+  ADMIN_PATH,
+  isAdminOverviewPath,
+  isAdminPath,
+  isAdminUsersPath,
+  isAdminListingsPath,
+} from "../config/admin-routes";
 import {
   HOME_HERO_BACKGROUND_IMAGE,
   HOME_HERO_BACKGROUND_POSITION,
@@ -525,6 +531,7 @@ export function App() {
             authLoading={authLoading}
             overview={isAdminOverviewPath(adminPath)}
             users={isAdminUsersPath(adminPath)}
+            listings={isAdminListingsPath(adminPath)}
             onLogin={() => setAuthOpen(true)}
             onNavigate={navigateTo}
           />

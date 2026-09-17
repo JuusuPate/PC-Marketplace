@@ -9,6 +9,8 @@ import type { DemoUser, Locale } from "../../types";
 import { getAdminCopy } from "./admin-copy";
 import { AdminUsersPanel } from "./AdminUsersPanel";
 import { getAdminUsersCopy } from "./admin-users-copy";
+import { AdminListingsPanel } from "./AdminListingsPanel";
+import { getAdminListingsCopy } from "./admin-listings-copy";
 import "./admin-dashboard.css";
 
 interface AdminDashboardPageProps {
@@ -17,6 +19,7 @@ interface AdminDashboardPageProps {
   authLoading: boolean;
   overview: boolean;
   users?: boolean;
+  listings?: boolean;
   onLogin: () => void;
   onNavigate: (path: string) => void;
 }
@@ -94,6 +97,7 @@ export function AdminDashboardPage({
   authLoading,
   overview,
   users = false,
+  listings = false,
   onLogin,
   onNavigate,
 }: AdminDashboardPageProps) {
@@ -148,7 +152,7 @@ export function AdminDashboardPage({
   if (backendMode !== "supabase") return renderState(copy.setupTitle, copy.setupBody);
   if (!user) return renderState(copy.loginTitle, copy.loginBody, { label: copy.login, run: onLogin });
   if (user.role !== "admin" || state.status === "denied") return renderState(copy.deniedTitle, copy.deniedBody);
-  if (!overview && !users)
+  if (!overview && !users && !listings)
     return renderState(copy.notFoundTitle, copy.notFoundBody, {
       label: copy.overview,
       run: () => onNavigate(ADMIN_PATH),
@@ -184,6 +188,16 @@ export function AdminDashboardPage({
             {getAdminUsersCopy(locale).title}
           </a>
           <a
+            href={`${ADMIN_PATH}/listings`}
+            aria-current={listings ? "page" : undefined}
+            onClick={(event) => {
+              event.preventDefault();
+              onNavigate(`${ADMIN_PATH}/listings`);
+            }}
+          >
+            {getAdminListingsCopy(locale).title}
+          </a>
+          <a
             href={getLegalPath("terms")}
             onClick={(event) => {
               event.preventDefault();
@@ -203,7 +217,9 @@ export function AdminDashboardPage({
           </a>
         </nav>
       </aside>
-      {users ? (
+      {listings ? (
+        <AdminListingsPanel locale={locale} />
+      ) : users ? (
         <AdminUsersPanel locale={locale} />
       ) : (
         <section className="admin-content" aria-busy={state.status === "loading"}>

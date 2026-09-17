@@ -260,3 +260,35 @@
   gap: 12px;
   margin-top: 24px;
 }
+
+.admin-listing-search {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-block: 28px;
+}
+.admin-listing-search label:first-child {
+  flex-basis: 100%;
+}
+.admin-listing-search input {
+  flex: 1;
+  min-width: 160px;
+}
+.admin-listing-search input,
+.admin-listing-search select {
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.admin-listing-search input:focus-visible,
+.admin-listing-search select:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 4px;
+}
+.admin-listing-id {
+  display: block;
+  font-weight: normal;
+  margin-top: 6px;
+  overflow-wrap: anywhere;
+}

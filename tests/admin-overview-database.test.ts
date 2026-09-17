@@ -234,3 +234,86 @@ describe("admin user directory", () => {
       });
   });
 });
+
+describe("admin listing directory", () => {
+  const directory = (search = "", status = "", page = 0) =>
+    asRole(
+      "authenticated",
+      adminId,
+      `select public.get_admin_listings('${search.replaceAll("'", "''")}', '${status.replaceAll("'", "''")}', ${page}) as directory`,
+    );
+
+  it("rejects anonymous, ordinary, missing and revoked identities", async () => {
+    for (const [role, identity] of [
+      ["anon", adminId],
+      ["authenticated", userId],
+      ["authenticated", null],
+      ["service_role", null],
+    ] as const)
+      await expect(asRole(role, identity, "select public.get_admin_listings()")).rejects.toMatchObject({
+        code: "42501",
+      });
+    await directory();
+    await db.query("delete from public.user_roles where user_id = $1", [adminId]);
+    await expect(directory()).rejects.toMatchObject({ code: "42501" });
+  });
+
+  it("returns all states and filters FI/EUR without exposing private listing fields", async () => {
+    for (const status of ["active", "draft", "reserved", "sold", "removed"]) await listing(status);
+    await db.exec(`insert into public.catalog_market_categories (category_id, market_country_code, is_enabled)
+      select id, 'SE', true from public.catalog_categories where slug = 'pc'
+      on conflict (category_id, market_country_code) do update set is_enabled = true;`);
+    await listing("draft", "SE", "SEK");
+    const result = (await directory()).rows[0].directory as { listings: Array<Record<string, unknown>> };
+    expect(result).toMatchObject({ market: "FI", currency: "EUR", total: 5, page_size: 25 });
+    expect(result.listings).toHaveLength(5);
+    for (const row of result.listings) {
+      expect(Object.keys(row).sort()).toEqual(
+        ["id", "title", "seller_id", "seller_name", "status", "price_minor", "created_at"].sort(),
+      );
+      expect(row.price_minor).toBe(12500);
+    }
+    for (const status of ["active", "draft", "reserved", "sold", "removed"])
+      expect((await directory("", status)).rows[0].directory).toMatchObject({ total: 1, listings: [{ status }] });
+  });
+
+  it("searches titles literally and accepts listing and seller identifiers", async () => {
+    const id = await listing();
+    await db.query("update public.listings set title = 'Boss 100%_PC' where id = $1", [id]);
+    await listing();
+    for (const search of ["boss", "%_", id, id.toUpperCase()])
+      expect((await directory(search)).rows[0].directory).toMatchObject({ total: 1, listings: [{ id }] });
+    expect((await directory(adminId)).rows[0].directory).toMatchObject({ total: 2 });
+    expect((await directory("missing")).rows[0].directory).toMatchObject({ total: 0, listings: [] });
+    expect((await directory("boss", "sold")).rows[0].directory).toMatchObject({ total: 0, listings: [] });
+  });
+
+  it("paginates tied dates deterministically without duplicate listings", async () => {
+    for (let i = 0; i < 27; i++) await listing();
+    await db.exec("update public.listings set created_at = '2026-01-01'");
+    const first = (await directory()).rows[0].directory as { listings: Array<{ id: string }> };
+    const second = (await directory("", "", 1)).rows[0].directory as { listings: Array<{ id: string }> };
+    expect(first).toMatchObject({ total: 27 });
+    expect(first.listings).toHaveLength(25);
+    expect(second.listings).toHaveLength(2);
+    const ids = [...first.listings, ...second.listings].map((row) => row.id);
+    expect(new Set(ids).size).toBe(27);
+    expect(ids).toEqual([...ids].sort());
+    expect((await directory("", "", 2)).rows[0].directory).toMatchObject({ total: 27, listings: [] });
+  });
+
+  it("rejects malformed parameters at the database boundary", async () => {
+    for (const args of [
+      "'', '', -1",
+      "'', '', 1000001",
+      "'', '', null",
+      "null, '', 0",
+      "repeat('x', 101), '', 0",
+      "'', null, 0",
+      "'', 'unknown', 0",
+    ])
+      await expect(asRole("authenticated", adminId, `select public.get_admin_listings(${args})`)).rejects.toMatchObject(
+        { code: "22023" },
+      );
+  });
+});
