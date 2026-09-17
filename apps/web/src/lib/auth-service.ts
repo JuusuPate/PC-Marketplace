@@ -103,25 +103,40 @@ export const authService = {
     };
   },
 
-  subscribe(listener: (user: DemoUser | null) => void) {
+  subscribe(listener: (user: DemoUser | null) => void, onLoading?: (loading: boolean) => void) {
     if (!supabase) return () => undefined;
 
     let requestId = 0;
     const { data } = supabase.auth.onAuthStateChange((_event, session) => {
       const currentRequest = ++requestId;
+      onLoading?.(true);
       if (!session?.user) {
         listener(null);
+        onLoading?.(false);
         return;
       }
 
       window.setTimeout(() => {
-        void mapUser(session.user).then((mappedUser) => {
-          if (currentRequest === requestId) listener(mappedUser);
-        });
+        if (currentRequest !== requestId) return;
+        void mapUser(session.user).then(
+          (mappedUser) => {
+            if (currentRequest !== requestId) return;
+            listener(mappedUser);
+            onLoading?.(false);
+          },
+          () => {
+            if (currentRequest !== requestId) return;
+            listener(null);
+            onLoading?.(false);
+          },
+        );
       }, 0);
     });
 
-    return () => data.subscription.unsubscribe();
+    return () => {
+      requestId++;
+      data.subscription.unsubscribe();
+    };
   },
 
   async signOut() {

@@ -8,10 +8,11 @@ const intlLocales: Record<Locale, string> = {
   en: "en-GB",
 };
 
-export function formatMoney(amountMinor: number, currency: Currency, locale: Locale) {
+export function formatMoney(amountMinor: number, currency: Currency, locale: Locale, fractionDigits = 0) {
   return new Intl.NumberFormat(intlLocales[locale], {
     style: "currency",
     currency,
-    maximumFractionDigits: 0,
+    minimumFractionDigits: fractionDigits,
+    maximumFractionDigits: fractionDigits,
   }).format(amountMinor / 100);
 }

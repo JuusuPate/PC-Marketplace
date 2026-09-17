@@ -13,6 +13,13 @@ import {
 import { getLegalPath, getLegalRoute } from "../config/legal-routes";
 import { getListingId, getListingPath } from "../config/listing-routes";
 import {
+  ADMIN_PATH,
+  isAdminOverviewPath,
+  isAdminPath,
+  isAdminUsersPath,
+  isAdminListingsPath,
+} from "../config/admin-routes";
+import {
   HOME_HERO_BACKGROUND_IMAGE,
   HOME_HERO_BACKGROUND_POSITION,
   HOME_HERO_BACKGROUND_SIZE,
@@ -20,6 +27,8 @@ import {
 import { LAUNCH_MARKET, MARKETS } from "../config/markets";
 import { DEMO_LISTINGS } from "../data/demo-listings";
 import { AccountModal } from "../features/account/AccountModal";
+import { AdminDashboardPage } from "../features/admin/AdminDashboardPage";
+import { getAdminCopy } from "../features/admin/admin-copy";
 import { AuthModal } from "../features/auth/AuthModal";
 import { CategoryHero } from "../features/catalog/CategoryHero";
 import { CheckoutModal } from "../features/checkout/CheckoutModal";
@@ -150,11 +159,15 @@ export function App() {
     () => getCatalogRouteFilter(window.location.pathname, window.location.search).activeHref,
   );
   const [legalRoute, setLegalRoute] = useState(() => getLegalRoute(window.location.pathname));
+  const [adminPath, setAdminPath] = useState<string | null>(() =>
+    isAdminPath(window.location.pathname) ? window.location.pathname : null,
+  );
   const [createListingPage, setCreateListingPage] = useState(() => isCreateListingPath(window.location.pathname));
   const [listingPageId, setListingPageId] = useState(() => getListingId(window.location.pathname));
   const [routeListing, setRouteListing] = useState<Listing | null>(null);
   const [listingRouteLoading, setListingRouteLoading] = useState(() => Boolean(getListingId(window.location.pathname)));
   const [user, setUser] = useState<DemoUser | null>(() => (backendMode === "demo" ? demoStorage.getSession() : null));
+  const [authLoading, setAuthLoading] = useState(backendMode === "supabase");
   const [customListings, setCustomListings] = useState<Listing[]>(() =>
     backendMode === "demo" ? demoStorage.getListings() : [],
   );
@@ -212,7 +225,7 @@ export function App() {
     return [];
   }, [catalogPage]);
 
-  useEffect(() => authService.subscribe(setUser), []);
+  useEffect(() => authService.subscribe(setUser, setAuthLoading), []);
 
   useEffect(() => {
     let isCurrent = true;
@@ -232,6 +245,7 @@ export function App() {
       setCatalogNavigationFilter(nextCatalogFilter.filter);
       setActiveCatalogSubmenuHref(nextCatalogFilter.activeHref);
       setLegalRoute(getLegalRoute(window.location.pathname));
+      setAdminPath(isAdminPath(window.location.pathname) ? window.location.pathname : null);
       setCreateListingPage(isCreateListingPath(window.location.pathname));
       setListingPageId(nextListingId);
       setListingRouteLoading(Boolean(nextListingId));
@@ -274,18 +288,20 @@ export function App() {
 
   useEffect(() => {
     document.documentElement.lang = locale;
-    document.title = legalRoute
-      ? `${copy[legalRoute.labelKey]} | PC Market`
-      : activeListing
-        ? `${activeListing.title} | PC Market`
-        : listingPageId
-          ? `${copy.noResults} | PC Market`
-          : createListingPage
-            ? `${copy.sellTitle} | PC Market`
-            : catalogPage
-              ? `${copy[catalogPage.labelKey]} | PC Market`
-              : copy.siteTitle;
-  }, [activeListing, catalogPage, copy, createListingPage, legalRoute, listingPageId, locale]);
+    document.title = adminPath
+      ? `${getAdminCopy(locale).title} | PC Market`
+      : legalRoute
+        ? `${copy[legalRoute.labelKey]} | PC Market`
+        : activeListing
+          ? `${activeListing.title} | PC Market`
+          : listingPageId
+            ? `${copy.noResults} | PC Market`
+            : createListingPage
+              ? `${copy.sellTitle} | PC Market`
+              : catalogPage
+                ? `${copy[catalogPage.labelKey]} | PC Market`
+                : copy.siteTitle;
+  }, [activeListing, adminPath, catalogPage, copy, createListingPage, legalRoute, listingPageId, locale]);
 
   useEffect(() => {
     if (!createListingPage) return;
@@ -364,6 +380,7 @@ export function App() {
     setCatalogNavigationFilter(nextCatalogFilter.filter);
     setActiveCatalogSubmenuHref(nextCatalogFilter.activeHref);
     setLegalRoute(nextLegalRoute);
+    setAdminPath(isAdminPath(pathname) ? pathname : null);
     setCreateListingPage(isCreateListingPath(pathname));
     setListingPageId(nextListingId);
     setListingRouteLoading(Boolean(nextListingId && !listings.some((listing) => listing.id === nextListingId)));
@@ -379,6 +396,8 @@ export function App() {
       if (nextPage) document.querySelector<HTMLElement>("#category-page-title")?.focus({ preventScroll: true });
       if (nextListingId) document.querySelector<HTMLElement>("#listing-page-title")?.focus({ preventScroll: true });
       if (nextLegalRoute) document.querySelector<HTMLElement>("#legal-page-title")?.focus({ preventScroll: true });
+      if (isAdminPath(pathname))
+        document.querySelector<HTMLElement>("#admin-page-title")?.focus({ preventScroll: true });
     }, 0);
   };
 
@@ -389,6 +408,7 @@ export function App() {
 
   const completeAuth = (nextUser: DemoUser) => {
     setUser(nextUser);
+    setAuthLoading(false);
     if (backendMode === "demo") demoStorage.setSession(nextUser);
     setAuthOpen(false);
     if (pendingCheckout) {
@@ -467,7 +487,7 @@ export function App() {
       setUser(null);
       if (backendMode === "demo") demoStorage.setSession(null);
       setAccountOpen(false);
-      if (createListingPage) navigateTo("/");
+      if (createListingPage || adminPath) navigateTo("/");
     }
   };
 
@@ -503,6 +523,19 @@ export function App() {
       />
 
       <main>
+        {adminPath && (
+          <AdminDashboardPage
+            key={`${user?.id ?? "anonymous"}:${adminPath}`}
+            locale={locale}
+            user={user}
+            authLoading={authLoading}
+            overview={isAdminOverviewPath(adminPath)}
+            users={isAdminUsersPath(adminPath)}
+            listings={isAdminListingsPath(adminPath)}
+            onLogin={() => setAuthOpen(true)}
+            onNavigate={navigateTo}
+          />
+        )}
         {legalRoute && (
           <LegalPage route={legalRoute} locale={locale} copy={copy} user={user} onHome={() => navigateTo("/")} />
         )}
@@ -552,7 +585,8 @@ export function App() {
             </section>
           ))}
 
-        {!legalRoute &&
+        {!adminPath &&
+          !legalRoute &&
           !listingPageId &&
           (!createListingPage || !user) &&
           (catalogPage ? (
@@ -642,7 +676,7 @@ export function App() {
             </>
           ))}
 
-        {!legalRoute && !listingPageId && (!createListingPage || !user) && (
+        {!adminPath && !legalRoute && !listingPageId && (!createListingPage || !user) && (
           <section
             className={`marketplace-section section-shell${catalogPage ? " marketplace-section--category" : ""}`}
             id="marketplace"
@@ -730,7 +764,7 @@ export function App() {
           </section>
         )}
 
-        {!legalRoute && !listingPageId && (!createListingPage || !user) && !catalogPage && (
+        {!adminPath && !legalRoute && !listingPageId && (!createListingPage || !user) && !catalogPage && (
           <>
             <section className="protection-section" id="safety">
               <div className="section-shell protection-inner">
@@ -887,6 +921,10 @@ export function App() {
           ownListings={customListings.filter((listing) => listing.seller.id === user.id)}
           onClose={() => setAccountOpen(false)}
           onLogout={logout}
+          onAdmin={() => {
+            setAccountOpen(false);
+            navigateTo(ADMIN_PATH);
+          }}
           onManageLegal={() => {
             setAccountOpen(false);
             navigateTo(getLegalPath("terms"));

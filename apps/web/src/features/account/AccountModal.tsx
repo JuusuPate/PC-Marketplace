@@ -6,6 +6,7 @@ import { getRuntimeCopy } from "../../lib/runtime-copy";
 import { backendMode } from "../../lib/supabase";
 import { Icon } from "../../components/Icon";
 import { ModalShell } from "../../components/ModalShell";
+import { getAdminCopy } from "../admin/admin-copy";
 
 interface AccountModalProps {
   copy: Messages;
@@ -16,6 +17,7 @@ interface AccountModalProps {
   onClose: () => void;
   onLogout: () => void;
   onManageLegal: () => void;
+  onAdmin: () => void;
 }
 
 export function AccountModal({
@@ -27,6 +29,7 @@ export function AccountModal({
   onClose,
   onLogout,
   onManageLegal,
+  onAdmin,
 }: AccountModalProps) {
   const runtimeCopy = getRuntimeCopy(locale);
 
@@ -122,7 +125,10 @@ export function AccountModal({
                   );
                 })}
               </div>
-              <button className="button button--dark button--full" type="button" onClick={onManageLegal}>
+              <button className="button button--dark button--full" type="button" onClick={onAdmin}>
+                {getAdminCopy(locale).title}
+              </button>
+              <button className="button button--outline button--full" type="button" onClick={onManageLegal}>
                 {locale === "fi" ? "Muokkaa sisältösivuja" : "Manage content pages"}
               </button>
             </section>
