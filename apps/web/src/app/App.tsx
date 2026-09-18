@@ -20,6 +20,8 @@ import {
   isAdminListingsPath,
   isAdminTransactionsPath,
   isAdminRevenuePath,
+  isAdminMarketDataPath,
+  isAdminCatalogPath,
 } from "../config/admin-routes";
 import {
   HOME_HERO_BACKGROUND_IMAGE,
@@ -146,6 +148,10 @@ const categories: Array<{ key: "all" | Category; glyph: string }> = [
   { key: "memory", glyph: "▥" },
   { key: "motherboard", glyph: "▦" },
   { key: "pc", glyph: "▣" },
+  { key: "psu", glyph: "▦" },
+  { key: "storage", glyph: "▦" },
+  { key: "case", glyph: "▦" },
+  { key: "cooling", glyph: "▦" },
   { key: "other", glyph: "⌨" },
 ];
 
@@ -536,6 +542,8 @@ export function App() {
             listings={isAdminListingsPath(adminPath)}
             transactions={isAdminTransactionsPath(adminPath)}
             revenue={isAdminRevenuePath(adminPath)}
+            marketData={isAdminMarketDataPath(adminPath)}
+            catalog={isAdminCatalogPath(adminPath)}
             onLogin={() => setAuthOpen(true)}
             onNavigate={navigateTo}
           />

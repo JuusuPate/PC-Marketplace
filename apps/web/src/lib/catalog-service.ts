@@ -9,6 +9,10 @@ const CATEGORY_ROUTES: Readonly<Record<string, string>> = {
   cpu: "/kategoriat/prosessorit",
   memory: "/kategoriat/muistit",
   motherboard: "/kategoriat/emolevyt",
+  psu: "/kategoriat/virtalahteet",
+  storage: "/kategoriat/tallennuslaitteet",
+  case: "/kategoriat/kotelot",
+  cooling: "/kategoriat/jaahdytys",
   other: "/kategoriat/oheislaitteet-ja-muut",
   components: "/kategoriat/komponentit",
 };

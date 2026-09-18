@@ -10,7 +10,7 @@
 - [x] Suomen-, ruotsin- ja englanninkielinen näkymä sekä mukautuva asettelu.
 - [x] PostgreSQL:n käyttöoikeus- ja mittaritestit sekä sovelluksen palvelu-, näkymä- ja istuntotestit CI:ssä.
 
-Toteutetut vaiheet ovat vain luku. Käyttäjien, ilmoitusten, raporttien tai tilausten muokkaustoimintoja ei ole vielä lisätty.
+Tilastonäkymät ovat vain luku. Tuotekatalogin malleja voi lisätä ja muokata. Käyttäjien, ilmoitusten, raporttien tai tilausten ylläpitomuokkausta ei ole vielä lisätty.
 
 ## Vaihe 2: Users
 
@@ -65,16 +65,30 @@ Tietomallista puuttuu valmistumisajan kenttä. Siksi erittely perustuu **tilauks
 
 Tarkistettu 18.9.2026: 100 testiä, tyyppitarkistus, muotoilu ja tuotantokäännös läpäisivät. Migraatio 0011 asennettiin yhdistettyyn Supabaseen. Anonyymin ja ei-admin-identiteetin pääsy estettiin. Paikallisessa sovelluksessa tarkistettiin ylläpitäjän näkymä ja vuosien 2025/2026 vaihtaminen. Oikeita valmiita kauppoja ei ollut; rahasummat, hyvitykset ja aikarajat testattiin automaattisilla tietokantatesteillä.
 
+## Vaihe 6: Market Data
+
+- [x] Suojattu `/admin/market-data`, tuoteryhmät katalogista ja FI/EUR-rajaus.
+- [x] Aktiivisten ilmoitusten määrä ja keskimääräinen pyyntihinta; valmiiden tilausten määrä ja keskimääräinen tuotehinta koko ajalta.
+- [x] Keskiarvot senttiin pyöristettyinä, havaintomäärät näkyvissä. Puuttuva hinta näytetään Ei tietoa -tekstinä, ei nollan euron hintana.
+- [x] Suomi, ruotsi, englanti, päivitys sekä lataus-, virhe-, tyhjä- ja pääsy estetty -tilat.
+
+`get_admin_market_data` tarkistaa admin-oikeuden jokaisella pyynnöllä ja palauttaa vain tuoteryhmäkohtaisia aggregaatteja. Ilmoitukset ja tilaukset aggregoidaan erikseen, jotta liitos ei monista havaintoja. Tilausten rajaus vastaa yleiskatsausta: EUR, FI-ostaja ja FI-myyjä sekä FI-ilmoitus. Kauppahinta tulee tilaukselta; nykyinen ilmoitushinta ei korvaa sitä. Hyvitetyt, perutut, keskeneräiset ja demo-ostot eivät sisälly kauppalukuihin. Toimitus ja maksut eivät sisälly tuotehintoihin.
+
+Ryhmittely käyttää ilmoituksen nykyistä tuoteryhmää. Käytöstä poistunut tuoteryhmä säilyy raportissa, jos siinä on aktiivisia ilmoituksia tai valmiita kauppoja. Mukana ovat oman palvelun havainnot eri malleista ja kuntoluokista: tämä ei ole ulkoinen hintaseuranta tai mallikohtainen hinta-arvio. Aikasarjaa tai hintahistoriaa ei tietomallissa vielä ole.
+
+119 automaattista testiä sekä tyyppitarkistus ja tuotantokäännös läpäisivät. Migraatio 0012 asennettiin yhdistettyyn Supabase-projektiin. Anonyymin, puuttuvan identiteetin ja ei-admin-identiteetin pääsy estettiin. Ylläpitäjän näkymä ja päivitys tarkistettiin selaimessa; oikea aineisto oli tyhjä, joten ei-nollat hinnat tarkistettiin tietokantatestien aineistolla. Paikallisen sovelluksen kaksi olemassa olevaa selaintestiä läpäisivät. Muut paikalliset muutokset ja ympäristöasetukset säilytettiin.
+
 ## Käyttöönotto
 
-1. Suorita olemassa olevaan Supabase-projektiin `supabase/migrations/0007_admin_overview.sql` , `supabase/migrations/0008_admin_users.sql` , `supabase/migrations/0009_admin_listings.sql` , `supabase/migrations/0010_admin_transactions.sql` ja `supabase/migrations/0011_admin_revenue.sql` tässä järjestyksessä. Suorita vain vielä asentamattomat migraatiot. Uuden tietokannan kaikki migraatiot suoritetaan numerojärjestyksessä.
+1. Suorita olemassa olevaan Supabase-projektiin `supabase/migrations/0007_admin_overview.sql` , `supabase/migrations/0008_admin_users.sql` , `supabase/migrations/0009_admin_listings.sql` , `supabase/migrations/0010_admin_transactions.sql` , `supabase/migrations/0011_admin_revenue.sql` ja `supabase/migrations/0012_admin_market_data.sql` tässä järjestyksessä. Suorita vain vielä asentamattomat migraatiot. Uuden tietokannan kaikki migraatiot suoritetaan numerojärjestyksessä.
 2. Varmista web-sovelluksen nykyiset Supabase-ympäristömuuttujat ja `user_roles`-tauluun ylläpitäjälle lisätty admin-rooli. Selaimeen tarvitaan vain julkinen avain.
 3. Kirjaudu ylläpitäjän tilille ja avaa **Oma tili → Admin Dashboard** tai `/admin`.
 4. Avaa `/admin/users`, tarkista haku näyttönimellä ja tunnisteella, sivutus sekä päivitys. Varmista tavallisella tilillä pääsyn estyminen.
 5. Avaa `/admin/listings` ja tarkista otsikko- ja tunnistehaku, kaikki tilasuodattimet, sivutus, tyhjä hakutulos ja päivitys. Varmista pääsyn esto tavallisella tilillä sekä oikeuden poistamisen jälkeen.
 6. Avaa `/admin/transactions` ja tarkista haku, tilasuodatus, sivutus, päivitys ja summien erittely. Demo-ostot eivät luo rivejä listalle.
 7. Avaa `/admin/revenue`, vaihda vuotta ja tarkista kuukausien ja vuosiyhteenvedon täsmäytys. Huomioi luontiaikaan perustuva ryhmittely.
-8. Vertaa mittareita oman testitietokannan riveihin ja tarkista päivitys. Maksuintegraation puuttuessa tietokannan tilausluvut voivat olla nollia, vaikka selaimessa olisi demo-ostoja.
+8. Avaa `/admin/market-data`, tarkista tuoteryhmät, havaintomäärät, puuttuvat hinnat ja päivitys.
+9. Vertaa mittareita oman testitietokannan riveihin ja tarkista päivitys. Maksuintegraation puuttuessa tietokannan tilausluvut voivat olla nollia, vaikka selaimessa olisi demo-ostoja.
 
 GitHubin PR ei suorita migraatiota yhdistettyyn Supabase-projektiin. Käyttöönotto tarvitsee tämän erillisen tietokantavaiheen.
 
@@ -110,8 +124,12 @@ npm run typecheck
 npm run build
 ```
 
-PostgreSQL-testit käyttävät PGliteä ja asentavat varsinaiset migraatiot `0001`–`0011` muuttamattomina. Supabasen tarjoamat Auth- ja Storage-taulut sekä roolit alustetaan testikohtaisessa ympäristössä. Testit kattavat anonyymin käyttäjän, tavallisen käyttäjän, puuttuvan identiteetin, väärennetyn roolimetatiedon, admin-oikeuden poistamisen, taulujen oikeudet, tyhjän datan, tilakohtaiset laskennat ja rahasummien rajaukset. Tämä ei korvaa yhdistetyn Supabase-projektin käyttöönoton tarkistamista.
+PostgreSQL-testit käyttävät PGliteä ja asentavat varsinaiset migraatiot `0001`–`0013` muuttamattomina. Supabasen tarjoamat Auth- ja Storage-taulut sekä roolit alustetaan testikohtaisessa ympäristössä. Testit kattavat anonyymin käyttäjän, tavallisen käyttäjän, puuttuvan identiteetin, väärennetyn roolimetatiedon, admin-oikeuden poistamisen, taulujen oikeudet, tyhjän datan, tilakohtaiset laskennat ja rahasummien rajaukset. Tämä ei korvaa yhdistetyn Supabase-projektin käyttöönoton tarkistamista.
 
 ## Seuraavat moduulit
 
-Toteuta ja testaa yksi moduuli kerrallaan: Market Data → Reports/Disputes → Moderation → Marketing → System → Settings. Kunkin moduulin todellinen datalähde ja käyttöoikeusrajat tarkistetaan ennen toteutusta. Katalogieditori hyödyntää olemassa olevia suojattuja katalogifunktioita erillisessä vaiheessa.
+Toteuta ja testaa yksi moduuli kerrallaan: Reports/Disputes → Moderation → Marketing → System → Settings. Kunkin moduulin todellinen datalähde ja käyttöoikeusrajat tarkistetaan ennen toteutusta. Tuotemallien katalogieditori on toteutettu erillisenä `/admin/catalog`-näkymänä.
+
+## Tuotemallikatalogi
+
+`/admin/catalog` sisältää muokattavan tuotemallikatalogin ja mallikohtaiset markkinatiedot. Kymmenessä tuoteryhmässä on kolme aloitusmallia (30 yhteensä). Ilmoituksen luonnin mallihaku yhdistää ilmoituksen pysyvään malliin. [Täydennysohje ja aloitussisältö](product-catalog.md). Asenna myös migraatio `0013_product_model_catalog.sql` ennen uuden sovellusversion käyttöä.

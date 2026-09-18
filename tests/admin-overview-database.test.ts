@@ -553,3 +553,270 @@ describe("admin revenue", () => {
     for (const year of [2000, 2100]) await expect(revenue(year)).resolves.toBeDefined();
   });
 });
+
+describe("admin market data", () => {
+  const sql = "select public.get_admin_market_data() as data";
+  async function data() {
+    return (await asRole("authenticated", adminId, sql)).rows[0].data as any;
+  }
+  it.each([
+    ["anon", adminId],
+    ["authenticated", null],
+    ["authenticated", userId],
+    ["service_role", null],
+  ] as const)("denies %s with identity %s", async (role, id) => {
+    await expect(asRole(role, id, sql)).rejects.toMatchObject({ code: "42501" });
+  });
+  it("enforces revoked roles on refresh", async () => {
+    await data();
+    await db.query("delete from public.user_roles where user_id = $1", [adminId]);
+    await expect(data()).rejects.toMatchObject({ code: "42501" });
+  });
+  it("returns catalog categories with zero samples and null prices", async () => {
+    const result = await data();
+    expect(result).toMatchObject({ market: "FI", currency: "EUR", period: "all_time" });
+    expect(result.categories.length).toBeGreaterThan(0);
+    expect(
+      result.categories.every(
+        (c: any) =>
+          c.active_listings === 0 &&
+          c.completed_orders === 0 &&
+          c.asking_average_minor === null &&
+          c.sold_average_minor === null,
+      ),
+    ).toBe(true);
+    expect(result.categories.some((c: any) => c.slug === "components")).toBe(false);
+  });
+  it("keeps listing and order samples independent and rounds half cents", async () => {
+    const id = await listing();
+    await order("completed", 10000, 100);
+    await order("completed", 10001, 900);
+    await db.query("update public.listings set price_minor = 50000 where id = $1", [id]);
+    const row = (await data()).categories.find((c: any) => c.slug === "pc");
+    expect(row).toMatchObject({
+      active_listings: 3,
+      asking_average_minor: 25000,
+      completed_orders: 2,
+      sold_average_minor: 10001,
+    });
+  });
+  it("excludes inactive asks, foreign markets/currencies and noncompleted orders", async () => {
+    for (const state of ["draft", "reserved", "sold", "removed"]) await listing(state);
+    await listing("draft", "SE", "EUR");
+    await listing("draft", "FI", "SEK");
+    for (const state of [
+      "pending_payment",
+      "paid",
+      "shipped",
+      "delivered",
+      "inspection",
+      "disputed",
+      "cancelled",
+      "refunded",
+    ])
+      await order(state, 111, 0);
+    await order("completed", 333, 0, "SEK");
+    const row = (await data()).categories.find((c: any) => c.slug === "pc");
+    expect(row).toMatchObject({ active_listings: 9, completed_orders: 0, sold_average_minor: null });
+  });
+  it("requires FI buyer, seller and listing and removes refunded sales", async () => {
+    await order("completed", 12599, 200);
+    expect((await data()).categories.find((c: any) => c.slug === "pc").sold_average_minor).toBe(12599);
+    for (const column of ["buyer_country_code", "seller_country_code"]) {
+      await db.exec(`update public.orders set ${column} = 'SE'`);
+      expect((await data()).categories.find((c: any) => c.slug === "pc").completed_orders).toBe(0);
+      await db.exec(`update public.orders set ${column} = 'FI'`);
+    }
+    await db.exec("update public.listings set status = 'draft', market_country_code = 'SE'");
+    expect((await data()).categories.find((c: any) => c.slug === "pc").completed_orders).toBe(0);
+    await db.exec(
+      "update public.listings set market_country_code = 'FI'; update public.orders set status = 'refunded'",
+    );
+    expect((await data()).categories.find((c: any) => c.slug === "pc").sold_average_minor).toBeNull();
+  });
+  it("retains historical data for disabled catalog categories without personal fields", async () => {
+    await order("completed", 12345, 100);
+    await db.exec(
+      "update public.catalog_market_categories set is_enabled = false where category_id = (select id from public.catalog_categories where slug = 'pc')",
+    );
+    try {
+      const row = (await data()).categories.find((c: any) => c.slug === "pc");
+      expect(row.completed_orders).toBe(1);
+      expect(Object.keys(row).sort()).toEqual(
+        ["slug", "labels", "active_listings", "asking_average_minor", "completed_orders", "sold_average_minor"].sort(),
+      );
+    } finally {
+      await db.exec(
+        "update public.catalog_market_categories set is_enabled = true where category_id = (select id from public.catalog_categories where slug = 'pc')",
+      );
+    }
+  });
+});
+
+describe("product model catalog", () => {
+  const search = (category = "gpu", query = "", page = 0) =>
+    `select public.search_product_models('${category}','${query}',${page}) as data`;
+  const market = (category = "gpu") => `select public.get_admin_model_market('${category}') as data`;
+  const model = async (category = "gpu") =>
+    (
+      await db.query<any>("select * from public.catalog_product_models where category=$1 order by name limit 1", [
+        category,
+      ])
+    ).rows[0];
+  const save = (data: unknown) =>
+    `select public.save_product_model('${JSON.stringify(data).replaceAll("'", "''")}'::jsonb) as id`;
+  it("seeds exactly three models in each of ten categories including AMD and Intel", async () => {
+    const rows = (
+      await db.query<any>("select category,count(*)::integer as n from public.catalog_product_models group by category")
+    ).rows;
+    expect(rows).toHaveLength(10);
+    expect(rows.every((r) => r.n === 3)).toBe(true);
+    expect(
+      (await db.query<any>("select distinct brand from public.catalog_product_models where category='cpu'")).rows
+        .map((r) => r.brand)
+        .sort(),
+    ).toEqual(["AMD", "Intel"]);
+  });
+  it("allows public literal and alias search with category isolation", async () => {
+    const r = (await asRole("anon", null, search("gpu", "rtx3070"))).rows[0].data as any;
+    expect(r.total).toBe(1);
+    expect(r.items[0].name).toBe("GeForce RTX 3070");
+    expect(((await asRole("anon", null, search("cpu", "3070"))).rows[0].data as any).total).toBe(0);
+    for (const q of ["%", "_"])
+      expect(((await asRole("anon", null, search("gpu", q))).rows[0].data as any).total).toBe(0);
+    expect(((await asRole("anon", null, search("gpu", "", 1))).rows[0].data as any).items).toEqual([]);
+  });
+  it("denies direct writes and non-admin catalog mutation/market access", async () => {
+    for (const [role, id] of [
+      ["anon", null],
+      ["authenticated", userId],
+      ["authenticated", null],
+      ["service_role", null],
+    ] as const) {
+      await expect(asRole(role, id, save({ category: "cpu", brand: "X", name: "Y" }))).rejects.toMatchObject({
+        code: "42501",
+      });
+      await expect(asRole(role, id, market())).rejects.toMatchObject({ code: "42501" });
+    }
+    await expect(
+      asRole(
+        "authenticated",
+        adminId,
+        "insert into public.catalog_product_models(category,brand,name) values('cpu','X','Y')",
+      ),
+    ).rejects.toMatchObject({ code: "42501" });
+  });
+  it("supports admin creation, edits, audit, duplicate prevention and optimistic concurrency", async () => {
+    const payload = {
+      category: "cpu",
+      brand: "Test",
+      name: "Catalog test",
+      variant: "v1",
+      aliases: "find-me",
+      is_active: true,
+    };
+    const id = (await asRole("authenticated", adminId, save(payload))).rows[0].id;
+    try {
+      const row = (await db.query<any>("select * from public.catalog_product_models where id=$1", [id])).rows[0];
+      await asRole("authenticated", adminId, save({ ...row, aliases: "updated" }));
+      await expect(asRole("authenticated", adminId, save({ ...row, aliases: "stale" }))).rejects.toMatchObject({
+        code: "40001",
+      });
+      await expect(
+        asRole("authenticated", adminId, save({ ...payload, brand: " TEST ", name: "catalog TEST" })),
+      ).rejects.toMatchObject({ code: "23505" });
+      expect(
+        (await db.query<any>("select count(*)::integer n from public.catalog_admin_changes where entity_id=$1", [id]))
+          .rows[0].n,
+      ).toBe(2);
+      await expect(asRole("authenticated", adminId, save({ ...row, category: "gpu" }))).rejects.toMatchObject({
+        code: "22023",
+      });
+    } finally {
+      await db.query("delete from public.catalog_product_models where id=$1", [id]);
+    }
+  });
+  it("binds model IDs atomically through create RPC and removes the reserved transport key", async () => {
+    const m = await model();
+    const result = await asRole(
+      "authenticated",
+      adminId,
+      `select public.create_listing_draft('FI','A valid title','A sufficiently long description','gpu','good',12345,'EUR','Mikkeli','{"_catalog_model_id":"${m.id}","Model":"example"}',array['FI'],null) as id`,
+    );
+    const row = (
+      await db.query<any>("select catalog_model_id,specs from public.listings where id=$1", [result.rows[0].id])
+    ).rows[0];
+    expect(row.catalog_model_id).toBe(m.id);
+    expect(row.specs).toEqual({ Model: "example" });
+  });
+  it("rejects mismatched models and supports explicit unlink on editing", async () => {
+    const id = await listing(),
+      gpu = await model(),
+      pc = await model("pc");
+    await expect(
+      db.query("update public.listings set specs=jsonb_build_object('_catalog_model_id',$1::text) where id=$2", [
+        gpu.id,
+        id,
+      ]),
+    ).rejects.toMatchObject({ code: "22023" });
+    await db.query("update public.listings set specs=jsonb_build_object('_catalog_model_id',$1::text) where id=$2", [
+      pc.id,
+      id,
+    ]);
+    await db.query("update public.listings set specs='{\"_catalog_model_id\":null}' where id=$1", [id]);
+    expect(
+      (await db.query<any>("select catalog_model_id from public.listings where id=$1", [id])).rows[0].catalog_model_id,
+    ).toBeNull();
+  });
+  it("hides archived models but preserves existing references and model stats", async () => {
+    const m = await model("pc");
+    const id = await listing();
+    await db.query("update public.listings set catalog_model_id=$1 where id=$2", [m.id, id]);
+    await asRole("authenticated", adminId, save({ ...m, is_active: false }));
+    try {
+      expect(((await asRole("anon", null, search("pc", m.name))).rows[0].data as any).total).toBe(0);
+      await db.query("update public.listings set status='sold' where id=$1", [id]);
+      await expect(
+        db.query("update public.listings set catalog_model_id=$1 where id=$2", [m.id, await listing()]),
+      ).rejects.toMatchObject({ code: "22023" });
+      expect(
+        ((await asRole("authenticated", adminId, market("pc"))).rows[0].data as any).items.some(
+          (r: any) => r.id === m.id,
+        ),
+      ).toBe(true);
+    } finally {
+      await db.query("update public.catalog_product_models set is_active=true where id=$1", [m.id]);
+    }
+  });
+  it("separates models and counts only linked eligible samples using order prices", async () => {
+    const m = await model("pc");
+    await order("completed", 10001, 200);
+    await order("refunded", 999999, 200);
+    await listing();
+    await db.query("update public.listings set catalog_model_id=$1 where id in(select listing_id from public.orders)", [
+      m.id,
+    ]);
+    const r = (await asRole("authenticated", adminId, market("pc"))).rows[0].data as any;
+    expect(r.unlinked_listings).toBe(1);
+    expect(r.items.find((x: any) => x.id === m.id)).toMatchObject({
+      active_listings: 2,
+      asking_average_minor: 12500,
+      completed_orders: 1,
+      sold_average_minor: 10001,
+    });
+    expect(
+      r.items
+        .filter((x: any) => x.id !== m.id)
+        .every((x: any) => x.completed_orders === 0 && x.sold_average_minor === null),
+    ).toBe(true);
+  });
+  it("rechecks revocation and validates bounds and sellable categories", async () => {
+    await expect(
+      asRole("authenticated", adminId, save({ category: "components", brand: "X", name: "Y" })),
+    ).rejects.toMatchObject({ code: "22023" });
+    await expect(asRole("anon", null, search("gpu", "", -1))).rejects.toMatchObject({ code: "22023" });
+    await expect(asRole("anon", null, search("gpu", "a".repeat(101)))).rejects.toMatchObject({ code: "22023" });
+    await db.query("delete from public.user_roles where user_id=$1", [adminId]);
+    await expect(asRole("authenticated", adminId, market())).rejects.toMatchObject({ code: "42501" });
+  });
+});
