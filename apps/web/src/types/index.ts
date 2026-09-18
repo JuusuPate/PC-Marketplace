@@ -5,7 +5,7 @@ export type Category = "gpu" | "cpu" | "memory" | "motherboard" | "pc" | "other"
 export type Condition = "new" | "excellent" | "good" | "fair";
 export type PriceSignal = "great" | "fair" | "high";
 export type UserRole = "user" | "admin";
-export type LegalPageSlug = "terms" | "privacy" | "accessibility";
+export type LegalPageSlug = "terms" | "privacy" | "accessibility" | "safety";
 
 export interface Market {
   countryCode: CountryCode;

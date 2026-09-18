@@ -610,7 +610,6 @@ export function App() {
                 <div className="hero section-shell">
                   <div className="hero-copy">
                     <div className="eyebrow">
-                      <span className="eyebrow-dot" />
                       {copy.heroEyebrow}
                     </div>
                     <h1>
@@ -652,6 +651,40 @@ export function App() {
                       onOpen={(listing) => navigateTo(getListingPath(listing.id))}
                     />
                   </div>
+                </div>
+              </section>
+
+              <section className="home-hero-cards section-shell" aria-label="Marketplace highlights">
+                <div className="home-hero-cards__grid">
+                  <article className="home-hero-card">
+                    <div className="home-hero-card__art home-hero-card__art--one" aria-hidden="true">
+                      <div className="home-hero-card__content">
+                        <span className="section-index">TARKASTETTU</span>
+                        <h3>Turvalliset kaupat</h3>
+                        <p>Jokainen tuote käy läpi läpinäkyvän tarkastuksen ennen myyntiin päätymistä.</p>
+                      </div>
+                    </div>
+                  </article>
+
+                  <article className="home-hero-card">
+                    <div className="home-hero-card__art home-hero-card__art--two">
+                      <div className="home-hero-card__content">
+                        <span className="section-index">KOKOONPANO</span>
+                        <h3>Valmiit ratkaisut</h3>
+                        <p>Hae korkealaatuisia komponentteja ja valmiita koneita helposti yhdestä paikasta.</p>
+                      </div>
+                    </div>
+                  </article>
+
+                  <article className="home-hero-card">
+                    <div className="home-hero-card__art home-hero-card__art--three" aria-hidden="true">
+                      <div className="home-hero-card__content">
+                        <span className="section-index">YHTEISÖ</span>
+                        <h3>Harrastajilta toisille</h3>
+                        <p>Yhteisö, joka ymmärtää PC-osien arvoa ja rakentamisen merkityksen.</p>
+                      </div>
+                    </div>
+                  </article>
                 </div>
               </section>
 
@@ -770,68 +803,6 @@ export function App() {
 
         {!adminPath && !legalRoute && !listingPageId && (!createListingPage || !user) && !catalogPage && (
           <>
-            <section className="protection-section" id="safety">
-              <div className="section-shell protection-inner">
-                <div className="protection-art">
-                  <div className="protection-ring protection-ring--one" />
-                  <div className="protection-ring protection-ring--two" />
-                  <div className="large-shield">
-                    <Icon name="shield" />
-                    <span>48H</span>
-                  </div>
-                  <div className="protection-chip chip--top">
-                    <Icon name="package" />
-                    <span>
-                      TRACKED<small>Shipment verified</small>
-                    </span>
-                  </div>
-                  <div className="protection-chip chip--bottom">
-                    <Icon name="check" />
-                    <span>
-                      PAYOUT<small>Ready after inspection</small>
-                    </span>
-                  </div>
-                </div>
-                <div className="protection-copy">
-                  <span className="section-index section-index--light">02 / PROTECTION</span>
-                  <h2>{copy.protectionTitle}</h2>
-                  <p>{copy.protectionBody}</p>
-                  <div className="protection-points">
-                    <span>
-                      <Icon name="check" /> Serial evidence
-                    </span>
-                    <span>
-                      <Icon name="check" /> Tracked delivery
-                    </span>
-                    <span>
-                      <Icon name="check" /> Dispute workflow
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            <section className="how-section section-shell" id="how-it-works">
-              <div className="section-heading">
-                <div>
-                  <span className="section-index">03 / FLOW</span>
-                  <h2>{copy.howTitle}</h2>
-                </div>
-              </div>
-              <div className="steps-grid">
-                {[copy.stepList, copy.stepBuy, copy.stepInspect, copy.stepPayout].map((step, index) => (
-                  <article key={step}>
-                    <span className="step-number">0{index + 1}</span>
-                    <div className="step-icon">
-                      <Icon name={index === 0 ? "plus" : index === 1 ? "shield" : index === 2 ? "truck" : "check"} />
-                    </div>
-                    <h3>{step}</h3>
-                    {index < 3 && <Icon className="step-arrow" name="arrow" />}
-                  </article>
-                ))}
-              </div>
-            </section>
-
             <section className="cta-section section-shell">
               <div>
                 <span className="section-index section-index--light">{copy.launchBadge}</span>
@@ -873,7 +844,7 @@ export function App() {
           </span>
         </a>
         <div>
-          {(["terms", "privacy", "accessibility"] as const).map((slug) => {
+          {(["terms", "privacy", "accessibility", "safety"] as const).map((slug) => {
             const path = getLegalPath(slug);
             return (
               <a
