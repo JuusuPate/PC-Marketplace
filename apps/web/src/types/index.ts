@@ -1,7 +1,8 @@
 export type Locale = "fi" | "sv" | "da" | "nb" | "en";
 export type Currency = "EUR" | "SEK" | "DKK" | "NOK";
 export type CountryCode = "FI" | "SE" | "DK" | "NO";
-export type Category = "gpu" | "cpu" | "memory" | "motherboard" | "pc" | "other";
+export type Category =
+  "gpu" | "cpu" | "memory" | "motherboard" | "pc" | "other" | "psu" | "storage" | "case" | "cooling";
 export type Condition = "new" | "excellent" | "good" | "fair";
 export type PriceSignal = "great" | "fair" | "high";
 export type UserRole = "user" | "admin";
@@ -53,6 +54,7 @@ export interface PrivatePickupAddress {
 }
 
 export interface Listing {
+  catalogModelId?: string | null;
   id: string;
   title: string;
   subtitle: string;

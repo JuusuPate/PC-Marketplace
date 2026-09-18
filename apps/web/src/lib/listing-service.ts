@@ -5,7 +5,7 @@ import { backendMode, supabase } from "./supabase";
 
 const LISTING_IMAGES_BUCKET = "listing-images";
 const LISTING_SELECT =
-  "id,title,description,category,condition,price_minor,currency,city,specs,is_featured,created_at,seller:profiles!listings_seller_id_fkey(id,display_name,country_code,joined_at,reviews:reviews!reviews_subject_id_fkey(rating)),destinations:listing_shipping_countries(country_code),images:listing_images(id,storage_path,alt_text,width,height,sort_order)";
+  "id,catalog_model_id,title,description,category,condition,price_minor,currency,city,specs,is_featured,created_at,seller:profiles!listings_seller_id_fkey(id,display_name,country_code,joined_at,reviews:reviews!reviews_subject_id_fkey(rating)),destinations:listing_shipping_countries(country_code),images:listing_images(id,storage_path,alt_text,width,height,sort_order)";
 
 interface DbListingImage {
   id: string;
@@ -34,6 +34,7 @@ interface DbListing {
   currency: Currency;
   city: string;
   specs: Record<string, string> | null;
+  catalog_model_id: string | null;
   is_featured: boolean;
   created_at: string;
   seller: DbSeller | DbSeller[];
@@ -97,6 +98,7 @@ function mapListing(row: DbListing): Listing {
 
   return {
     id: row.id,
+    catalogModelId: row.catalog_model_id,
     title: row.title,
     subtitle: Object.values(specs).slice(0, 2).join(" · ") || row.category.toUpperCase(),
     category: row.category,
@@ -192,7 +194,7 @@ export const listingService = {
       p_price_minor: listing.priceMinor,
       p_currency: listing.currency,
       p_city: listing.city,
-      p_specs: listing.specs,
+      p_specs: { ...listing.specs, _catalog_model_id: listing.catalogModelId ?? null },
       p_shipping_country_codes: listing.shipsTo,
       p_pickup_address: pickupAddress
         ? {

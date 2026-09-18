@@ -16,6 +16,7 @@ import type {
   PrivatePickupAddress,
   Seller,
 } from "../../types";
+import { ProductModelPicker } from "./ProductModelPicker";
 import { ImagePicker } from "./ImagePicker";
 import { getGuidedSpecificationFields, specificationCopy } from "./specification-fields";
 
@@ -48,6 +49,10 @@ const visualByCategory: Record<Category, Listing["visual"]> = {
   cpu: "orange",
   memory: "violet",
   motherboard: "silver",
+  psu: "silver",
+  storage: "blue",
+  case: "silver",
+  cooling: "blue",
   pc: "blue",
   other: "pink",
 };
@@ -84,6 +89,7 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
   const [price, setPrice] = useState("");
   const [brand, setBrand] = useState("");
   const [model, setModel] = useState("");
+  const [catalogModelId, setCatalogModelId] = useState<string | null>(null);
   const [guidedSpecifications, setGuidedSpecifications] = useState<Record<string, string>>({});
   const [specifications, setSpecifications] = useState<SpecificationRow[]>([]);
   const [technicalDetailsUnknown, setTechnicalDetailsUnknown] = useState(false);
@@ -188,6 +194,7 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
       title: title.trim(),
       subtitle: `${identity || copy[category]} · ${conditionLabel}`,
       category,
+      catalogModelId,
       brand: brand.trim(),
       priceMinor: Math.round(numericPrice * 100),
       currency: MARKETS[market].currency,
@@ -266,6 +273,20 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
                 <p>{copy.productDetailsHelp}</p>
               </div>
             </div>
+            <ProductModelPicker
+              key={category}
+              category={category}
+              locale={locale}
+              selectedId={catalogModelId}
+              onSelect={(m) => {
+                setCatalogModelId(m?.id ?? null);
+                if (m) {
+                  setBrand(m.brand);
+                  setModel([m.name, m.variant].filter(Boolean).join(" · "));
+                  if (!title.trim()) setTitle(`${m.brand} ${m.name}`);
+                }
+              }}
+            />
             <div className="create-listing-fields">
               <label className="field-wide">
                 <FieldLabel label={copy.productTitle} required requiredText={formCopy.required} />
@@ -286,10 +307,24 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
                   onChange={(event) => {
                     const nextCategory = event.target.value as Category;
                     setCategory(nextCategory);
+                    setCatalogModelId(null);
                     if (nextCategory !== "pc") setTechnicalDetailsUnknown(false);
                   }}
                 >
-                  {(["gpu", "cpu", "memory", "motherboard", "pc", "other"] as Category[]).map((item) => (
+                  {(
+                    [
+                      "gpu",
+                      "cpu",
+                      "memory",
+                      "motherboard",
+                      "psu",
+                      "storage",
+                      "case",
+                      "cooling",
+                      "pc",
+                      "other",
+                    ] as Category[]
+                  ).map((item) => (
                     <option key={item} value={item}>
                       {copy[item]}
                     </option>
@@ -322,13 +357,23 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
               </label>
               <label>
                 <FieldLabel label={copy.brand} requiredText={formCopy.required} optionalText={formCopy.optional} />
-                <input value={brand} onChange={(event) => setBrand(event.target.value)} placeholder="ASUS" />
+                <input
+                  value={brand}
+                  onChange={(event) => {
+                    setBrand(event.target.value);
+                    setCatalogModelId(null);
+                  }}
+                  placeholder="ASUS"
+                />
               </label>
               <label>
                 <FieldLabel label={copy.model} requiredText={formCopy.required} optionalText={formCopy.optional} />
                 <input
                   value={model}
-                  onChange={(event) => setModel(event.target.value)}
+                  onChange={(event) => {
+                    setModel(event.target.value);
+                    setCatalogModelId(null);
+                  }}
                   placeholder="TUF-RTX4070S-O12G-GAMING"
                 />
               </label>
