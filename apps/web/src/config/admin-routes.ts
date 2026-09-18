@@ -24,3 +24,7 @@ export function isAdminTransactionsPath(pathname: string) {
 export function isAdminRevenuePath(pathname: string) {
   return pathname.replace(/\/+$/, "") === `${ADMIN_PATH}/revenue`;
 }
+
+export function isAdminMarketDataPath(pathname: string) {
+  return pathname.replace(/\/+$/, "") === `${ADMIN_PATH}/market-data`;
+}

@@ -553,3 +553,102 @@ describe("admin revenue", () => {
     for (const year of [2000, 2100]) await expect(revenue(year)).resolves.toBeDefined();
   });
 });
+
+describe("admin market data", () => {
+  const sql = "select public.get_admin_market_data() as data";
+  async function data() {
+    return (await asRole("authenticated", adminId, sql)).rows[0].data as any;
+  }
+  it.each([
+    ["anon", adminId],
+    ["authenticated", null],
+    ["authenticated", userId],
+    ["service_role", null],
+  ] as const)("denies %s with identity %s", async (role, id) => {
+    await expect(asRole(role, id, sql)).rejects.toMatchObject({ code: "42501" });
+  });
+  it("enforces revoked roles on refresh", async () => {
+    await data();
+    await db.query("delete from public.user_roles where user_id = $1", [adminId]);
+    await expect(data()).rejects.toMatchObject({ code: "42501" });
+  });
+  it("returns catalog categories with zero samples and null prices", async () => {
+    const result = await data();
+    expect(result).toMatchObject({ market: "FI", currency: "EUR", period: "all_time" });
+    expect(result.categories.length).toBeGreaterThan(0);
+    expect(
+      result.categories.every(
+        (c: any) =>
+          c.active_listings === 0 &&
+          c.completed_orders === 0 &&
+          c.asking_average_minor === null &&
+          c.sold_average_minor === null,
+      ),
+    ).toBe(true);
+    expect(result.categories.some((c: any) => c.slug === "components")).toBe(false);
+  });
+  it("keeps listing and order samples independent and rounds half cents", async () => {
+    const id = await listing();
+    await order("completed", 10000, 100);
+    await order("completed", 10001, 900);
+    await db.query("update public.listings set price_minor = 50000 where id = $1", [id]);
+    const row = (await data()).categories.find((c: any) => c.slug === "pc");
+    expect(row).toMatchObject({
+      active_listings: 3,
+      asking_average_minor: 25000,
+      completed_orders: 2,
+      sold_average_minor: 10001,
+    });
+  });
+  it("excludes inactive asks, foreign markets/currencies and noncompleted orders", async () => {
+    for (const state of ["draft", "reserved", "sold", "removed"]) await listing(state);
+    await listing("draft", "SE", "EUR");
+    await listing("draft", "FI", "SEK");
+    for (const state of [
+      "pending_payment",
+      "paid",
+      "shipped",
+      "delivered",
+      "inspection",
+      "disputed",
+      "cancelled",
+      "refunded",
+    ])
+      await order(state, 111, 0);
+    await order("completed", 333, 0, "SEK");
+    const row = (await data()).categories.find((c: any) => c.slug === "pc");
+    expect(row).toMatchObject({ active_listings: 9, completed_orders: 0, sold_average_minor: null });
+  });
+  it("requires FI buyer, seller and listing and removes refunded sales", async () => {
+    await order("completed", 12599, 200);
+    expect((await data()).categories.find((c: any) => c.slug === "pc").sold_average_minor).toBe(12599);
+    for (const column of ["buyer_country_code", "seller_country_code"]) {
+      await db.exec(`update public.orders set ${column} = 'SE'`);
+      expect((await data()).categories.find((c: any) => c.slug === "pc").completed_orders).toBe(0);
+      await db.exec(`update public.orders set ${column} = 'FI'`);
+    }
+    await db.exec("update public.listings set status = 'draft', market_country_code = 'SE'");
+    expect((await data()).categories.find((c: any) => c.slug === "pc").completed_orders).toBe(0);
+    await db.exec(
+      "update public.listings set market_country_code = 'FI'; update public.orders set status = 'refunded'",
+    );
+    expect((await data()).categories.find((c: any) => c.slug === "pc").sold_average_minor).toBeNull();
+  });
+  it("retains historical data for disabled catalog categories without personal fields", async () => {
+    await order("completed", 12345, 100);
+    await db.exec(
+      "update public.catalog_market_categories set is_enabled = false where category_id = (select id from public.catalog_categories where slug = 'pc')",
+    );
+    try {
+      const row = (await data()).categories.find((c: any) => c.slug === "pc");
+      expect(row.completed_orders).toBe(1);
+      expect(Object.keys(row).sort()).toEqual(
+        ["slug", "labels", "active_listings", "asking_average_minor", "completed_orders", "sold_average_minor"].sort(),
+      );
+    } finally {
+      await db.exec(
+        "update public.catalog_market_categories set is_enabled = true where category_id = (select id from public.catalog_categories where slug = 'pc')",
+      );
+    }
+  });
+});
