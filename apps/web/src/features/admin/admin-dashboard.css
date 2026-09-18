@@ -292,3 +292,22 @@
   margin-top: 6px;
   overflow-wrap: anywhere;
 }
+
+.admin-model-editor fieldset {
+  display: grid;
+  gap: 1rem;
+  margin-block: 1rem;
+  padding: 1.2rem;
+  border: 1px solid #ccd2cf;
+  border-radius: 12px;
+}
+.admin-model-editor label {
+  display: grid;
+  gap: 0.4rem;
+}
+.admin-model-editor input:not([type="checkbox"]) {
+  width: 100%;
+  padding: 0.65rem;
+  border: 1px solid #ccd2cf;
+  border-radius: 6px;
+}

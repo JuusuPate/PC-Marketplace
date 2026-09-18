@@ -10,7 +10,7 @@
 - [x] Suomen-, ruotsin- ja englanninkielinen näkymä sekä mukautuva asettelu.
 - [x] PostgreSQL:n käyttöoikeus- ja mittaritestit sekä sovelluksen palvelu-, näkymä- ja istuntotestit CI:ssä.
 
-Toteutetut vaiheet ovat vain luku. Käyttäjien, ilmoitusten, raporttien tai tilausten muokkaustoimintoja ei ole vielä lisätty.
+Tilastonäkymät ovat vain luku. Tuotekatalogin malleja voi lisätä ja muokata. Käyttäjien, ilmoitusten, raporttien tai tilausten ylläpitomuokkausta ei ole vielä lisätty.
 
 ## Vaihe 2: Users
 
@@ -124,8 +124,12 @@ npm run typecheck
 npm run build
 ```
 
-PostgreSQL-testit käyttävät PGliteä ja asentavat varsinaiset migraatiot `0001`–`0012` muuttamattomina. Supabasen tarjoamat Auth- ja Storage-taulut sekä roolit alustetaan testikohtaisessa ympäristössä. Testit kattavat anonyymin käyttäjän, tavallisen käyttäjän, puuttuvan identiteetin, väärennetyn roolimetatiedon, admin-oikeuden poistamisen, taulujen oikeudet, tyhjän datan, tilakohtaiset laskennat ja rahasummien rajaukset. Tämä ei korvaa yhdistetyn Supabase-projektin käyttöönoton tarkistamista.
+PostgreSQL-testit käyttävät PGliteä ja asentavat varsinaiset migraatiot `0001`–`0013` muuttamattomina. Supabasen tarjoamat Auth- ja Storage-taulut sekä roolit alustetaan testikohtaisessa ympäristössä. Testit kattavat anonyymin käyttäjän, tavallisen käyttäjän, puuttuvan identiteetin, väärennetyn roolimetatiedon, admin-oikeuden poistamisen, taulujen oikeudet, tyhjän datan, tilakohtaiset laskennat ja rahasummien rajaukset. Tämä ei korvaa yhdistetyn Supabase-projektin käyttöönoton tarkistamista.
 
 ## Seuraavat moduulit
 
-Toteuta ja testaa yksi moduuli kerrallaan: Reports/Disputes → Moderation → Marketing → System → Settings. Kunkin moduulin todellinen datalähde ja käyttöoikeusrajat tarkistetaan ennen toteutusta. Katalogieditori hyödyntää olemassa olevia suojattuja katalogifunktioita erillisessä vaiheessa.
+Toteuta ja testaa yksi moduuli kerrallaan: Reports/Disputes → Moderation → Marketing → System → Settings. Kunkin moduulin todellinen datalähde ja käyttöoikeusrajat tarkistetaan ennen toteutusta. Tuotemallien katalogieditori on toteutettu erillisenä `/admin/catalog`-näkymänä.
+
+## Tuotemallikatalogi
+
+`/admin/catalog` sisältää muokattavan tuotemallikatalogin ja mallikohtaiset markkinatiedot. Kymmenessä tuoteryhmässä on kolme aloitusmallia (30 yhteensä). Ilmoituksen luonnin mallihaku yhdistää ilmoituksen pysyvään malliin. [Täydennysohje ja aloitussisältö](product-catalog.md). Asenna myös migraatio `0013_product_model_catalog.sql` ennen uuden sovellusversion käyttöä.
