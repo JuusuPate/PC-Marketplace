@@ -83,6 +83,8 @@ export const fi = {
   completedSales: "toteutunutta kauppaa",
   memberSince: "Jäsen vuodesta",
   protectionTitle: "Rahat vapautetaan vasta tarkastuksen jälkeen",
+  protectionBody:
+    "Demo havainnollistaa osto → toimitus → 48 h tarkastus → myyjän tilitys -ketjun. Oikeaa maksua ei käsitellä.",
   demoBadge: "TOIMINNALLINEN DEMO",
   demoNotice: "Tämä versio ei käsittele oikeita maksuja tai henkilötietoja.",
   authTitle: "Tervetuloa PC Marketiin",
@@ -173,7 +175,8 @@ export const fi = {
   soon: "Tulossa",
   howTitle: "Ostajansuoja jokaisessa tilauksessa",
   stepList: "Myyjä listaa tuotteen myytäväksi",
-  stepListDescription: "Myyjä lisää tuotteen tiedot, kunnon ja toimitustiedot, jotta ostaja näkee kaiken tarvittavan tiedon ennen päätöstä.",
+  stepListDescription:
+    "Myyjä lisää tuotteen tiedot, kunnon ja toimitustiedot, jotta ostaja näkee kaiken tarvittavan tiedon ennen päätöstä.",
   stepBuy: "Ostaja maksaa suojatusti",
   stepBuyDescription: "Maksu suojataan koko kaupan ajan ja ostaja saa selkeän prosessin ilman epävarmuutta.",
   stepInspect: "Tuote toimitetaan",

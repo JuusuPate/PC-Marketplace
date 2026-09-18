@@ -68,8 +68,7 @@ Lopulliseen saavutettavuusselosteeseen lisätään sovellettavan lainsäädänn�
   },
   safety: {
     title: "Luotettavuus",
-    summary:
-      "Jokainen tilaus on ostajansuojattu - pidätämme maksun kunnes tuote on vastaanotettu & tarkistettu.",
+    summary: "Jokainen tilaus on ostajansuojattu - pidätämme maksun kunnes tuote on vastaanotettu & tarkistettu.",
     body: `## 1. Turvallisuustavoitteet
 PC Market pyrkii tarjoamaan läpinäkyvän, turvallisen ja helposti arvioitavan kaupankäyntikokemuksen. Demoversio auttaa käyttäjiä ymmärtämään, miten myyjän ja ostajan väliset toimenpiteet on suunniteltu.
 

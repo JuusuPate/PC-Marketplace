@@ -84,6 +84,7 @@ export const sv = {
   completedSales: "genomförda affärer",
   memberSince: "Medlem sedan",
   protectionTitle: "Pengarna släpps först efter inspektionen",
+  protectionBody: "Demon visar flödet köp → frakt → 48 h inspektion → utbetalning. Ingen riktig betalning behandlas.",
   demoBadge: "FUNKTIONELL DEMO",
   demoNotice: "Den här versionen behandlar inga riktiga betalningar eller personuppgifter.",
   authTitle: "Välkommen till PC Market",
@@ -172,7 +173,8 @@ export const sv = {
   soon: "Kommer snart",
   howTitle: "Ett tryggare sätt att återanvända prestanda",
   stepList: "Säljaren dokumenterar varan",
-  stepListDescription: "Säljaren lägger till produktens uppgifter, skick och leveransinformation så att köparen ser allt tydligt innan beslutet.",
+  stepListDescription:
+    "Säljaren lägger till produktens uppgifter, skick och leveransinformation så att köparen ser allt tydligt innan beslutet.",
   stepBuy: "Köparen betalar skyddat",
   stepBuyDescription: "Betalningen skyddas genom hela affären och köparen får en tydlig och säker process.",
   stepInspect: "Varan levereras och inspekteras",

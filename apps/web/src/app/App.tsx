@@ -617,9 +617,7 @@ export function App() {
               >
                 <div className="hero section-shell">
                   <div className="hero-copy">
-                    <div className="eyebrow">
-                      {copy.heroEyebrow}
-                    </div>
+                    <div className="eyebrow">{copy.heroEyebrow}</div>
                     <h1>
                       {copy.heroTitleA}
                       <br />

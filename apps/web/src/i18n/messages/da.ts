@@ -174,7 +174,8 @@ export const da = {
   soon: "Kommer snart",
   howTitle: "En tryggere måde at genbruge ydeevne",
   stepList: "Sælgeren dokumenterer varen",
-  stepListDescription: "Sælgeren tilføjer produktoplysninger, stand og leveringsinformation, så køberen ser alt tydeligt før beslutningen.",
+  stepListDescription:
+    "Sælgeren tilføjer produktoplysninger, stand og leveringsinformation, så køberen ser alt tydeligt før beslutningen.",
   stepBuy: "Køberen betaler beskyttet",
   stepBuyDescription: "Betalingen er beskyttet gennem hele handlen, og køberen får en tydelig og sikker proces.",
   stepInspect: "Varen leveres og kontrolleres",
