@@ -4,6 +4,7 @@ const SESSION_KEY = "pc-marketplace.demo-session";
 const LISTINGS_KEY = "pc-marketplace.demo-listings";
 const ORDERS_KEY = "pc-marketplace.demo-orders";
 const FAVOURITES_KEY = "pc-marketplace.demo-favourites";
+const REPORTS_KEY = "pc-marketplace.demo-reports";
 const PICKUP_ADDRESSES_KEY = "pc-marketplace.demo-private-pickup-addresses";
 const LEGAL_PAGES_KEY = "pc-marketplace.demo-legal-pages";
 
@@ -12,6 +13,11 @@ export const DEMO_LISTINGS_MAX_SERIALIZED_CHARACTERS = 3_000_000;
 interface DemoPrivatePickupAddress {
   sellerId: string;
   address: PrivatePickupAddress;
+}
+
+interface DemoReport {
+  reporterId: string;
+  listingId: string;
 }
 
 export class DemoStorageQuotaError extends Error {
@@ -63,6 +69,15 @@ export const demoStorage = {
   setOrders: (orders: DemoOrder[]) => write(ORDERS_KEY, orders),
   getFavourites: () => read<string[]>(FAVOURITES_KEY, []),
   setFavourites: (ids: string[]) => write(FAVOURITES_KEY, ids),
+  getReportedListingIds: (reporterId: string) =>
+    read<DemoReport[]>(REPORTS_KEY, [])
+      .filter((report) => report.reporterId === reporterId)
+      .map((report) => report.listingId),
+  markReportedListing(listingId: string, reporterId: string) {
+    const reports = read<DemoReport[]>(REPORTS_KEY, []);
+    if (reports.some((report) => report.listingId === listingId && report.reporterId === reporterId)) return;
+    write(REPORTS_KEY, [...reports, { listingId, reporterId }]);
+  },
   getLegalPage(slug: LegalPageContent["slug"], locale: LegalPageContent["locale"]) {
     const pages = read<Record<string, LegalPageContent>>(LEGAL_PAGES_KEY, {});
     return pages[`${slug}:${locale}`] ?? null;

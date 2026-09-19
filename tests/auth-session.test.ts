@@ -4,6 +4,7 @@ import { authService } from "../apps/web/src/lib/auth-service";
 const mock = vi.hoisted(() => ({ rpc: vi.fn(), onAuthStateChange: vi.fn(), unsubscribe: vi.fn() }));
 vi.mock("../apps/web/src/lib/supabase", () => ({
   backendMode: "supabase",
+  passwordRecoveryRedirect: false,
   supabase: { rpc: mock.rpc, auth: { onAuthStateChange: mock.onAuthStateChange } },
 }));
 const authUser = {
@@ -27,7 +28,7 @@ it("keeps the dashboard waiting until the server resolves the admin role", async
   mock.rpc.mockResolvedValue({ data: true, error: null });
   const listener = vi.fn();
   const loading = vi.fn();
-  const stop = authService.subscribe(listener, loading);
+  const stop = authService.subscribe(listener, undefined, loading);
   const callback = mock.onAuthStateChange.mock.calls[0][0];
   callback("INITIAL_SESSION", { user: authUser });
   expect(loading).toHaveBeenLastCalledWith(true);
@@ -47,7 +48,7 @@ it("ignores a pending admin lookup after sign-out", async () => {
   );
   const listener = vi.fn();
   const loading = vi.fn();
-  const stop = authService.subscribe(listener, loading);
+  const stop = authService.subscribe(listener, undefined, loading);
   const callback = mock.onAuthStateChange.mock.calls[0][0];
   callback("SIGNED_IN", { user: authUser });
   await vi.runAllTimersAsync();

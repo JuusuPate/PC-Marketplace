@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ChangeEvent, type DragEvent } from "react";
 import { Icon } from "../../components/Icon";
+import { getSafeListingImageUrl } from "../../components/ListingVisual";
 import type { Messages } from "../../i18n/messages/fi";
 import {
   ListingImageError,
@@ -7,12 +8,17 @@ import {
   releasePreparedListingImages,
   type PreparedListingImage,
 } from "../../lib/listing-images";
+import type { ListingImage } from "../../types";
 
 const MAX_IMAGES = 5;
 
 interface ImagePickerProps {
   copy: Messages;
   images: PreparedListingImage[];
+  existingImages?: ListingImage[];
+  existingImagesTitle?: string;
+  existingImageLabel?: string;
+  replacePhotosLabel?: string;
   alt: string;
   mode: "demo" | "supabase";
   disabled?: boolean;
@@ -45,7 +51,18 @@ function withSortOrder(images: PreparedListingImage[]) {
   return images.map((image, sortOrder) => ({ ...image, sortOrder }));
 }
 
-export function ImagePicker({ copy, images, alt, mode, disabled = false, onChange }: ImagePickerProps) {
+export function ImagePicker({
+  copy,
+  images,
+  existingImages = [],
+  existingImagesTitle = "Tallennetut kuvat",
+  existingImageLabel = "Tallennettu",
+  replacePhotosLabel,
+  alt,
+  mode,
+  disabled = false,
+  onChange,
+}: ImagePickerProps) {
   const [busy, setBusy] = useState(false);
   const [dragging, setDragging] = useState(false);
   const [error, setError] = useState("");
@@ -109,6 +126,9 @@ export function ImagePicker({ copy, images, alt, mode, disabled = false, onChang
   };
 
   const atLimit = images.length >= MAX_IMAGES;
+  const storedImages = existingImages.filter((image) => getSafeListingImageUrl(image));
+  const showingStoredImages = images.length === 0 && storedImages.length > 0;
+  const visibleImageCount = showingStoredImages ? storedImages.length : images.length;
 
   return (
     <div className="image-picker">
@@ -145,10 +165,10 @@ export function ImagePicker({ copy, images, alt, mode, disabled = false, onChang
           onClick={() => inputRef.current?.click()}
         >
           <Icon name="plus" />
-          {busy ? "…" : copy.addPhotos}
+          {busy ? "…" : showingStoredImages && replacePhotosLabel ? replacePhotosLabel : copy.addPhotos}
         </button>
         <small>
-          {images.length} / {MAX_IMAGES}
+          {visibleImageCount} / {MAX_IMAGES}
         </small>
       </div>
 
@@ -156,6 +176,25 @@ export function ImagePicker({ copy, images, alt, mode, disabled = false, onChang
         <p className="form-error image-picker__error" role="alert">
           {error}
         </p>
+      )}
+
+      {showingStoredImages && (
+        <section className="image-picker__stored" aria-labelledby="stored-listing-images-title">
+          <div className="image-picker__stored-heading">
+            <strong id="stored-listing-images-title">{existingImagesTitle}</strong>
+            <span>
+              {storedImages.length} / {MAX_IMAGES}
+            </span>
+          </div>
+          <ol className="image-picker__previews" aria-live="polite">
+            {storedImages.map((image, index) => (
+              <li className="image-picker__preview image-picker__preview--stored" key={image.id || image.url}>
+                <img src={getSafeListingImageUrl(image) ?? undefined} alt={image.alt || alt} />
+                <span className="image-picker__cover-badge">{index === 0 ? copy.coverPhoto : existingImageLabel}</span>
+              </li>
+            ))}
+          </ol>
+        </section>
       )}
 
       {images.length > 0 && (

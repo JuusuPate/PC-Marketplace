@@ -6,8 +6,8 @@ const ACCEPTED_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 
 const OUTPUT_PRESETS = {
   demo: {
-    maxEdge: 1200,
-    targetBytes: 180 * 1024,
+    maxEdge: 1600,
+    targetBytes: 360 * 1024,
   },
   supabase: {
     maxEdge: 1800,

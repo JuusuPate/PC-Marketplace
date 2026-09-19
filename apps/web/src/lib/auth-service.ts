@@ -1,7 +1,7 @@
 import type { User } from "@supabase/supabase-js";
 import { LAUNCH_MARKET, MARKETS } from "../config/markets";
 import type { CountryCode, DemoUser, Locale } from "../types";
-import { backendMode, supabase } from "./supabase";
+import { backendMode, passwordRecoveryRedirect, supabase } from "./supabase";
 
 const locales: Locale[] = ["fi", "sv", "da", "nb", "en"];
 export const DEMO_ADMIN_EMAIL = "admin@pcmarket.fi";
@@ -103,11 +103,18 @@ export const authService = {
     };
   },
 
-  subscribe(listener: (user: DemoUser | null) => void, onLoading?: (loading: boolean) => void) {
+  subscribe(
+    listener: (user: DemoUser | null) => void,
+    onPasswordRecovery?: () => void,
+    onLoading?: (loading: boolean) => void,
+  ) {
     if (!supabase) return () => undefined;
 
     let requestId = 0;
-    const { data } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "PASSWORD_RECOVERY" || (event === "INITIAL_SESSION" && passwordRecoveryRedirect && session)) {
+        onPasswordRecovery?.();
+      }
       const currentRequest = ++requestId;
       onLoading?.(true);
       if (!session?.user) {
@@ -142,6 +149,20 @@ export const authService = {
   async signOut() {
     if (!supabase) return;
     const { error } = await supabase.auth.signOut();
+    if (error) throw error;
+  },
+
+  async requestPasswordReset(email: string) {
+    if (!supabase) throw new Error("Salasanan palautus vaatii Supabase-yhteyden.");
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin,
+    });
+    if (error) throw error;
+  },
+
+  async updatePassword(password: string) {
+    if (!supabase) throw new Error("Salasanan palautus vaatii Supabase-yhteyden.");
+    const { error } = await supabase.auth.updateUser({ password });
     if (error) throw error;
   },
 };
