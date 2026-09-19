@@ -1,0 +1,29 @@
+.section-shell {
+  width: min(1440px, calc(100% - 80px));
+  margin-inline: auto;
+}
+.demo-banner {
+  height: 31px;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: #e6f0ea;
+  background: var(--ink);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+}
+.demo-banner span {
+  padding: 3px 7px;
+  border-radius: 999px;
+  color: var(--ink);
+  background: var(--lime);
+  font-weight: 900;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+}
+.demo-banner p {
+  margin: 0;
+  opacity: 0.68;
+}

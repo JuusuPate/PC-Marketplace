@@ -1,0 +1,46 @@
+.account-button {
+  max-width: 128px;
+}
+.header-favourites-button {
+  width: 46px;
+  padding: 0;
+  position: relative;
+  flex: 0 0 auto;
+}
+.header-favourites-button.is-active {
+  color: var(--ink);
+  border-color: #9ed01d;
+  background: #f4ffda;
+}
+.header-favourites-count {
+  min-width: 18px;
+  height: 18px;
+  padding-inline: 4px;
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  display: grid;
+  place-items: center;
+  color: var(--ink);
+  background: var(--lime);
+  border: 2px solid white;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 900;
+  line-height: 1;
+}
+.account-button > span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.mini-avatar {
+  width: 23px;
+  height: 23px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--ink);
+  background: var(--lime);
+  font-size: 9px;
+}

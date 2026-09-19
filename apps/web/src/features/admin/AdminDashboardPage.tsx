@@ -19,7 +19,7 @@ import { AdminMarketDataPanel } from "./AdminMarketDataPanel";
 import { getAdminMarketDataCopy } from "./admin-market-data-copy";
 import { AdminCatalogPanel } from "./AdminCatalogPanel";
 import { productCopy } from "../sell/product-model-copy";
-import "./admin-dashboard.css";
+import "./styles/admin-dashboard.css";
 
 interface AdminDashboardPageProps {
   locale: Locale;

@@ -1,0 +1,26 @@
+.product-model-picker {
+  margin-block: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--border, #d7ddd9);
+  border-radius: 12px;
+}
+.product-model-picker label {
+  display: grid;
+  gap: 0.4rem;
+}
+.product-model-picker input {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #ccd2cf;
+  border-radius: 6px;
+}
+.product-model-picker ul {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+.product-model-picker li button {
+  white-space: normal;
+  text-align: left;
+}

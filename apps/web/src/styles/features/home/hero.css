@@ -1,0 +1,195 @@
+.home-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: white;
+}
+.home-hero::before,
+.home-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+}
+.home-hero::before {
+  background-image: var(--home-hero-background-image);
+  background-position: var(--home-hero-background-position, center center);
+  background-repeat: no-repeat;
+  background-size: var(--home-hero-background-size, cover);
+  filter: saturate(0.92) contrast(1.06);
+  opacity: 0;
+  transform: scale(1.025);
+}
+.home-hero::after {
+  z-index: -1;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(4, 17, 16, 0.96) 0%,
+      rgba(4, 17, 16, 0.78) 26%,
+      rgba(4, 17, 16, 0.34) 62%,
+      rgba(4, 17, 16, 0.86) 100%
+    ),
+    radial-gradient(ellipse at 55% 48%, transparent 20%, rgba(4, 17, 16, 0.22) 58%, rgba(4, 17, 16, 0.92) 100%),
+    linear-gradient(
+      180deg,
+      rgba(4, 17, 16, 0.88) 0%,
+      rgba(4, 17, 16, 0.08) 24%,
+      rgba(4, 17, 16, 0.12) 72%,
+      rgba(4, 17, 16, 0.92) 100%
+    );
+  opacity: 0;
+}
+.home-hero--with-background {
+  background: #041110;
+}
+.home-hero--with-background::before,
+.home-hero--with-background::after {
+  opacity: 1;
+}
+.home-hero--with-background .eyebrow,
+.home-hero--with-background .hero-copy > p,
+.home-hero--with-background .hero-proof span {
+  color: rgba(255, 255, 255, 0.76);
+}
+.home-hero--with-background .hero h1,
+.home-hero--with-background .hero-proof strong {
+  color: white;
+}
+.home-hero--with-background .hero h1 em {
+  -webkit-text-stroke-color: rgba(255, 255, 255, 0.76);
+}
+.home-hero--with-background .eyebrow-dot {
+  background: var(--lime);
+  box-shadow: 0 0 0 5px rgba(200, 255, 72, 0.16);
+}
+.home-hero--with-background .hero-actions .button--outline {
+  color: white;
+  background: rgba(4, 17, 16, 0.46);
+  border-color: rgba(255, 255, 255, 0.42);
+  backdrop-filter: blur(8px);
+}
+.home-hero--with-background .hero-art::before,
+.home-hero--with-background .hero-art::after {
+  border-color: rgba(255, 255, 255, 0.18);
+}
+.hero {
+  min-height: 655px;
+  padding-block: 64px 72px;
+  display: grid;
+  grid-template-columns: minmax(0, 0.94fr) minmax(480px, 1.06fr);
+  align-items: center;
+  gap: 50px;
+  overflow: hidden;
+}
+.hero-copy {
+  position: relative;
+  z-index: 2;
+}
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 28px;
+  color: #53605e;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+.eyebrow-dot {
+  width: 7px;
+  height: 7px;
+  background: var(--lime-dark);
+  border-radius: 50%;
+  box-shadow: 0 0 0 5px rgba(135, 183, 25, 0.12);
+}
+.hero h1 {
+  margin: 0;
+  max-width: 750px;
+  color: var(--ink);
+  font-size: clamp(52px, 5.3vw, 83px);
+  font-weight: 860;
+  line-height: 0.96;
+  letter-spacing: -0.068em;
+}
+.hero h1 em {
+  color: transparent;
+  -webkit-text-stroke: 1.5px #7a8682;
+  font-style: normal;
+}
+.hero-copy > p {
+  max-width: 600px;
+  margin: 28px 0 30px;
+  color: var(--ink-soft);
+  font-size: 17px;
+  line-height: 1.65;
+}
+.hero-actions {
+  display: flex;
+  gap: 10px;
+}
+.hero-actions .button {
+  min-height: 52px;
+  padding-inline: 22px;
+}
+.hero-proof {
+  margin-top: 36px;
+  display: flex;
+  gap: 34px;
+}
+.hero-proof div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.hero-proof strong {
+  font-size: 18px;
+  letter-spacing: -0.04em;
+}
+.hero-proof span {
+  color: #7b8583;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hero-art {
+  min-width: 0;
+  height: 540px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+}
+.hero-glow {
+  width: 440px;
+  height: 440px;
+  position: absolute;
+  inset: 50% auto auto 50%;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(200, 255, 72, 0.5) 0%, rgba(200, 255, 72, 0.12) 43%, transparent 70%);
+  filter: blur(4px);
+  transform: translate(-50%, -50%);
+}
+.hero-art::before {
+  content: "";
+  width: 510px;
+  height: 510px;
+  position: absolute;
+  z-index: -2;
+  border: 1px solid rgba(10, 21, 21, 0.12);
+  border-radius: 50%;
+}
+.hero-art::after {
+  content: "";
+  width: 650px;
+  height: 650px;
+  position: absolute;
+  z-index: -2;
+  border: 1px dashed rgba(10, 21, 21, 0.09);
+  border-radius: 50%;
+}

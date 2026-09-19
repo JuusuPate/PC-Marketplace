@@ -1,0 +1,130 @@
+.protection-section {
+  color: white;
+  background: var(--ink);
+  overflow: hidden;
+}
+.protection-inner {
+  min-height: 510px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 80px;
+}
+.protection-art {
+  height: 390px;
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+.protection-ring {
+  position: absolute;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 50%;
+}
+.protection-ring--one {
+  width: 300px;
+  height: 300px;
+}
+.protection-ring--two {
+  width: 430px;
+  height: 430px;
+  border-style: dashed;
+}
+.large-shield {
+  width: 170px;
+  height: 190px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  color: var(--ink);
+  filter: drop-shadow(0 24px 35px rgba(0, 0, 0, 0.3));
+}
+.large-shield svg {
+  width: 170px;
+  height: 190px;
+  fill: var(--lime);
+  stroke-width: 0.7;
+}
+.large-shield span {
+  position: absolute;
+  font-size: 35px;
+  font-weight: 950;
+  letter-spacing: -0.07em;
+}
+.protection-chip {
+  min-width: 190px;
+  padding: 13px 15px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  color: var(--ink);
+  background: rgba(255, 255, 252, 0.94);
+  border-radius: 8px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
+}
+.protection-chip > svg {
+  width: 24px;
+  height: 24px;
+  color: #78a50b;
+}
+.protection-chip span {
+  display: flex;
+  flex-direction: column;
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: 0.11em;
+}
+.protection-chip small {
+  margin-top: 3px;
+  color: #697572;
+  font-size: 8px;
+  font-weight: 650;
+  letter-spacing: 0;
+}
+.chip--top {
+  top: 32px;
+  right: 6%;
+  transform: rotate(3deg);
+}
+.chip--bottom {
+  bottom: 28px;
+  left: 5%;
+  transform: rotate(-3deg);
+}
+.protection-copy h2 {
+  max-width: 560px;
+  margin: 14px 0 23px;
+  font-size: clamp(38px, 4vw, 64px);
+  line-height: 0.98;
+  letter-spacing: -0.06em;
+}
+.protection-copy > p {
+  max-width: 590px;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.59);
+  font-size: 15px;
+  line-height: 1.7;
+}
+.protection-points {
+  margin-top: 28px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+.protection-points span {
+  padding: 8px 11px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(255, 255, 255, 0.77);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  font-size: 9px;
+  font-weight: 800;
+}
+.protection-points svg {
+  width: 13px;
+  height: 13px;
+  color: var(--lime);
+}

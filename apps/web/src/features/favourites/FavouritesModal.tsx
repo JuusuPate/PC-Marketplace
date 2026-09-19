@@ -4,7 +4,7 @@ import { ModalShell } from "../../components/ModalShell";
 import type { Messages } from "../../i18n/messages/fi";
 import { formatMoney } from "../../lib/money";
 import type { Listing, Locale } from "../../types";
-import "./favourites-modal.css";
+import "./styles/favourites-modal.css";
 
 type FavouritesMessages = Pick<Messages, "seller" | "viewItem"> & {
   favourites: string;

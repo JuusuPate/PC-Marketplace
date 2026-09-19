@@ -1,0 +1,17 @@
+:root {
+  color: #111b1b;
+  background: #fff;
+  font-family: Inter, Aptos, "Segoe UI", sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  --ink: #0a1515;
+  --ink-soft: #475452;
+  --paper: #fff;
+  --paper-2: #e8e9e2;
+  --white: #fffefa;
+  --lime: #c8ff48;
+  --lime-dark: #87b719;
+  --blue: #4778ff;
+  --line: rgba(10, 21, 21, 0.14);
+  --shadow: 0 18px 50px rgba(10, 21, 21, 0.12);
+}

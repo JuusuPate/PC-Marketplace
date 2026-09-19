@@ -1,0 +1,176 @@
+/* Readability pass: supporting text stays compact without dropping below a practical size. */
+.demo-banner {
+  min-height: 42px;
+  height: auto;
+  padding-block: 8px;
+  font-size: 14px;
+  line-height: 1.35;
+}
+.demo-banner span,
+.brand small {
+  font-size: 11px;
+  line-height: 1.2;
+}
+.desktop-nav a,
+.compact-select select,
+.sort-select select {
+  font-size: 14px;
+}
+.button {
+  min-height: 46px;
+  font-size: 14px;
+}
+.mini-avatar {
+  font-size: 11px;
+}
+.eyebrow,
+.hero-proof span {
+  font-size: 12px;
+}
+.trust-strip strong {
+  font-size: 15px;
+}
+.trust-strip small,
+.section-index {
+  font-size: 12px;
+}
+.listing-count,
+.search-box kbd,
+.category-row button {
+  font-size: 13px;
+}
+.search-box input {
+  font-size: 15px;
+}
+.hardware-brand,
+.hardware-model,
+.visual-condition {
+  font-size: 10px;
+}
+.price-signal,
+.card-topline,
+.protection-mini {
+  font-size: 11px;
+}
+.card-title {
+  font-size: 17px;
+}
+.card-content > p,
+.card-footer {
+  font-size: 13px;
+}
+.seller-avatar {
+  font-size: 10px;
+}
+.seller-avatar--large {
+  font-size: 14px;
+}
+.protection-chip span,
+.protection-chip small {
+  font-size: 11px;
+}
+.protection-points span,
+.step-number {
+  font-size: 12px;
+}
+.map-country small {
+  font-size: 10px;
+}
+.site-footer {
+  font-size: 12px;
+}
+.modal-kicker {
+  font-size: 11px;
+}
+.modal-lead {
+  font-size: 15px;
+}
+.demo-pill {
+  font-size: 10px;
+}
+.auth-visual small {
+  font-size: 12px;
+}
+.auth-tabs button,
+.stack-form label {
+  font-size: 13px;
+}
+.stack-form input,
+.stack-form select,
+.stack-form textarea {
+  font-size: 15px;
+}
+.form-error,
+.form-notice {
+  font-size: 13px;
+}
+.divider,
+.demo-privacy {
+  font-size: 11px;
+}
+.detail-proof-row span {
+  font-size: 11px;
+}
+.detail-subtitle,
+.detail-section > p {
+  font-size: 15px;
+}
+.detail-meta,
+.detail-section dl div {
+  font-size: 12px;
+}
+.detail-section h2,
+.detail-section h3 {
+  font-size: 13px;
+}
+.seller-panel small {
+  font-size: 10px;
+}
+.seller-panel strong {
+  font-size: 15px;
+}
+.seller-panel div > span,
+.detail-shipping strong,
+.report-button {
+  font-size: 11px;
+}
+.detail-shipping span,
+.checkout-item span,
+.checkout-thumb {
+  font-size: 12px;
+}
+.checkout-item strong,
+.checkout-totals div {
+  font-size: 14px;
+}
+.safe-note strong,
+.safe-note small {
+  font-size: 12px;
+}
+.account-profile p {
+  font-size: 12px;
+}
+.section-heading-mini h3 {
+  font-size: 16px;
+}
+.section-heading-mini > span,
+.status-chip,
+.market-status-grid small {
+  font-size: 10px;
+}
+.empty-copy,
+.account-list article > div:nth-child(2) strong,
+.order-value strong,
+.market-status-grid strong,
+.toast {
+  font-size: 13px;
+}
+.account-list article small {
+  font-size: 11px;
+}
+.order-icon {
+  font-size: 9px;
+}
+.auth-form-wrap > .button + .button {
+  margin-top: 10px;
+}

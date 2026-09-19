@@ -1,0 +1,29 @@
+.toast {
+  max-width: min(520px, calc(100vw - 36px));
+  padding: 14px 18px;
+  position: fixed;
+  z-index: 200;
+  left: 50%;
+  bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: white;
+  background: var(--ink);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 9px;
+  box-shadow: 0 17px 45px rgba(0, 0, 0, 0.26);
+  translate: -50% 0;
+  font-size: 10px;
+  font-weight: 800;
+  animation: toast-in 0.3s ease both;
+}
+.toast svg {
+  color: var(--lime);
+}
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}

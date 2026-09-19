@@ -1,0 +1,119 @@
+.marketplace-section {
+  padding-block: 88px 105px;
+}
+.marketplace-section--category {
+  padding-top: 62px;
+}
+.section-heading {
+  margin-bottom: 34px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+}
+.section-heading > div {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.section-index {
+  color: #7b8683;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+}
+.section-index--light {
+  color: rgba(255, 255, 255, 0.48);
+}
+.section-heading h2,
+.how-section h2 {
+  margin: 0;
+  font-size: clamp(32px, 3vw, 48px);
+  line-height: 1;
+  letter-spacing: -0.055em;
+}
+.listing-count {
+  color: #687370;
+  font-size: 11px;
+  font-weight: 800;
+}
+.market-toolbar {
+  display: flex;
+  gap: 10px;
+}
+.search-box {
+  height: 54px;
+  padding: 0 16px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  box-shadow: 0 4px 18px rgba(10, 21, 21, 0.03);
+}
+.search-box svg {
+  color: #77827f;
+}
+.search-box input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font-size: 13px;
+}
+.search-box kbd {
+  padding: 4px 7px;
+  color: #7c8784;
+  background: #eeefe9;
+  border: 1px solid #dde0d8;
+  border-radius: 5px;
+  font-size: 9px;
+}
+.sort-select {
+  height: 54px;
+  min-width: 178px;
+  padding-inline: 14px;
+  justify-content: space-between;
+  background: var(--white);
+}
+.sort-select select {
+  max-width: none;
+  width: 140px;
+}
+.category-row {
+  margin: 13px 0 28px;
+  display: flex;
+  gap: 7px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+.category-row button {
+  min-width: max-content;
+  height: 39px;
+  padding: 0 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #56615f;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 800;
+}
+.category-row button span {
+  color: #8b9693;
+  font-size: 15px;
+}
+.category-row button.active {
+  color: white;
+  background: var(--ink);
+  border-color: var(--ink);
+}
+.category-row button.active span {
+  color: var(--lime);
+}

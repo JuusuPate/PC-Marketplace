@@ -1,0 +1,70 @@
+.modal-backdrop {
+  padding: 28px;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  background: rgba(3, 10, 9, 0.74);
+  backdrop-filter: blur(8px);
+  animation: backdrop-in 0.18s ease both;
+}
+.modal-panel {
+  width: min(760px, 100%);
+  max-height: calc(100vh - 56px);
+  position: relative;
+  overflow: auto;
+  background: var(--white);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 14px;
+  box-shadow: 0 35px 100px rgba(0, 0, 0, 0.38);
+  animation: modal-in 0.25s ease both;
+}
+.modal-panel--wide {
+  width: min(1080px, 100%);
+}
+.modal-close {
+  width: 36px;
+  height: 36px;
+  position: absolute;
+  z-index: 4;
+  top: 13px;
+  right: 13px;
+  color: #3a4744;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(10, 21, 21, 0.12);
+  border-radius: 50%;
+  backdrop-filter: blur(9px);
+}
+.modal-close svg {
+  width: 16px;
+  height: 16px;
+}
+@keyframes backdrop-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+}
+.modal-kicker {
+  color: #788380;
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: 0.14em;
+}
+.modal-panel h2 {
+  margin: 10px 0 9px;
+  font-size: 30px;
+  letter-spacing: -0.05em;
+}
+.modal-lead {
+  margin: 0 0 23px;
+  color: #687370;
+  font-size: 12px;
+  line-height: 1.55;
+}
