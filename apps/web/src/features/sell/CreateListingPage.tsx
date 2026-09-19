@@ -60,7 +60,10 @@ const visualByCategory: Record<Category, Listing["visual"]> = {
   cpu: "orange",
   memory: "violet",
   motherboard: "silver",
-  psu: "silver", storage: "blue", case: "silver", cooling: "blue",
+  psu: "silver",
+  storage: "blue",
+  case: "silver",
+  cooling: "blue",
   pc: "blue",
   other: "pink",
 };
@@ -494,7 +497,20 @@ export function CreateListingPage({
                 <p>{copy.productDetailsHelp}</p>
               </div>
             </div>
-            <ProductModelPicker key={category} category={category} locale={locale} selectedId={catalogModelId} onSelect={m=>{setCatalogModelId(m?.id??null);if(m){setBrand(m.brand);setModel([m.name,m.variant].filter(Boolean).join(" · "));if(!title.trim())setTitle(`${m.brand} ${m.name}`);}}}/>
+            <ProductModelPicker
+              key={category}
+              category={category}
+              locale={locale}
+              selectedId={catalogModelId}
+              onSelect={(m) => {
+                setCatalogModelId(m?.id ?? null);
+                if (m) {
+                  setBrand(m.brand);
+                  setModel([m.name, m.variant].filter(Boolean).join(" · "));
+                  if (!title.trim()) setTitle(`${m.brand} ${m.name}`);
+                }
+              }}
+            />
             <div className="create-listing-fields">
               <label className="field-wide">
                 <FieldLabel label={copy.productTitle} required requiredText={formCopy.required} />
@@ -526,7 +542,20 @@ export function CreateListingPage({
                     if (nextCategory !== "pc") setTechnicalDetailsUnknown(false);
                   }}
                 >
-                  {(["gpu", "cpu", "memory", "motherboard", "psu", "storage", "case", "cooling", "pc", "other"] as Category[]).map((item) => (
+                  {(
+                    [
+                      "gpu",
+                      "cpu",
+                      "memory",
+                      "motherboard",
+                      "psu",
+                      "storage",
+                      "case",
+                      "cooling",
+                      "pc",
+                      "other",
+                    ] as Category[]
+                  ).map((item) => (
                     <option key={item} value={item}>
                       {copy[item]}
                     </option>
@@ -566,13 +595,23 @@ export function CreateListingPage({
               </label>
               <label>
                 <FieldLabel label={copy.brand} requiredText={formCopy.required} optionalText={formCopy.optional} />
-                <input value={brand} onChange={(event) => {setBrand(event.target.value);setCatalogModelId(null);}} placeholder="ASUS" />
+                <input
+                  value={brand}
+                  onChange={(event) => {
+                    setBrand(event.target.value);
+                    setCatalogModelId(null);
+                  }}
+                  placeholder="ASUS"
+                />
               </label>
               <label>
                 <FieldLabel label={copy.model} requiredText={formCopy.required} optionalText={formCopy.optional} />
                 <input
                   value={model}
-                  onChange={(event) => {setModel(event.target.value);setCatalogModelId(null);}}
+                  onChange={(event) => {
+                    setModel(event.target.value);
+                    setCatalogModelId(null);
+                  }}
                   placeholder="TUF-RTX4070S-O12G-GAMING"
                 />
               </label>

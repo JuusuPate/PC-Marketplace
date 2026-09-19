@@ -243,7 +243,16 @@ export function AdminDashboardPage({
           >
             {getAdminMarketDataCopy(locale).title}
           </a>
-          <a href={`${ADMIN_PATH}/catalog`} aria-current={catalog ? "page" : undefined} onClick={event=>{event.preventDefault();onNavigate(`${ADMIN_PATH}/catalog`);}}>{productCopy(locale).title}</a>
+          <a
+            href={`${ADMIN_PATH}/catalog`}
+            aria-current={catalog ? "page" : undefined}
+            onClick={(event) => {
+              event.preventDefault();
+              onNavigate(`${ADMIN_PATH}/catalog`);
+            }}
+          >
+            {productCopy(locale).title}
+          </a>
           <a
             href={getLegalPath("terms")}
             onClick={(event) => {
@@ -264,7 +273,9 @@ export function AdminDashboardPage({
           </a>
         </nav>
       </aside>
-      {catalog ? (<AdminCatalogPanel locale={locale}/>) : marketData ? (
+      {catalog ? (
+        <AdminCatalogPanel locale={locale} />
+      ) : marketData ? (
         <AdminMarketDataPanel locale={locale} />
       ) : revenue ? (
         <AdminRevenuePanel locale={locale} />

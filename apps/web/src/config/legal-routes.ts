@@ -1,6 +1,6 @@
 import type { LegalPageSlug } from "../types";
 
-export type LegalLabelKey = "terms" | "privacy" | "accessibility";
+export type LegalLabelKey = "terms" | "privacy" | "accessibility" | "safety";
 
 export interface LegalRoute {
   slug: LegalPageSlug;
@@ -12,6 +12,7 @@ export const LEGAL_ROUTES: LegalRoute[] = [
   { slug: "terms", path: "/kayttoehdot", labelKey: "terms" },
   { slug: "privacy", path: "/tietosuoja", labelKey: "privacy" },
   { slug: "accessibility", path: "/saavutettavuus", labelKey: "accessibility" },
+  { slug: "safety", path: "/turvallisuus", labelKey: "safety" },
 ];
 
 export function getLegalRoute(pathname: string): LegalRoute | null {

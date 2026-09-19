@@ -137,7 +137,10 @@ const fieldKeysByCategory: Record<Category, string[]> = {
   memory: ["capacity", "memoryType", "speed"],
   motherboard: ["socket", "chipset", "formFactor", "memoryType"],
   other: [],
-  psu: [], storage: ["capacity", "interface"], case: ["formFactor"], cooling: [],
+  psu: [],
+  storage: ["capacity", "interface"],
+  case: ["formFactor"],
+  cooling: [],
 };
 
 export function getGuidedSpecificationFields(category: Category, locale: Locale): GuidedSpecificationField[] {

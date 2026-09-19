@@ -12,10 +12,13 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "test": "vitest run --config apps/web/vite.config.ts"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.5.8",
     "@playwright/test": "^1.58.0",
-    "prettier": "^3.9.6"
+    "prettier": "^3.9.6",
+    "vitest": "^5.0.1"
   }
 }

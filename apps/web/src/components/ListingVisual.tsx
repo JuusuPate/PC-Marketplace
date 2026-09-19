@@ -6,7 +6,10 @@ const shortCategory: Record<Category, string> = {
   cpu: "CPU",
   memory: "RAM",
   motherboard: "MB",
-  psu: "PSU", storage: "SSD", case: "CASE", cooling: "FAN",
+  psu: "PSU",
+  storage: "SSD",
+  case: "CASE",
+  cooling: "FAN",
   pc: "PC",
   other: "HW",
 };

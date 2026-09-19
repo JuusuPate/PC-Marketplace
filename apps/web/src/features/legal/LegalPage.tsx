@@ -111,6 +111,41 @@ function renderBody(body: string) {
     });
 }
 
+function renderSafetySections(copy: Messages) {
+  const steps = [
+    { title: copy.stepList, description: copy.stepListDescription },
+    { title: copy.stepBuy, description: copy.stepBuyDescription },
+    { title: copy.stepInspect, description: copy.stepInspectDescription },
+    { title: copy.stepPayout, description: copy.stepPayoutDescription },
+  ];
+
+  return (
+    <>
+      <section className="how-section section-shell" id="how-it-works">
+        <div className="section-heading">
+          <div>
+            <span className="section-index">03 / FLOW</span>
+            <h2>{copy.howTitle}</h2>
+          </div>
+        </div>
+        <div className="steps-grid">
+          {steps.map(({ title, description }, index) => (
+            <article key={title}>
+              <span className="step-number">0{index + 1}</span>
+              <div className="step-icon">
+                <Icon name={index === 0 ? "plus" : index === 1 ? "shield" : index === 2 ? "truck" : "check"} />
+              </div>
+              <h3>{title}</h3>
+              <p>{description}</p>
+              {index < 3 && <Icon className="step-arrow" name="arrow" />}
+            </article>
+          ))}
+        </div>
+      </section>
+    </>
+  );
+}
+
 export function LegalPage({ route, locale, copy, user, onHome }: LegalPageProps) {
   const [page, setPage] = useState<LegalPageContent>(() => getDefaultLegalPage(route.slug, locale));
   const [draft, setDraft] = useState(page);
@@ -192,36 +227,56 @@ export function LegalPage({ route, locale, copy, user, onHome }: LegalPageProps)
           <span aria-current="page">{page.title}</span>
         </nav>
 
-        <header className="legal-page__header">
-          <div>
-            <span className="section-index">{labels.eyebrow}</span>
-            <h1 id="legal-page-title" tabIndex={-1}>
-              {page.title}
-            </h1>
-            <p>{page.summary}</p>
-          </div>
-          {isAdmin && (
-            <div className="legal-page__admin-actions">
-              <span className="admin-badge">
-                <Icon name="shield" /> {labels.adminMode}
-              </span>
-              {!editing && (
-                <button
-                  className="button button--dark"
-                  type="button"
-                  onClick={() => {
-                    setDraft(page);
-                    setEditing(true);
-                    setNotice("");
-                    setError("");
-                  }}
-                >
-                  {labels.edit}
-                </button>
-              )}
+        {route.slug === "safety" && !editing ? (
+          <header className="safety-hero" aria-labelledby="safety-page-title">
+            <div className="safety-hero__content">
+              <span className="section-index section-index--light">LUOTETTAVUUS &amp; TURVALLISUUS</span>
+              <h1 id="safety-page-title" tabIndex={-1}>
+                {page.title}
+              </h1>
+              <p>{page.summary}</p>
+              <div className="safety-hero__actions">
+                <a className="button button--light" href="/kategoriat/kaikki">
+                  Selaa tuotteita
+                </a>
+                <a className="button button--outline button--light-outline" href="/#contact">
+                  Ota yhteyttä
+                </a>
+              </div>
             </div>
-          )}
-        </header>
+          </header>
+        ) : (
+          <header className="legal-page__header">
+            <div>
+              <span className="section-index">{labels.eyebrow}</span>
+              <h1 id="legal-page-title" tabIndex={-1}>
+                {page.title}
+              </h1>
+              <p>{page.summary}</p>
+            </div>
+            {isAdmin && (
+              <div className="legal-page__admin-actions">
+                <span className="admin-badge">
+                  <Icon name="shield" /> {labels.adminMode}
+                </span>
+                {!editing && (
+                  <button
+                    className="button button--dark"
+                    type="button"
+                    onClick={() => {
+                      setDraft(page);
+                      setEditing(true);
+                      setNotice("");
+                      setError("");
+                    }}
+                  >
+                    {labels.edit}
+                  </button>
+                )}
+              </div>
+            )}
+          </header>
+        )}
 
         {notice && (
           <p className="legal-page__notice" role="status">
@@ -234,7 +289,9 @@ export function LegalPage({ route, locale, copy, user, onHome }: LegalPageProps)
           </p>
         )}
 
-        {editing && isAdmin ? (
+        {route.slug === "safety" && !editing ? (
+          renderSafetySections(copy)
+        ) : editing && isAdmin ? (
           <form className="legal-editor" onSubmit={save}>
             <div className="legal-editor__heading">
               <div>

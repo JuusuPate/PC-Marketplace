@@ -173,9 +173,15 @@ export const en = {
   soon: "Coming soon",
   howTitle: "A safer way to reuse performance",
   stepList: "The seller documents the item",
+  stepListDescription:
+    "The seller adds the product details, condition and shipping information so the buyer sees everything clearly before committing.",
   stepBuy: "The buyer pays with protection",
+  stepBuyDescription: "The payment stays protected throughout the trade, giving the buyer a clear and safe process.",
   stepInspect: "The item is shipped and inspected",
+  stepInspectDescription: "The item is delivered and checked before the transaction is finalized with confidence.",
   stepPayout: "Funds are released to the seller",
+  stepPayoutDescription:
+    "Once the inspection is approved, the payment is released to the seller in a transparent flow.",
   ctaTitle: "Give great hardware another round.",
   ctaBody: "Join the first testers and help build Finland's most trusted PC market.",
   joinDemo: "Try the demo",

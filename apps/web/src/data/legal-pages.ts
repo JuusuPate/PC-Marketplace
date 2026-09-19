@@ -66,6 +66,21 @@ Jos huomaat saavutettavuusongelman, voit ilmoittaa siitä palvelun ylläpidolle.
 ## 5. Valvonta
 Lopulliseen saavutettavuusselosteeseen lisätään sovellettavan lainsäädännön mukaiset valvontaviranomaisen tiedot ja ohjeet saavutettavuuskantelun tekemiseen.`,
   },
+  safety: {
+    title: "Luotettavuus",
+    summary: "Jokainen tilaus on ostajansuojattu - pidätämme maksun kunnes tuote on vastaanotettu & tarkistettu.",
+    body: `## 1. Turvallisuustavoitteet
+PC Market pyrkii tarjoamaan läpinäkyvän, turvallisen ja helposti arvioitavan kaupankäyntikokemuksen. Demoversio auttaa käyttäjiä ymmärtämään, miten myyjän ja ostajan väliset toimenpiteet on suunniteltu.
+
+## 2. Käyttäjätoimet
+Käyttäjän vastuulla on tarkistaa tuotteen tiedot, nouto- tai toimitustiedot ja kaupanteon turvallisuusnäkökohdat. Vääriä tai harhaanjohtavia ilmoituksia tulee ilmoittaa ylläpidolle.
+
+## 3. Palvelun suojaukset
+Demoversio käyttää rajattuja kirjautumismalleja, selkeitä ilmoitusprosesseja sekä turvallisuuden kannalta tärkeää kuva- ja tehtäväkohtaisen tiedon esittämistä. Tuotantoversiossa tähän lisätään viralliset hyväksynnät ja tarkemmat suojausmekanismit.
+
+## 4. Pysyvä kehitys
+Turvallisuutta kehitetään jatkuvasti: kansainväliset vaatimukset, käyttötapaukset ja turvallisuushavaintojen perusteella palvelua täydennetään ennen varsinaista julkaisua.`,
+  },
 };
 
 export function getDefaultLegalPage(slug: LegalPageSlug, locale: Locale): LegalPageContent {

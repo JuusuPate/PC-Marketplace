@@ -7,9 +7,9 @@ export const reportService = {
   async listMine(userId: string): Promise<string[]> {
     if (!supabase) return demoStorage.getReportedListingIds(userId);
 
-    const { data, error } = await supabase.from("reports").select("listing_id").eq("reporter_id", userId);
+    const { data, error } = await supabase.rpc("get_my_reported_listing_ids");
     if (error) throw error;
-    return (data ?? []).map((row) => String(row.listing_id));
+    return (data ?? []).map((row: { listing_id: string }) => String(row.listing_id));
   },
 
   async submit(userId: string, listingId: string, reason: ReportReason, details: string): Promise<void> {

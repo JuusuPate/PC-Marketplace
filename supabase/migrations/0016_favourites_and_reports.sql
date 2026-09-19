@@ -36,15 +36,26 @@ create policy "users remove their favourites"
 -- Reports were formerly directly insertable by any authenticated browser client.
 -- Keep the report body private and validate submissions through one owner-aware RPC.
 revoke insert on table public.reports from authenticated;
-grant select on table public.reports to authenticated;
+revoke select on table public.reports from authenticated;
 drop policy if exists "authenticated users create reports" on public.reports;
-
-create policy "users read their own reports"
-  on public.reports for select to authenticated
-  using (reporter_id = (select auth.uid()));
+drop policy if exists "users read their own reports" on public.reports;
 
 create index reports_reporter_listing_idx
   on public.reports (reporter_id, listing_id);
+
+create or replace function public.get_my_reported_listing_ids()
+returns table (listing_id uuid)
+language sql
+security definer
+set search_path = ''
+as $$
+  select report.listing_id
+  from public.reports as report
+  where report.reporter_id = (select auth.uid());
+$$;
+
+revoke execute on function public.get_my_reported_listing_ids() from public, anon;
+grant execute on function public.get_my_reported_listing_ids() to authenticated, service_role;
 
 create or replace function public.submit_listing_report(
   p_listing_id uuid,
