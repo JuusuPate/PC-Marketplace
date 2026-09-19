@@ -16,7 +16,7 @@ interface AuthModalProps {
 }
 
 export function AuthModal({ copy, locale, market, onClose, onComplete }: AuthModalProps) {
-  const [mode, setMode] = useState<"login" | "register">("login");
+  const [mode, setMode] = useState<"login" | "register" | "forgot">("login");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -31,11 +31,19 @@ export function AuthModal({ copy, locale, market, onClose, onComplete }: AuthMod
 
   const submit = async (event: FormEvent) => {
     event.preventDefault();
-    if (!email.includes("@") || password.length < 6 || (mode === "register" && name.trim().length < 2)) {
+    if (
+      !email.trim().includes("@") ||
+      (mode !== "forgot" && password.length < 6) ||
+      (mode === "register" && name.trim().length < 2)
+    ) {
       setError(
         locale === "fi"
-          ? "Tarkista tiedot. Salasanassa tulee olla vähintään 6 merkkiä."
-          : "Please check the fields. Use at least 6 characters for the password.",
+          ? mode === "forgot"
+            ? "Tarkista sähköpostiosoite."
+            : "Tarkista tiedot. Salasanassa tulee olla vähintään 6 merkkiä."
+          : mode === "forgot"
+            ? "Please check the email address."
+            : "Please check the fields. Use at least 6 characters for the password.",
       );
       return;
     }
@@ -46,6 +54,15 @@ export function AuthModal({ copy, locale, market, onClose, onComplete }: AuthMod
 
     try {
       const normalizedEmail = email.trim().toLowerCase();
+      if (mode === "forgot") {
+        await authService.requestPasswordReset(normalizedEmail);
+        setNotice(
+          locale === "fi"
+            ? "Jos osoitteella on tili, saat sähköpostiisi salasanan palautuslinkin."
+            : "If an account exists, a password reset link will arrive by email.",
+        );
+        return;
+      }
       const result =
         mode === "register"
           ? await authService.signUp(name.trim(), normalizedEmail, password, market, locale)
@@ -125,16 +142,18 @@ export function AuthModal({ copy, locale, market, onClose, onComplete }: AuthMod
                 placeholder="alex@example.com"
               />
             </label>
-            <label>
-              {copy.password}
-              <input
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                type="password"
-                autoComplete={mode === "login" ? "current-password" : "new-password"}
-                placeholder="••••••••"
-              />
-            </label>
+            {mode !== "forgot" && (
+              <label>
+                {copy.password}
+                <input
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  type="password"
+                  autoComplete={mode === "login" ? "current-password" : "new-password"}
+                  placeholder="••••••••"
+                />
+              </label>
+            )}
             {error && (
               <p className="form-error" role="alert">
                 {error}
@@ -146,10 +165,37 @@ export function AuthModal({ copy, locale, market, onClose, onComplete }: AuthMod
               </p>
             )}
             <button className="button button--primary button--full" type="submit" disabled={busy}>
-              {busy ? runtimeCopy.working : mode === "login" ? copy.login : copy.createAccount}
+              {busy
+                ? runtimeCopy.working
+                : mode === "forgot"
+                  ? locale === "fi"
+                    ? "Lähetä palautuslinkki"
+                    : "Send reset link"
+                  : mode === "login"
+                    ? copy.login
+                    : copy.createAccount}
               <Icon name="arrow" />
             </button>
           </form>
+          {authService.mode === "supabase" && (mode === "login" || mode === "forgot") && (
+            <button
+              className="auth-link-button"
+              type="button"
+              onClick={() => {
+                setMode(mode === "login" ? "forgot" : "login");
+                setError("");
+                setNotice("");
+              }}
+            >
+              {mode === "login"
+                ? locale === "fi"
+                  ? "Unohditko salasanasi?"
+                  : "Forgot your password?"
+                : locale === "fi"
+                  ? "Takaisin kirjautumiseen"
+                  : "Back to sign in"}
+            </button>
+          )}
           {authService.mode === "demo" && (
             <>
               <div className="divider">

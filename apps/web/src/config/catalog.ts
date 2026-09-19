@@ -51,7 +51,7 @@ export const CATALOG_PAGES: CatalogPage[] = [
     labelKey: "components",
     glyph: "▦",
     image: componentsImage,
-    categories: ["gpu", "cpu", "memory", "motherboard"],
+    categories: ["gpu", "cpu", "memory", "motherboard", "psu", "storage", "case", "cooling"],
   },
   {
     id: "pc",
@@ -121,6 +121,10 @@ export const CATALOG_PAGES: CatalogPage[] = [
     image: componentsImage,
     categories: ["motherboard"],
   },
+  { id: "psu", path: "/kategoriat/virtalahteet", labelKey: "psu", glyph: "▦", image: componentsImage, categories: ["psu"] },
+  { id: "storage", path: "/kategoriat/tallennuslaitteet", labelKey: "storage", glyph: "▦", image: componentsImage, categories: ["storage"] },
+  { id: "case", path: "/kategoriat/kotelot", labelKey: "case", glyph: "▦", image: componentsImage, categories: ["case"] },
+  { id: "cooling", path: "/kategoriat/jaahdytys", labelKey: "cooling", glyph: "▦", image: componentsImage, categories: ["cooling"] },
   {
     id: "other",
     path: "/kategoriat/oheislaitteet-ja-muut",

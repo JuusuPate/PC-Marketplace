@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { CategoryNavigation } from "../components/CategoryNavigation";
 import { Header } from "../components/Header";
 import { Icon } from "../components/Icon";
@@ -11,7 +11,18 @@ import {
   type CatalogSubmenuItem,
 } from "../config/catalog";
 import { getLegalPath, getLegalRoute } from "../config/legal-routes";
-import { getListingId, getListingPath } from "../config/listing-routes";
+import { getListingEditId, getListingEditPath, getListingId, getListingPath } from "../config/listing-routes";
+import {
+  ADMIN_PATH,
+  isAdminOverviewPath,
+  isAdminPath,
+  isAdminUsersPath,
+  isAdminListingsPath,
+  isAdminTransactionsPath,
+  isAdminRevenuePath,
+  isAdminMarketDataPath,
+  isAdminCatalogPath,
+} from "../config/admin-routes";
 import {
   HOME_HERO_BACKGROUND_IMAGE,
   HOME_HERO_BACKGROUND_POSITION,
@@ -20,7 +31,10 @@ import {
 import { LAUNCH_MARKET, MARKETS } from "../config/markets";
 import { DEMO_LISTINGS } from "../data/demo-listings";
 import { AccountModal } from "../features/account/AccountModal";
+import { AdminDashboardPage } from "../features/admin/AdminDashboardPage";
+import { getAdminCopy } from "../features/admin/admin-copy";
 import { AuthModal } from "../features/auth/AuthModal";
+import { PasswordRecoveryModal } from "../features/auth/PasswordRecoveryModal";
 import { CategoryHero } from "../features/catalog/CategoryHero";
 import { CheckoutModal } from "../features/checkout/CheckoutModal";
 import { FavouritesModal } from "../features/favourites/FavouritesModal";
@@ -33,8 +47,10 @@ import { authService } from "../lib/auth-service";
 import { applyCatalogNavigationFilter } from "../lib/catalog-filtering";
 import { catalogService, type CatalogNavigationCategory, type CatalogRuntimeFilter } from "../lib/catalog-service";
 import { demoStorage } from "../lib/demo-storage";
+import { favouriteService } from "../lib/favourite-service";
 import type { PreparedListingImage } from "../lib/listing-images";
 import { listingService } from "../lib/listing-service";
+import { reportService, type ReportReason } from "../lib/report-service";
 import { getRuntimeCopy } from "../lib/runtime-copy";
 import { backendMode } from "../lib/supabase";
 import type { Category, DemoOrder, DemoUser, Listing, Locale, PrivatePickupAddress } from "../types";
@@ -135,6 +151,10 @@ const categories: Array<{ key: "all" | Category; glyph: string }> = [
   { key: "memory", glyph: "▥" },
   { key: "motherboard", glyph: "▦" },
   { key: "pc", glyph: "▣" },
+  { key: "psu", glyph: "▦" },
+  { key: "storage", glyph: "▦" },
+  { key: "case", glyph: "▦" },
+  { key: "cooling", glyph: "▦" },
   { key: "other", glyph: "⌨" },
 ];
 
@@ -150,21 +170,42 @@ export function App() {
     () => getCatalogRouteFilter(window.location.pathname, window.location.search).activeHref,
   );
   const [legalRoute, setLegalRoute] = useState(() => getLegalRoute(window.location.pathname));
+  const [adminPath, setAdminPath] = useState<string | null>(() =>
+    isAdminPath(window.location.pathname) ? window.location.pathname : null,
+  );
   const [createListingPage, setCreateListingPage] = useState(() => isCreateListingPath(window.location.pathname));
+  const [editListingId, setEditListingId] = useState(() => getListingEditId(window.location.pathname));
+  const [editPickupAddress, setEditPickupAddress] = useState<PrivatePickupAddress | null | undefined>(() =>
+    getListingEditId(window.location.pathname) ? undefined : null,
+  );
   const [listingPageId, setListingPageId] = useState(() => getListingId(window.location.pathname));
   const [routeListing, setRouteListing] = useState<Listing | null>(null);
   const [listingRouteLoading, setListingRouteLoading] = useState(() => Boolean(getListingId(window.location.pathname)));
   const [user, setUser] = useState<DemoUser | null>(() => (backendMode === "demo" ? demoStorage.getSession() : null));
+  const [authLoading, setAuthLoading] = useState(backendMode === "supabase");
   const [customListings, setCustomListings] = useState<Listing[]>(() =>
     backendMode === "demo" ? demoStorage.getListings() : [],
   );
   const [orders, setOrders] = useState<DemoOrder[]>(() => demoStorage.getOrders());
-  const [favourites, setFavourites] = useState<string[]>(() => demoStorage.getFavourites());
+  const [favourites, setFavourites] = useState<string[]>(() =>
+    backendMode === "demo" ? demoStorage.getFavourites() : [],
+  );
+  const [favouritesReady, setFavouritesReady] = useState(backendMode === "demo");
+  const [savedListings, setSavedListings] = useState<Listing[]>([]);
+  const [reportedListingIds, setReportedListingIds] = useState<string[]>(() =>
+    backendMode === "demo" && user ? demoStorage.getReportedListingIds(user.id) : [],
+  );
+  const [supabaseOwnListings, setSupabaseOwnListings] = useState<Listing[]>([]);
+  const [ownListingsLoading, setOwnListingsLoading] = useState(false);
+  const favouriteRequests = useRef(new Set<string>());
+  const currentUserId = useRef(user?.id);
+  currentUserId.current = user?.id;
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<"all" | Category>("all");
   const [sort, setSort] = useState<SortOption>("newest");
   const [checkoutListing, setCheckoutListing] = useState<Listing | null>(null);
   const [authOpen, setAuthOpen] = useState(false);
+  const [passwordRecoveryOpen, setPasswordRecoveryOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [favouritesOpen, setFavouritesOpen] = useState(false);
   const [pendingSell, setPendingSell] = useState(false);
@@ -175,7 +216,7 @@ export function App() {
   const runtimeCopy = getRuntimeCopy(locale);
   const listings = useMemo(
     () =>
-      [...customListings, ...DEMO_LISTINGS]
+      [...customListings, ...(backendMode === "demo" ? DEMO_LISTINGS : [])]
         .filter(isLaunchListing)
         .map((listing) => ({ ...listing, shipsTo: [LAUNCH_MARKET] })),
     [customListings],
@@ -189,6 +230,24 @@ export function App() {
     );
   }, [listingPageId, listings, routeListing]);
 
+  const editingListing = useMemo(
+    () =>
+      editListingId
+        ? (listings.find((listing) => listing.id === editListingId) ??
+          supabaseOwnListings.find((listing) => listing.id === editListingId && listing.status === "active") ??
+          null)
+        : null,
+    [editListingId, listings, supabaseOwnListings],
+  );
+
+  const ownListings = useMemo(
+    () =>
+      backendMode === "supabase"
+        ? supabaseOwnListings
+        : customListings.filter((listing) => listing.seller.id === user?.id),
+    [customListings, supabaseOwnListings, user?.id],
+  );
+
   const catalogListings = useMemo(() => {
     if (!catalogPage?.categories) return listings;
     return listings.filter((listing) => catalogPage.categories?.includes(listing.category));
@@ -199,10 +258,13 @@ export function App() {
     [catalogListings, catalogNavigationFilter],
   );
 
-  const favouriteListings = useMemo(
-    () => listings.filter((listing) => favourites.includes(listing.id)),
-    [favourites, listings],
-  );
+  const favouriteListings = useMemo(() => {
+    const byId = new Map([...savedListings, ...listings].map((listing) => [listing.id, listing]));
+    return favourites.flatMap((id) => {
+      const listing = byId.get(id);
+      return listing ? [listing] : [];
+    });
+  }, [favourites, listings, savedListings]);
 
   const categoryFilters = useMemo(() => {
     if (!catalogPage || catalogPage.id === "all") return categories;
@@ -212,7 +274,100 @@ export function App() {
     return [];
   }, [catalogPage]);
 
-  useEffect(() => authService.subscribe(setUser), []);
+  useEffect(
+    () =>
+      authService.subscribe(
+        setUser,
+        () => {
+          setAuthOpen(false);
+          setPasswordRecoveryOpen(true);
+        },
+        setAuthLoading,
+      ),
+    [],
+  );
+
+  useEffect(() => {
+    if (backendMode === "demo") {
+      setReportedListingIds(user ? demoStorage.getReportedListingIds(user.id) : []);
+      return;
+    }
+
+    let isCurrent = true;
+    setFavourites([]);
+    setSavedListings([]);
+    setReportedListingIds([]);
+    setSupabaseOwnListings([]);
+    setFavouritesReady(false);
+    setOwnListingsLoading(Boolean(user));
+    if (!user)
+      return () => {
+        isCurrent = false;
+      };
+
+    favouriteService
+      .listMine(user.id)
+      .then((ids) => {
+        if (isCurrent) setFavourites(ids);
+      })
+      .catch(() => {
+        if (isCurrent) showToast(locale === "fi" ? "Suosikkeja ei voitu ladata." : "Could not load favourites.");
+      })
+      .finally(() => {
+        if (isCurrent) setFavouritesReady(true);
+      });
+
+    reportService
+      .listMine(user.id)
+      .then((ids) => {
+        if (isCurrent) setReportedListingIds(ids);
+      })
+      .catch(() => {
+        if (isCurrent)
+          showToast(locale === "fi" ? "Ilmoitushistoriaa ei voitu ladata." : "Could not load report history.");
+      });
+
+    listingService
+      .listMine(user.id)
+      .then((results) => {
+        if (isCurrent) setSupabaseOwnListings(results);
+      })
+      .catch(() => {
+        if (isCurrent)
+          showToast(locale === "fi" ? "Omia ilmoituksia ei voitu ladata." : "Could not load your listings.");
+      })
+      .finally(() => {
+        if (isCurrent) setOwnListingsLoading(false);
+      });
+
+    return () => {
+      isCurrent = false;
+    };
+  }, [user?.id]);
+
+  useEffect(() => {
+    if (backendMode !== "supabase" || !user || !favouritesReady) return;
+    const loadedIds = new Set(listings.map((listing) => listing.id));
+    const missingIds = favourites.filter((id) => !loadedIds.has(id));
+    if (missingIds.length === 0) {
+      setSavedListings([]);
+      return;
+    }
+
+    let isCurrent = true;
+    listingService
+      .getActiveByIds(missingIds)
+      .then((results) => {
+        if (isCurrent) setSavedListings(results);
+      })
+      .catch(() => {
+        if (isCurrent)
+          showToast(locale === "fi" ? "Tallennettuja ilmoituksia ei voitu ladata." : "Could not load saved listings.");
+      });
+    return () => {
+      isCurrent = false;
+    };
+  }, [favourites, favouritesReady, listings, user?.id]);
 
   useEffect(() => {
     let isCurrent = true;
@@ -227,12 +382,16 @@ export function App() {
   useEffect(() => {
     const syncRoute = () => {
       const nextListingId = getListingId(window.location.pathname);
+      const nextEditListingId = getListingEditId(window.location.pathname);
       const nextCatalogFilter = getCatalogRouteFilter(window.location.pathname, window.location.search);
       setCatalogPage(getCatalogPage(window.location.pathname));
       setCatalogNavigationFilter(nextCatalogFilter.filter);
       setActiveCatalogSubmenuHref(nextCatalogFilter.activeHref);
       setLegalRoute(getLegalRoute(window.location.pathname));
+      setAdminPath(isAdminPath(window.location.pathname) ? window.location.pathname : null);
       setCreateListingPage(isCreateListingPath(window.location.pathname));
+      setEditListingId(nextEditListingId);
+      setEditPickupAddress(nextEditListingId ? undefined : null);
       setListingPageId(nextListingId);
       setListingRouteLoading(Boolean(nextListingId));
       setCategory("all");
@@ -242,6 +401,31 @@ export function App() {
     window.addEventListener("popstate", syncRoute);
     return () => window.removeEventListener("popstate", syncRoute);
   }, []);
+
+  useEffect(() => {
+    if (!editListingId || !user || !editingListing || editingListing.seller.id !== user.id) return;
+
+    let isCurrent = true;
+    setEditPickupAddress(undefined);
+    listingService
+      .getPrivatePickupAddress(editListingId)
+      .then((address) => {
+        if (isCurrent) setEditPickupAddress(address);
+      })
+      .catch(() => {
+        if (!isCurrent) return;
+        setEditPickupAddress(null);
+        showToast(
+          locale === "fi"
+            ? "Yksityisen nouto-osoitteen lataaminen epäonnistui."
+            : "Could not load the private pickup address.",
+        );
+      });
+
+    return () => {
+      isCurrent = false;
+    };
+  }, [editListingId, editingListing, locale, user]);
 
   useEffect(() => {
     if (!listingPageId || listings.some((listing) => listing.id === listingPageId)) {
@@ -274,18 +458,32 @@ export function App() {
 
   useEffect(() => {
     document.documentElement.lang = locale;
-    document.title = legalRoute
-      ? `${copy[legalRoute.labelKey]} | PC Market`
-      : activeListing
-        ? `${activeListing.title} | PC Market`
-        : listingPageId
-          ? `${copy.noResults} | PC Market`
-          : createListingPage
-            ? `${copy.sellTitle} | PC Market`
-            : catalogPage
-              ? `${copy[catalogPage.labelKey]} | PC Market`
-              : copy.siteTitle;
-  }, [activeListing, catalogPage, copy, createListingPage, legalRoute, listingPageId, locale]);
+    document.title = adminPath
+      ? `${getAdminCopy(locale).title} | PC Market`
+      : legalRoute
+        ? `${copy[legalRoute.labelKey]} | PC Market`
+        : editListingId
+          ? `${locale === "fi" ? "Muokkaa ilmoitusta" : "Edit listing"} | PC Market`
+          : activeListing
+            ? `${activeListing.title} | PC Market`
+            : listingPageId
+              ? `${copy.noResults} | PC Market`
+              : createListingPage
+                ? `${copy.sellTitle} | PC Market`
+                : catalogPage
+                  ? `${copy[catalogPage.labelKey]} | PC Market`
+                  : copy.siteTitle;
+  }, [
+    activeListing,
+    adminPath,
+    catalogPage,
+    copy,
+    createListingPage,
+    editListingId,
+    legalRoute,
+    listingPageId,
+    locale,
+  ]);
 
   useEffect(() => {
     if (!createListingPage) return;
@@ -297,6 +495,15 @@ export function App() {
     setPendingSell(true);
     setAuthOpen(true);
   }, [createListingPage, user]);
+
+  useEffect(() => {
+    if (!editListingId) return;
+    if (user) {
+      setAuthOpen(false);
+      return;
+    }
+    setAuthOpen(true);
+  }, [editListingId, user]);
 
   useEffect(() => {
     if (backendMode !== "supabase") return;
@@ -360,11 +567,15 @@ export function App() {
     const nextCatalogFilter = getCatalogRouteFilter(pathname, search);
     const nextLegalRoute = getLegalRoute(pathname);
     const nextListingId = getListingId(pathname);
+    const nextEditListingId = getListingEditId(pathname);
     setCatalogPage(nextPage);
     setCatalogNavigationFilter(nextCatalogFilter.filter);
     setActiveCatalogSubmenuHref(nextCatalogFilter.activeHref);
     setLegalRoute(nextLegalRoute);
+    setAdminPath(isAdminPath(pathname) ? pathname : null);
     setCreateListingPage(isCreateListingPath(pathname));
+    setEditListingId(nextEditListingId);
+    setEditPickupAddress(nextEditListingId ? undefined : null);
     setListingPageId(nextListingId);
     setListingRouteLoading(Boolean(nextListingId && !listings.some((listing) => listing.id === nextListingId)));
     setCategory("all");
@@ -379,6 +590,8 @@ export function App() {
       if (nextPage) document.querySelector<HTMLElement>("#category-page-title")?.focus({ preventScroll: true });
       if (nextListingId) document.querySelector<HTMLElement>("#listing-page-title")?.focus({ preventScroll: true });
       if (nextLegalRoute) document.querySelector<HTMLElement>("#legal-page-title")?.focus({ preventScroll: true });
+      if (isAdminPath(pathname))
+        document.querySelector<HTMLElement>("#admin-page-title")?.focus({ preventScroll: true });
     }, 0);
   };
 
@@ -389,6 +602,7 @@ export function App() {
 
   const completeAuth = (nextUser: DemoUser) => {
     setUser(nextUser);
+    setAuthLoading(false);
     if (backendMode === "demo") demoStorage.setSession(nextUser);
     setAuthOpen(false);
     if (pendingCheckout) {
@@ -439,9 +653,38 @@ export function App() {
       }
     }
     setCustomListings(nextListings);
+    if (backendMode === "supabase") setSupabaseOwnListings((current) => [savedListing, ...current]);
     setCategory("all");
     showToast(copy.published);
     navigateTo(getListingPath(savedListing.id));
+  };
+
+  const updateListing = async (
+    listing: Listing,
+    images: PreparedListingImage[],
+    pickupAddress: PrivatePickupAddress,
+  ) => {
+    if (!user || listing.seller.id !== user.id) {
+      throw new Error(
+        locale === "fi" ? "Voit muokata vain omia ilmoituksiasi." : "You can only edit your own listings.",
+      );
+    }
+
+    const savedListing = await listingService.update(listing, market, images, pickupAddress);
+    const nextListings = customListings.map((item) => (item.id === savedListing.id ? savedListing : item));
+    if (backendMode === "demo") demoStorage.setListings(nextListings);
+    setCustomListings(nextListings);
+    if (backendMode === "supabase") {
+      setSupabaseOwnListings((current) => current.map((item) => (item.id === savedListing.id ? savedListing : item)));
+    }
+    showToast(locale === "fi" ? "Ilmoituksen muutokset tallennettiin." : "Listing changes saved.");
+    navigateTo(getListingPath(savedListing.id));
+  };
+
+  const beginEditListing = (listing: Listing) => {
+    if (!user || listing.seller.id !== user.id) return;
+    setAccountOpen(false);
+    navigateTo(getListingEditPath(listing.id));
   };
 
   const completeOrder = (order: DemoOrder) => {
@@ -452,23 +695,54 @@ export function App() {
     showToast(`${copy.orderCreated} — ${copy.orderCreatedBody}`);
   };
 
-  const toggleFavourite = (listingId: string) => {
-    const next = favourites.includes(listingId)
-      ? favourites.filter((id) => id !== listingId)
-      : [...favourites, listingId];
-    setFavourites(next);
-    demoStorage.setFavourites(next);
+  const toggleFavourite = async (listingId: string) => {
+    if (backendMode === "supabase" && !user) {
+      setAuthOpen(true);
+      return;
+    }
+    if (!favouritesReady) {
+      showToast(
+        locale === "fi" ? "Suosikkeja ladataan. Yritä hetken kuluttua." : "Favourites are loading. Try again shortly.",
+      );
+      return;
+    }
+    if (favouriteRequests.current.has(listingId)) return;
+    favouriteRequests.current.add(listingId);
+    const alreadySaved = favourites.includes(listingId);
+    const requestUserId = user?.id;
+    try {
+      if (alreadySaved) await favouriteService.remove(requestUserId ?? "", listingId);
+      else await favouriteService.add(requestUserId ?? "", listingId);
+      if (backendMode === "supabase" && currentUserId.current !== requestUserId) return;
+      setFavourites((current) => (alreadySaved ? current.filter((id) => id !== listingId) : [listingId, ...current]));
+    } catch {
+      showToast(locale === "fi" ? "Suosikin tallennus epäonnistui." : "Could not update favourites.");
+    } finally {
+      favouriteRequests.current.delete(listingId);
+    }
+  };
+
+  const submitReport = async (listing: Listing, reason: ReportReason, details: string) => {
+    if (!user || listing.seller.id === user.id)
+      throw new Error(locale === "fi" ? "Kirjaudu sisään toisella tilillä." : "Sign in with another account.");
+    await reportService.submit(user.id, listing.id, reason, details);
+    if (backendMode === "supabase" && currentUserId.current !== user.id) return;
+    setReportedListingIds((current) => (current.includes(listing.id) ? current : [...current, listing.id]));
+    showToast(locale === "fi" ? "Ilmoitus lähetettiin ylläpidolle." : "Report sent to the team.");
   };
 
   const logout = async () => {
-    try {
-      await authService.signOut();
-    } finally {
-      setUser(null);
-      if (backendMode === "demo") demoStorage.setSession(null);
-      setAccountOpen(false);
-      if (createListingPage) navigateTo("/");
+    await authService.signOut();
+    setUser(null);
+    if (backendMode === "demo") demoStorage.setSession(null);
+    if (backendMode === "supabase") {
+      setFavourites([]);
+      setSavedListings([]);
+      setReportedListingIds([]);
+      setSupabaseOwnListings([]);
     }
+    setAccountOpen(false);
+    if (createListingPage || editListingId || adminPath) navigateTo("/");
   };
 
   return (
@@ -503,6 +777,23 @@ export function App() {
       />
 
       <main>
+        {adminPath && (
+          <AdminDashboardPage
+            key={`${user?.id ?? "anonymous"}:${adminPath}`}
+            locale={locale}
+            user={user}
+            authLoading={authLoading}
+            overview={isAdminOverviewPath(adminPath)}
+            users={isAdminUsersPath(adminPath)}
+            listings={isAdminListingsPath(adminPath)}
+            transactions={isAdminTransactionsPath(adminPath)}
+            revenue={isAdminRevenuePath(adminPath)}
+            marketData={isAdminMarketDataPath(adminPath)}
+            catalog={isAdminCatalogPath(adminPath)}
+            onLogin={() => setAuthOpen(true)}
+            onNavigate={navigateTo}
+          />
+        )}
         {legalRoute && (
           <LegalPage route={legalRoute} locale={locale} copy={copy} user={user} onHome={() => navigateTo("/")} />
         )}
@@ -513,11 +804,56 @@ export function App() {
             locale={locale}
             market={market}
             user={user}
-            seller={customListings.find((listing) => listing.seller.id === user.id)?.seller}
+            seller={ownListings.find((listing) => listing.seller.id === user.id)?.seller}
             onCancel={() => navigateTo("/kategoriat/kaikki")}
             onPublish={publishListing}
           />
         )}
+
+        {editListingId &&
+          user &&
+          (editingListing ? (
+            editingListing.seller.id === user.id ? (
+              editPickupAddress !== undefined ? (
+                <CreateListingPage
+                  key={`edit-${editingListing.id}`}
+                  copy={copy}
+                  locale={locale}
+                  market={market}
+                  user={user}
+                  seller={editingListing.seller}
+                  initialListing={editingListing}
+                  initialPickupAddress={editPickupAddress}
+                  onCancel={() => navigateTo(getListingPath(editingListing.id))}
+                  onPublish={updateListing}
+                />
+              ) : (
+                <section className="listing-page-state section-shell" aria-busy="true">
+                  <div aria-hidden="true">…</div>
+                  <h1>{locale === "fi" ? "Ladataan ilmoitusta" : "Loading listing"}</h1>
+                </section>
+              )
+            ) : (
+              <section className="listing-page-state section-shell">
+                <div aria-hidden="true">⌁</div>
+                <h1>
+                  {locale === "fi" ? "Voit muokata vain omia ilmoituksiasi" : "You can only edit your own listings"}
+                </h1>
+                <button
+                  className="button button--outline"
+                  type="button"
+                  onClick={() => navigateTo(getListingPath(editingListing.id))}
+                >
+                  {locale === "fi" ? "Takaisin ilmoitukseen" : "Back to listing"}
+                </button>
+              </section>
+            )
+          ) : (
+            <section className="listing-page-state section-shell" aria-busy="true">
+              <div aria-hidden="true">…</div>
+              <h1>{locale === "fi" ? "Ladataan ilmoitusta" : "Loading listing"}</h1>
+            </section>
+          ))}
 
         {listingPageId &&
           (activeListing ? (
@@ -527,12 +863,18 @@ export function App() {
               locale={locale}
               favourite={favourites.includes(activeListing.id)}
               canBuy={!user || user.id !== activeListing.seller.id}
+              canEdit={Boolean(user && user.id === activeListing.seller.id)}
+              canReport={Boolean(user && user.id !== activeListing.seller.id)}
+              reported={reportedListingIds.includes(activeListing.id)}
               onBack={(event) => {
                 event.preventDefault();
                 navigateTo("/kategoriat/kaikki");
               }}
               onFavourite={() => toggleFavourite(activeListing.id)}
               onBuy={() => beginCheckout(activeListing)}
+              onEdit={() => beginEditListing(activeListing)}
+              onRequireReportAuth={() => setAuthOpen(true)}
+              onReport={(reason, details) => submitReport(activeListing, reason, details)}
             />
           ) : (
             <section className="listing-page-state section-shell" aria-busy={listingRouteLoading}>
@@ -552,8 +894,10 @@ export function App() {
             </section>
           ))}
 
-        {!legalRoute &&
+        {!adminPath &&
+          !legalRoute &&
           !listingPageId &&
+          !editListingId &&
           (!createListingPage || !user) &&
           (catalogPage ? (
             <CategoryHero
@@ -642,7 +986,7 @@ export function App() {
             </>
           ))}
 
-        {!legalRoute && !listingPageId && (!createListingPage || !user) && (
+        {!adminPath && !legalRoute && !listingPageId && !editListingId && (!createListingPage || !user) && (
           <section
             className={`marketplace-section section-shell${catalogPage ? " marketplace-section--category" : ""}`}
             id="marketplace"
@@ -730,90 +1074,95 @@ export function App() {
           </section>
         )}
 
-        {!legalRoute && !listingPageId && (!createListingPage || !user) && !catalogPage && (
-          <>
-            <section className="protection-section" id="safety">
-              <div className="section-shell protection-inner">
-                <div className="protection-art">
-                  <div className="protection-ring protection-ring--one" />
-                  <div className="protection-ring protection-ring--two" />
-                  <div className="large-shield">
-                    <Icon name="shield" />
-                    <span>48H</span>
-                  </div>
-                  <div className="protection-chip chip--top">
-                    <Icon name="package" />
-                    <span>
-                      TRACKED<small>Shipment verified</small>
-                    </span>
-                  </div>
-                  <div className="protection-chip chip--bottom">
-                    <Icon name="check" />
-                    <span>
-                      PAYOUT<small>Ready after inspection</small>
-                    </span>
-                  </div>
-                </div>
-                <div className="protection-copy">
-                  <span className="section-index section-index--light">02 / PROTECTION</span>
-                  <h2>{copy.protectionTitle}</h2>
-                  <p>{copy.protectionBody}</p>
-                  <div className="protection-points">
-                    <span>
-                      <Icon name="check" /> Serial evidence
-                    </span>
-                    <span>
-                      <Icon name="check" /> Tracked delivery
-                    </span>
-                    <span>
-                      <Icon name="check" /> Dispute workflow
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            <section className="how-section section-shell" id="how-it-works">
-              <div className="section-heading">
-                <div>
-                  <span className="section-index">03 / FLOW</span>
-                  <h2>{copy.howTitle}</h2>
-                </div>
-              </div>
-              <div className="steps-grid">
-                {[copy.stepList, copy.stepBuy, copy.stepInspect, copy.stepPayout].map((step, index) => (
-                  <article key={step}>
-                    <span className="step-number">0{index + 1}</span>
-                    <div className="step-icon">
-                      <Icon name={index === 0 ? "plus" : index === 1 ? "shield" : index === 2 ? "truck" : "check"} />
+        {!adminPath &&
+          !legalRoute &&
+          !listingPageId &&
+          !editListingId &&
+          (!createListingPage || !user) &&
+          !catalogPage && (
+            <>
+              <section className="protection-section" id="safety">
+                <div className="section-shell protection-inner">
+                  <div className="protection-art">
+                    <div className="protection-ring protection-ring--one" />
+                    <div className="protection-ring protection-ring--two" />
+                    <div className="large-shield">
+                      <Icon name="shield" />
+                      <span>48H</span>
                     </div>
-                    <h3>{step}</h3>
-                    {index < 3 && <Icon className="step-arrow" name="arrow" />}
-                  </article>
-                ))}
-              </div>
-            </section>
+                    <div className="protection-chip chip--top">
+                      <Icon name="package" />
+                      <span>
+                        TRACKED<small>Shipment verified</small>
+                      </span>
+                    </div>
+                    <div className="protection-chip chip--bottom">
+                      <Icon name="check" />
+                      <span>
+                        PAYOUT<small>Ready after inspection</small>
+                      </span>
+                    </div>
+                  </div>
+                  <div className="protection-copy">
+                    <span className="section-index section-index--light">02 / PROTECTION</span>
+                    <h2>{copy.protectionTitle}</h2>
+                    <p>{copy.protectionBody}</p>
+                    <div className="protection-points">
+                      <span>
+                        <Icon name="check" /> Serial evidence
+                      </span>
+                      <span>
+                        <Icon name="check" /> Tracked delivery
+                      </span>
+                      <span>
+                        <Icon name="check" /> Dispute workflow
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </section>
 
-            <section className="cta-section section-shell">
-              <div>
-                <span className="section-index section-index--light">{copy.launchBadge}</span>
-                <h2>{copy.ctaTitle}</h2>
-                <p>{copy.ctaBody}</p>
-                <button
-                  className="button button--light"
-                  type="button"
-                  onClick={() => (user ? setAccountOpen(true) : setAuthOpen(true))}
-                >
-                  {copy.joinDemo}
-                  <Icon name="arrow" />
-                </button>
-              </div>
-              <div className="cta-map cta-map--finland" aria-label={copy.marketShipping}>
-                <span className="map-country map-fi">✓</span>
-              </div>
-            </section>
-          </>
-        )}
+              <section className="how-section section-shell" id="how-it-works">
+                <div className="section-heading">
+                  <div>
+                    <span className="section-index">03 / FLOW</span>
+                    <h2>{copy.howTitle}</h2>
+                  </div>
+                </div>
+                <div className="steps-grid">
+                  {[copy.stepList, copy.stepBuy, copy.stepInspect, copy.stepPayout].map((step, index) => (
+                    <article key={step}>
+                      <span className="step-number">0{index + 1}</span>
+                      <div className="step-icon">
+                        <Icon name={index === 0 ? "plus" : index === 1 ? "shield" : index === 2 ? "truck" : "check"} />
+                      </div>
+                      <h3>{step}</h3>
+                      {index < 3 && <Icon className="step-arrow" name="arrow" />}
+                    </article>
+                  ))}
+                </div>
+              </section>
+
+              <section className="cta-section section-shell">
+                <div>
+                  <span className="section-index section-index--light">{copy.launchBadge}</span>
+                  <h2>{copy.ctaTitle}</h2>
+                  <p>{copy.ctaBody}</p>
+                  <button
+                    className="button button--light"
+                    type="button"
+                    onClick={() => (user ? setAccountOpen(true) : setAuthOpen(true))}
+                  >
+                    {copy.joinDemo}
+                    <Icon name="arrow" />
+                  </button>
+                </div>
+                <div className="cta-map cta-map--finland" aria-label={copy.marketShipping}>
+                  <span className="map-country map-fi">✓</span>
+                </div>
+              </section>
+            </>
+          )}
       </main>
 
       <footer className="site-footer section-shell">
@@ -863,10 +1212,31 @@ export function App() {
           onClose={() => {
             setAuthOpen(false);
             if (pendingSell && createListingPage) navigateTo("/");
+            if (editListingId && !user) navigateTo("/");
             setPendingSell(false);
             setPendingCheckout(null);
           }}
           onComplete={completeAuth}
+        />
+      )}
+      {passwordRecoveryOpen && (
+        <PasswordRecoveryModal
+          locale={locale}
+          onCancel={() => {
+            void logout()
+              .then(() => setPasswordRecoveryOpen(false))
+              .catch(() => {
+                showToast(locale === "fi" ? "Uloskirjautuminen epäonnistui." : "Could not sign out.");
+              });
+          }}
+          onSuccess={() => {
+            setPasswordRecoveryOpen(false);
+            showToast(
+              locale === "fi"
+                ? "Salasana vaihdettiin. Olet kirjautunut sisään."
+                : "Password changed. You are signed in.",
+            );
+          }}
         />
       )}
       {checkoutListing && (
@@ -884,9 +1254,23 @@ export function App() {
           locale={locale}
           user={user}
           orders={orders}
-          ownListings={customListings.filter((listing) => listing.seller.id === user.id)}
+          ownListings={ownListings}
+          ownListingsLoading={ownListingsLoading}
           onClose={() => setAccountOpen(false)}
-          onLogout={logout}
+          onLogout={() => {
+            void logout().catch(() => {
+              showToast(locale === "fi" ? "Uloskirjautuminen epäonnistui." : "Could not sign out.");
+            });
+          }}
+          onOpenListing={(listing) => {
+            setAccountOpen(false);
+            navigateTo(getListingPath(listing.id));
+          }}
+          onEditListing={beginEditListing}
+          onAdmin={() => {
+            setAccountOpen(false);
+            navigateTo(ADMIN_PATH);
+          }}
           onManageLegal={() => {
             setAccountOpen(false);
             navigateTo(getLegalPath("terms"));

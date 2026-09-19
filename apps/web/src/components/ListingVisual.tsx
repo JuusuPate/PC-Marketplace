@@ -6,6 +6,7 @@ const shortCategory: Record<Category, string> = {
   cpu: "CPU",
   memory: "RAM",
   motherboard: "MB",
+  psu: "PSU", storage: "SSD", case: "CASE", cooling: "FAN",
   pc: "PC",
   other: "HW",
 };
@@ -43,11 +44,16 @@ export function ListingVisual({ listing, large = false, image }: ListingVisualPr
 
   if (displayImageUrl) {
     return (
-      <div
-        className={`listing-visual listing-visual--photo visual--${listing.visual} ${
-          large ? "listing-visual--large" : ""
-        }`}
-      >
+      <div className={`listing-visual listing-visual--photo ${large ? "listing-visual--large" : ""}`}>
+        <img
+          className="listing-visual__backdrop"
+          src={displayImageUrl}
+          alt=""
+          aria-hidden="true"
+          loading={large ? "eager" : "lazy"}
+          decoding="async"
+          referrerPolicy="no-referrer"
+        />
         <img
           className="listing-visual__image"
           src={displayImageUrl}

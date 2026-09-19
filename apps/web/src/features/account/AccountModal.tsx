@@ -6,6 +6,7 @@ import { getRuntimeCopy } from "../../lib/runtime-copy";
 import { backendMode } from "../../lib/supabase";
 import { Icon } from "../../components/Icon";
 import { ModalShell } from "../../components/ModalShell";
+import { getAdminCopy } from "../admin/admin-copy";
 
 interface AccountModalProps {
   copy: Messages;
@@ -13,9 +14,13 @@ interface AccountModalProps {
   user: DemoUser;
   orders: DemoOrder[];
   ownListings: Listing[];
+  ownListingsLoading: boolean;
   onClose: () => void;
   onLogout: () => void;
   onManageLegal: () => void;
+  onOpenListing: (listing: Listing) => void;
+  onEditListing: (listing: Listing) => void;
+  onAdmin: () => void;
 }
 
 export function AccountModal({
@@ -24,11 +29,19 @@ export function AccountModal({
   user,
   orders,
   ownListings,
+  ownListingsLoading,
   onClose,
   onLogout,
   onManageLegal,
+  onOpenListing,
+  onEditListing,
+  onAdmin,
 }: AccountModalProps) {
   const runtimeCopy = getRuntimeCopy(locale);
+  const listingStatusLabels =
+    locale === "fi"
+      ? { draft: "Luonnos", active: "Julkaistu", reserved: "Varattu", sold: "Myyty", removed: "Poistettu" }
+      : { draft: "Draft", active: "Published", reserved: "Reserved", sold: "Sold", removed: "Removed" };
 
   return (
     <ModalShell title={copy.account} onClose={onClose} size="wide">
@@ -80,23 +93,45 @@ export function AccountModal({
               <h3>{copy.myListings}</h3>
               <span>{ownListings.length}</span>
             </div>
-            {ownListings.length === 0 ? (
+            {ownListingsLoading ? (
+              <p className="empty-copy" role="status">
+                {locale === "fi" ? "Ladataan omia ilmoituksia…" : "Loading your listings…"}
+              </p>
+            ) : ownListings.length === 0 ? (
               <p className="empty-copy">{copy.noOwnListings}</p>
             ) : (
               <div className="account-list">
-                {ownListings.map((listing) => (
-                  <article key={listing.id}>
-                    <span className={`order-icon visual--${listing.visual}`}>{listing.category.toUpperCase()}</span>
-                    <div>
-                      <strong>{listing.title}</strong>
-                      <small>{listing.city}</small>
-                    </div>
-                    <div className="order-value">
-                      <strong>{formatMoney(listing.priceMinor, listing.currency, locale)}</strong>
-                      <span className="status-chip status--beta">DEMO</span>
-                    </div>
-                  </article>
-                ))}
+                {ownListings.map((listing) => {
+                  const status = listing.status ?? "active";
+                  const isActive = status === "active";
+                  return (
+                    <article className="account-listing" key={listing.id}>
+                      <span className={`order-icon visual--${listing.visual}`}>{listing.category.toUpperCase()}</span>
+                      <button
+                        className="account-listing__open"
+                        type="button"
+                        disabled={!isActive}
+                        onClick={() => onOpenListing(listing)}
+                      >
+                        <strong>{listing.title}</strong>
+                        <small>
+                          {listing.city} · {listingStatusLabels[status]}
+                        </small>
+                      </button>
+                      <div className="order-value">
+                        <strong>{formatMoney(listing.priceMinor, listing.currency, locale)}</strong>
+                        <button
+                          className="account-listing__edit"
+                          type="button"
+                          disabled={!isActive}
+                          onClick={() => onEditListing(listing)}
+                        >
+                          {locale === "fi" ? "Muokkaa" : "Edit"}
+                        </button>
+                      </div>
+                    </article>
+                  );
+                })}
               </div>
             )}
           </section>
@@ -122,7 +157,10 @@ export function AccountModal({
                   );
                 })}
               </div>
-              <button className="button button--dark button--full" type="button" onClick={onManageLegal}>
+              <button className="button button--dark button--full" type="button" onClick={onAdmin}>
+                {getAdminCopy(locale).title}
+              </button>
+              <button className="button button--outline button--full" type="button" onClick={onManageLegal}>
                 {locale === "fi" ? "Muokkaa sisältösivuja" : "Manage content pages"}
               </button>
             </section>

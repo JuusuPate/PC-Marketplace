@@ -1,5 +1,6 @@
 import { useMemo, useState, type FormEvent } from "react";
 import { Icon } from "../../components/Icon";
+import { getSafeListingImageUrl } from "../../components/ListingVisual";
 import { MARKETS } from "../../config/markets";
 import type { Messages } from "../../i18n/messages/fi";
 import type { PreparedListingImage } from "../../lib/listing-images";
@@ -16,6 +17,7 @@ import type {
   PrivatePickupAddress,
   Seller,
 } from "../../types";
+import { ProductModelPicker } from "./ProductModelPicker";
 import { ImagePicker } from "./ImagePicker";
 import { getGuidedSpecificationFields, specificationCopy } from "./specification-fields";
 
@@ -23,6 +25,14 @@ interface SpecificationRow {
   id: string;
   name: string;
   value: string;
+}
+
+type ListingStep = 1 | 2 | 3 | 4 | 5;
+
+interface ValidationIssue {
+  field: string;
+  message: string;
+  step: ListingStep;
 }
 
 type SellerSummary = Pick<Seller, "rating" | "reviewCount" | "completedSales" | "verified">;
@@ -33,6 +43,8 @@ export interface CreateListingPageProps {
   market: CountryCode;
   user: DemoUser;
   seller?: SellerSummary;
+  initialListing?: Listing;
+  initialPickupAddress?: PrivatePickupAddress | null;
   onCancel: () => void;
   onPublish: (listing: Listing, images: PreparedListingImage[], pickupAddress: PrivatePickupAddress) => Promise<void>;
 }
@@ -48,6 +60,7 @@ const visualByCategory: Record<Category, Listing["visual"]> = {
   cpu: "orange",
   memory: "violet",
   motherboard: "silver",
+  psu: "silver", storage: "blue", case: "silver", cooling: "blue",
   pc: "blue",
   other: "pink",
 };
@@ -77,26 +90,72 @@ function FieldLabel({ label, requiredText, optionalText, required = false }: Fie
   );
 }
 
-export function CreateListingPage({ copy, locale, market, user, seller, onCancel, onPublish }: CreateListingPageProps) {
-  const [title, setTitle] = useState("");
-  const [category, setCategory] = useState<Category>("gpu");
-  const [condition, setCondition] = useState<Condition>("good");
-  const [price, setPrice] = useState("");
-  const [brand, setBrand] = useState("");
-  const [model, setModel] = useState("");
-  const [guidedSpecifications, setGuidedSpecifications] = useState<Record<string, string>>({});
-  const [specifications, setSpecifications] = useState<SpecificationRow[]>([]);
-  const [technicalDetailsUnknown, setTechnicalDetailsUnknown] = useState(false);
-  const [description, setDescription] = useState("");
-  const [images, setImages] = useState<PreparedListingImage[]>([]);
-  const [city, setCity] = useState(user.pickupAddress?.city ?? "");
-  const [streetAddress, setStreetAddress] = useState(user.pickupAddress?.streetAddress ?? "");
-  const [postalCode, setPostalCode] = useState(user.pickupAddress?.postalCode ?? "");
-  const [error, setError] = useState("");
-  const [busy, setBusy] = useState(false);
+function FieldError({ id, message }: { id: string; message?: string }) {
+  if (!message) return null;
+  return (
+    <small className="field-error" id={id} role="alert">
+      {message}
+    </small>
+  );
+}
+
+export function CreateListingPage({
+  copy,
+  locale,
+  market,
+  user,
+  seller,
+  initialListing,
+  initialPickupAddress,
+  onCancel,
+  onPublish,
+}: CreateListingPageProps) {
   const runtimeCopy = getRuntimeCopy(locale);
   const formCopy = specificationCopy[locale];
-  const photosRequired = backendMode !== "demo";
+  const initialCategory = initialListing?.category ?? "gpu";
+  const initialGuidedFields = getGuidedSpecificationFields(initialCategory, locale);
+  const initialReservedSpecificationNames = new Set(
+    [copy.brand, copy.model, copy.technicalDetails, ...initialGuidedFields.map((field) => field.label)].map((label) =>
+      label.toLocaleLowerCase(),
+    ),
+  );
+  const [title, setTitle] = useState(initialListing?.title ?? "");
+  const [category, setCategory] = useState<Category>(initialCategory);
+  const [condition, setCondition] = useState<Condition>(initialListing?.condition ?? "good");
+  const [price, setPrice] = useState(initialListing ? String(initialListing.priceMinor / 100).replace(".", ",") : "");
+  const [brand, setBrand] = useState(initialListing?.brand ?? initialListing?.specs[copy.brand] ?? "");
+  const [model, setModel] = useState(initialListing?.specs[copy.model] ?? "");
+  const [catalogModelId, setCatalogModelId] = useState<string | null>(initialListing?.catalogModelId ?? null);
+  const [guidedSpecifications, setGuidedSpecifications] = useState<Record<string, string>>(() =>
+    Object.fromEntries(initialGuidedFields.map((field) => [field.key, initialListing?.specs[field.label] ?? ""])),
+  );
+  const [specifications, setSpecifications] = useState<SpecificationRow[]>(() =>
+    Object.entries(initialListing?.specs ?? {})
+      .filter(([name]) => !initialReservedSpecificationNames.has(name.toLocaleLowerCase()))
+      .map(([name, value]) => ({ id: crypto.randomUUID(), name, value })),
+  );
+  const [technicalDetailsUnknown, setTechnicalDetailsUnknown] = useState(
+    initialListing?.specs[copy.technicalDetails] === formCopy.unknown,
+  );
+  const [description, setDescription] = useState(initialListing?.description ?? "");
+  const [images, setImages] = useState<PreparedListingImage[]>([]);
+  const [city, setCity] = useState(
+    initialPickupAddress?.city ?? initialListing?.city ?? user.pickupAddress?.city ?? "",
+  );
+  const [streetAddress, setStreetAddress] = useState(
+    initialPickupAddress?.streetAddress ?? user.pickupAddress?.streetAddress ?? "",
+  );
+  const [postalCode, setPostalCode] = useState(
+    initialPickupAddress?.postalCode ?? user.pickupAddress?.postalCode ?? "",
+  );
+  const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [currentStep, setCurrentStep] = useState<ListingStep>(1);
+  const [busy, setBusy] = useState(false);
+  const existingImages = initialListing?.images ?? [];
+  const existingPreviewUrl = getSafeListingImageUrl(existingImages[0]);
+  const displayedImageCount = images.length > 0 ? images.length : existingImages.length;
+  const photosRequired = backendMode !== "demo" && existingImages.length === 0;
   const guidedFields = getGuidedSpecificationFields(category, locale);
   const technicalSectionTitle =
     category === "pc" ? formCopy.pcTitle : category === "other" ? formCopy.optionalTitle : formCopy.componentTitle;
@@ -107,6 +166,66 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
     Number.isFinite(numericPrice) && numericPrice > 0
       ? formatMoney(Math.round(numericPrice * 100), MARKETS[market].currency, locale)
       : copy.previewPricePlaceholder;
+  const wizardCopy =
+    locale === "fi"
+      ? {
+          steps: ["Tuote", "Tiedot", "Kuvat", "Sijainti", "Tarkistus"],
+          previous: "Takaisin",
+          next: "Jatka",
+          edit: "Muokkaa",
+          step: "Vaihe",
+          reviewTitle: "Tarkista ilmoitus",
+          reviewHelp: "Varmista vielä tiedot ennen julkaisemista. Pääset takaisin muokkaamaan aiempia vaiheita.",
+          titleError: "Kirjoita ilmoitukselle vähintään 5 merkkiä pitkä otsikko.",
+          priceError: "Anna tuotteelle kelvollinen, nollaa suurempi hinta.",
+          descriptionError: (length: number) =>
+            `Kirjoita kuvaukseen vähintään 20 merkkiä. Nyt kuvauksessa on ${length} merkkiä.`,
+          cityError: "Kirjoita paikkakunta.",
+          streetAddressError: "Kirjoita vähintään 5 merkkiä pitkä katuosoite.",
+          postalCodeError: "Kirjoita suomalainen postinumero viidellä numerolla.",
+          photosSummary: "Kuvia",
+          technicalSummary: "Teknisiä tietoja",
+          descriptionSummary: "Kuvaus",
+          locationSummary: "Sijainti ja myyjä",
+          editEyebrow: "OMAN ILMOITUKSEN MUOKKAUS",
+          editTitle: "Muokkaa ilmoitusta",
+          editIntro:
+            "Päivitä ilmoituksen tiedot ja tallenna muutokset. Ilmoituksen tunniste ja myyjän tiedot säilyvät samoina.",
+          save: "Tallenna muutokset",
+          currentPhotos: "Nykyiset kuvat säilytetään, ellet valitse uusia kuvia.",
+          storedPhotos: "Ilmoituksessa olevat kuvat",
+          storedPhoto: "Tallennettu",
+          replacePhotos: "Vaihda kuvat",
+        }
+      : {
+          steps: ["Item", "Details", "Photos", "Location", "Review"],
+          previous: "Back",
+          next: "Continue",
+          edit: "Edit",
+          step: "Step",
+          reviewTitle: "Review your listing",
+          reviewHelp: "Check the details before publishing. You can return to any earlier step to make changes.",
+          titleError: "Enter a listing title with at least 5 characters.",
+          priceError: "Enter a valid price greater than zero.",
+          descriptionError: (length: number) =>
+            `Write a description with at least 20 characters. It currently has ${length} characters.`,
+          cityError: "Enter the city.",
+          streetAddressError: "Enter a street address with at least 5 characters.",
+          postalCodeError: "Enter a five-digit Finnish postal code.",
+          photosSummary: "Photos",
+          technicalSummary: "Technical details",
+          descriptionSummary: "Description",
+          locationSummary: "Location and seller",
+          editEyebrow: "EDIT YOUR LISTING",
+          editTitle: "Edit listing",
+          editIntro: "Update the listing details and save your changes. The listing identity and seller stay the same.",
+          save: "Save changes",
+          currentPhotos: "Current photos are kept unless you select new ones.",
+          storedPhotos: "Photos in this listing",
+          storedPhoto: "Saved",
+          replacePhotos: "Replace photos",
+        };
+  const wizardSteps = wizardCopy.steps.map((label, index) => ({ id: (index + 1) as ListingStep, label }));
 
   const sellerRating = seller?.rating ?? 0;
   const sellerReviews = seller?.reviewCount ?? 0;
@@ -124,39 +243,110 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
 
   const updateSpecification = (id: string, key: "name" | "value", value: string) => {
     setSpecifications((rows) => rows.map((row) => (row.id === id ? { ...row, [key]: value } : row)));
+    clearFieldError("specifications");
   };
 
   const removeSpecification = (id: string) => {
     setSpecifications((rows) => rows.filter((row) => row.id !== id));
+    clearFieldError("specifications");
+  };
+
+  const clearFieldError = (field: string) => {
+    setFieldErrors((current) => {
+      if (!current[field]) return current;
+      const next = { ...current };
+      delete next[field];
+      return next;
+    });
+    setError("");
+  };
+
+  const getValidationIssues = (steps: ListingStep[]): ValidationIssue[] => {
+    const issues: ValidationIssue[] = [];
+    const includes = (step: ListingStep) => steps.includes(step);
+
+    if (includes(1)) {
+      if (title.trim().length < 5) issues.push({ field: "title", message: wizardCopy.titleError, step: 1 });
+      if (!Number.isFinite(numericPrice) || numericPrice <= 0) {
+        issues.push({ field: "price", message: wizardCopy.priceError, step: 1 });
+      }
+    }
+
+    if (includes(2)) {
+      const incompleteSpecification =
+        !technicalDetailsUnknown &&
+        specifications.some(
+          (row) =>
+            (row.name.trim().length > 0 || row.value.trim().length > 0) && (!row.name.trim() || !row.value.trim()),
+        );
+      if (incompleteSpecification) {
+        issues.push({ field: "specifications", message: copy.specIncomplete, step: 2 });
+      }
+      if (description.trim().length < 20) {
+        issues.push({
+          field: "description",
+          message: wizardCopy.descriptionError(description.trim().length),
+          step: 2,
+        });
+      }
+    }
+
+    if (includes(3) && photosRequired && images.length === 0) {
+      issues.push({ field: "photos", message: formCopy.photoRequired, step: 3 });
+    }
+
+    if (includes(4)) {
+      if (!city.trim()) issues.push({ field: "city", message: wizardCopy.cityError, step: 4 });
+      if (!/^\d{5}$/.test(postalCode.trim())) {
+        issues.push({ field: "postalCode", message: wizardCopy.postalCodeError, step: 4 });
+      }
+      if (streetAddress.trim().length < 5) {
+        issues.push({ field: "streetAddress", message: wizardCopy.streetAddressError, step: 4 });
+      }
+    }
+
+    return issues;
+  };
+
+  const showValidationIssues = (issues: ValidationIssue[]) => {
+    const nextErrors = Object.fromEntries(issues.map((issue) => [issue.field, issue.message]));
+    setFieldErrors(nextErrors);
+    setError(issues[0]?.message ?? "");
+    if (issues[0]) {
+      setCurrentStep(issues[0].step);
+      window.setTimeout(() => {
+        document.querySelector<HTMLElement>(`[data-listing-field="${issues[0].field}"]`)?.focus();
+      }, 0);
+    }
+  };
+
+  const moveToStep = (step: ListingStep) => {
+    if (step === currentStep || (!initialListing && step > currentStep)) return;
+    setCurrentStep(step);
+    setError("");
+    setFieldErrors({});
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const incompleteSpecification =
-      !technicalDetailsUnknown &&
-      specifications.some(
-        (row) => (row.name.trim().length > 0 || row.value.trim().length > 0) && (!row.name.trim() || !row.value.trim()),
-      );
-    if (incompleteSpecification) {
-      setError(copy.specIncomplete);
+    if (currentStep < 5) {
+      const issues = getValidationIssues([currentStep]);
+      if (issues.length > 0) {
+        showValidationIssues(issues);
+        return;
+      }
+      setFieldErrors({});
+      setError("");
+      setCurrentStep((current) => (current + 1) as ListingStep);
+      window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
 
-    if (
-      title.trim().length < 5 ||
-      description.trim().length < 20 ||
-      !city.trim() ||
-      streetAddress.trim().length < 5 ||
-      !/^\d{5}$/.test(postalCode.trim()) ||
-      !Number.isFinite(numericPrice) ||
-      numericPrice <= 0
-    ) {
-      setError(copy.formIncomplete);
-      return;
-    }
-    if (photosRequired && images.length === 0) {
-      setError(formCopy.photoRequired);
+    const issues = getValidationIssues([1, 2, 3, 4]);
+    if (issues.length > 0) {
+      showValidationIssues(issues);
       return;
     }
 
@@ -184,16 +374,18 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
     const identity = [brand.trim(), model.trim()].filter(Boolean).join(" ");
 
     const listing: Listing = {
-      id: `listing-${Date.now()}`,
+      ...(initialListing ?? {}),
+      id: initialListing?.id ?? `listing-${Date.now()}`,
       title: title.trim(),
       subtitle: `${identity || copy[category]} · ${conditionLabel}`,
       category,
+      catalogModelId,
       brand: brand.trim(),
       priceMinor: Math.round(numericPrice * 100),
       currency: MARKETS[market].currency,
       condition,
       city: city.trim(),
-      seller: {
+      seller: initialListing?.seller ?? {
         id: user.id,
         name: user.name,
         initials: sellerInitials,
@@ -212,13 +404,13 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
         ...technicalSpecifications,
       },
       description: description.trim(),
-      priceSignal: "fair",
-      buyerProtection: true,
-      serialVerified: false,
-      createdLabel: copy.justNow,
-      createdAt: new Date().toISOString(),
+      priceSignal: initialListing?.priceSignal ?? "fair",
+      buyerProtection: initialListing?.buyerProtection ?? true,
+      serialVerified: initialListing?.serialVerified ?? false,
+      createdLabel: initialListing?.createdLabel ?? copy.justNow,
+      createdAt: initialListing?.createdAt ?? new Date().toISOString(),
       visual: visualByCategory[category],
-      images: [],
+      images: existingImages,
     };
 
     const pickupAddress: PrivatePickupAddress = {
@@ -243,9 +435,9 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
     <section className="create-listing-page" aria-labelledby="create-listing-title">
       <header className="create-listing-page__header">
         <div>
-          <span className="section-kicker">{copy.createListingEyebrow}</span>
-          <h1 id="create-listing-title">{copy.sellTitle}</h1>
-          <p>{copy.createListingIntro}</p>
+          <span className="section-kicker">{initialListing ? wizardCopy.editEyebrow : copy.createListingEyebrow}</span>
+          <h1 id="create-listing-title">{initialListing ? wizardCopy.editTitle : copy.sellTitle}</h1>
+          <p>{initialListing ? wizardCopy.editIntro : copy.createListingIntro}</p>
         </div>
         <button className="button button--outline" type="button" onClick={onCancel} disabled={busy}>
           <Icon name="close" />
@@ -253,12 +445,48 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
         </button>
       </header>
 
+      <nav
+        className="listing-wizard"
+        aria-label={
+          locale === "fi"
+            ? initialListing
+              ? "Ilmoituksen muokkauksen vaiheet"
+              : "Ilmoituksen luonnin vaiheet"
+            : initialListing
+              ? "Listing editing steps"
+              : "Listing creation steps"
+        }
+      >
+        <ol>
+          {wizardSteps.map((step) => (
+            <li
+              className={`${step.id === currentStep ? "is-current" : ""}${step.id < currentStep ? " is-complete" : ""}`}
+              key={step.id}
+            >
+              <button
+                type="button"
+                onClick={() => moveToStep(step.id)}
+                disabled={!initialListing && step.id > currentStep}
+                aria-current={step.id === currentStep ? "step" : undefined}
+              >
+                <span>{step.id < currentStep ? "✓" : step.id}</span>
+                <strong>{step.label}</strong>
+              </button>
+            </li>
+          ))}
+        </ol>
+      </nav>
+
       <form className="create-listing-form" onSubmit={submit} noValidate>
         <div className="create-listing-form__main">
           <p className="required-fields-note">
             <span aria-hidden="true">*</span> {formCopy.required}
           </p>
-          <section className="create-listing-section" aria-labelledby="product-details-title">
+          <section
+            className="create-listing-section"
+            aria-labelledby="product-details-title"
+            hidden={currentStep !== 1}
+          >
             <div className="create-listing-section__heading">
               <span className="create-listing-section__number">01</span>
               <div>
@@ -266,6 +494,7 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
                 <p>{copy.productDetailsHelp}</p>
               </div>
             </div>
+            <ProductModelPicker key={category} category={category} locale={locale} selectedId={catalogModelId} onSelect={m=>{setCatalogModelId(m?.id??null);if(m){setBrand(m.brand);setModel([m.name,m.variant].filter(Boolean).join(" · "));if(!title.trim())setTitle(`${m.brand} ${m.name}`);}}}/>
             <div className="create-listing-fields">
               <label className="field-wide">
                 <FieldLabel label={copy.productTitle} required requiredText={formCopy.required} />
@@ -274,9 +503,16 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
                   minLength={5}
                   maxLength={100}
                   value={title}
-                  onChange={(event) => setTitle(event.target.value)}
+                  onChange={(event) => {
+                    setTitle(event.target.value);
+                    clearFieldError("title");
+                  }}
                   placeholder="ASUS TUF RTX 4070 SUPER"
+                  aria-invalid={Boolean(fieldErrors.title)}
+                  aria-describedby={fieldErrors.title ? "title-error" : undefined}
+                  data-listing-field="title"
                 />
+                <FieldError id="title-error" message={fieldErrors.title} />
               </label>
               <label>
                 <FieldLabel label={copy.category} required requiredText={formCopy.required} />
@@ -286,10 +522,11 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
                   onChange={(event) => {
                     const nextCategory = event.target.value as Category;
                     setCategory(nextCategory);
+                    setCatalogModelId(null);
                     if (nextCategory !== "pc") setTechnicalDetailsUnknown(false);
                   }}
                 >
-                  {(["gpu", "cpu", "memory", "motherboard", "pc", "other"] as Category[]).map((item) => (
+                  {(["gpu", "cpu", "memory", "motherboard", "psu", "storage", "case", "cooling", "pc", "other"] as Category[]).map((item) => (
                     <option key={item} value={item}>
                       {copy[item]}
                     </option>
@@ -316,32 +553,46 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
                   required
                   inputMode="decimal"
                   value={price}
-                  onChange={(event) => setPrice(event.target.value)}
+                  onChange={(event) => {
+                    setPrice(event.target.value);
+                    clearFieldError("price");
+                  }}
                   placeholder="450"
+                  aria-invalid={Boolean(fieldErrors.price)}
+                  aria-describedby={fieldErrors.price ? "price-error" : undefined}
+                  data-listing-field="price"
                 />
+                <FieldError id="price-error" message={fieldErrors.price} />
               </label>
               <label>
                 <FieldLabel label={copy.brand} requiredText={formCopy.required} optionalText={formCopy.optional} />
-                <input value={brand} onChange={(event) => setBrand(event.target.value)} placeholder="ASUS" />
+                <input value={brand} onChange={(event) => {setBrand(event.target.value);setCatalogModelId(null);}} placeholder="ASUS" />
               </label>
               <label>
                 <FieldLabel label={copy.model} requiredText={formCopy.required} optionalText={formCopy.optional} />
                 <input
                   value={model}
-                  onChange={(event) => setModel(event.target.value)}
+                  onChange={(event) => {setModel(event.target.value);setCatalogModelId(null);}}
                   placeholder="TUF-RTX4070S-O12G-GAMING"
                 />
               </label>
             </div>
           </section>
 
-          <section className="create-listing-section" aria-labelledby="technical-details-title">
+          <section
+            className="create-listing-section"
+            aria-labelledby="technical-details-title"
+            hidden={currentStep !== 2}
+          >
             <div className="create-listing-section__heading">
               <span className="create-listing-section__number">02</span>
               <div>
                 <h2 id="technical-details-title">{technicalSectionTitle}</h2>
                 <p>{technicalSectionHelp}</p>
               </div>
+            </div>
+            <div tabIndex={-1} data-listing-field="specifications">
+              <FieldError id="specifications-error" message={fieldErrors.specifications} />
             </div>
             {category === "pc" && (
               <label className={`unknown-details-toggle${technicalDetailsUnknown ? " is-selected" : ""}`}>
@@ -419,7 +670,7 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
             )}
           </section>
 
-          <section className="create-listing-section" aria-labelledby="description-title">
+          <section className="create-listing-section" aria-labelledby="description-title" hidden={currentStep !== 2}>
             <div className="create-listing-section__heading">
               <span className="create-listing-section__number">03</span>
               <div>
@@ -437,16 +688,23 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
                 maxLength={4000}
                 rows={9}
                 value={description}
-                onChange={(event) => setDescription(event.target.value)}
+                onChange={(event) => {
+                  setDescription(event.target.value);
+                  clearFieldError("description");
+                }}
                 placeholder={copy.descriptionHelp}
+                aria-invalid={Boolean(fieldErrors.description)}
+                aria-describedby={fieldErrors.description ? "description-error" : undefined}
+                data-listing-field="description"
               />
               <small>{description.length} / 4000</small>
             </div>
+            <FieldError id="description-error" message={fieldErrors.description} />
           </section>
 
-          <section className="create-listing-section" aria-labelledby="photos-title">
+          <section className="create-listing-section" aria-labelledby="photos-title" hidden={currentStep !== 3}>
             <div className="create-listing-section__heading">
-              <span className="create-listing-section__number">04</span>
+              <span className="create-listing-section__number">03</span>
               <div>
                 <h2 id="photos-title">
                   <FieldLabel
@@ -459,19 +717,32 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
                 <p>{copy.photoHelp}</p>
               </div>
             </div>
-            <ImagePicker
-              copy={copy}
-              images={images}
-              alt={title}
-              mode={backendMode}
-              disabled={busy}
-              onChange={setImages}
-            />
+            <div tabIndex={-1} data-listing-field="photos">
+              <ImagePicker
+                copy={copy}
+                images={images}
+                existingImages={existingImages}
+                existingImagesTitle={wizardCopy.storedPhotos}
+                existingImageLabel={wizardCopy.storedPhoto}
+                replacePhotosLabel={wizardCopy.replacePhotos}
+                alt={title}
+                mode={backendMode}
+                disabled={busy}
+                onChange={(nextImages) => {
+                  setImages(nextImages);
+                  clearFieldError("photos");
+                }}
+              />
+              {initialListing && existingImages.length > 0 && images.length === 0 && (
+                <p className="existing-images-note">{wizardCopy.currentPhotos}</p>
+              )}
+              <FieldError id="photos-error" message={fieldErrors.photos} />
+            </div>
           </section>
 
-          <section className="create-listing-section" aria-labelledby="seller-details-title">
+          <section className="create-listing-section" aria-labelledby="seller-details-title" hidden={currentStep !== 4}>
             <div className="create-listing-section__heading">
-              <span className="create-listing-section__number">05</span>
+              <span className="create-listing-section__number">04</span>
               <div>
                 <h2 id="seller-details-title">{copy.sellerDetails}</h2>
                 <p>{copy.sellerDetailsHelp}</p>
@@ -501,10 +772,17 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
                   required
                   autoComplete="address-level2"
                   value={city}
-                  onChange={(event) => setCity(event.target.value)}
+                  onChange={(event) => {
+                    setCity(event.target.value);
+                    clearFieldError("city");
+                  }}
                   placeholder="Helsinki"
+                  aria-invalid={Boolean(fieldErrors.city)}
+                  aria-describedby={fieldErrors.city ? "city-error" : undefined}
+                  data-listing-field="city"
                 />
                 <small>{copy.publicLocationHelp}</small>
+                <FieldError id="city-error" message={fieldErrors.city} />
               </label>
               <label>
                 <FieldLabel label={copy.postalCode} required requiredText={formCopy.required} />
@@ -516,9 +794,16 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
                   maxLength={5}
                   pattern="[0-9]{5}"
                   value={postalCode}
-                  onChange={(event) => setPostalCode(event.target.value)}
+                  onChange={(event) => {
+                    setPostalCode(event.target.value);
+                    clearFieldError("postalCode");
+                  }}
                   placeholder="00100"
+                  aria-invalid={Boolean(fieldErrors.postalCode)}
+                  aria-describedby={fieldErrors.postalCode ? "postal-code-error" : undefined}
+                  data-listing-field="postalCode"
                 />
+                <FieldError id="postal-code-error" message={fieldErrors.postalCode} />
               </label>
               <label className="field-wide">
                 <FieldLabel label={copy.streetAddress} required requiredText={formCopy.required} />
@@ -526,9 +811,16 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
                   required
                   autoComplete="street-address"
                   value={streetAddress}
-                  onChange={(event) => setStreetAddress(event.target.value)}
+                  onChange={(event) => {
+                    setStreetAddress(event.target.value);
+                    clearFieldError("streetAddress");
+                  }}
                   placeholder={copy.streetAddressPlaceholder}
+                  aria-invalid={Boolean(fieldErrors.streetAddress)}
+                  aria-describedby={fieldErrors.streetAddress ? "street-address-error" : undefined}
+                  data-listing-field="streetAddress"
                 />
+                <FieldError id="street-address-error" message={fieldErrors.streetAddress} />
               </label>
               <div className="private-address-notice field-wide">
                 <Icon name="shield" />
@@ -539,6 +831,88 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
               </div>
             </div>
           </section>
+
+          <section className="create-listing-section" aria-labelledby="review-listing-title" hidden={currentStep !== 5}>
+            <div className="create-listing-section__heading">
+              <span className="create-listing-section__number">05</span>
+              <div>
+                <h2 id="review-listing-title">{wizardCopy.reviewTitle}</h2>
+                <p>{wizardCopy.reviewHelp}</p>
+              </div>
+            </div>
+            <div className="listing-review-grid">
+              <section>
+                <span>{wizardCopy.steps[0]}</span>
+                <strong>{title}</strong>
+                <p>
+                  {copy[category]} · {copy[condition === "fair" ? "conditionFair" : condition]} · {formattedPrice}
+                </p>
+                <button type="button" onClick={() => moveToStep(1)}>
+                  {wizardCopy.edit}
+                </button>
+              </section>
+              <section>
+                <span>{wizardCopy.technicalSummary}</span>
+                <strong>
+                  {technicalDetailsUnknown
+                    ? formCopy.unknown
+                    : `${Object.values(guidedSpecifications).filter((value) => value.trim()).length + specifications.filter((row) => row.name.trim() && row.value.trim()).length} ${wizardCopy.technicalSummary.toLocaleLowerCase()}`}
+                </strong>
+                <p className="listing-review-grid__description">{description}</p>
+                <button type="button" onClick={() => moveToStep(2)}>
+                  {wizardCopy.edit}
+                </button>
+              </section>
+              <section>
+                <span>{wizardCopy.photosSummary}</span>
+                <strong>{displayedImageCount}</strong>
+                <p>{displayedImageCount > 0 ? `${displayedImageCount} / 5` : formCopy.optional}</p>
+                <button type="button" onClick={() => moveToStep(3)}>
+                  {wizardCopy.edit}
+                </button>
+              </section>
+              <section>
+                <span>{wizardCopy.locationSummary}</span>
+                <strong>{user.name}</strong>
+                <p>
+                  {streetAddress}, {postalCode} {city}
+                </p>
+                <button type="button" onClick={() => moveToStep(4)}>
+                  {wizardCopy.edit}
+                </button>
+              </section>
+            </div>
+          </section>
+
+          {error && (
+            <p className="form-error create-listing-form__error" role="alert">
+              {error}
+            </p>
+          )}
+
+          <div className="listing-wizard__actions">
+            <button
+              className="button button--outline"
+              type="button"
+              onClick={() => moveToStep((currentStep - 1) as ListingStep)}
+              disabled={currentStep === 1 || busy}
+            >
+              {wizardCopy.previous}
+            </button>
+            <span>
+              {wizardCopy.step} {currentStep} / 5
+            </span>
+            <button className="button button--primary" type="submit" disabled={busy}>
+              {currentStep === 5
+                ? busy
+                  ? runtimeCopy.publishing
+                  : initialListing
+                    ? wizardCopy.save
+                    : runtimeCopy.publish
+                : wizardCopy.next}
+              <Icon name="arrow" />
+            </button>
+          </div>
         </div>
 
         <aside className="create-listing-preview" aria-labelledby="listing-preview-title">
@@ -549,6 +923,8 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
             <div className={`create-listing-preview__image visual--${visualByCategory[category]}`}>
               {images[0] ? (
                 <img src={images[0].previewUrl} alt={images[0].alt || title} />
+              ) : existingPreviewUrl ? (
+                <img src={existingPreviewUrl} alt={existingImages[0]?.alt || title} />
               ) : (
                 <span>{brand.trim().slice(0, 3).toUpperCase() || "PC"}</span>
               )}
@@ -571,15 +947,6 @@ export function CreateListingPage({ copy, locale, market, user, seller, onCancel
                 <dd>{user.name}</dd>
               </div>
             </dl>
-            {error && (
-              <p className="form-error" role="alert">
-                {error}
-              </p>
-            )}
-            <button className="button button--primary button--full" type="submit" disabled={busy}>
-              {busy ? runtimeCopy.publishing : runtimeCopy.publish}
-              <Icon name="arrow" />
-            </button>
             <button className="button button--ghost button--full" type="button" onClick={onCancel} disabled={busy}>
               {copy.cancel}
             </button>

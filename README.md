@@ -13,11 +13,12 @@ Finland-first, Nordic-ready -demo käytettyjen PC-komponenttien ja pelikoneiden 
 - paikallinen demo-kirjautuminen tai valinnainen Supabase Auth sähköpostivahvistuksella
 - oma ilmoituksenluontisivu, pakollisten kenttien merkinnät, tuotetyypin mukaan vaihtuvat tekniset tiedot, tarkempi kuvaus ja enintään viisi tuotekuvaa
 - ilmoituksen luonti paikallisesti tuotelistaan tai Supabase-tietokantaan, yksityinen nouto-osoite, suosikit ja demo-osto
-- oma tili, tilaukset ja omat ilmoitukset
+- oma tili, tilaukset ja omat ilmoitukset; Supabase-tilassa omat ilmoitukset haetaan kaikissa tiloissa
+- ilmoituksen raportointi ylläpidolle Supabase-tilassa, demossa vain selaimen omaan muistiin
 - käyttöehdot, tietosuoja- ja saavutettavuussivu sekä admin-oikeudella toimiva sisältöeditori
 - mobiiliin mukautuva käyttöliittymä
 
-Ilman Supabase-asetuksia sovellus toimii edelleen paikallisena demona, eikä lähetä käyttäjätietoja palvelimelle. Kun Supabase on otettu käyttöön, käyttäjätilit, istunnot, profiilit ja käyttäjien julkaisemat ilmoitukset tallennetaan Supabaseen. Maksaminen, tilaukset ja suosikit ovat vielä paikallisia demotoimintoja.
+Ilman Supabase-asetuksia sovellus toimii edelleen paikallisena demona, eikä lähetä käyttäjätietoja palvelimelle. Kun Supabase on otettu käyttöön, käyttäjätilit, istunnot, profiilit, julkaistut ilmoitukset, suosikit ja raportit tallennetaan Supabaseen. Supabase-tilassa paikallisia esimerkki-ilmoituksia ei näytetä oikeina tuotteina. Maksaminen ja tilaukset ovat vielä paikallisia demotoimintoja; raporttien ylläpitokäsittelyliittymää ei ole vielä toteutettu.
 
 ## Käynnistys
 
@@ -36,16 +37,38 @@ Tuotantokäännös:
 npm run build
 ```
 
+Ilmoituksen luonti-, kuva- ja muokkauspolun selaintesti:
+
+```bash
+npm run test:e2e
+```
+
+Paikallinen testiajo käyttää asennettua Chromea. CI asentaa Chromiumin itse. Tietokannan
+käyttöoikeustestit voi ajaa Supabase CLI:n paikallisen pinon käynnistämisen jälkeen
+komennolla `supabase test db`.
+
 ## Supabase-kirjautumisen ja tietokannan käyttöönotto
 
 1. Luo Supabase-projekti.
-2. Suorita SQL-editorissa `supabase/migrations`-hakemiston migraatiot numerojärjestyksessä (`0001`–`0006`). Vaihtoehtoisesti linkitä paikallinen Supabase CLI -projekti ja suorita `supabase db push`. Neljäs migraatio lisää ilmoituskuvat ja myyjän yksityisen nouto-osoitteen, viides sisältösivut ja admin-roolit ja kuudes hallittavan komponenttikatalogin.
+2. Suorita uudessa projektissa SQL-editorissa `supabase/migrations`-hakemiston migraatiot numerojärjestyksessä (`0001`–`0009`), tai linkitä Supabase CLI -projekti ja suorita `supabase db push` — älä tee molempia samaan projektiin. Neljäs migraatio lisää ilmoituskuvat ja myyjän yksityisen nouto-osoitteen, viides sisältösivut ja admin-roolit, kuudes hallittavan komponenttikatalogin, seitsemäs omien ilmoitusten muokkauksen, kahdeksas turvallisen kuvien vaihdon ja yhdeksäs suosikit sekä turvatun ilmoitusraportoinnin.
 3. Kopioi `apps/web/.env.example` tiedostoksi `apps/web/.env.local`.
 4. Lisää ympäristötiedostoon projektin URL ja publishable key. Älä koskaan lisää selaimeen service role- tai secret key -avainta.
-5. Lisää Supabasen Authentication → URL Configuration -asetuksiin kehityksessä `http://localhost:4173` ja tuotannossa palvelun HTTPS-osoite sekä sallitut redirect-osoitteet.
+5. Lisää Supabasen Authentication → URL Configuration -asetuksiin kehityksessä `http://localhost:4173` ja tuotannossa palvelun HTTPS-osoite sekä sallitut redirect-osoitteet. Sähköpostivahvistus ja salasanan palautus palaavat sivuston juureen; lisää myös käyttämäsi vaihtoehtoinen localhost-osoite tarvittaessa.
 6. Käynnistä kehityspalvelin uudelleen komennolla `npm run dev`.
 
 Kun molemmat `VITE_SUPABASE_*`-arvot löytyvät, yläpalkissa näkyy `SUPABASE BETA`. Muussa tapauksessa sovellus käyttää automaattisesti paikallista demotilaa.
+
+Supabase-tilassa ilmoituksen omistaja voi vaihtaa kuvat muokkauksen yhteydessä. Vanhat kuvat
+säilyvät julkaistuina siihen asti, kunnes uudet kuvat on ladattu ja tietokanta on vaihtanut
+kuvaviitteet yhdellä kertaa. Epäonnistunut lataus ei poista vanhoja kuvia. Kirjautumisikkunan
+**Unohditko salasanasi?** lähettää palautuslinkin, ja linkiltä palatessa käyttäjä voi asettaa
+uuden salasanan. Paikallinen `.env.local` on pidettävä pois versionhallinnasta.
+
+Nykyisen yhdistetyn Supabase-projektin `0001`–`0009` on suoritettu SQL-editorissa, mutta niitä ei
+ole kirjattu Supabase CLI:n migraatiohistoriaan. Älä aja siinä projektissa `supabase db push` ennen
+kuin etähistoria on tarkistettu ja täsmäytetty; muuten jo tehdyt muutokset voivat yrittää ajaa
+uudelleen. Julkiset lukukyselyt on tarkistettu, mutta oikean käyttäjätilin rekisteröintiä,
+palautussähköpostin toimitusta ja käyttöoikeuksia ei ole vielä testattu päästä päähän.
 
 ### Admin-oikeuden lisääminen
 
@@ -99,7 +122,7 @@ Lisätiedot: [arkkitehtuuri](docs/architecture.md), [MVP-rajaus](docs/mvp-scope.
 
 Tämä on käyttöliittymä- ja tuotevirtojen demo, ei julkaisuvalmis rahaa käsittelevä markkinapaikka. Ennen oikeita käyttäjiä tarvitaan ainakin:
 
-1. Supabase Auth on kytketty, mutta salasanan palautus, MFA ja kattavat käyttöoikeustestit puuttuvat
+1. Supabase Auth ja salasanan palautus on kytketty, mutta palautussähköpostin toimituksen testaus, MFA ja kattavat käyttöoikeustestit puuttuvat
 2. ulkopuolinen marketplace-maksupalvelu, KYC/onboarding ja payout-logiikka
 3. tietoturva- ja maksujärjestelmäkatselmointi ammattilaisella
 4. GDPR-, DSA-, DAC7-, kuluttajansuoja- ja veromallin juridinen tarkistus
