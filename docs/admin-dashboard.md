@@ -136,7 +136,7 @@ Toteuta ja testaa yksi moduuli kerrallaan: Reports/Disputes → Moderation → M
 
 `get_admin_reports` tarkistaa admin-roolin jokaisella pyynnöllä ja palauttaa vain FI/EUR-ilmoituksiin liittyvät raportit. Raporttitaulun suoraa lukuoikeutta ei anneta selaimelle. Anonyymin, tavallisen käyttäjän, puuttuvan identiteetin ja vanhentuneen admin-oikeuden pääsy estetään; palvelukerros hylkää virheelliset vastaukset. Raportin teksti näytetään Reactin tekstinä, ei HTML:nä.
 
-Tämä ensimmäinen osa on katselujono. Raportin ratkaisu, ilmoituksen moderointi ja tilausriitojen käsittely vaativat erilliset palvelinpuolen päätös- ja auditointitoiminnot. Uusi migraatio `20260923165419_admin_reports_directory.sql` on suoritettava yhdistettyyn Supabase-projektiin ennen näkymän käyttöä. GitHubiin vieminen ei asenna migraatiota.
+Tämä ensimmäinen osa on katselujono. Raportin ratkaisu, ilmoituksen moderointi ja tilausriitojen käsittely vaativat erilliset palvelinpuolen päätös- ja auditointitoiminnot. Migraatiot `20260923165419_admin_reports_directory.sql` ja `20260923170833_secure_report_read_contract.sql` on suoritettava tässä järjestyksessä yhdistettyyn Supabase-projektiin ennen näkymän käyttöä. Jälkimmäinen poistaa vanhan suoran raporttien lukuoikeuden ja varmistaa omien raportoituja ilmoituksia koskevan RPC:n olemassaolon. GitHubiin vieminen ei asenna migraatioita.
 
 ## Tuotemallikatalogi
 
