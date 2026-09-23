@@ -19,6 +19,8 @@ import { AdminMarketDataPanel } from "./AdminMarketDataPanel";
 import { getAdminMarketDataCopy } from "./admin-market-data-copy";
 import { AdminCatalogPanel } from "./AdminCatalogPanel";
 import { productCopy } from "../sell/product-model-copy";
+import { AdminReportsPanel } from "./AdminReportsPanel";
+import { getAdminReportsCopy } from "./admin-reports-copy";
 import "./styles/admin-dashboard.css";
 
 interface AdminDashboardPageProps {
@@ -32,6 +34,7 @@ interface AdminDashboardPageProps {
   revenue?: boolean;
   marketData?: boolean;
   catalog?: boolean;
+  reports?: boolean;
   onLogin: () => void;
   onNavigate: (path: string) => void;
 }
@@ -114,6 +117,7 @@ export function AdminDashboardPage({
   revenue = false,
   marketData = false,
   catalog = false,
+  reports = false,
   onLogin,
   onNavigate,
 }: AdminDashboardPageProps) {
@@ -168,7 +172,7 @@ export function AdminDashboardPage({
   if (backendMode !== "supabase") return renderState(copy.setupTitle, copy.setupBody);
   if (!user) return renderState(copy.loginTitle, copy.loginBody, { label: copy.login, run: onLogin });
   if (user.role !== "admin" || state.status === "denied") return renderState(copy.deniedTitle, copy.deniedBody);
-  if (!overview && !users && !listings && !transactions && !revenue && !marketData && !catalog)
+  if (!overview && !users && !listings && !transactions && !revenue && !marketData && !catalog && !reports)
     return renderState(copy.notFoundTitle, copy.notFoundBody, {
       label: copy.overview,
       run: () => onNavigate(ADMIN_PATH),
@@ -254,6 +258,16 @@ export function AdminDashboardPage({
             {productCopy(locale).title}
           </a>
           <a
+            href={`${ADMIN_PATH}/reports`}
+            aria-current={reports ? "page" : undefined}
+            onClick={(event) => {
+              event.preventDefault();
+              onNavigate(`${ADMIN_PATH}/reports`);
+            }}
+          >
+            {getAdminReportsCopy(locale).title}
+          </a>
+          <a
             href={getLegalPath("terms")}
             onClick={(event) => {
               event.preventDefault();
@@ -273,7 +287,9 @@ export function AdminDashboardPage({
           </a>
         </nav>
       </aside>
-      {catalog ? (
+      {reports ? (
+        <AdminReportsPanel locale={locale} />
+      ) : catalog ? (
         <AdminCatalogPanel locale={locale} />
       ) : marketData ? (
         <AdminMarketDataPanel locale={locale} />

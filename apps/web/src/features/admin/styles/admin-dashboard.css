@@ -293,6 +293,57 @@
   overflow-wrap: anywhere;
 }
 
+.admin-reports-list {
+  display: grid;
+  gap: 16px;
+}
+.admin-report {
+  min-width: 0;
+}
+.admin-report-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+.admin-report-heading h2 {
+  margin: 0;
+}
+.admin-report-heading a:hover {
+  text-decoration: underline;
+}
+.admin-report-heading a:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 4px;
+}
+.admin-report-status {
+  flex: none;
+  font-weight: 700;
+}
+.admin-report-facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 20px;
+  margin: 20px 0;
+}
+.admin-report-facts dt {
+  color: var(--ink-soft);
+  font-size: 12px;
+}
+.admin-report-facts dd {
+  margin: 4px 0 0;
+  overflow-wrap: anywhere;
+}
+.admin-report-details p {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 600px) {
+  .admin-report-facts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 .admin-model-editor fieldset {
   display: grid;
   gap: 1rem;

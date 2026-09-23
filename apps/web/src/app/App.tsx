@@ -22,6 +22,7 @@ import {
   isAdminRevenuePath,
   isAdminMarketDataPath,
   isAdminCatalogPath,
+  isAdminReportsPath,
 } from "../config/admin-routes";
 import {
   HOME_HERO_BACKGROUND_IMAGE,
@@ -790,6 +791,7 @@ export function App() {
             revenue={isAdminRevenuePath(adminPath)}
             marketData={isAdminMarketDataPath(adminPath)}
             catalog={isAdminCatalogPath(adminPath)}
+            reports={isAdminReportsPath(adminPath)}
             onLogin={() => setAuthOpen(true)}
             onNavigate={navigateTo}
           />

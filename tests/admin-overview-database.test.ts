@@ -48,6 +48,68 @@ afterAll(async () => {
   await db?.close();
 });
 
+describe("admin report directory authorization", () => {
+  const query = (search = "", status = "open", page = 0) =>
+    `select public.get_admin_reports('${search.replaceAll("'", "''")}', '${status}', ${page}) as data`;
+
+  it("rejects anonymous, missing, forged and revoked identities without table grants", async () => {
+    for (const [role, id] of [
+      ["anon", null],
+      ["authenticated", null],
+      ["authenticated", userId],
+      ["service_role", null],
+    ] as const)
+      await expect(asRole(role, id, query())).rejects.toMatchObject({ code: "42501" });
+    await expect(asRole("authenticated", adminId, "select * from public.reports")).rejects.toMatchObject({
+      code: "42501",
+    });
+    await db.query("delete from public.user_roles where user_id = $1", [adminId]);
+    await expect(asRole("authenticated", adminId, query())).rejects.toMatchObject({ code: "42501" });
+  });
+
+  it("filters FI reports, pages stably and keeps details available only through the admin RPC", async () => {
+    const listingId = await listing();
+    const first = (
+      await db.query<{ id: string }>(
+        "insert into public.reports (reporter_id, listing_id, reason, details, created_at) values ($1, $2, 'scam', 'Needs review', '2026-09-21') returning id",
+        [userId, listingId],
+      )
+    ).rows[0].id;
+    await db.query(
+      "insert into public.reports (reporter_id, listing_id, reason, resolved_at, created_at) values ($1, $2, 'other', now(), '2026-09-22')",
+      [userId, listingId],
+    );
+    const open = (await asRole("authenticated", adminId, query())).rows[0].data as any;
+    expect(open).toMatchObject({ market: "FI", page: 0, page_size: 25, total: 1 });
+    expect(open.reports[0]).toMatchObject({
+      id: first,
+      reporter_id: userId,
+      listing_id: listingId,
+      details: "Needs review",
+    });
+    const resolved = (await asRole("authenticated", adminId, query("", "resolved"))).rows[0].data as any;
+    expect(resolved.total).toBe(1);
+    expect(resolved.reports[0].resolved_at).not.toBeNull();
+    expect(((await asRole("authenticated", adminId, query("", "", 1))).rows[0].data as any).reports).toEqual([]);
+    expect(((await asRole("authenticated", adminId, query(first))).rows[0].data as any).total).toBe(1);
+    expect(((await asRole("authenticated", adminId, query("%"))).rows[0].data as any).total).toBe(0);
+  });
+
+  it("rejects invalid filters and pages", async () => {
+    for (const args of [
+      "null, 'open', 0",
+      "'', null, 0",
+      "'', 'bad', 0",
+      "'', 'open', -1",
+      "'', 'open', 1000001",
+      `'${"x".repeat(101)}', 'open', 0`,
+    ])
+      await expect(asRole("authenticated", adminId, `select public.get_admin_reports(${args})`)).rejects.toMatchObject({
+        code: "22023",
+      });
+  });
+});
+
 async function asRole(
   role: "anon" | "authenticated" | "service_role",
   id: string | null,
