@@ -110,6 +110,25 @@ describe("admin report directory authorization", () => {
   });
 });
 
+describe("private own-report lookup", () => {
+  it("returns only the caller's listing IDs without granting raw report reads", async () => {
+    const mine = await listing();
+    const theirs = await listing();
+    await db.query(
+      "insert into public.reports (reporter_id, listing_id, reason) values ($1, $2, 'scam'), ($3, $4, 'other')",
+      [userId, mine, adminId, theirs],
+    );
+    const result = await asRole("authenticated", userId, "select listing_id from public.get_my_reported_listing_ids()");
+    expect(result.rows).toEqual([{ listing_id: mine }]);
+    await expect(asRole("authenticated", userId, "select * from public.reports")).rejects.toMatchObject({
+      code: "42501",
+    });
+    await expect(asRole("anon", null, "select * from public.get_my_reported_listing_ids()")).rejects.toMatchObject({
+      code: "42501",
+    });
+  });
+});
+
 async function asRole(
   role: "anon" | "authenticated" | "service_role",
   id: string | null,
