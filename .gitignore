@@ -6,4 +6,5 @@ dist/
 *.log
 test-results/
 playwright-report/
+supabase/.temp/
 .DS_Store

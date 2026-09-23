@@ -32,3 +32,7 @@ export function isAdminMarketDataPath(pathname: string) {
 export function isAdminCatalogPath(pathname: string) {
   return pathname.replace(/\/+$/, "") === `${ADMIN_PATH}/catalog`;
 }
+
+export function isAdminReportsPath(pathname: string) {
+  return pathname.replace(/\/+$/, "") === `${ADMIN_PATH}/reports`;
+}

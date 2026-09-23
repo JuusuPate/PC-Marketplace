@@ -130,6 +130,14 @@ PostgreSQL-testit käyttävät PGliteä ja asentavat varsinaiset migraatiot `000
 
 Toteuta ja testaa yksi moduuli kerrallaan: Reports/Disputes → Moderation → Marketing → System → Settings. Kunkin moduulin todellinen datalähde ja käyttöoikeusrajat tarkistetaan ennen toteutusta. Tuotemallien katalogieditori on toteutettu erillisenä `/admin/catalog`-näkymänä.
 
+## Vaihe 7: Reports, ensimmäinen osa
+
+`/admin/reports` näyttää Suomen markkinapaikan ilmoitusraportit ylläpitäjälle. Oletusnäkymä sisältää avoimet raportit; käsitellyt ja kaikki raportit voi valita erikseen. Otsikko- ja tunnistehaku, 25 rivin sivutus, päivitys, raportin syy, lisätiedot, ilmoituksen nykyinen tila sekä raportoijan ja myyjän näyttönimet tukevat raportin tarkistamista. Käyttöliittymä on suomeksi, ruotsiksi ja englanniksi.
+
+`get_admin_reports` tarkistaa admin-roolin jokaisella pyynnöllä ja palauttaa vain FI/EUR-ilmoituksiin liittyvät raportit. Raporttitaulun suoraa lukuoikeutta ei anneta selaimelle. Anonyymin, tavallisen käyttäjän, puuttuvan identiteetin ja vanhentuneen admin-oikeuden pääsy estetään; palvelukerros hylkää virheelliset vastaukset. Raportin teksti näytetään Reactin tekstinä, ei HTML:nä.
+
+Tämä ensimmäinen osa on katselujono. Raportin ratkaisu, ilmoituksen moderointi ja tilausriitojen käsittely vaativat erilliset palvelinpuolen päätös- ja auditointitoiminnot. Uusi migraatio `20260923165419_admin_reports_directory.sql` on suoritettava yhdistettyyn Supabase-projektiin ennen näkymän käyttöä. GitHubiin vieminen ei asenna migraatiota.
+
 ## Tuotemallikatalogi
 
 `/admin/catalog` sisältää muokattavan tuotemallikatalogin ja mallikohtaiset markkinatiedot. Kymmenessä tuoteryhmässä on kolme aloitusmallia (30 yhteensä). Ilmoituksen luonnin mallihaku yhdistää ilmoituksen pysyvään malliin. [Täydennysohje ja aloitussisältö](product-catalog.md). Asenna myös migraatio `0013_product_model_catalog.sql` ennen uuden sovellusversion käyttöä.
