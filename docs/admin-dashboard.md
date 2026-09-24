@@ -168,6 +168,6 @@ Käyttäjän Avaa tiedot -painike hakee erikseen sähköpostin, Suomen ilmoitusm
 
 Asenna `20260924175915_admin_activity_and_audit.sql` ja `20260924181012_admin_detail_views.sql` ennen uuden version käyttöönottoa. Ne lisäävät neljä ylläpitäjän vain luku -RPC:tä; taulujen selainoikeudet pysyvät ennallaan. Jokainen pyyntö tarkistaa identiteetin ja palvelinpuolen admin-roolin. Virhe tai oikeuden menetys tyhjentää aiemmin näytetyt tiedot.
 
-Paikallisesti 24.9.2026: 174 automaattista testiä, tyyppitarkistus, tuotantokäännös ja kaikki seitsemän selaintestiä läpäisivät. Näistä kolme uutta selaintestiä kattaa aikavälin vaihdon, lokin haun/sivutuksen ja yksityistietojen poistumisen oikeuden menetyksessä. Migraatioiden etäasennus ja oikean palvelun selaintarkistus varmistetaan erikseen käyttöönotossa.
+Paikallisesti 24.9.2026: 175 automaattista testiä, tyyppitarkistus, tuotantokäännös ja kaikki seitsemän selaintestiä läpäisivät. Näistä kolme uutta selaintestiä kattaa aikavälin vaihdon, lokin haun/sivutuksen ja yksityistietojen poistumisen oikeuden menetyksessä. Migraatioiden etäasennus ja oikean palvelun selaintarkistus varmistetaan erikseen käyttöönotossa.
 
 Paikallinen puuttuvan ylläpitosivun virhe johtui portissa 4173 ajetusta vanhasta `Documents/Github/PC-Marketplace`-kopiosta. Oikean `OneDrive/Tiedostot/ChatGPT/PC-Marketplace`-kopion käynnistäminen samaan porttiin korjasi `/admin/disputes`-sivun. Varmista aina palvelimen todellinen projektikansio, älä pelkkää porttia.

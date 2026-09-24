@@ -47,4 +47,4 @@ Lähde: käyttäjän nimeämä keskustelu **Rigin admin dashboardin sisältö**.
 
 Migraatiot `20260924175915_admin_activity_and_audit.sql` ja `20260924181012_admin_detail_views.sql` lisäävät neljä vain luku -RPC:tä. Kaikki tarkistavat identiteetin ja suojatun admin-roolin joka kutsulla; eivät laajenna taulujen selainoikeuksia. Lukeminen ei muuta maksuja, tilauksia tai käyttäjiä.
 
-Paikallisesti tarkistettu: 174 Vitest-testiä (koko migraatioketju PGlitessä), tyyppitarkistus ja kolme uutta selaintestiä. Selaintesteissä vain RPC-kuljetus on korvattu testivastauksilla; varsinaiset komponentit ja palvelukerrokset suoritetaan. Katso käyttöönottotilanne [ylläpidon dokumentista](admin-dashboard.md).
+Paikallisesti tarkistettu: 175 Vitest-testiä (koko migraatioketju PGlitessä), tyyppitarkistus ja kolme uutta selaintestiä. Selaintesteissä vain RPC-kuljetus on korvattu testivastauksilla; varsinaiset komponentit ja palvelukerrokset suoritetaan. Katso käyttöönottotilanne [ylläpidon dokumentista](admin-dashboard.md).

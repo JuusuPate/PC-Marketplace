@@ -1,6 +1,6 @@
 -- Read-only, FI/EUR admin activity. Ranges are [start, end); comparison has equal duration.
 create function public.get_admin_activity(p_start timestamptz, p_end timestamptz)
-returns jsonb language plpgsql stable security definer set search_path = '' as $$
+returns jsonb language plpgsql stable security definer set search_path = '' set timezone = 'UTC' as $$
 declare result jsonb;
 begin
   if (select auth.uid()) is null or not public.is_current_user_admin() then

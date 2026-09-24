@@ -156,6 +156,21 @@ describe("admin activity and audit", () => {
         code: "22023",
       });
   });
+  it("keeps equal elapsed duration across Helsinki daylight saving transitions", async () => {
+    await db.exec("set timezone = 'Europe/Helsinki'");
+    try {
+      const data = (
+        await asRole(
+          "authenticated",
+          adminId,
+          "select public.get_admin_activity('2025-03-30T12:00:00Z','2025-03-31T12:00:00Z') as data",
+        )
+      ).rows[0].data as any;
+      expect(Date.parse(data.previous.end_at) - Date.parse(data.previous.start_at)).toBe(86400000);
+    } finally {
+      await db.exec("set timezone = 'UTC'");
+    }
+  });
   it("shows both audit sources, filters literal IDs and cannot mutate evidence", async () => {
     const listingId = await listing();
     const reportId = (
