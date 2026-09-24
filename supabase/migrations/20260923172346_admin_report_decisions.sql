@@ -105,4 +105,3 @@ $$;
 
 revoke execute on function public.get_admin_reports(text, text, integer) from public, anon;
 grant execute on function public.get_admin_reports(text, text, integer) to authenticated, service_role;
-
