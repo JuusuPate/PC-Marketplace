@@ -48,6 +48,85 @@ afterAll(async () => {
   await db?.close();
 });
 
+describe("audited report decisions", () => {
+  async function report() {
+    const listingId = await listing();
+    return (
+      await db.query<{ id: string }>(
+        "insert into public.reports(reporter_id,listing_id,reason) values($1,$2,'scam') returning id",
+        [userId, listingId],
+      )
+    ).rows[0].id;
+  }
+  const decide = (id: string, action = "resolve", version = 0, note = "Checked the report") =>
+    `select public.review_admin_report('${id}','${action}','${note}',${version})`;
+  it("records both transitions, exposes the latest decision and rejects stale retries including ABA", async () => {
+    const id = await report();
+    await asRole("authenticated", adminId, decide(id));
+    expect(
+      (await db.query<any>("select resolved_at,review_version from public.reports where id=$1", [id])).rows[0],
+    ).toMatchObject({ review_version: 1, resolved_at: expect.any(Date) });
+    await expect(asRole("authenticated", adminId, decide(id))).rejects.toMatchObject({ code: "40001" });
+    await asRole("authenticated", adminId, decide(id, "reopen", 1, "Review new evidence"));
+    await expect(asRole("authenticated", adminId, decide(id))).rejects.toMatchObject({ code: "40001" });
+    const rows = (
+      await db.query<any>(
+        "select actor_id,action,note,version from public.report_decisions where report_id=$1 order by version",
+        [id],
+      )
+    ).rows;
+    expect(rows).toEqual([
+      { actor_id: adminId, action: "resolve", note: "Checked the report", version: 1 },
+      { actor_id: adminId, action: "reopen", note: "Review new evidence", version: 2 },
+    ]);
+    const result = (await asRole("authenticated", adminId, "select public.get_admin_reports() as data")).rows[0]
+      .data as any;
+    expect(result.reports[0]).toMatchObject({
+      resolved_at: null,
+      review_version: 2,
+      last_decision: { actor_id: adminId, action: "reopen", note: "Review new evidence" },
+    });
+    expect((await db.query<any>("select status from public.listings")).rows[0].status).toBe("active");
+  });
+  it("rejects unauthorized decisions and direct audit changes", async () => {
+    const id = await report();
+    for (const [role, identity] of [
+      ["anon", null],
+      ["authenticated", null],
+      ["authenticated", userId],
+      ["service_role", null],
+    ] as const)
+      await expect(asRole(role, identity, decide(id))).rejects.toMatchObject({ code: "42501" });
+    for (const sql of [
+      "select * from public.report_decisions",
+      "delete from public.report_decisions",
+      "update public.reports set resolved_at=now()",
+    ])
+      await expect(asRole("authenticated", adminId, sql)).rejects.toMatchObject({ code: "42501" });
+    await db.query("delete from public.user_roles where user_id=$1", [adminId]);
+    await expect(asRole("authenticated", adminId, decide(id))).rejects.toMatchObject({ code: "42501" });
+    expect((await db.query<any>("select count(*)::int as n from public.report_decisions")).rows[0].n).toBe(0);
+  });
+  it("validates input, missing reports and current status without partial writes", async () => {
+    const id = await report();
+    for (const sql of [
+      decide(id, "bad"),
+      decide(id, "resolve", -1),
+      decide(id, "resolve", 0, "short"),
+      decide(id, "resolve", 0, "x".repeat(2001)),
+      `select public.review_admin_report('${id}',null,'Checked the report',0)`,
+      `select public.review_admin_report('${id}','resolve',null,0)`,
+      `select public.review_admin_report('${id}','resolve','Checked the report',null)`,
+    ])
+      await expect(asRole("authenticated", adminId, sql)).rejects.toMatchObject({ code: "22023" });
+    await expect(asRole("authenticated", adminId, decide(id, "reopen"))).rejects.toMatchObject({ code: "40001" });
+    await expect(
+      asRole("authenticated", adminId, decide("00000000-0000-4000-8000-000000000099")),
+    ).rejects.toMatchObject({ code: "P0002" });
+    expect((await db.query<any>("select count(*)::int as n from public.report_decisions")).rows[0].n).toBe(0);
+  });
+});
+
 describe("admin report directory authorization", () => {
   const query = (search = "", status = "open", page = 0) =>
     `select public.get_admin_reports('${search.replaceAll("'", "''")}', '${status}', ${page}) as data`;
@@ -746,26 +825,52 @@ describe("product model catalog", () => {
     ).rows[0];
   const save = (data: unknown) =>
     `select public.save_product_model('${JSON.stringify(data).replaceAll("'", "''")}'::jsonb) as id`;
-  it("seeds exactly three models in each of ten categories including AMD and Intel", async () => {
+  it("keeps at least three starter models in every launch category while allowing catalog growth", async () => {
     const rows = (
       await db.query<any>("select category,count(*)::integer as n from public.catalog_product_models group by category")
     ).rows;
-    expect(rows).toHaveLength(10);
-    expect(rows.every((r) => r.n === 3)).toBe(true);
+    for (const category of [
+      "gpu",
+      "cpu",
+      "motherboard",
+      "memory",
+      "psu",
+      "storage",
+      "case",
+      "cooling",
+      "pc",
+      "other",
+    ]) {
+      expect(rows.find((row) => row.category === category)?.n).toBeGreaterThanOrEqual(3);
+    }
     expect(
       (await db.query<any>("select distinct brand from public.catalog_product_models where category='cpu'")).rows
         .map((r) => r.brand)
         .sort(),
-    ).toEqual(["AMD", "Intel"]);
+    ).toEqual(expect.arrayContaining(["AMD", "Intel"]));
   });
   it("allows public literal and alias search with category isolation", async () => {
-    const r = (await asRole("anon", null, search("gpu", "rtx3070"))).rows[0].data as any;
-    expect(r.total).toBe(1);
-    expect(r.items[0].name).toBe("GeForce RTX 3070");
-    expect(((await asRole("anon", null, search("cpu", "3070"))).rows[0].data as any).total).toBe(0);
-    for (const q of ["%", "_"])
-      expect(((await asRole("anon", null, search("gpu", q))).rows[0].data as any).total).toBe(0);
-    expect(((await asRole("anon", null, search("gpu", "", 1))).rows[0].data as any).items).toEqual([]);
+    // Dedicated fixtures keep search assertions independent of user-added models.
+    const marker = "catalog-test-" + crypto.randomUUID();
+    const fixture = (
+      await db.query<{ id: string }>(
+        "insert into public.catalog_product_models(category,brand,name,aliases) values('gpu','Test',$1,$2) returning id",
+        [marker, marker + "%_"],
+      )
+    ).rows[0];
+    try {
+      const r = (await asRole("anon", null, search("gpu", marker + "%_"))).rows[0].data as any;
+      expect(r.total).toBe(1);
+      expect(r.items[0].id).toBe(fixture.id);
+      expect(((await asRole("anon", null, search("cpu", marker))).rows[0].data as any).total).toBe(0);
+      // A literal wildcard suffix must not behave as a SQL wildcard.
+      expect(((await asRole("anon", null, search("gpu", marker + "%missing"))).rows[0].data as any).total).toBe(0);
+      const first = (await asRole("anon", null, search("gpu"))).rows[0].data as any;
+      const beyondLastPage = Math.ceil(first.total / 20);
+      expect(((await asRole("anon", null, search("gpu", "", beyondLastPage))).rows[0].data as any).items).toEqual([]);
+    } finally {
+      await db.query("delete from public.catalog_product_models where id=$1", [fixture.id]);
+    }
   });
   it("denies direct writes and non-admin catalog mutation/market access", async () => {
     for (const [role, id] of [

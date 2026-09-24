@@ -3,6 +3,14 @@ import { listingStatuses, type ListingStatus } from "./admin-listings-service";
 import { supabase } from "./supabase";
 
 export type ReportFilter = "" | "open" | "resolved";
+export type ReportAction = "resolve" | "reopen";
+export class ReportConflictError extends Error {}
+export interface ReportDecision {
+  actorId: string;
+  action: ReportAction;
+  note: string;
+  createdAt: string;
+}
 export interface AdminReport {
   id: string;
   reporterId: string;
@@ -16,6 +24,8 @@ export interface AdminReport {
   details: string | null;
   createdAt: string;
   resolvedAt: string | null;
+  reviewVersion: number;
+  lastDecision: ReportDecision | null;
 }
 export interface AdminReports {
   page: number;
@@ -50,6 +60,24 @@ export function parseAdminReports(value: unknown): AdminReports {
     throw new Error("Invalid report page");
   const reports = data.reports.map((item): AdminReport => {
     const row = record(item);
+    const reviewVersion = count(row.review_version);
+    let lastDecision: ReportDecision | null = null;
+    if (row.last_decision !== null) {
+      const d = record(row.last_decision);
+      if (
+        typeof d.actor_id !== "string" ||
+        !uuid.test(d.actor_id) ||
+        (d.action !== "resolve" && d.action !== "reopen") ||
+        typeof d.note !== "string" ||
+        d.note.trim().length < 10 ||
+        d.note.length > 2000 ||
+        !timestamp(d.created_at)
+      )
+        throw new Error("Invalid report decision");
+      lastDecision = { actorId: d.actor_id, action: d.action, note: d.note, createdAt: d.created_at };
+    }
+    if (reviewVersion > 2147483647 || (reviewVersion === 0) !== (lastDecision === null))
+      throw new Error("Invalid report revision");
     if (
       typeof row.id !== "string" ||
       !uuid.test(row.id) ||
@@ -90,9 +118,41 @@ export function parseAdminReports(value: unknown): AdminReports {
       details: row.details,
       createdAt: row.created_at,
       resolvedAt: row.resolved_at,
+      reviewVersion,
+      lastDecision,
     };
   });
   return { page, pageSize: 25, total, reports };
+}
+
+export async function reviewAdminReport(
+  report: Pick<AdminReport, "id" | "reviewVersion">,
+  action: ReportAction,
+  note: string,
+): Promise<void> {
+  const cleanNote = note.trim();
+  if (
+    !uuid.test(report.id) ||
+    !Number.isInteger(report.reviewVersion) ||
+    report.reviewVersion < 0 ||
+    report.reviewVersion > 2147483647 ||
+    !["resolve", "reopen"].includes(action) ||
+    cleanNote.length < 10 ||
+    cleanNote.length > 2000
+  )
+    throw new Error("Invalid report decision");
+  if (!supabase) throw new Error("Admin reports require Supabase");
+  const { error } = await supabase.rpc("review_admin_report", {
+    p_report_id: report.id,
+    p_action: action,
+    p_note: cleanNote,
+    p_expected_version: report.reviewVersion,
+  });
+  if (error) {
+    if (["42501", "PGRST301", "PGRST302"].includes(error.code)) throw new AdminAccessError("Admin access required");
+    if (error.code === "40001") throw new ReportConflictError("Report changed");
+    throw error;
+  }
 }
 
 export async function getAdminReports(search = "", status: ReportFilter = "open", page = 0): Promise<AdminReports> {

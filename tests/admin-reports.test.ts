@@ -5,7 +5,12 @@ import { isAdminReportsPath } from "../apps/web/src/config/admin-routes";
 import { AdminDashboardPage } from "../apps/web/src/features/admin/AdminDashboardPage";
 import { AdminReportsList } from "../apps/web/src/features/admin/AdminReportsPanel";
 import { AdminAccessError } from "../apps/web/src/lib/admin-service";
-import { getAdminReports, parseAdminReports } from "../apps/web/src/lib/admin-reports-service";
+import {
+  getAdminReports,
+  parseAdminReports,
+  reviewAdminReport,
+  ReportConflictError,
+} from "../apps/web/src/lib/admin-reports-service";
 
 const mock = vi.hoisted(() => ({ rpc: vi.fn() }));
 vi.mock("../apps/web/src/lib/supabase", () => ({ backendMode: "supabase", supabase: { rpc: mock.rpc } }));
@@ -28,11 +33,48 @@ const response = () => ({
       details: "<script>Details</script>",
       created_at: "2026-09-23T12:00:00Z",
       resolved_at: null,
+      review_version: 0,
+      last_decision: null,
     },
   ],
 });
 
 beforeEach(() => vi.clearAllMocks());
+it("submits a decision with an expected revision and maps conflicts and denial", async () => {
+  const report = parseAdminReports(response()).reports[0];
+  mock.rpc.mockResolvedValue({ error: null });
+  await reviewAdminReport(report, "resolve", "  Checked this report  ");
+  expect(mock.rpc).toHaveBeenCalledWith("review_admin_report", {
+    p_report_id: report.id,
+    p_action: "resolve",
+    p_note: "Checked this report",
+    p_expected_version: 0,
+  });
+  mock.rpc.mockResolvedValue({ error: { code: "40001" } });
+  await expect(reviewAdminReport(report, "resolve", "Checked this report")).rejects.toBeInstanceOf(ReportConflictError);
+  mock.rpc.mockResolvedValue({ error: { code: "42501" } });
+  await expect(reviewAdminReport(report, "resolve", "Checked this report")).rejects.toBeInstanceOf(AdminAccessError);
+  mock.rpc.mockClear();
+  await expect(reviewAdminReport(report, "resolve", "short")).rejects.toThrow();
+  expect(mock.rpc).not.toHaveBeenCalled();
+});
+it("validates and escapes the decision history", () => {
+  const value = response();
+  Object.assign(value.reports[0], {
+    review_version: 1,
+    last_decision: {
+      actor_id: value.reports[0].seller_id,
+      action: "resolve",
+      note: "<script>Decision</script>",
+      created_at: value.reports[0].created_at,
+    },
+  });
+  const html = renderToStaticMarkup(createElement(AdminReportsList, { data: parseAdminReports(value), locale: "fi" }));
+  expect(html).toContain("&lt;script&gt;Decision");
+  expect(html).not.toContain("<script>");
+  Object.assign(value.reports[0], { last_decision: null });
+  expect(() => parseAdminReports(value)).toThrow();
+});
 it("matches only the reports route", () => {
   expect(isAdminReportsPath("/admin/reports/")).toBe(true);
   expect(isAdminReportsPath("/admin/reports/other")).toBe(false);

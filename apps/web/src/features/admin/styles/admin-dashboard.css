@@ -362,3 +362,18 @@
   border: 1px solid #ccd2cf;
   border-radius: 6px;
 }
+
+.admin-report-decision {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+.admin-report-decision textarea {
+  width: 100%;
+  min-height: 6rem;
+  resize: vertical;
+  font: inherit;
+}
+.admin-report-decision .button {
+  justify-self: start;
+}
