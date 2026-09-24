@@ -6,9 +6,21 @@ import type { Locale } from "../../types";
 import { getAdminCopy } from "./admin-copy";
 import { getAdminReportsCopy } from "./admin-reports-copy";
 
+import { AdminReportDecisionForm } from "./AdminReportDecisionForm";
+
 type State = { status: "loading" } | { status: "ready"; data: AdminReports } | { status: "error" | "denied" };
 
-export function AdminReportsList({ data, locale }: { data: AdminReports; locale: Locale }) {
+export function AdminReportsList({
+  data,
+  locale,
+  onSaved,
+  onDenied,
+}: {
+  data: AdminReports;
+  locale: Locale;
+  onSaved?: () => void;
+  onDenied?: () => void;
+}) {
   const copy = getAdminReportsCopy(locale);
   const common = getAdminCopy(locale);
   if (!data.reports.length) return <p role="status">{copy.empty}</p>;
@@ -73,6 +85,29 @@ export function AdminReportsList({ data, locale }: { data: AdminReports; locale:
               <p>{report.details}</p>
             </div>
           )}
+          {report.lastDecision && (
+            <div className="admin-report-details">
+              <strong>
+                {copy.lastDecision}: {report.lastDecision.action === "resolve" ? copy.resolved : copy.open}
+              </strong>
+              <p>{report.lastDecision.note}</p>
+              <p>
+                {copy.reviewer}: {report.lastDecision.actorId}
+              </p>
+              <time dateTime={report.lastDecision.createdAt}>
+                {new Date(report.lastDecision.createdAt).toLocaleString(locale)}
+              </time>
+            </div>
+          )}
+          {onSaved && onDenied && (
+            <AdminReportDecisionForm
+              key={report.id + ":" + report.reviewVersion}
+              report={report}
+              locale={locale}
+              onSaved={onSaved}
+              onDenied={onDenied}
+            />
+          )}
         </article>
       ))}
     </div>
@@ -82,6 +117,7 @@ export function AdminReportsList({ data, locale }: { data: AdminReports; locale:
 export function AdminReportsPanel({ locale }: { locale: Locale }) {
   const copy = getAdminReportsCopy(locale);
   const common = getAdminCopy(locale);
+  const [saved, setSaved] = useState(false);
   const [input, setInput] = useState("");
   const [filter, setFilter] = useState<ReportFilter>("open");
   const [query, setQuery] = useState({ search: "", status: "open" as ReportFilter, page: 0, refresh: 0 });
@@ -160,6 +196,7 @@ export function AdminReportsPanel({ locale }: { locale: Locale }) {
           {copy.submit}
         </button>
       </form>
+      {saved && <p role="status">{copy.saved}</p>}
       {state.status === "loading" && (
         <p className="admin-loading" role="status">
           {copy.loading}
@@ -173,7 +210,15 @@ export function AdminReportsPanel({ locale }: { locale: Locale }) {
       )}
       {state.status === "ready" && (
         <>
-          <AdminReportsList data={state.data} locale={locale} />
+          <AdminReportsList
+            data={state.data}
+            locale={locale}
+            onSaved={() => {
+              setSaved(true);
+              load(query.page);
+            }}
+            onDenied={() => setState({ status: "denied" })}
+          />
           <nav className="admin-user-pagination" aria-label={copy.page}>
             <button
               type="button"

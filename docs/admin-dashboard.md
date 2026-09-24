@@ -141,3 +141,11 @@ Tämä ensimmäinen osa on katselujono. Raportin ratkaisu, ilmoituksen moderoint
 ## Tuotemallikatalogi
 
 `/admin/catalog` sisältää muokattavan tuotemallikatalogin ja mallikohtaiset markkinatiedot. Kymmenessä tuoteryhmässä on kolme aloitusmallia (30 yhteensä). Ilmoituksen luonnin mallihaku yhdistää ilmoituksen pysyvään malliin. [Täydennysohje ja aloitussisältö](product-catalog.md). Asenna myös migraatio `0013_product_model_catalog.sql` ennen uuden sovellusversion käyttöä.
+
+## Vaihe 7: Raporttien käsittely
+
+Ylläpitäjä voi merkitä raportin käsitellyksi tai avata sen uudelleen. Molemmat toimet vaativat 10–2000 merkin perustelun. Viimeisin päätös, käsittelijän tunniste ja ajankohta näkyvät raportissa. Ilmoituksen tai tilauksen tila ei muutu.
+
+Migraatio `20260923172346_admin_report_decisions.sql` lisää raportin version ja päätöslokin. `review_admin_report` tarkistaa admin-oikeuden joka kutsulla, lukitsee raportin ja hylkää vanhaan versioon kohdistuvat päätökset. Päätös ja raportin tila tallennetaan samassa transaktiossa. Selainrooleilla ei ole suoria kirjoitus- eikä lukuoikeuksia päätöslokiin; koko historia säilyy tietokannassa, käyttöliittymä näyttää viimeisimmän päätöksen. Lokin käsittelijätunniste säilyy myös tilin poistamisen jälkeen. Päätöksiä sisältävää raporttia ei voi poistaa ennen erillisen tietojen säilytyskäytännön toteuttamista.
+
+Asenna uusi migraatio ennen tämän käyttöliittymäversion käyttöönottoa. Ilmoitusten piilottaminen ja tilausriitojen ratkaiseminen ovat edelleen erillisiä tulevia vaiheita.

@@ -59,3 +59,11 @@ Ilmoituksen `catalog_model_id` on viite malliin. Nykyiset create/update-RPC:t v�
 136 automaattista testiä, tyyppitarkistus ja tuotantokäännös läpäisivät. Myös paikallisen sovelluksen kaksi aiempaa E2E-testiä läpäisivät. Migraation asennus yhdistettyyn Supabase-projektiin onnistui 18.9.2026.
 
 Selaimessa tarkistettu: GPU- ja CPU-katalogit, olemassa olevan mallin tallennus samoilla tiedoilla, `rtx3070`-hakusana, mallin valinta ja valmistajan/mallin/otsikon täyttyminen sekä malliyhteyden poistuminen käsin muokattaessa. Testi-ilmoitusta ei julkaistu. Oikeat hinta-aggregaatit olivat tyhjiä; laskenta tarkistettiin tietokantatestien aineistolla.
+
+## Katalogin täydentäminen
+
+Lisää mallit ylläpitäjänä sivulla `/admin/catalog`. Mallien määrälle ei ole kolmen tuotteen rajaa: kolme on alkuperäinen aloitussisältö tuoteryhmää kohden. Voit myös lisätä rivejä Supabasen Table Editorissa tauluun `public.catalog_product_models` ylläpitäjän tietokantaoikeuksilla. Valitse olemassa oleva tuoteryhmän tunniste (`category`) ja täytä `brand`, `name` sekä tarvittaessa `variant` ja `aliases`. Eri muistimäärät ja muut versiot erotellaan `variant`-kentällä; samaa yhdistelmää ei voi lisätä kahdesti.
+
+Jo asennetun `0013_product_model_catalog.sql`-tiedoston muokkaus ei päivitä olemassa olevaa Supabase-tietokantaa. Käytä katalogieditoria tai erillistä uutta migraatiota, jos haluat jakaa lisäykset myös muiden kehittäjien tietokantoihin. Älä suorita vanhaa taulujen luontimigraatiota uudelleen.
+
+Katalogitesti varmistaa vähintään kolme aloitusmallia kussakin alkuperäisessä tuoteryhmässä sekä AMD- ja Intel-prosessorien olemassaolon. Lisämallit, lisävalmistajat ja lisäryhmät ovat sallittuja. Hakutestit käyttävät erillistä testituotetta ja laskevat viimeisen sivun tuotemäärän perusteella. Testit suoritetaan erillisessä paikallisessa testitietokannassa, eivät Supabasen tuotetiedoilla.
