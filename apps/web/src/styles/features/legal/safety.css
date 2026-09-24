@@ -1,0 +1,40 @@
+.safety-hero {
+  display: block;
+  margin-bottom: 42px;
+  padding: clamp(30px, 4vw, 58px);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 24px;
+  background: linear-gradient(120deg, #ccd8ff 0%, #8ae9a2 38%, #d5ffc2 100%);
+  box-shadow: 0 28px 80px rgba(56, 67, 122, 0.18);
+}
+
+.safety-hero__content {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-width: 820px;
+  min-width: 0;
+}
+
+.safety-hero__content h1 {
+  margin: 0;
+  color: #000000;
+  font-size: clamp(42px, 5vw, 82px);
+  line-height: 0.9;
+  letter-spacing: -0.07em;
+}
+
+.safety-hero__content p {
+  margin: 0;
+  max-width: 660px;
+  color: #000000;
+  font-size: 17px;
+  line-height: 1.55;
+}
+
+.safety-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 4px;
+}

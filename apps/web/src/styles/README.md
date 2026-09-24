@@ -27,6 +27,17 @@ Niiden React-komponentit lataavat nämä tyylit kuten ennenkin. Muita tyylejä l
 
 ## Työskentely tiimissä
 
+ZIP-version ulkoasun yhdistäminen 25.9.2026 säilyttää tämän rakenteen. `global.css` ei ole käytössä. Uudet omistajat:
+
+- `components/language-picker.css`: kielivalitsimen painike, valikko ja näppäimistökohdistus.
+- `features/home/highlights.css`: etusivun kolme esittelykorttia, taustat ja mobiiliasettelu; sisältö on `features/home/HomeHighlights.tsx`-komponentissa.
+- `features/legal/safety.css`: turvallisuussivun pääalue.
+- Nykyiset `layout/header.css`, `layout/footer.css` ja `features/home/hero.css`: ZIP-version logo, alatunniste ja pyöristetty etusivun pääalue.
+
+Ilmoituksen suuren kuvan, muokkauksen, salasanan palautuksen, katalogihaun ja adminin uudemmat tyylit säilyvät. Ilmoituskortin kuva täyttää kortin ZIPin tapaan; tietosivun suuri kuva näytetään edelleen kokonaisena. Esittelykortit ovat saavutettavia ja lokalisoituja; tuotekortti ei lupaa palvelun tarkastaneen jokaista ilmoitusta.
+
+Git-työnkulku: [Yhteinen työskentely](../../../../docs/team-workflow.md).
+
 - Muokkaa tyylin omistavaa ominaisuus- tai komponenttitiedostoa. Lisää uudet, vain yhtä ominaisuutta koskevat mediaehdot samaan tiedostoon.
 - Käytä yhteisiä muuttujia `base/tokens.css`-tiedostosta. Käytä ominaisuudelle omaa luokkaprefiksiä, esimerkiksi `create-listing-`.
 - Säilytä `index.css`-importtien järjestys: saman vahvuisista säännöistä myöhempi voittaa. Tiedostot ovat alkuperäisen CSS:n järjestyksessä, eivät aakkosjärjestyksessä.

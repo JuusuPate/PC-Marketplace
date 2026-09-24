@@ -1,5 +1,7 @@
 # Admin Dashboard
 
+Koko tavoitteen ajantasainen toteutusjono ja avoimet riippuvuudet: [Rigin ylläpidon toteutusjono](admin-roadmap.md). Alla olevat vaihemerkinnät kuvaavat rajattuja toimituksia, eivät koko moduulin valmistumista.
+
 ## Vaihe 1: suojattu yleiskatsaus
 
 - [x] `/admin` ja sen alireitit käsitellään ylläpidon alueena; keskeneräinen alireitti näyttää suojatun ilmoituksen.
@@ -10,7 +12,7 @@
 - [x] Suomen-, ruotsin- ja englanninkielinen näkymä sekä mukautuva asettelu.
 - [x] PostgreSQL:n käyttöoikeus- ja mittaritestit sekä sovelluksen palvelu-, näkymä- ja istuntotestit CI:ssä.
 
-Tilastonäkymät ovat vain luku. Tuotekatalogin malleja voi lisätä ja muokata. Käyttäjien, ilmoitusten, raporttien tai tilausten ylläpitomuokkausta ei ole vielä lisätty.
+Tilastonäkymät ovat vain luku. Tuotekatalogin malleja voi lisätä ja muokata. Raportteja voi ratkaista ja avata uudelleen perusteluineen. Käyttäjien, ilmoitusten tai tilausten ylläpitomuokkausta ei ole vielä lisätty.
 
 ## Vaihe 2: Users
 
@@ -155,3 +157,17 @@ Asenna uusi migraatio ennen tämän käyttöliittymäversion käyttöönottoa. I
 `/admin/disputes` näyttää vain nykytilaltaan riitautetut FI/EUR-tilaukset. Näkymässä on otsikko- ja tunnistehaku, 25 rivin sivutus, päivitys, osapuolet ja hintojen erittely suomeksi, ruotsiksi ja englanniksi. Suodatin välitetään nykyiselle admin-oikeuden tarkistavalle `get_admin_transactions`-funktiolle jokaisessa haussa, sivunvaihdossa ja päivityksessä. Palvelukerros hylkää muun tilan sisältävän vastauksen. Tilaukset-näkymän kaikki tilasuodattimet säilyvät.
 
 Päivämäärä on tilauksen luontiaika, koska riitautuksen ajankohtaa ei tallenneta erikseen. Riidan syy, viestit, todistusaineisto ja ratkaisu-/hyvitystoiminnot puuttuvat vielä tietomallista. Näkymä ei muuta tilauksia eikä maksuja. Se käyttää jo asennettua tilausrajapintaa eikä tarvitse uutta migraatiota.
+
+## Vaihe 9: aikavertailu, tarkemmat tiedot ja tapahtumaloki
+
+Yleiskatsauksen Vaatii huomiota -linkit avaavat avoimet raportit ja riitautetut tilaukset. Aikavertailu näyttää rekisteröinnit, ilmoitusten ja tilausten luonnit sekä valittuna aikana luotujen, nykytilaltaan valmiiden tilausten tuotearvon ja palvelumaksut. Valinnat ovat 24 tuntia, 7/30/90/365 päivää tai oma enintään 366 päivän UTC-aikaväli. Tulosten päivämäärät esitetään Suomen ajassa. Rajat ovat alku mukaan lukien ja loppu pois lukien. Vertailujakso on välittömästi edeltävä samanpituinen jakso; muutos esitetään lukuna, joten nollavertailu ei tuota harhaanjohtavaa prosenttia.
+
+Käyttäjän Avaa tiedot -painike hakee erikseen sähköpostin, Suomen ilmoitusmäärän, valmiit myynnit/ostot, avoimet riidat ja 25 uusinta tilausta. Tilaus- ja riitajonoissa painike näyttää tallennetun maksupalvelun ja viitteen, tarkastusajan sekä mahdolliset toimitustiedot. Tietoja ei muuteta, maksuviite ei vahvista maksua eikä puuttuva toimitus ole vahvistettu lähettämättömäksi tilaukseksi. Yksityisiä nouto-osoitteita tai Auth-metatietoja ei palauteta.
+
+`/admin/audit` yhdistää katalogimuutokset ja raporttien käsittelypäätökset. Haku tukee kohteen, tekijän ja tapahtuman tarkkaa tunnistetta sekä kohdetyyppiä/toimintoa. Sivutus on 25 tapahtumaa. Ennen/jälkeen-tiedot ja tallennettu perustelu ovat luettavissa; lokia ei voi muuttaa tämän käyttöliittymän kautta. Näkymä ei väitä sisältävänsä vielä kirjaamattomia toimintoja.
+
+Asenna `20260924175915_admin_activity_and_audit.sql` ja `20260924181012_admin_detail_views.sql` ennen uuden version käyttöönottoa. Ne lisäävät neljä ylläpitäjän vain luku -RPC:tä; taulujen selainoikeudet pysyvät ennallaan. Jokainen pyyntö tarkistaa identiteetin ja palvelinpuolen admin-roolin. Virhe tai oikeuden menetys tyhjentää aiemmin näytetyt tiedot.
+
+Paikallisesti 24.9.2026: 175 automaattista testiä, tyyppitarkistus, tuotantokäännös ja kaikki seitsemän selaintestiä läpäisivät. Näistä kolme uutta selaintestiä kattaa aikavälin vaihdon, lokin haun/sivutuksen ja yksityistietojen poistumisen oikeuden menetyksessä. Migraatioiden etäasennus ja oikean palvelun selaintarkistus varmistetaan erikseen käyttöönotossa.
+
+Paikallinen puuttuvan ylläpitosivun virhe johtui portissa 4173 ajetusta vanhasta `Documents/Github/PC-Marketplace`-kopiosta. Oikean `OneDrive/Tiedostot/ChatGPT/PC-Marketplace`-kopion käynnistäminen samaan porttiin korjasi `/admin/disputes`-sivun. Varmista aina palvelimen todellinen projektikansio, älä pelkkää porttia.

@@ -1,18 +1,31 @@
 .site-footer {
-  min-height: 120px;
+  min-height: 250px;
+  padding-top: 18px;
+  padding-bottom: 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 25px;
   border-top: 1px solid var(--line);
-  color: #687370;
+  color: #000000;
   font-size: 9px;
   font-weight: 750;
 }
 .site-footer > div {
   display: flex;
-  gap: 23px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 220px;
 }
 .site-footer a:hover {
   color: var(--ink);
+}
+.site-footer a {
+  display: inline-block;
+  text-align: center;
+  font-size: 15px;
 }

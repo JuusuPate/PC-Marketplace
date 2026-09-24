@@ -3,6 +3,7 @@ import { CategoryNavigation } from "../components/CategoryNavigation";
 import { Header } from "../components/Header";
 import { Icon } from "../components/Icon";
 import { ListingCard } from "../components/ListingCard";
+import { HomeHighlights } from "../features/home/HomeHighlights";
 import {
   CATALOG_PAGES,
   getCatalogPage,
@@ -20,6 +21,7 @@ import {
   isAdminListingsPath,
   isAdminTransactionsPath,
   isAdminDisputesPath,
+  isAdminAuditPath,
   isAdminRevenuePath,
   isAdminMarketDataPath,
   isAdminCatalogPath,
@@ -790,6 +792,7 @@ export function App() {
             listings={isAdminListingsPath(adminPath)}
             transactions={isAdminTransactionsPath(adminPath)}
             disputes={isAdminDisputesPath(adminPath)}
+            audit={isAdminAuditPath(adminPath)}
             revenue={isAdminRevenuePath(adminPath)}
             marketData={isAdminMarketDataPath(adminPath)}
             catalog={isAdminCatalogPath(adminPath)}
@@ -919,10 +922,7 @@ export function App() {
               >
                 <div className="hero section-shell">
                   <div className="hero-copy">
-                    <div className="eyebrow">
-                      <span className="eyebrow-dot" />
-                      {copy.heroEyebrow}
-                    </div>
+                    <div className="eyebrow">{copy.heroEyebrow}</div>
                     <h1>
                       {copy.heroTitleA}
                       <br />
@@ -964,6 +964,8 @@ export function App() {
                   </div>
                 </div>
               </section>
+
+              <HomeHighlights locale={locale} />
 
               <section className="trust-strip">
                 <div>
@@ -1085,68 +1087,6 @@ export function App() {
           (!createListingPage || !user) &&
           !catalogPage && (
             <>
-              <section className="protection-section" id="safety">
-                <div className="section-shell protection-inner">
-                  <div className="protection-art">
-                    <div className="protection-ring protection-ring--one" />
-                    <div className="protection-ring protection-ring--two" />
-                    <div className="large-shield">
-                      <Icon name="shield" />
-                      <span>48H</span>
-                    </div>
-                    <div className="protection-chip chip--top">
-                      <Icon name="package" />
-                      <span>
-                        TRACKED<small>Shipment verified</small>
-                      </span>
-                    </div>
-                    <div className="protection-chip chip--bottom">
-                      <Icon name="check" />
-                      <span>
-                        PAYOUT<small>Ready after inspection</small>
-                      </span>
-                    </div>
-                  </div>
-                  <div className="protection-copy">
-                    <span className="section-index section-index--light">02 / PROTECTION</span>
-                    <h2>{copy.protectionTitle}</h2>
-                    <p>{copy.protectionBody}</p>
-                    <div className="protection-points">
-                      <span>
-                        <Icon name="check" /> Serial evidence
-                      </span>
-                      <span>
-                        <Icon name="check" /> Tracked delivery
-                      </span>
-                      <span>
-                        <Icon name="check" /> Dispute workflow
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </section>
-
-              <section className="how-section section-shell" id="how-it-works">
-                <div className="section-heading">
-                  <div>
-                    <span className="section-index">03 / FLOW</span>
-                    <h2>{copy.howTitle}</h2>
-                  </div>
-                </div>
-                <div className="steps-grid">
-                  {[copy.stepList, copy.stepBuy, copy.stepInspect, copy.stepPayout].map((step, index) => (
-                    <article key={step}>
-                      <span className="step-number">0{index + 1}</span>
-                      <div className="step-icon">
-                        <Icon name={index === 0 ? "plus" : index === 1 ? "shield" : index === 2 ? "truck" : "check"} />
-                      </div>
-                      <h3>{step}</h3>
-                      {index < 3 && <Icon className="step-arrow" name="arrow" />}
-                    </article>
-                  ))}
-                </div>
-              </section>
-
               <section className="cta-section section-shell">
                 <div>
                   <span className="section-index section-index--light">{copy.launchBadge}</span>
@@ -1188,7 +1128,7 @@ export function App() {
           </span>
         </a>
         <div>
-          {(["terms", "privacy", "accessibility"] as const).map((slug) => {
+          {(["terms", "privacy", "accessibility", "safety"] as const).map((slug) => {
             const path = getLegalPath(slug);
             return (
               <a

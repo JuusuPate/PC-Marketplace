@@ -3,6 +3,7 @@ import { AdminAccessError, adminService, type AdminUsers } from "../../lib/admin
 import type { Locale } from "../../types";
 import { getAdminCopy } from "./admin-copy";
 import { getAdminUsersCopy } from "./admin-users-copy";
+import { AdminDetail } from "./AdminDetail";
 
 type State = { status: "loading" } | { status: "ready"; data: AdminUsers } | { status: "error" | "denied" };
 
@@ -27,7 +28,10 @@ export function AdminUsersTable({ data, locale }: { data: AdminUsers; locale: Lo
         <tbody>
           {data.users.map((user) => (
             <tr key={user.id}>
-              <th scope="row">{user.displayName}</th>
+              <th scope="row">
+                {user.displayName}
+                <AdminDetail key={user.id} id={user.id} kind="user" locale={locale} />
+              </th>
               <td>{user.id}</td>
               <td>{copy[user.role]}</td>
               <td>{user.locale}</td>
