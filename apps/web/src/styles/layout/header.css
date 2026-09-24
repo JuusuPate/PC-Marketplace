@@ -58,8 +58,9 @@
   line-height: 1;
 }
 .brand strong {
-  font-size: 15px;
-  letter-spacing: -0.02em;
+  font-size: 28px;
+  line-height: 0.5;
+  letter-spacing: -0.01em;
 }
 .brand small {
   margin-top: 5px;

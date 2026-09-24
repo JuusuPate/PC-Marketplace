@@ -3,9 +3,11 @@
 @import "./layout/shell.css";
 @import "./layout/header.css";
 @import "./components/controls.css";
+@import "./components/language-picker.css";
 @import "./layout/header-account.css";
 @import "./features/catalog/category-page.css";
 @import "./features/home/hero.css";
+@import "./features/home/highlights.css";
 @import "./features/home/featured-listings.css";
 @import "./features/home/trust-strip.css";
 @import "./features/marketplace/browse.css";
@@ -24,6 +26,7 @@
 @import "./components/toast.css";
 @import "./base/readability.css";
 @import "./features/legal/legal.css";
+@import "./features/legal/safety.css";
 @import "./responsive/desktop.css";
 @import "./responsive/tablet.css";
 @import "./responsive/mobile.css";

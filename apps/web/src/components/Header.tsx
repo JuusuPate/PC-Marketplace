@@ -133,7 +133,17 @@ export function Header({
       </form>
 
       <div className="header-actions">
-        <div className="language-picker" aria-label="Language selector" ref={pickerRef}>
+        <div
+          className="language-picker"
+          aria-label="Language selector"
+          ref={pickerRef}
+          onKeyDown={(event) => {
+            if (event.key === "Escape" && menuOpen) {
+              setMenuOpen(false);
+              pickerRef.current?.querySelector<HTMLButtonElement>(".language-picker__trigger")?.focus();
+            }
+          }}
+        >
           <button
             type="button"
             className="language-picker__trigger"
