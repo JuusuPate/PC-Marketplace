@@ -149,3 +149,9 @@ Ylläpitäjä voi merkitä raportin käsitellyksi tai avata sen uudelleen. Molem
 Migraatio `20260923172346_admin_report_decisions.sql` lisää raportin version ja päätöslokin. `review_admin_report` tarkistaa admin-oikeuden joka kutsulla, lukitsee raportin ja hylkää vanhaan versioon kohdistuvat päätökset. Päätös ja raportin tila tallennetaan samassa transaktiossa. Selainrooleilla ei ole suoria kirjoitus- eikä lukuoikeuksia päätöslokiin; koko historia säilyy tietokannassa, käyttöliittymä näyttää viimeisimmän päätöksen. Lokin käsittelijätunniste säilyy myös tilin poistamisen jälkeen. Päätöksiä sisältävää raporttia ei voi poistaa ennen erillisen tietojen säilytyskäytännön toteuttamista.
 
 Asenna uusi migraatio ennen tämän käyttöliittymäversion käyttöönottoa. Ilmoitusten piilottaminen ja tilausriitojen ratkaiseminen ovat edelleen erillisiä tulevia vaiheita.
+
+## Vaihe 8: Riitautettujen tilausten katselujono
+
+`/admin/disputes` näyttää vain nykytilaltaan riitautetut FI/EUR-tilaukset. Näkymässä on otsikko- ja tunnistehaku, 25 rivin sivutus, päivitys, osapuolet ja hintojen erittely suomeksi, ruotsiksi ja englanniksi. Suodatin välitetään nykyiselle admin-oikeuden tarkistavalle `get_admin_transactions`-funktiolle jokaisessa haussa, sivunvaihdossa ja päivityksessä. Palvelukerros hylkää muun tilan sisältävän vastauksen. Tilaukset-näkymän kaikki tilasuodattimet säilyvät.
+
+Päivämäärä on tilauksen luontiaika, koska riitautuksen ajankohtaa ei tallenneta erikseen. Riidan syy, viestit, todistusaineisto ja ratkaisu-/hyvitystoiminnot puuttuvat vielä tietomallista. Näkymä ei muuta tilauksia eikä maksuja. Se käyttää jo asennettua tilausrajapintaa eikä tarvitse uutta migraatiota.

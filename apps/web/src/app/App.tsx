@@ -19,6 +19,7 @@ import {
   isAdminUsersPath,
   isAdminListingsPath,
   isAdminTransactionsPath,
+  isAdminDisputesPath,
   isAdminRevenuePath,
   isAdminMarketDataPath,
   isAdminCatalogPath,
@@ -788,6 +789,7 @@ export function App() {
             users={isAdminUsersPath(adminPath)}
             listings={isAdminListingsPath(adminPath)}
             transactions={isAdminTransactionsPath(adminPath)}
+            disputes={isAdminDisputesPath(adminPath)}
             revenue={isAdminRevenuePath(adminPath)}
             marketData={isAdminMarketDataPath(adminPath)}
             catalog={isAdminCatalogPath(adminPath)}
