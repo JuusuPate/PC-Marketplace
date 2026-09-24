@@ -220,19 +220,36 @@
 .admin-user-search label {
   flex-basis: 100%;
 }
-.admin-user-search input {
+.admin-user-search input,
+.admin-user-search select {
   min-width: 0;
   flex: 1;
   padding: 12px;
   border: 1px solid var(--line);
   border-radius: 8px;
 }
-.admin-user-search input:focus-visible {
+.admin-user-search input:focus-visible,
+.admin-user-search select:focus-visible {
   outline: 3px solid var(--blue);
   outline-offset: 4px;
 }
 .admin-table-scroll {
   overflow-x: auto;
+}
+.admin-detail {
+  margin-top: 12px;
+  font-weight: normal;
+}
+.admin-detail > div {
+  min-width: 260px;
+  max-width: 600px;
+  margin-top: 12px;
+  overflow-wrap: anywhere;
+}
+.admin-users-table pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-width: 600px;
 }
 .admin-users-table {
   width: 100%;

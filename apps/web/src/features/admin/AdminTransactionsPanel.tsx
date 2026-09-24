@@ -11,6 +11,7 @@ import { formatMoney } from "../../lib/money";
 import type { Locale } from "../../types";
 import { getAdminCopy } from "./admin-copy";
 import { getAdminTransactionsCopy, getAdminDisputesCopy } from "./admin-transactions-copy";
+import { AdminDetail } from "./AdminDetail";
 
 type State = { status: "loading" } | { status: "ready"; data: AdminTransactions } | { status: "error" | "denied" };
 
@@ -46,6 +47,7 @@ export function AdminTransactionsTable({
               <th scope="row">
                 {transaction.title}
                 <small className="admin-listing-id">{transaction.id}</small>
+                <AdminDetail key={transaction.id} id={transaction.id} kind="order" locale={locale} />
               </th>
               <td>
                 {transaction.buyerName}

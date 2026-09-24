@@ -48,6 +48,153 @@ afterAll(async () => {
   await db?.close();
 });
 
+describe("admin detail authorization", () => {
+  it("limits details to admins and returns real order/shipment and user records", async () => {
+    await order("completed", 10000, 500);
+    const orderId = (await db.query<{ id: string }>("select id from public.orders")).rows[0].id;
+    const sql = `select public.get_admin_order_detail('${orderId}') as data`;
+    const userSql = `select public.get_admin_user_detail('${userId}') as data`;
+    for (const query of [sql, userSql]) {
+      for (const [role, identity] of [
+        ["anon", null],
+        ["authenticated", null],
+        ["authenticated", userId],
+        ["service_role", null],
+      ] as const)
+        await expect(asRole(role, identity, query)).rejects.toMatchObject({ code: "42501" });
+    }
+    const user = (await asRole("authenticated", adminId, userSql)).rows[0].data as any;
+    expect(user).toMatchObject({
+      email: "user@example.test",
+      listings: 0,
+      sales: 0,
+      purchases: 1,
+      disputes: 0,
+      orders_total: 1,
+    });
+    expect(user.orders[0]).toMatchObject({ id: orderId, direction: "purchase", item_price_minor: 10000 });
+    const empty = (await asRole("authenticated", adminId, sql)).rows[0].data as any;
+    expect(empty).toMatchObject({ id: orderId, shipment: null, inspection_deadline: null, payment_reference: null });
+    await db.query(
+      "insert into public.shipments(order_id,carrier,tracking_code,shipped_at) values($1,'Test carrier','TRACK123',now())",
+      [orderId],
+    );
+    const shipped = (await asRole("authenticated", adminId, sql)).rows[0].data as any;
+    expect(shipped.shipment).toMatchObject({ carrier: "Test carrier", tracking_code: "TRACK123", delivered_at: null });
+    expect(shipped.shipment.shipped_at).toEqual(expect.any(String));
+    expect(JSON.stringify(shipped)).not.toContain("pickup");
+    await db.query("delete from public.user_roles where user_id=$1", [adminId]);
+    for (const query of [sql, userSql])
+      await expect(asRole("authenticated", adminId, query)).rejects.toMatchObject({ code: "42501" });
+  });
+  it("validates missing IDs and bounds user history to newest 25", async () => {
+    for (const name of ["get_admin_order_detail", "get_admin_user_detail"]) {
+      await expect(asRole("authenticated", adminId, `select public.${name}(null)`)).rejects.toMatchObject({
+        code: "22023",
+      });
+      await expect(
+        asRole("authenticated", adminId, `select public.${name}('00000000-0000-4000-8000-000000000099')`),
+      ).rejects.toMatchObject({ code: "P0002" });
+    }
+    for (let i = 0; i < 26; i++) await order("completed", 10000, 500);
+    const data = (await asRole("authenticated", adminId, `select public.get_admin_user_detail('${adminId}') as data`))
+      .rows[0].data as any;
+    expect(data.orders_total).toBe(26);
+    expect(data.orders).toHaveLength(25);
+    expect(data.sales).toBe(26);
+  });
+});
+
+describe("admin activity and audit", () => {
+  const activity = "select public.get_admin_activity('2025-02-01','2025-03-01') as data";
+  it("denies anonymous, missing, forged and revoked identities", async () => {
+    for (const sql of [activity, "select public.get_admin_audit()"])
+      for (const [role, identity] of [
+        ["anon", null],
+        ["authenticated", null],
+        ["authenticated", userId],
+        ["service_role", null],
+      ] as const)
+        await expect(asRole(role, identity, sql)).rejects.toMatchObject({ code: "42501" });
+    await db.query("delete from public.user_roles where user_id=$1", [adminId]);
+    for (const sql of [activity, "select public.get_admin_audit()"])
+      await expect(asRole("authenticated", adminId, sql)).rejects.toMatchObject({ code: "42501" });
+  });
+  it("uses half-open equal ranges and only FI/EUR completed amounts", async () => {
+    await order("completed", 10000, 500);
+    await order("refunded", 20000, 1000);
+    await db.exec(
+      "update public.orders set created_at='2025-02-01'; update public.listings set created_at='2025-02-01'; update public.profiles set joined_at='2025-02-01';",
+    );
+    const endId = await listing();
+    await db.query("update public.listings set created_at='2025-03-01' where id=$1", [endId]);
+    const previousId = await listing();
+    await db.query("update public.listings set created_at='2025-01-31' where id=$1", [previousId]);
+    const data = (await asRole("authenticated", adminId, activity)).rows[0].data as any;
+    expect(data.current).toMatchObject({
+      new_users: 2,
+      new_listings: 2,
+      orders: { total: 2, completed: 1, value_minor: 10000, fees_minor: 500 },
+    });
+    expect(data.previous).toMatchObject({ new_users: 0, new_listings: 1, orders: { total: 0, value_minor: 0 } });
+    expect(Date.parse(data.current.start_at) - Date.parse(data.previous.start_at)).toBe(28 * 86400000);
+  });
+  it("rejects invalid ranges and audit paging", async () => {
+    for (const args of [
+      "null,now()",
+      "now(),null",
+      "now(),now()",
+      "'infinity',now()",
+      "now()-interval '367 days',now()",
+      "now(),now()+interval '1 day'",
+    ])
+      await expect(asRole("authenticated", adminId, `select public.get_admin_activity(${args})`)).rejects.toMatchObject(
+        { code: "22023" },
+      );
+    for (const args of ["null,0", "'',null", "'',-1", "'',1000001", `'${"x".repeat(101)}',0`])
+      await expect(asRole("authenticated", adminId, `select public.get_admin_audit(${args})`)).rejects.toMatchObject({
+        code: "22023",
+      });
+  });
+  it("shows both audit sources, filters literal IDs and cannot mutate evidence", async () => {
+    const listingId = await listing();
+    const reportId = (
+      await db.query<{ id: string }>(
+        "insert into public.reports(reporter_id,listing_id,reason) values($1,$2,'scam') returning id",
+        [userId, listingId],
+      )
+    ).rows[0].id;
+    await asRole(
+      "authenticated",
+      adminId,
+      `select public.review_admin_report('${reportId}','resolve','Reviewed all evidence',0)`,
+    );
+    await db.query(
+      "insert into public.catalog_admin_changes(entity_type,entity_id,action,after_data,changed_by) values('listing_featured',$1,'updated','{}',$2)",
+      [listingId, adminId],
+    );
+    const all = (await asRole("authenticated", adminId, "select public.get_admin_audit() as data")).rows[0].data as any;
+    expect(all.total).toBe(2);
+    expect(all.events.map((e: any) => e.source).sort()).toEqual(["catalog", "report"]);
+    const filtered = (await asRole("authenticated", adminId, `select public.get_admin_audit('${reportId}') as data`))
+      .rows[0].data as any;
+    expect(filtered.total).toBe(1);
+    expect(filtered.events[0]).toMatchObject({
+      actor_id: adminId,
+      reason: "Reviewed all evidence",
+      before_data: { resolved: false, version: 0 },
+      after_data: { resolved: true, version: 1 },
+    });
+    expect(
+      ((await asRole("authenticated", adminId, "select public.get_admin_audit('%') as data")).rows[0].data as any)
+        .total,
+    ).toBe(0);
+    await expect(asRole("authenticated", adminId, "delete from public.catalog_admin_changes")).rejects.toMatchObject({
+      code: "42501",
+    });
+  });
+});
+
 describe("audited report decisions", () => {
   async function report() {
     const listingId = await listing();

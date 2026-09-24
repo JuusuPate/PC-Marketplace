@@ -22,6 +22,9 @@ import { productCopy } from "../sell/product-model-copy";
 import { AdminReportsPanel } from "./AdminReportsPanel";
 import { getAdminReportsCopy } from "./admin-reports-copy";
 import "./styles/admin-dashboard.css";
+import { AdminActivityPanel } from "./AdminActivityPanel";
+import { AdminAuditPanel } from "./AdminAuditPanel";
+import { activityCopy } from "./admin-activity-copy";
 
 interface AdminDashboardPageProps {
   locale: Locale;
@@ -36,6 +39,7 @@ interface AdminDashboardPageProps {
   marketData?: boolean;
   catalog?: boolean;
   reports?: boolean;
+  audit?: boolean;
   onLogin: () => void;
   onNavigate: (path: string) => void;
 }
@@ -62,6 +66,23 @@ export function AdminOverviewPanel({ data, locale }: { data: AdminOverview; loca
 
   return (
     <>
+      <section className="admin-panel">
+        <h2>{activityCopy(locale).attention}</h2>
+        <p>{activityCopy(locale).attentionNote}</p>
+        <ul>
+          <li>
+            <a href="/admin/reports">
+              {copy.openReports}: {number(data.reports.unresolved)}
+            </a>
+          </li>
+          <li>
+            <a href="/admin/disputes">
+              {copy.disputes}: {number(data.orders.disputed)}
+            </a>
+          </li>
+        </ul>
+        <p className="admin-note">{activityCopy(locale).missing}</p>
+      </section>
       <div className="admin-metrics">
         {metrics.map((metric) => (
           <article className="admin-metric" key={metric.label}>
@@ -120,6 +141,7 @@ export function AdminDashboardPage({
   marketData = false,
   catalog = false,
   reports = false,
+  audit = false,
   onLogin,
   onNavigate,
 }: AdminDashboardPageProps) {
@@ -174,7 +196,18 @@ export function AdminDashboardPage({
   if (backendMode !== "supabase") return renderState(copy.setupTitle, copy.setupBody);
   if (!user) return renderState(copy.loginTitle, copy.loginBody, { label: copy.login, run: onLogin });
   if (user.role !== "admin" || state.status === "denied") return renderState(copy.deniedTitle, copy.deniedBody);
-  if (!overview && !users && !listings && !transactions && !revenue && !marketData && !catalog && !reports && !disputes)
+  if (
+    !overview &&
+    !users &&
+    !listings &&
+    !transactions &&
+    !revenue &&
+    !marketData &&
+    !catalog &&
+    !reports &&
+    !disputes &&
+    !audit
+  )
     return renderState(copy.notFoundTitle, copy.notFoundBody, {
       label: copy.overview,
       run: () => onNavigate(ADMIN_PATH),
@@ -280,6 +313,16 @@ export function AdminDashboardPage({
             {getAdminDisputesCopy(locale).title}
           </a>
           <a
+            href={`${ADMIN_PATH}/audit`}
+            aria-current={audit ? "page" : undefined}
+            onClick={(event) => {
+              event.preventDefault();
+              onNavigate(`${ADMIN_PATH}/audit`);
+            }}
+          >
+            {activityCopy(locale).audit}
+          </a>
+          <a
             href={getLegalPath("terms")}
             onClick={(event) => {
               event.preventDefault();
@@ -299,7 +342,9 @@ export function AdminDashboardPage({
           </a>
         </nav>
       </aside>
-      {disputes ? (
+      {audit ? (
+        <AdminAuditPanel locale={locale} />
+      ) : disputes ? (
         <AdminTransactionsPanel key="disputes" locale={locale} disputes />
       ) : reports ? (
         <AdminReportsPanel locale={locale} />
@@ -355,6 +400,7 @@ export function AdminDashboardPage({
                 <time dateTime={state.data.generatedAt}>{new Date(state.data.generatedAt).toLocaleString(locale)}</time>
               </p>
               <AdminOverviewPanel data={state.data} locale={locale} />
+              <AdminActivityPanel key={refresh} locale={locale} />
             </>
           )}
         </section>
