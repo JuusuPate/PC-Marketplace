@@ -3,13 +3,14 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { beforeEach, expect, it, vi } from "vitest";
 import {
   getAdminTransactions,
+  getAdminDisputes,
   parseAdminTransactions,
   type TransactionFilter,
 } from "../apps/web/src/lib/admin-transactions-service";
 import { AdminAccessError } from "../apps/web/src/lib/admin-service";
 import { AdminTransactionsTable } from "../apps/web/src/features/admin/AdminTransactionsPanel";
 import { AdminDashboardPage } from "../apps/web/src/features/admin/AdminDashboardPage";
-import { isAdminTransactionsPath } from "../apps/web/src/config/admin-routes";
+import { isAdminTransactionsPath, isAdminDisputesPath } from "../apps/web/src/config/admin-routes";
 const mock = vi.hoisted(() => ({ rpc: vi.fn() }));
 vi.mock("../apps/web/src/lib/supabase", () => ({ backendMode: "supabase", supabase: { rpc: mock.rpc } }));
 const response = () => ({
@@ -135,5 +136,46 @@ it("guards the transactions view during authentication and for ordinary users", 
     expect(renderToStaticMarkup(createElement(AdminDashboardPage, { ...props, user, authLoading }))).not.toContain(
       "admin-transaction-search",
     );
+  expect(mock.rpc).not.toHaveBeenCalled();
+});
+
+it("restricts the dispute queue to server-filtered disputed orders", async () => {
+  const data = response();
+  data.transactions[0].status = "disputed";
+  mock.rpc.mockResolvedValue({ data, error: null });
+  expect((await getAdminDisputes(" GPU ")).transactions[0].status).toBe("disputed");
+  expect(mock.rpc).toHaveBeenCalledWith("get_admin_transactions", { p_search: "GPU", p_status: "disputed", p_page: 0 });
+  mock.rpc.mockResolvedValue({ data: response(), error: null });
+  await expect(getAdminDisputes()).rejects.toThrow("Unexpected dispute status");
+  mock.rpc.mockResolvedValue({ data: null, error: { code: "42501" } });
+  await expect(getAdminDisputes()).rejects.toBeInstanceOf(AdminAccessError);
+});
+it("recognizes only the dispute route and translates the queue", () => {
+  expect(isAdminDisputesPath("/admin/disputes/")).toBe(true);
+  expect(isAdminDisputesPath("/admin/disputes/unknown")).toBe(false);
+  const data = parseAdminTransactions({ ...response(), transactions: [], total: 0 });
+  for (const [locale, text] of [
+    ["fi", "riitautettuja"],
+    ["sv", "bestridda"],
+    ["en", "disputed"],
+  ] as const) {
+    expect(renderToStaticMarkup(createElement(AdminTransactionsTable, { data, locale, disputes: true }))).toContain(
+      text,
+    );
+  }
+});
+it("does not expose disputes before admin authorization", () => {
+  const html = renderToStaticMarkup(
+    createElement(AdminDashboardPage, {
+      locale: "fi",
+      user: null,
+      authLoading: false,
+      overview: false,
+      disputes: true,
+      onLogin: () => {},
+      onNavigate: () => {},
+    }),
+  );
+  expect(html).not.toContain("admin-transaction-search");
   expect(mock.rpc).not.toHaveBeenCalled();
 });

@@ -108,3 +108,38 @@ const sv: typeof en = {
 export function getAdminTransactionsCopy(locale: Locale) {
   return locale === "fi" ? fi : locale === "sv" ? sv : en;
 }
+
+export function getAdminDisputesCopy(locale: Locale) {
+  const base = getAdminTransactionsCopy(locale);
+  const copy =
+    locale === "fi"
+      ? {
+          title: "Riitautukset",
+          description:
+            "Riitautetut Suomen markkinapaikan tilaukset. Voit tarkistaa osapuolet ja summat. Näkymä ei vielä sisällä riidan perusteluja, viestejä tai ratkaisutoimintoja. Päivämäärä on tilauksen luontiaika.",
+          empty: "Hakua vastaavia riitautettuja tilauksia ei löytynyt.",
+          total: "Riitautettuja tilauksia",
+          loading: "Ladataan riitautuksia…",
+          error: "Riitautuksia ei voitu ladata.",
+        }
+      : locale === "sv"
+        ? {
+            title: "Tvister",
+            description:
+              "Bestridda beställningar på den finska marknadsplatsen. Granska parter och belopp. Orsaker, meddelanden och beslut ingår ännu inte. Datumet avser när beställningen skapades.",
+            empty: "Inga matchande bestridda beställningar.",
+            total: "Bestridda beställningar",
+            loading: "Laddar tvister…",
+            error: "Tvisterna kunde inte laddas.",
+          }
+        : {
+            title: "Disputes",
+            description:
+              "Disputed Finnish marketplace orders. Review parties and amounts. Reasons, messages and resolution actions are not yet available. The date is the order creation date.",
+            empty: "No matching disputed orders.",
+            total: "Disputed orders",
+            loading: "Loading disputes…",
+            error: "Disputes could not be loaded.",
+          };
+  return { ...base, ...copy };
+}

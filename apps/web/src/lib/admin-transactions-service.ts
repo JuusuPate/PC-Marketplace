@@ -134,3 +134,9 @@ export async function getAdminTransactions(
   if (result.page !== page) throw new Error("Unexpected transaction page");
   return result;
 }
+
+export async function getAdminDisputes(search = "", page = 0): Promise<AdminTransactions> {
+  const result = await getAdminTransactions(search, "disputed", page);
+  if (result.transactions.some((order) => order.status !== "disputed")) throw new Error("Unexpected dispute status");
+  return result;
+}

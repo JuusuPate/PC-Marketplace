@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { AdminAccessError } from "../../lib/admin-service";
 import {
   getAdminTransactions,
+  getAdminDisputes,
   transactionStatuses,
   type TransactionFilter,
   type AdminTransactions,
@@ -9,12 +10,20 @@ import {
 import { formatMoney } from "../../lib/money";
 import type { Locale } from "../../types";
 import { getAdminCopy } from "./admin-copy";
-import { getAdminTransactionsCopy } from "./admin-transactions-copy";
+import { getAdminTransactionsCopy, getAdminDisputesCopy } from "./admin-transactions-copy";
 
 type State = { status: "loading" } | { status: "ready"; data: AdminTransactions } | { status: "error" | "denied" };
 
-export function AdminTransactionsTable({ data, locale }: { data: AdminTransactions; locale: Locale }) {
-  const copy = getAdminTransactionsCopy(locale);
+export function AdminTransactionsTable({
+  data,
+  locale,
+  disputes = false,
+}: {
+  data: AdminTransactions;
+  locale: Locale;
+  disputes?: boolean;
+}) {
+  const copy = disputes ? getAdminDisputesCopy(locale) : getAdminTransactionsCopy(locale);
   if (!data.transactions.length) return <p role="status">{copy.empty}</p>;
   return (
     <div className="admin-table-scroll">
@@ -78,8 +87,8 @@ export function AdminTransactionsTable({ data, locale }: { data: AdminTransactio
   );
 }
 
-export function AdminTransactionsPanel({ locale }: { locale: Locale }) {
-  const copy = getAdminTransactionsCopy(locale);
+export function AdminTransactionsPanel({ locale, disputes = false }: { locale: Locale; disputes?: boolean }) {
+  const copy = disputes ? getAdminDisputesCopy(locale) : getAdminTransactionsCopy(locale);
   const common = getAdminCopy(locale);
   const [input, setInput] = useState("");
   const [filter, setFilter] = useState<TransactionFilter>("");
@@ -88,7 +97,10 @@ export function AdminTransactionsPanel({ locale }: { locale: Locale }) {
   useEffect(() => {
     let current = true;
     setState({ status: "loading" });
-    getAdminTransactions(query.search, query.status, query.page).then(
+    (disputes
+      ? getAdminDisputes(query.search, query.page)
+      : getAdminTransactions(query.search, query.status, query.page)
+    ).then(
       (data) => {
         if (current) setState({ status: "ready", data });
       },
@@ -99,7 +111,7 @@ export function AdminTransactionsPanel({ locale }: { locale: Locale }) {
     return () => {
       current = false;
     };
-  }, [query]);
+  }, [query, disputes]);
   function load(page: number, search = query.search, status = query.status) {
     setState({ status: "loading" });
     setQuery((previous) => ({ page, search, status, refresh: previous.refresh + 1 }));
@@ -145,19 +157,23 @@ export function AdminTransactionsPanel({ locale }: { locale: Locale }) {
           value={input}
           onChange={(event) => setInput(event.target.value)}
         />
-        <label htmlFor="admin-transaction-status">{copy.status}</label>
-        <select
-          id="admin-transaction-status"
-          value={filter}
-          onChange={(event) => setFilter(event.target.value as TransactionFilter)}
-        >
-          <option value="">{copy.all}</option>
-          {transactionStatuses.map((status) => (
-            <option key={status} value={status}>
-              {copy[status]}
-            </option>
-          ))}
-        </select>
+        {!disputes && (
+          <>
+            <label htmlFor="admin-transaction-status">{copy.status}</label>
+            <select
+              id="admin-transaction-status"
+              value={filter}
+              onChange={(event) => setFilter(event.target.value as TransactionFilter)}
+            >
+              <option value="">{copy.all}</option>
+              {transactionStatuses.map((status) => (
+                <option key={status} value={status}>
+                  {copy[status]}
+                </option>
+              ))}
+            </select>
+          </>
+        )}
         <button type="submit" className="button button--outline">
           {copy.submit}
         </button>
@@ -175,7 +191,7 @@ export function AdminTransactionsPanel({ locale }: { locale: Locale }) {
       )}
       {state.status === "ready" && (
         <>
-          <AdminTransactionsTable data={state.data} locale={locale} />
+          <AdminTransactionsTable data={state.data} locale={locale} disputes={disputes} />
           <nav className="admin-user-pagination" aria-label={copy.page}>
             <button
               type="button"
