@@ -36,6 +36,7 @@ beforeAll(async () => {
 }, 30000);
 
 beforeEach(async () => {
+  await db.exec("truncate public.marketing_announcement_changes, public.marketing_announcements cascade;");
   await db.exec("truncate auth.users cascade;");
   await db.query(
     "insert into auth.users (id, email, raw_user_meta_data) values ($1, 'admin@example.test', '{}'), ($2, 'user@example.test', '{\"role\":\"admin\"}')",
@@ -654,7 +655,7 @@ describe("listing moderation", () => {
   const decision = (id: string, action: "hide" | "restore", version: number, reason = "Reviewed listing evidence") =>
     `select public.moderate_admin_listing('${id}', '${action}', '${reason}', ${version})`;
 
-  it("hides and restores an active FI listing with an auditable reason", async () => {
+  it("hides with a reason and restores without one while preserving the audit event", async () => {
     const id = await listing();
     await asRole("authenticated", adminId, decision(id, "hide", 0));
     expect(
@@ -668,7 +669,7 @@ describe("listing moderation", () => {
       .audit as any;
     expect(audit.events).toMatchObject([{ source: "moderation", action: "hide", reason: "Reviewed listing evidence" }]);
     await expect(asRole("authenticated", adminId, decision(id, "restore", 0))).rejects.toMatchObject({ code: "40001" });
-    await asRole("authenticated", adminId, decision(id, "restore", 1));
+    await asRole("authenticated", adminId, decision(id, "restore", 1, ""));
     expect(
       (await db.query("select status, moderation_hidden, moderation_version from public.listings where id=$1", [id]))
         .rows[0],
@@ -676,13 +677,13 @@ describe("listing moderation", () => {
     expect(
       (
         await db.query(
-          "select action, version from public.listing_moderation_decisions where listing_id=$1 order by version",
+          "select action, reason, version from public.listing_moderation_decisions where listing_id=$1 order by version",
           [id],
         )
       ).rows,
     ).toMatchObject([
-      { action: "hide", version: 1 },
-      { action: "restore", version: 2 },
+      { action: "hide", reason: "Reviewed listing evidence", version: 1 },
+      { action: "restore", reason: null, version: 2 },
     ]);
   });
 
@@ -697,6 +698,7 @@ describe("listing moderation", () => {
       await expect(asRole(role, identity, decision(id, "hide", 0))).rejects.toMatchObject({ code: "42501" });
     for (const sql of [
       decision(id, "hide", 0, "short"),
+      decision(id, "hide", 0, ""),
       `select public.moderate_admin_listing('${id}', 'delete', 'Long enough reason', 0)`,
     ])
       await expect(asRole("authenticated", adminId, sql)).rejects.toMatchObject({ code: "22023" });
@@ -716,6 +718,72 @@ describe("listing moderation", () => {
     expect(
       (await db.query("select status, moderation_version from public.listings where id=$1", [id])).rows[0],
     ).toMatchObject({ status: "active", moderation_version: 0 });
+  });
+});
+
+describe("marketing announcements", () => {
+  const save = (id: string | null, version: number | null, title = "Autumn hardware picks", published = false) =>
+    `select public.save_admin_marketing_announcement(${id ? `'${id}'` : "null"}, 'fi', '${title}', 'Find the right components for your build.', ${published}, ${version ?? "null"})`;
+  const publicAnnouncement = (locale = "fi") =>
+    `select public.get_public_marketing_announcement('${locale}') as announcement`;
+
+  it("keeps drafts private and publishes only the requested language", async () => {
+    for (const [role, identity] of [
+      ["anon", null],
+      ["authenticated", null],
+      ["authenticated", userId],
+      ["service_role", null],
+    ] as const) {
+      await expect(asRole(role, identity, "select public.get_admin_marketing_announcements()")).rejects.toMatchObject({
+        code: "42501",
+      });
+      await expect(asRole(role, identity, save(null, null))).rejects.toMatchObject({ code: "42501" });
+    }
+    await asRole("authenticated", adminId, save(null, null));
+    const row = (await db.query<{ id: string }>("select id from public.marketing_announcements")).rows[0];
+    expect((await asRole("anon", null, publicAnnouncement())).rows[0].announcement).toBeNull();
+    expect((await asRole("authenticated", userId, publicAnnouncement())).rows[0].announcement).toBeNull();
+    await expect(asRole("anon", null, "select * from public.marketing_announcements")).rejects.toMatchObject({
+      code: "42501",
+    });
+    await asRole("authenticated", adminId, save(row.id, 1, "Autumn hardware picks", true));
+    expect((await asRole("anon", null, publicAnnouncement())).rows[0].announcement).toMatchObject({
+      id: row.id,
+      title: "Autumn hardware picks",
+      body: "Find the right components for your build.",
+    });
+    expect((await asRole("anon", null, publicAnnouncement("sv"))).rows[0].announcement).toBeNull();
+    expect(
+      (await asRole("authenticated", adminId, "select public.get_admin_marketing_announcements() as data")).rows[0]
+        .data,
+    ).toMatchObject([{ id: row.id, is_published: true, version: 2 }]);
+    const changes = (await db.query("select action from public.marketing_announcement_changes order by created_at"))
+      .rows;
+    expect(changes).toMatchObject([{ action: "create" }, { action: "update" }]);
+    const audit = (await asRole("authenticated", adminId, `select public.get_admin_audit('${row.id}', 0) as data`))
+      .rows[0].data;
+    expect(audit.events).toMatchObject([
+      { source: "marketing", target_type: "announcement", action: "update" },
+      { source: "marketing", target_type: "announcement", action: "create" },
+    ]);
+  });
+
+  it("rejects stale, malformed and revoked writes without changing published content", async () => {
+    await asRole("authenticated", adminId, save(null, null, "Autumn hardware picks", true));
+    const row = (await db.query<{ id: string }>("select id from public.marketing_announcements")).rows[0];
+    await expect(asRole("authenticated", adminId, save(row.id, 2))).rejects.toMatchObject({ code: "40001" });
+    await expect(asRole("authenticated", adminId, save(null, null, "x"))).rejects.toMatchObject({ code: "22023" });
+    await expect(asRole("authenticated", adminId, publicAnnouncement("de"))).rejects.toMatchObject({
+      code: "22023",
+    });
+    await db.query("delete from public.user_roles where user_id=$1", [adminId]);
+    await expect(asRole("authenticated", adminId, save(row.id, 1))).rejects.toMatchObject({ code: "42501" });
+    expect((await asRole("anon", null, publicAnnouncement())).rows[0].announcement).toMatchObject({
+      title: "Autumn hardware picks",
+    });
+    expect(
+      (await db.query("select count(*)::int as total from public.marketing_announcement_changes")).rows[0],
+    ).toMatchObject({ total: 1 });
   });
 });
 

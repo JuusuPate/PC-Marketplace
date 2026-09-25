@@ -8,6 +8,7 @@
 @import "./features/catalog/category-page.css";
 @import "./features/home/hero.css";
 @import "./features/home/highlights.css";
+@import "./features/home/marketing-announcement.css";
 @import "./features/home/featured-listings.css";
 @import "./features/home/trust-strip.css";
 @import "./features/marketplace/browse.css";

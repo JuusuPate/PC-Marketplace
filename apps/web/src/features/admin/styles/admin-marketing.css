@@ -1,0 +1,51 @@
+.admin-marketing-list {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.admin-marketing-list .admin-panel h2 {
+  margin: 0.5rem 0;
+}
+.admin-marketing-list .admin-panel p {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.admin-marketing-editor {
+  margin-top: 1.5rem;
+}
+.admin-marketing-editor fieldset {
+  display: grid;
+  gap: 1rem;
+  padding: 1.2rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+.admin-marketing-editor label:not(.admin-marketing-editor__toggle) {
+  display: grid;
+  gap: 0.4rem;
+}
+.admin-marketing-editor input:not([type="checkbox"]),
+.admin-marketing-editor select,
+.admin-marketing-editor textarea {
+  width: 100%;
+  padding: 0.65rem;
+  font: inherit;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+.admin-marketing-editor textarea {
+  min-height: 7rem;
+  resize: vertical;
+}
+.admin-marketing-editor__toggle,
+.admin-marketing-editor__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.admin-marketing-editor input:focus-visible,
+.admin-marketing-editor select:focus-visible,
+.admin-marketing-editor textarea:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 3px;
+}
