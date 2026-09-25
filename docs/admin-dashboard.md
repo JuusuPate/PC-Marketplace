@@ -142,7 +142,7 @@ Tämä ensimmäinen osa on katselujono. Raportin ratkaisu, ilmoituksen moderoint
 
 ## Tuotemallikatalogi
 
-`/admin/catalog` sisältää muokattavan tuotemallikatalogin ja mallikohtaiset markkinatiedot. Kymmenessä tuoteryhmässä on kolme aloitusmallia (30 yhteensä). Ilmoituksen luonnin mallihaku yhdistää ilmoituksen pysyvään malliin. [Täydennysohje ja aloitussisältö](product-catalog.md). Asenna myös migraatio `0013_product_model_catalog.sql` ennen uuden sovellusversion käyttöä.
+`/admin/catalog` sisältää muokattavan tuotemallikatalogin ja mallikohtaiset markkinatiedot. Alkuperäinen aloitussisältö oli 30 mallia kymmenessä tuoteryhmässä; kaksi AMD-näytönohjainta lisätään erillisessä migraatiossa. Ilmoituksen luonnin mallihaku yhdistää ilmoituksen pysyvään malliin. [Täydennysohje ja aloitussisältö](product-catalog.md). Asenna myös migraatiot `0013_product_model_catalog.sql` ja `20260925190900_amd_gpu_catalog_seed.sql` ennen uuden sovellusversion käyttöä.
 
 ## Vaihe 7: Raporttien käsittely
 

@@ -3,7 +3,7 @@
 ## Täydennä itse
 
 1. Kirjaudu ylläpitäjänä ja avaa **Admin Dashboard → Tuotekatalogi** (`/admin/catalog`).
-2. Valitse tuoteryhmä. Aloituksessa jokaisessa kymmenessä ryhmässä on kolme mallia.
+2. Valitse tuoteryhmä. Alkuperäisessä aloituskatalogissa oli kolme mallia jokaisessa kymmenessä ryhmässä; malleja voi lisätä ilman kolmen tuotteen rajaa.
 3. Paina **Lisää malli**. Täytä valmistaja ja mallin nimi. Käytä **Versio / kapasiteetti / osanumero** -kenttää esimerkiksi 10 GB / 12 GB, muistikitin osanumeron tai virtalähteen vuosimallin erottamiseen.
 4. Lisää halutessasi vaihtoehtoisia hakusanoja, esimerkiksi `rtx4070 4070super`. Tallenna.
 5. **Muokkaa** korjaa olemassa olevan mallin. Poista valinta **Valittavissa ilmoitusta luotaessa**, jos haluat piilottaa mallin uusilta ilmoituksilta. Vanhojen ilmoitusten yhteys säilyy.
@@ -12,11 +12,13 @@ Samaa valmistajaa, mallia ja versiota ei voi lisätä samaan ryhmään kahdesti 
 
 ## Ilmoituksen luonti
 
-Valitse tuoteryhmä ja kirjoita **Hae tuotemallia** -kenttään valmistaja, malli tai hakusana. Valitse tulos: valmistaja ja mallikenttä täyttyvät, ja tyhjä otsikko saa mallin nimen. Valinta yhdistää ilmoituksen pysyvään malliin. Valmistajan, mallitekstin tai tuoteryhmän muuttaminen poistaa aiemman yhteyden. Mallia ei ole pakko valita: puuttuvan tuotteen voi syöttää käsin. Katalogin häiriö ei estä käsinsyöttöä.
+Valitse tuoteryhmä ja kirjoita **Hae tuotemallia** -kenttään valmistaja, malli tai hakusana. Haku avautuu vasta kirjoitettaessa ja näyttää myös malliversion, jotta eri muistimäärät erottuvat. Jos osumia on yli 20, selaa hakutulosten sivuja. Valitse tulos: valmistaja ja mallikenttä täyttyvät, ja tyhjä otsikko saa mallin nimen. Valinta yhdistää ilmoituksen pysyvään malliin. Valmistajan, mallitekstin tai tuoteryhmän muuttaminen poistaa aiemman yhteyden. Mallia ei ole pakko valita: puuttuvan tuotteen voi syöttää käsin. Katalogin häiriö ei estä käsinsyöttöä.
 
 Katalogi on palvelimen tieto; demotila ei luo kopioita oikeasta katalogista. Mallin piilottaminen ei riko olemassa olevan ilmoituksen myöhempää käsittelyä. Paikallisen sovelluksen ilmoituseditori säilyttää malliyhteyden tavallisessa muokkauksessa, kun mallin tietoja ei vaihdeta.
 
 ## Aloitussisältö: 30 mallia
+
+Myöhempi migraatio `20260925190900_amd_gpu_catalog_seed.sql` lisää kaksi AMD-näytönohjainta alkuperäisen 30 mallin lisäksi: Radeon RX 6800 XT 16 GB ja Radeon RX 6900 XT 16 GB. Jo asennettua alkuperäistä migraatiota ei muuteta.
 
 | Ryhmä                 | Kolme aloitusmallia                                            |
 | --------------------- | -------------------------------------------------------------- |

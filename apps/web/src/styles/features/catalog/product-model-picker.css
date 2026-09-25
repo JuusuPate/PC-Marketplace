@@ -1,26 +1,101 @@
 .product-model-picker {
-  margin-block: 1rem;
-  padding: 1rem;
-  border: 1px solid var(--border, #d7ddd9);
-  border-radius: 12px;
+  margin-block: 0.5rem 0.75rem;
 }
-.product-model-picker label {
-  display: grid;
-  gap: 0.4rem;
-}
-.product-model-picker input {
+
+.product-model-picker__input {
   width: 100%;
-  padding: 0.8rem;
-  border: 1px solid #ccd2cf;
-  border-radius: 6px;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid #d9e0dc;
+  border-radius: 10px;
+  background: #f7faf8;
+  color: #1b2a25;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.04);
 }
+
+.product-model-picker__input:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 2px;
+  border-color: #99b9a6;
+  box-shadow: 0 0 0 3px rgba(86, 160, 115, 0.12);
+}
+
+.product-model-picker__selected,
+.product-model-picker__meta,
+.product-model-picker__empty {
+  margin: 0.5rem 0 0;
+  font-size: 0.78rem;
+  color: #5d6b66;
+}
+
+.product-model-picker__results {
+  margin-top: 0.5rem;
+  max-height: 220px;
+  overflow-y: auto;
+  border: 1px solid #e6ece8;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.08);
+}
+
 .product-model-picker ul {
   list-style: none;
-  padding: 0;
+  margin: 0;
+  padding: 0.35rem;
   display: grid;
-  gap: 0.5rem;
+  gap: 0.2rem;
 }
-.product-model-picker li button {
-  white-space: normal;
+
+.product-model-picker__option {
+  width: 100%;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  padding: 0.55rem 0.7rem;
   text-align: left;
+  line-height: 1.3;
+  font-size: 0.92rem;
+  cursor: pointer;
+}
+
+.product-model-picker__option:hover,
+.product-model-picker__option:focus-visible {
+  background: #eef5f0;
+  border-color: #d7e8db;
+}
+
+.product-model-picker__option[aria-pressed="true"] {
+  background: #ebf7ef;
+  border-color: #b7d9c1;
+}
+
+.product-model-picker__pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.45rem 0.7rem;
+  border-top: 1px solid #e6ece8;
+  color: #5d6b66;
+  font-size: 0.78rem;
+}
+
+.product-model-picker__pagination button {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+}
+
+.product-model-picker__pagination button:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 2px;
+}
+
+.product-model-picker__pagination button:disabled {
+  opacity: 0.45;
+  cursor: default;
 }
