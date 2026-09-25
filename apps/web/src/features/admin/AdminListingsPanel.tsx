@@ -10,10 +10,21 @@ import { formatMoney } from "../../lib/money";
 import type { Locale } from "../../types";
 import { getAdminCopy } from "./admin-copy";
 import { getAdminListingsCopy } from "./admin-listings-copy";
+import { AdminListingModerationForm } from "./AdminListingModerationForm";
 
 type State = { status: "loading" } | { status: "ready"; data: AdminListings } | { status: "error" | "denied" };
 
-export function AdminListingsTable({ data, locale }: { data: AdminListings; locale: Locale }) {
+export function AdminListingsTable({
+  data,
+  locale,
+  onSaved,
+  onDenied,
+}: {
+  data: AdminListings;
+  locale: Locale;
+  onSaved?: () => void;
+  onDenied?: () => void;
+}) {
   const copy = getAdminListingsCopy(locale);
   const common = getAdminCopy(locale);
   if (!data.listings.length) return <p role="status">{copy.empty}</p>;
@@ -25,7 +36,14 @@ export function AdminListingsTable({ data, locale }: { data: AdminListings; loca
         </caption>
         <thead>
           <tr>
-            {[copy.listing, copy.seller, copy.status, copy.price, copy.created].map((label) => (
+            {[
+              copy.listing,
+              copy.seller,
+              copy.status,
+              copy.price,
+              copy.created,
+              ...(onSaved ? [copy.moderation] : []),
+            ].map((label) => (
               <th scope="col" key={label}>
                 {label}
               </th>
@@ -48,6 +66,17 @@ export function AdminListingsTable({ data, locale }: { data: AdminListings; loca
               <td>
                 <time dateTime={listing.createdAt}>{new Date(listing.createdAt).toLocaleDateString(locale)}</time>
               </td>
+              {onSaved && onDenied && (
+                <td>
+                  <AdminListingModerationForm
+                    key={`${listing.id}:${listing.moderationVersion}`}
+                    listing={listing}
+                    locale={locale}
+                    onSaved={onSaved}
+                    onDenied={onDenied}
+                  />
+                </td>
+              )}
             </tr>
           ))}
         </tbody>
@@ -63,6 +92,7 @@ export function AdminListingsPanel({ locale }: { locale: Locale }) {
   const [filter, setFilter] = useState<ListingFilter>("");
   const [query, setQuery] = useState({ search: "", status: "" as ListingFilter, page: 0, refresh: 0 });
   const [state, setState] = useState<State>({ status: "loading" });
+  const [saved, setSaved] = useState(false);
   useEffect(() => {
     let current = true;
     setState({ status: "loading" });
@@ -145,6 +175,7 @@ export function AdminListingsPanel({ locale }: { locale: Locale }) {
           {copy.loading}
         </p>
       )}
+      {saved && <p role="status">{copy.saved}</p>}
       {state.status === "error" && (
         <div className="admin-error" role="alert">
           <h2>{copy.error}</h2>
@@ -153,7 +184,15 @@ export function AdminListingsPanel({ locale }: { locale: Locale }) {
       )}
       {state.status === "ready" && (
         <>
-          <AdminListingsTable data={state.data} locale={locale} />
+          <AdminListingsTable
+            data={state.data}
+            locale={locale}
+            onSaved={() => {
+              setSaved(true);
+              load(query.page);
+            }}
+            onDenied={() => setState({ status: "denied" })}
+          />
           <nav className="admin-user-pagination" aria-label={copy.page}>
             <button
               type="button"

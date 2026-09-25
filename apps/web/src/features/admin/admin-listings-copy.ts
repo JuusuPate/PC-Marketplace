@@ -1,7 +1,7 @@
 import type { Locale } from "../../types";
 const en = {
   title: "Listings",
-  description: "Finnish marketplace listings in all states. Read-only view.",
+  description: "Finnish marketplace listings and available moderation actions.",
   search: "Search by title, full listing ID or seller ID",
   submit: "Search",
   status: "Status",
@@ -17,10 +17,18 @@ const en = {
   page: "Page",
   loading: "Loading listings…",
   error: "Listings could not be loaded.",
+  moderation: "Moderation",
+  reason: "Reason (10–2000 characters)",
+  hide: "Hide listing",
+  restore: "Restore listing",
+  saving: "Saving…",
+  saved: "Moderation decision saved.",
+  conflict: "Listing changed. Refresh before deciding.",
+  order: "An active order prevents hiding this listing.",
 };
 const fi: typeof en = {
   title: "Ilmoitukset",
-  description: "Suomen markkinapaikan ilmoitukset kaikissa tiloissa. Katselunäkymä.",
+  description: "Suomen markkinapaikan ilmoitukset ja käytettävissä olevat moderointitoimet.",
   search: "Hae otsikolla, koko ilmoitus- tai myyjätunnisteella",
   submit: "Hae",
   status: "Tila",
@@ -36,10 +44,18 @@ const fi: typeof en = {
   page: "Sivu",
   loading: "Ladataan ilmoituksia…",
   error: "Ilmoituksia ei voitu ladata.",
+  moderation: "Moderointi",
+  reason: "Perustelu (10–2000 merkkiä)",
+  hide: "Piilota ilmoitus",
+  restore: "Palauta ilmoitus",
+  saving: "Tallennetaan…",
+  saved: "Moderointipäätös tallennettu.",
+  conflict: "Ilmoitus muuttui. Päivitä ennen päätöstä.",
+  order: "Aktiivinen tilaus estää ilmoituksen piilottamisen.",
 };
 const sv: typeof en = {
   title: "Annonser",
-  description: "Den finska marknadsplatsens annonser i alla statusar. Skrivskyddad vy.",
+  description: "Annonser i Finland och tillgängliga modereringsåtgärder.",
   search: "Sök med rubrik, fullständigt annons-ID eller säljar-ID",
   submit: "Sök",
   status: "Status",
@@ -55,6 +71,14 @@ const sv: typeof en = {
   page: "Sida",
   loading: "Laddar annonser…",
   error: "Annonserna kunde inte laddas.",
+  moderation: "Moderering",
+  reason: "Motivering (10–2000 tecken)",
+  hide: "Dölj annons",
+  restore: "Återställ annons",
+  saving: "Sparar…",
+  saved: "Moderationsbeslutet sparades.",
+  conflict: "Annonsen har ändrats. Uppdatera före beslutet.",
+  order: "En aktiv beställning hindrar att annonsen döljs.",
 };
 export function getAdminListingsCopy(locale: Locale) {
   return locale === "fi" ? fi : locale === "sv" ? sv : en;

@@ -23,7 +23,7 @@ const en = {
   note: "Orders are grouped by creation time and their current status, not payment or completion time. Changes in status can change past totals. Comparison uses the immediately preceding period of equal duration. All amounts are FI/EUR.",
   audit: "Audit log",
   auditNote:
-    "Recorded catalog changes and report decisions. Other actions are not yet included. This view cannot edit or delete events.",
+    "Recorded catalog changes, report decisions and listing moderation. Other actions are not yet included. This view cannot edit or delete events.",
   search: "Target / actor / event ID, target type or action",
   empty: "No recorded events match this search.",
   actor: "Actor",
@@ -40,6 +40,8 @@ const en = {
   updated: "Updated",
   resolve: "Report resolved",
   reopen: "Report reopened",
+  hide: "Listing hidden",
+  restore: "Listing restored",
 };
 const fi: typeof en = {
   attention: "Vaatii huomiota",
@@ -66,7 +68,7 @@ const fi: typeof en = {
   note: "Tilaukset ryhmitellään luontiajan ja nykyisen tilan mukaan, ei maksu- tai valmistumisajan mukaan. Tilamuutokset voivat muuttaa menneitä lukuja. Vertailussa on välittömästi edeltävä samanpituinen jakso. Summat koskevat Suomen euromääräisiä kauppoja.",
   audit: "Tapahtumaloki",
   auditNote:
-    "Tallennetut katalogimuutokset ja raporttien käsittelypäätökset. Muut toiminnot eivät vielä sisälly lokiin. Tästä näkymästä tapahtumia ei voi muokata tai poistaa.",
+    "Tallennetut katalogimuutokset, raporttipäätökset ja ilmoitusten moderointi. Muut toiminnot eivät vielä sisälly lokiin. Tästä näkymästä tapahtumia ei voi muokata tai poistaa.",
   search: "Kohteen / tekijän / tapahtuman tunnus, kohdetyyppi tai toiminto",
   empty: "Hakua vastaavia tallennettuja tapahtumia ei ole.",
   actor: "Tekijä",
@@ -83,6 +85,8 @@ const fi: typeof en = {
   updated: "Muokattu",
   resolve: "Raportti ratkaistu",
   reopen: "Raportti avattu uudelleen",
+  hide: "Ilmoitus piilotettu",
+  restore: "Ilmoitus palautettu",
 };
 const sv: typeof en = {
   attention: "Kräver uppmärksamhet",
@@ -108,7 +112,7 @@ const sv: typeof en = {
   note: "Beställningar grupperas efter skapandetid och aktuell status, inte betalnings- eller sluttid. Statusändringar kan ändra historiska belopp. Jämförelsen gäller föregående lika långa period. Alla belopp gäller FI/EUR.",
   audit: "Händelselogg",
   auditNote:
-    "Registrerade katalogändringar och rapportbeslut. Andra åtgärder ingår ännu inte. Händelser kan inte redigeras eller raderas i denna vy.",
+    "Registrerade katalogändringar, rapportbeslut och annonsmoderering. Andra åtgärder ingår ännu inte. Händelser kan inte redigeras eller raderas i denna vy.",
   search: "Målets / aktörens / händelsens ID, måltyp eller åtgärd",
   empty: "Inga registrerade händelser matchar sökningen.",
   actor: "Aktör",
@@ -125,5 +129,7 @@ const sv: typeof en = {
   updated: "Uppdaterad",
   resolve: "Rapport löst",
   reopen: "Rapport återöppnad",
+  hide: "Annons dold",
+  restore: "Annons återställd",
 };
 export const activityCopy = (locale: Locale) => (locale === "fi" ? fi : locale === "sv" ? sv : en);
