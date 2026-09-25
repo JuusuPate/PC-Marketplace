@@ -203,3 +203,13 @@ Tämä on hetkellinen toimivuustarkistus, ei palvelimen jatkuva monitorointi. Ma
 Keskeytys estää uuden luonnoksen luomisen ja ennen keskeytystä tehdyn luonnoksen julkaisemisen tietokannan triggerissä. Julkaistujen ilmoitusten muokkaus, ylläpidon piilottaman ilmoituksen palautus ja luonnoksen hylkääminen pysyvät käytössä. Ilmoituksen luontisivu tarkistaa julkisen kyllä/ei-tilan ja näyttää keskeytyksen tai tarkistusvirheen; tietokanta tekee lopullisen päätöksen myös tilan muuttuessa lomakkeen täytön aikana. Paikallinen demo ei käytä tätä palvelinasetusta.
 
 Migraatio on asennettu Supabase-projektiin PC-Marketplace SUOMI. Se ei muuta maksujen, tilausten, muiden ominaisuuksien tai käyttäjätilien asetuksia.
+
+## Vaihe 14: aikavälikaaviot ja tumma analyysinäkymä
+
+Yleiskatsauksen ja tulojen analyysiosioissa on tumma mittarivalikko, pienet esikatselukäyrät ja valitun mittarin päivittäinen aluekäyrä. Valinnat ovat viikko (7 vrk), 30 vrk, 90 vrk, puolivuosi (180 vrk) ja vuosi (365 vrk). Päivät perustuvat Europe/Helsinki-aikavyöhykkeeseen; kuluva päivä on osittainen. Hiiri ja vasen/oikea nuolinäppäin näyttävät päivän tarkan arvon. Sama aineisto avautuu myös taulukkona. Nollapäivät näytetään nollina; selaimessa ei luoda tuotantolukuihin keinotekoista trendiä.
+
+Markkinatiedoissa samat aikavälit rajaavat tuoteryhmien määrät ja keskihinnat. Ryhmät näytetään vaakapalkkeina: tuoteryhmien järjestys ei ole aikasarja. Aktiivisten ilmoitusten otos sisältää valitulla aikavälillä luodut ja nyt aktiiviset ilmoitukset. Kauppaotos sisältää valitulla aikavälillä luodut ja nyt valmiit FI/EUR-tilaukset. Kaupan luontipäivä ei ole maksun tai valmistumisen ajankohta; myöhempi hyvitys muuttaa myös aiemman päivän arvoa. Vanha koko ajan markkinataulukko ja vuosi-/kuukausierittely säilyvät erikseen otsikoituina.
+
+Uusi `20260925190901_admin_dashboard_trends.sql` lisää vain ylläpitäjän lukurajapinnan. Se tarkistaa identiteetin ja admin-roolin jokaisella kutsulla, hyväksyy vain viisi rajattua aikaväliä eikä palauta henkilötietoja. Taulujen selainoikeudet eivät laajene. Migraatio on luotu CLI:llä ja sijoitettu tiedostojärjestyksessä aiemman katalogimigraation jälkeen. **Etäasennus on vielä tekemättä.** Asenna migraatio ennen käyttöliittymän julkaisua ja sovita tiedoston versionumero toteutuneeseen Supabase-migraatiohistoriaan.
+
+Kaavioiden tyylit ovat `apps/web/src/features/admin/styles/admin-charts.css`-tiedostossa. Sivurungon ja navigaation tyylit pysyvät `admin-dashboard.css`-tiedostossa. Selaintestin esikatselukuvat käyttävät selvästi testiin kuuluvaa aineistoa; ne eivät todista etätietokannan tilaa.

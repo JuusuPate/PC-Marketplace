@@ -1,0 +1,107 @@
+import type { Locale } from "../../types";
+
+const en = {
+  daily: "Daily values",
+  metric: "Choose a metric",
+  inspect: "Hover over the curve to inspect a day",
+  keyboard: "Use the left and right arrow keys to inspect daily values.",
+  period: "Time range",
+  periods: { 7: "7 days", 30: "30 days", 90: "90 days", 180: "6 months", 365: "1 year" },
+  from: "From",
+  to: "to",
+  empty: "No events in this period.",
+  breakdown: "View exact values",
+  day: "Date",
+  value: "Value",
+  current: "Current totals",
+  periodData: "Activity during the selected period",
+  overviewNote: "The cards above show today's totals. The charts below show events during the selected period.",
+  revenueNote: "Completed orders are shown by order creation date and current status. Refunds can change past bars.",
+  marketNote:
+    "Active listings created and completed orders placed during the selected period. Asking prices use currently active listings only.",
+  reports: "New reports",
+  users: "New users",
+  listings: "New listings",
+  orders: "Orders placed",
+  completed: "Currently completed orders",
+  itemValue: "Completed item value",
+  fees: "Marketplace fees",
+  activeByCategory: "Active listings by category",
+  askingByCategory: "Average asking price by category",
+  salesByCategory: "Completed orders by category",
+  soldByCategory: "Average sale price by category",
+  noSample: "No sample",
+};
+
+const fi: typeof en = {
+  daily: "Päivittäiset arvot",
+  metric: "Valitse mittari",
+  inspect: "Näet päivän arvon osoittamalla käyrää",
+  keyboard: "Tutki päivittäisiä arvoja vasemmalla ja oikealla nuolinäppäimellä.",
+  period: "Aikaväli",
+  periods: { 7: "Viikko", 30: "30 pv", 90: "90 pv", 180: "Puolivuosi", 365: "Vuosi" },
+  from: "Ajalla",
+  to: "–",
+  empty: "Ei tapahtumia tällä aikavälillä.",
+  breakdown: "Näytä tarkat luvut",
+  day: "Päivä",
+  value: "Arvo",
+  current: "Tämänhetkiset kokonaisluvut",
+  periodData: "Tapahtumat valitulla aikavälillä",
+  overviewNote:
+    "Yllä olevat kortit näyttävät nykytilanteen. Alla olevat kaaviot näyttävät valitulla aikavälillä tapahtuneet muutokset.",
+  revenueNote:
+    "Valmiit kaupat sijoitetaan tilauksen luontipäivälle nykyisen tilan mukaan. Hyvitykset voivat muuttaa aiempia pylväitä.",
+  marketNote:
+    "Valitulla aikavälillä luodut, nyt aktiiviset ilmoitukset ja luodut, nyt valmiit kaupat. Pyyntihinnat koskevat vain nyt aktiivisia ilmoituksia.",
+  reports: "Uudet raportit",
+  users: "Uudet käyttäjät",
+  listings: "Uudet ilmoitukset",
+  orders: "Luodut tilaukset",
+  completed: "Nyt valmiit kaupat",
+  itemValue: "Valmiiden tuotteiden arvo",
+  fees: "Palvelumaksut",
+  activeByCategory: "Aktiiviset ilmoitukset tuoteryhmittäin",
+  askingByCategory: "Keskipyynti tuoteryhmittäin",
+  salesByCategory: "Valmiit kaupat tuoteryhmittäin",
+  soldByCategory: "Keskikauppahinta tuoteryhmittäin",
+  noSample: "Ei havaintoja",
+};
+
+const sv: typeof en = {
+  daily: "Dagliga värden",
+  metric: "Välj mått",
+  inspect: "Peka på kurvan för att se dagens värde",
+  keyboard: "Använd vänster och höger piltangent för att visa dagliga värden.",
+  period: "Tidsperiod",
+  periods: { 7: "Vecka", 30: "30 dagar", 90: "90 dagar", 180: "Halvår", 365: "År" },
+  from: "Under",
+  to: "–",
+  empty: "Inga händelser under perioden.",
+  breakdown: "Visa exakta värden",
+  day: "Datum",
+  value: "Värde",
+  current: "Nuvarande totaler",
+  periodData: "Aktivitet under vald period",
+  overviewNote: "Korten ovan visar nuläget. Diagrammen nedan visar händelser under vald period.",
+  revenueNote:
+    "Slutförda affärer visas efter beställningsdatum och nuvarande status. Återbetalningar kan ändra tidigare staplar.",
+  marketNote:
+    "Nu aktiva annonser skapade och nu slutförda affärer beställda under vald period. Begärda priser gäller endast nu aktiva annonser.",
+  reports: "Nya rapporter",
+  users: "Nya användare",
+  listings: "Nya annonser",
+  orders: "Skapade beställningar",
+  completed: "Nu slutförda affärer",
+  itemValue: "Varuvärde för slutförda affärer",
+  fees: "Serviceavgifter",
+  activeByCategory: "Aktiva annonser per kategori",
+  askingByCategory: "Genomsnittligt begärt pris per kategori",
+  salesByCategory: "Slutförda affärer per kategori",
+  soldByCategory: "Genomsnittligt försäljningspris per kategori",
+  noSample: "Inga observationer",
+};
+
+export function chartCopy(locale: Locale) {
+  return locale === "fi" ? fi : locale === "sv" ? sv : en;
+}

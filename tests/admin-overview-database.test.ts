@@ -486,6 +486,67 @@ async function order(status: string, price: number, fee: number, currency = "EUR
   );
 }
 
+describe("admin dashboard trends", () => {
+  const sql = (days: string) => `select public.get_admin_dashboard_trends(${days}) as data`;
+  const read = async (days = "7") => (await asRole("authenticated", adminId, sql(days))).rows[0].data as any;
+
+  it("allows only current admins and validates the five supported periods", async () => {
+    for (const [role, identity] of [
+      ["anon", adminId],
+      ["authenticated", null],
+      ["authenticated", userId],
+      ["service_role", null],
+    ] as const)
+      await expect(asRole(role, identity, sql("7"))).rejects.toMatchObject({ code: "42501" });
+    for (const days of ["null", "0", "8", "366"]) await expect(read(days)).rejects.toMatchObject({ code: "22023" });
+    for (const days of [7, 30, 90, 180, 365]) {
+      const data = await read(String(days));
+      expect(data.buckets).toHaveLength(days);
+      expect(data.buckets[0].day).toBe(data.start_date);
+      expect(data.buckets[days - 1].day).toBe(data.end_date);
+    }
+    await db.query("delete from public.user_roles where user_id=$1", [adminId]);
+    await expect(read()).rejects.toMatchObject({ code: "42501" });
+  });
+
+  it("groups real FI/EUR events by Helsinki day and excludes refunded sales", async () => {
+    const listingId = await listing();
+    await order("completed", 12000, 240);
+    await order("refunded", 99000, 990);
+    await db.query("insert into public.reports (reporter_id, listing_id, reason) values ($1, $2, 'Other')", [
+      userId,
+      listingId,
+    ]);
+    const data = await read();
+    expect(data).toMatchObject({ days: 7, market: "FI", currency: "EUR", timezone: "Europe/Helsinki" });
+    expect(data.buckets.at(-1)).toMatchObject({
+      users_new: 2,
+      listings_new: 3,
+      orders_new: 2,
+      orders_completed: 1,
+      item_value_minor: 12000,
+      fees_minor: 240,
+      reports_new: 1,
+    });
+    expect(data.categories.find((row: any) => row.slug === "pc")).toMatchObject({
+      active_listings: 3,
+      asking_average_minor: 12500,
+      completed_orders: 1,
+      sold_average_minor: 12000,
+    });
+    await db.exec("update public.orders set created_at = now() - interval '8 days' where status = 'completed'");
+    const older = await read();
+    expect(older.buckets.reduce((sum: number, row: any) => sum + row.orders_completed, 0)).toBe(0);
+    expect(older.categories.find((row: any) => row.slug === "pc").sold_average_minor).toBeNull();
+    await db.exec("set timezone='America/New_York'");
+    try {
+      expect((await read()).buckets.map((row: any) => row.day)).toEqual(older.buckets.map((row: any) => row.day));
+    } finally {
+      await db.exec("set timezone='UTC'");
+    }
+  });
+});
+
 describe("admin aggregate authorization in PostgreSQL", () => {
   it("rejects anon even with an admin UUID", async () => {
     await expect(asRole("anon", adminId)).rejects.toMatchObject({ code: "42501" });

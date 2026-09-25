@@ -1,0 +1,353 @@
+.admin-trends-section {
+  --chart-muted: #a4a4a9;
+  --chart-line: #2b2b2e;
+  margin-block: 28px;
+  padding: 24px;
+  border: 1px solid #252527;
+  border-radius: 20px;
+  color: #f5f5f5;
+  background: #0c0c0d;
+  color-scheme: dark;
+}
+.admin-trends-section .admin-section-heading {
+  margin-top: 0;
+}
+.admin-trends-section .admin-section-heading h2 {
+  font-size: 19px;
+}
+.admin-trends-section .admin-section-heading p {
+  color: var(--chart-muted);
+  font-size: 12px;
+}
+.admin-period {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 18px;
+  margin-block: 24px 14px;
+  font-size: 13px;
+  font-weight: 700;
+}
+.admin-period-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 5px;
+  border: 1px solid #303033;
+  border-radius: 14px;
+  background: #18181a;
+}
+.admin-period-options button {
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: #b6b6bb;
+  font: inherit;
+  cursor: pointer;
+}
+.admin-period-options button[aria-pressed="true"] {
+  background: #f1f1f1;
+  color: #161616;
+}
+.admin-period-options button:hover:not([aria-pressed="true"]) {
+  background: #2a2a2c;
+}
+.admin-chart-range,
+.admin-chart-status {
+  color: #aaaab0;
+  font-size: 12px;
+}
+.admin-chart-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-block: 20px;
+}
+.admin-panel.admin-trend-card,
+.admin-panel.admin-category-card {
+  min-width: 0;
+  border-color: #2b2b2e;
+  color: #f5f5f5;
+  background: #171718;
+  box-shadow: none;
+}
+.admin-trend-heading {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.admin-trend-heading h3,
+.admin-category-card h3 {
+  margin: 0;
+  font-size: 14px;
+}
+.admin-trend-heading > div > span {
+  display: block;
+  margin-top: 8px;
+  font-size: 11px;
+  color: #a4a4a9;
+}
+.admin-trend-heading strong {
+  font-size: clamp(18px, 2.2vw, 28px);
+  letter-spacing: -0.04em;
+  overflow-wrap: anywhere;
+  text-align: right;
+}
+.admin-trend-explorer {
+  display: grid;
+  grid-template-columns: minmax(180px, 0.7fr) minmax(0, 2fr);
+  gap: 14px;
+  margin-top: 20px;
+}
+.admin-trend-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 8px;
+  border: 1px solid #2b2b2e;
+  border-radius: 16px;
+  background: #171718;
+}
+.admin-trend-menu button {
+  display: grid;
+  grid-template-columns: 5px minmax(0, 1fr) 58px;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 10px;
+  border: 0;
+  border-radius: 10px;
+  color: #dddde0;
+  background: transparent;
+  text-align: left;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.admin-trend-menu button[aria-pressed="true"],
+.admin-trend-menu button:hover {
+  background: #272729;
+}
+.admin-trend-menu button > span > span {
+  display: block;
+  line-height: 1.5;
+}
+.admin-trend-menu strong {
+  display: block;
+  margin-top: 6px;
+  color: #a4a4a9;
+  font-size: 11px;
+  font-weight: 500;
+}
+.admin-trend-menu-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #757579;
+}
+.admin-trend-menu button[aria-pressed="true"] .admin-trend-menu-dot {
+  background: var(--lime);
+}
+.admin-trend-menu svg {
+  width: 100%;
+  overflow: visible;
+}
+.admin-trend-menu path {
+  fill: none;
+  stroke: #85858a;
+  stroke-width: 1.2;
+  vector-effect: non-scaling-stroke;
+}
+.admin-trend-menu button[aria-pressed="true"] path {
+  stroke: #f4f4f4;
+}
+.admin-chart-readout {
+  min-height: 32px;
+  padding-top: 16px;
+  text-align: right;
+  color: #aaaab0;
+  font-size: 11px;
+}
+.admin-line-chart {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.admin-line-chart text {
+  fill: #a4a4a9;
+  font-size: 11px;
+}
+.admin-line-grid {
+  stroke: #2b2b2e;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.admin-line-stroke {
+  fill: none;
+  stroke: #eeeeef;
+  stroke-width: 1.6;
+  vector-effect: non-scaling-stroke;
+}
+.admin-line-guide {
+  stroke: #77777c;
+  stroke-dasharray: 3 4;
+  vector-effect: non-scaling-stroke;
+}
+.admin-line-point {
+  fill: #171718;
+  stroke: #fff;
+  stroke-width: 2;
+}
+.admin-line-interaction {
+  border-radius: 6px;
+}
+.admin-chart-empty {
+  margin: 10px 0 0;
+  font-size: 12px;
+  color: #a4a4a9;
+}
+.admin-chart-details {
+  margin-top: 16px;
+  font-size: 12px;
+}
+.admin-chart-details summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+.admin-chart-details .admin-table-scroll {
+  max-height: 280px;
+  margin-top: 12px;
+}
+.admin-chart-details .admin-users-table th,
+.admin-chart-details .admin-users-table td {
+  color: #dedee1;
+  border-color: #333336;
+}
+.admin-category-bars {
+  display: grid;
+  gap: 13px;
+  padding: 0;
+  margin: 20px 0 0;
+  list-style: none;
+}
+.admin-category-bars li {
+  display: grid;
+  grid-template-columns: minmax(90px, 1.2fr) minmax(60px, 2fr) minmax(50px, auto);
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+.admin-category-label {
+  overflow-wrap: anywhere;
+}
+.admin-category-bars strong {
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+.admin-category-track {
+  height: 6px;
+  border-radius: 99px;
+  background: #333336;
+  overflow: hidden;
+}
+.admin-category-track span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #dcdce0;
+}
+.admin-comparison-chart {
+  display: grid;
+  gap: 14px;
+  margin-block: 20px 28px;
+}
+.admin-comparison-row {
+  display: grid;
+  grid-template-columns: minmax(120px, 1fr) minmax(0, 2fr);
+  gap: 14px;
+  padding-block: 10px;
+  border-top: 1px solid var(--line);
+  font-size: 12px;
+}
+.admin-comparison-pair {
+  display: grid;
+  gap: 6px;
+}
+.admin-comparison-pair > div {
+  display: grid;
+  grid-template-columns: minmax(96px, 0.7fr) minmax(50px, 2fr) minmax(55px, auto);
+  align-items: center;
+  gap: 8px;
+}
+.admin-comparison-pair b {
+  text-align: right;
+}
+.admin-comparison-track {
+  height: 10px;
+  border-radius: 99px;
+  background: var(--paper-2);
+  overflow: hidden;
+}
+.admin-comparison-track span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--blue);
+}
+.admin-comparison-track--previous span {
+  background: var(--lime-dark);
+}
+.admin-period-options button:focus-visible,
+.admin-chart-details summary:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 3px;
+}
+.admin-trend-menu button:focus-visible,
+.admin-line-interaction:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+@media (max-width: 1100px) {
+  .admin-chart-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 1200px) {
+  .admin-trend-explorer {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .admin-trend-menu {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 600px) {
+  .admin-line-chart text {
+    font-size: 24px;
+  }
+  .admin-trends-section {
+    padding: 16px;
+  }
+  .admin-period-options {
+    width: 100%;
+  }
+  .admin-period-options button {
+    flex: 1 1 auto;
+  }
+  .admin-trend-card,
+  .admin-category-card {
+    padding: 16px;
+  }
+  .admin-comparison-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .admin-trend-menu button {
+    grid-template-columns: 5px minmax(0, 1fr);
+    padding: 12px 8px;
+  }
+  .admin-trend-menu svg {
+    display: none;
+  }
+}

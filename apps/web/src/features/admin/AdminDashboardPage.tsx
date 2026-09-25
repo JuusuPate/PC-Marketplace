@@ -31,6 +31,8 @@ import { AdminSystemPanel } from "./AdminSystemPanel";
 import { systemCopy } from "./admin-system-copy";
 import { AdminSettingsPanel } from "./AdminSettingsPanel";
 import { settingsCopy } from "./admin-settings-copy";
+import { AdminPeriodPicker, AdminTrendExplorer, AdminTrendStatus, useAdminTrends } from "./AdminCharts";
+import { chartCopy } from "./admin-chart-copy";
 
 interface AdminDashboardPageProps {
   locale: Locale;
@@ -134,6 +136,37 @@ export function AdminOverviewPanel({ data, locale }: { data: AdminOverview; loca
       </div>
       <p className="admin-note">{copy.sourceNote}</p>
     </>
+  );
+}
+
+function AdminOverviewTrends({ locale }: { locale: Locale }) {
+  const trends = useAdminTrends();
+  const copy = chartCopy(locale);
+  return (
+    <section
+      className="admin-trends-section"
+      aria-label={copy.periodData}
+      aria-busy={trends.state.status === "loading"}
+    >
+      <div className="admin-section-heading">
+        <h2>{copy.periodData}</h2>
+        <p>{copy.overviewNote}</p>
+      </div>
+      <AdminPeriodPicker locale={locale} period={trends.period} onChange={trends.setPeriod} />
+      <AdminTrendStatus locale={locale} state={trends.state} />
+      {trends.state.status === "ready" && (
+        <AdminTrendExplorer
+          data={trends.state.data}
+          locale={locale}
+          metrics={[
+            { field: "usersNew", label: copy.users },
+            { field: "listingsNew", label: copy.listings },
+            { field: "ordersNew", label: copy.orders },
+            { field: "reportsNew", label: copy.reports },
+          ]}
+        />
+      )}
+    </section>
   );
 }
 
@@ -451,6 +484,7 @@ export function AdminDashboardPage({
                 <time dateTime={state.data.generatedAt}>{new Date(state.data.generatedAt).toLocaleString(locale)}</time>
               </p>
               <AdminOverviewPanel data={state.data} locale={locale} />
+              <AdminOverviewTrends key={refresh} locale={locale} />
               <AdminActivityPanel key={refresh} locale={locale} />
             </>
           )}
