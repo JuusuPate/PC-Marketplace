@@ -195,3 +195,11 @@ Asenna molemmat uudet migraatiot tässä järjestyksessä ennen käyttöliittym�
 `/admin/system` tekee ylläpitäjän pyynnöstä neljä suojattua, vain luku -hakua: yleiskatsaus, GPU-katalogin ylläpitohaku, tiedotteet ja tapahtumalokin ensimmäinen sivu. Kukin tulos näyttää onnistuiko kysely ja paljonko selainkäynnistettyyn pyyntöön kului aikaa. Näytetty aika on tarkistushetki käyttäjän selaimessa. Yhden haun epäonnistuminen ei peitä muiden tuloksia; admin-oikeuden menetys tyhjentää koko tilannekuvan. Päivitä-painike suorittaa haut uudelleen.
 
 Tämä on hetkellinen toimivuustarkistus, ei palvelimen jatkuva monitorointi. Maksut, tilitykset, sähköposti, toimitukset, ajastetut työt ja taustavirheet merkitään valvomattomiksi. Vasteaika ei ole palvelimen sisäinen viive eikä onnistunut haku todista kyseisen toiminnon muuta liiketoimintalogiikkaa. Uutta migraatiota ei tarvita.
+
+## Vaihe 13: ilmoitusten luonnin asetus
+
+`/admin/settings` sallii ylläpitäjän keskeyttää ja jatkaa uusien ilmoitusten luontia. Tietokannan `20260925190901_listing_creation_setting.sql`-migraatio tallentaa oletusarvoksi **sallittu**. Suojattu luku- ja tallennusfunktio tarkistaa ylläpitäjän palvelinpuolella joka kutsulla; tallennus käyttää versiota, jotta kaksi ylläpitäjää eivät kirjoita toistensa muutoksen päälle. Muutos kirjataan tapahtumalokiin.
+
+Keskeytys estää uuden luonnoksen luomisen ja ennen keskeytystä tehdyn luonnoksen julkaisemisen tietokannan triggerissä. Julkaistujen ilmoitusten muokkaus, ylläpidon piilottaman ilmoituksen palautus ja luonnoksen hylkääminen pysyvät käytössä. Ilmoituksen luontisivu tarkistaa julkisen kyllä/ei-tilan ja näyttää keskeytyksen tai tarkistusvirheen; tietokanta tekee lopullisen päätöksen myös tilan muuttuessa lomakkeen täytön aikana. Paikallinen demo ei käytä tätä palvelinasetusta.
+
+Asenna migraatio ennen tämän käyttöliittymäversion käyttöönottoa. Se ei muuta maksujen, tilausten, muiden ominaisuuksien tai käyttäjätilien asetuksia.

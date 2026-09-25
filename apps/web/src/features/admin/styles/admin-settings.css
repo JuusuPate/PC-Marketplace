@@ -1,0 +1,26 @@
+.admin-settings-panel {
+  margin-top: 1.5rem;
+}
+
+.admin-settings-panel h2 {
+  margin-top: 0;
+}
+
+.admin-settings-panel form {
+  display: grid;
+  justify-items: start;
+  gap: 1rem;
+}
+
+.admin-settings-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  cursor: pointer;
+}
+
+.admin-settings-toggle input {
+  width: 1.2rem;
+  height: 1.2rem;
+  accent-color: var(--ink);
+}

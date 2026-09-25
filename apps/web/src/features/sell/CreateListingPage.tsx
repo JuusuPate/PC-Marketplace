@@ -1,9 +1,13 @@
-import { useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { Icon } from "../../components/Icon";
 import { getSafeListingImageUrl } from "../../components/ListingVisual";
 import { MARKETS } from "../../config/markets";
 import type { Messages } from "../../i18n/messages/fi";
 import type { PreparedListingImage } from "../../lib/listing-images";
+import {
+  getPublicListingCreationEnabled,
+  ListingCreationPausedError,
+} from "../../lib/listing-creation-setting-service";
 import { formatMoney } from "../../lib/money";
 import { getRuntimeCopy } from "../../lib/runtime-copy";
 import { backendMode } from "../../lib/supabase";
@@ -155,10 +159,30 @@ export function CreateListingPage({
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [currentStep, setCurrentStep] = useState<ListingStep>(1);
   const [busy, setBusy] = useState(false);
+  const [creationRefresh, setCreationRefresh] = useState(0);
+  const [creationState, setCreationState] = useState<"loading" | "enabled" | "paused" | "error">(
+    initialListing || backendMode === "demo" ? "enabled" : "loading",
+  );
   const existingImages = initialListing?.images ?? [];
   const existingPreviewUrl = getSafeListingImageUrl(existingImages[0]);
   const displayedImageCount = images.length > 0 ? images.length : existingImages.length;
   const photosRequired = backendMode !== "demo" && existingImages.length === 0;
+  useEffect(() => {
+    if (initialListing || backendMode === "demo") return;
+    let current = true;
+    setCreationState("loading");
+    getPublicListingCreationEnabled().then(
+      (enabled) => {
+        if (current) setCreationState(enabled ? "enabled" : "paused");
+      },
+      () => {
+        if (current) setCreationState("error");
+      },
+    );
+    return () => {
+      current = false;
+    };
+  }, [initialListing, creationRefresh]);
   const guidedFields = getGuidedSpecificationFields(category, locale);
   const technicalSectionTitle =
     category === "pc" ? formCopy.pcTitle : category === "other" ? formCopy.optionalTitle : formCopy.componentTitle;
@@ -347,6 +371,8 @@ export function CreateListingPage({
       return;
     }
 
+    if (!initialListing && creationState !== "enabled") return;
+
     const issues = getValidationIssues([1, 2, 3, 4]);
     if (issues.length > 0) {
       showValidationIssues(issues);
@@ -428,7 +454,10 @@ export function CreateListingPage({
     try {
       await onPublish(listing, images, pickupAddress);
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : runtimeCopy.listingError);
+      if (caught instanceof ListingCreationPausedError) {
+        setCreationState("paused");
+        setError("");
+      } else setError(caught instanceof Error ? caught.message : runtimeCopy.listingError);
     } finally {
       setBusy(false);
     }
@@ -447,6 +476,27 @@ export function CreateListingPage({
           {copy.cancel}
         </button>
       </header>
+
+      {!initialListing && creationState !== "enabled" && (
+        <div className="form-error create-listing-form__error" role={creationState === "loading" ? "status" : "alert"}>
+          <p>
+            {creationState === "loading"
+              ? runtimeCopy.creationCheck
+              : creationState === "paused"
+                ? runtimeCopy.creationPaused
+                : runtimeCopy.creationCheckError}
+          </p>
+          {creationState !== "loading" && (
+            <button
+              type="button"
+              className="button button--outline"
+              onClick={() => setCreationRefresh((value) => value + 1)}
+            >
+              {runtimeCopy.retryCreationCheck}
+            </button>
+          )}
+        </div>
+      )}
 
       <nav
         className="listing-wizard"
@@ -941,7 +991,11 @@ export function CreateListingPage({
             <span>
               {wizardCopy.step} {currentStep} / 5
             </span>
-            <button className="button button--primary" type="submit" disabled={busy}>
+            <button
+              className="button button--primary"
+              type="submit"
+              disabled={busy || (!initialListing && currentStep === 5 && creationState !== "enabled")}
+            >
               {currentStep === 5
                 ? busy
                   ? runtimeCopy.publishing

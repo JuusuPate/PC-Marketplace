@@ -33,7 +33,7 @@ Lähde: käyttäjän nimeämä keskustelu **Rigin admin dashboardin sisältö**.
 4. **Seller analytics:** käyttäjän valmiiden myyntien määrä ja viimeisimmät tilaukset ovat käytössä. Myyntinopeus, peruutus-/riitaosuudet ja vertailut puuttuvat.
 5. **Conversion funnels:** tarvitsee yhteisesti määritellyt tapahtumat ja mittauksen kävijästä valmistuneeseen tilaukseen.
 6. **Cohort/retention:** tarvitsee käyttöaktiivisuuden historian; rekisteröintipäivä ei osoita paluuta palveluun.
-7. **Feature flags:** palvelinpuolen hallinta, auditointi ja kunkin ominaisuuden todellinen käyttökohde puuttuvat.
+7. **Feature flags:** uusien ilmoitusten luonnin keskeytys on palvelinpuolella valvottu ja auditoitu `/admin/settings`-asetuksena. Yleinen ominaisuuslippujen hallinta, muiden toimintojen kytkennät ja käyttäjäkohtainen asteittainen julkaisu puuttuvat.
 8. **System monitoring:** `/admin/system` tekee pyynnöstä neljä nykyhetken suojattua lukutarkistusta ja näyttää kunkin tuloksen sekä selaimesta mitatun vasteajan. Jatkuva virhe-, ajastus-, integraatio- ja viiveseuranta sekä hälytyskynnykset puuttuvat. Valvomattomia toimintoja ei merkitä terveiksi.
 
 ## Yhteiset vaatimukset

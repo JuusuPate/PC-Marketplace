@@ -83,6 +83,12 @@ it("validates audit paging and events", async () => {
   };
   const data = { page: 0, page_size: 25, total: 1, events: [event] };
   expect(parseAdminAudit(data).events[0].after).toEqual({ resolved: true });
+  expect(
+    parseAdminAudit({
+      ...data,
+      events: [{ ...event, source: "settings", target_type: "listing_creation", action: "update" }],
+    }).events[0],
+  ).toMatchObject({ source: "settings", targetType: "listing_creation", action: "update" });
   for (const patch of [
     { id: "bad" },
     { source: "unknown" },

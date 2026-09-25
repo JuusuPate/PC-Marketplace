@@ -28,6 +28,7 @@ import {
   isAdminCatalogPath,
   isAdminMarketingPath,
   isAdminSystemPath,
+  isAdminSettingsPath,
   isAdminReportsPath,
 } from "../config/admin-routes";
 import {
@@ -801,6 +802,7 @@ export function App() {
             catalog={isAdminCatalogPath(adminPath)}
             marketing={isAdminMarketingPath(adminPath)}
             system={isAdminSystemPath(adminPath)}
+            settings={isAdminSettingsPath(adminPath)}
             reports={isAdminReportsPath(adminPath)}
             onLogin={() => setAuthOpen(true)}
             onNavigate={navigateTo}
