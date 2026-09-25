@@ -1157,6 +1157,17 @@ describe("product model catalog", () => {
         .map((r) => r.brand)
         .sort(),
     ).toEqual(expect.arrayContaining(["AMD", "Intel"]));
+    const amdGpus = (
+      await db.query<{ name: string; variant: string }>(
+        "select name, variant from public.catalog_product_models where category='gpu' and brand='AMD' order by name",
+      )
+    ).rows;
+    expect(amdGpus).toEqual(
+      expect.arrayContaining([
+        { name: "Radeon RX 6800 XT", variant: "16 GB" },
+        { name: "Radeon RX 6900 XT", variant: "16 GB" },
+      ]),
+    );
   });
   it("allows public literal and alias search with category isolation", async () => {
     // Dedicated fixtures keep search assertions independent of user-added models.

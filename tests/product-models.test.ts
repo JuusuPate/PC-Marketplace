@@ -71,6 +71,9 @@ it("uses expected timestamp for safe editing and retains variant identity", asyn
   expect(await saveProductModel(data)).toBe(data.id);
   expect(mock.rpc).toHaveBeenCalledWith("save_product_model", { p_model: data });
   expect(modelLabel(data)).toContain("8 GB");
+  expect(modelLabel({ brand: " * AMD ", name: " Radeon  RX 6800 XT ", variant: " 16 GB " })).toBe(
+    "AMD · Radeon RX 6800 XT · 16 GB",
+  );
 });
 it("localizes all ten categories and protects the editor route", () => {
   for (const locale of ["fi", "sv", "en", "da", "nb"] as const)

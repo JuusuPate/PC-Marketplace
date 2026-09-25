@@ -23,7 +23,7 @@ const en = {
   failed:
     "Saving failed. Check the fields and duplicate models. If another administrator edited this model, reload it.",
   category: "Category",
-  note: "Three starter models per category. Add precise variants separately. Statistics use explicitly linked listings and current completed orders in FI/EUR, across all time. Prices exclude shipping and fees. Condition and configuration may differ; PC series do not identify a complete configuration.",
+  note: "Add precise variants separately. Statistics use explicitly linked listings and current completed orders in FI/EUR, across all time. Prices exclude shipping and fees. Condition and configuration may differ; PC series do not identify a complete configuration.",
   unlinked: "Active listings without a model",
   asking: "Active / average ask",
   sold: "Completed / average sale",
@@ -55,7 +55,7 @@ const fi: typeof en = {
   failed:
     "Tallennus epäonnistui. Tarkista kentät ja mahdollinen kaksoiskappale. Jos toinen ylläpitäjä muokkasi mallia, lataa se uudelleen.",
   category: "Tuoteryhmä",
-  note: "Kolme aloitusmallia tuoteryhmää kohti. Lisää tarkat versiot erikseen. Tilastot perustuvat malliin yhdistettyihin FI/EUR-ilmoituksiin ja tällä hetkellä valmiisiin kauppoihin koko ajalta. Hinnoissa ei ole toimitusta tai palvelumaksuja. Kunto ja kokoonpano voivat vaihdella; konemallisto ei yksilöi koko kokoonpanoa.",
+  note: "Lisää tarkat versiot erikseen. Tilastot perustuvat malliin yhdistettyihin FI/EUR-ilmoituksiin ja tällä hetkellä valmiisiin kauppoihin koko ajalta. Hinnoissa ei ole toimitusta tai palvelumaksuja. Kunto ja kokoonpano voivat vaihdella; konemallisto ei yksilöi koko kokoonpanoa.",
   unlinked: "Aktiivisia ilmoituksia ilman mallia",
   asking: "Aktiiviset / keskipyynti",
   sold: "Valmiit / keskikauppahinta",
@@ -88,7 +88,7 @@ const sv: typeof en = {
   failed:
     "Kunde inte spara. Kontrollera fälten och dubbletter. Ladda om modellen om den ändrats av en annan administratör.",
   category: "Kategori",
-  note: "Tre startmodeller per kategori. Lägg till exakta varianter separat. Statistiken omfattar länkade FI/EUR-annonser och nu slutförda affärer över hela perioden, utan frakt eller avgifter. Skick och konfiguration kan variera; en datorserie identifierar inte hela konfigurationen.",
+  note: "Lägg till exakta varianter separat. Statistiken omfattar länkade FI/EUR-annonser och nu slutförda affärer över hela perioden, utan frakt eller avgifter. Skick och konfiguration kan variera; en datorserie identifierar inte hela konfigurationen.",
   unlinked: "Aktiva annonser utan modell",
   asking: "Aktiva / genomsnittligt begärt pris",
   sold: "Slutförda / genomsnittligt pris",
