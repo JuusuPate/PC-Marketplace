@@ -10,6 +10,7 @@ import type {
 } from "../types";
 import { demoStorage } from "./demo-storage";
 import { MAX_LISTING_IMAGES, type PreparedListingImage } from "./listing-images";
+import { throwIfListingCreationPaused } from "./listing-creation-setting-service";
 import { backendMode, supabase } from "./supabase";
 
 const LISTING_IMAGES_BUCKET = "listing-images";
@@ -417,7 +418,10 @@ export const listingService = {
         : null,
     });
 
-    if (error) throw error;
+    if (error) {
+      throwIfListingCreationPaused(error);
+      throw error;
+    }
     if (!data) throw new Error("Ilmoitusluonnoksen luominen epäonnistui.");
     listingId = String(data);
 
@@ -440,7 +444,10 @@ export const listingService = {
       }
 
       const { error: publishError } = await supabase.rpc("publish_listing_draft", { p_listing_id: listingId });
-      if (publishError) throw publishError;
+      if (publishError) {
+        throwIfListingCreationPaused(publishError);
+        throw publishError;
+      }
 
       return {
         ...listing,

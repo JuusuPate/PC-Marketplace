@@ -2,7 +2,7 @@ import { adminCount, adminRecord, adminRpc, adminTimestamp, adminUuid } from "./
 
 export interface AdminAuditEvent {
   id: string;
-  source: "catalog" | "report" | "moderation" | "marketing";
+  source: "catalog" | "report" | "moderation" | "marketing" | "settings";
   targetType: string;
   targetId: string;
   action: "created" | "updated" | "resolve" | "reopen" | "hide" | "restore" | "create" | "update";
@@ -35,11 +35,18 @@ export function parseAdminAudit(value: unknown): AdminAudit {
       (row.source !== "catalog" &&
         row.source !== "report" &&
         row.source !== "moderation" &&
-        row.source !== "marketing") ||
+        row.source !== "marketing" &&
+        row.source !== "settings") ||
       typeof row.target_type !== "string" ||
-      !["navigation_item", "listing_featured", "product_model", "report", "listing", "announcement"].includes(
-        row.target_type,
-      ) ||
+      ![
+        "navigation_item",
+        "listing_featured",
+        "product_model",
+        "report",
+        "listing",
+        "announcement",
+        "listing_creation",
+      ].includes(row.target_type) ||
       !["created", "updated", "resolve", "reopen", "hide", "restore", "create", "update"].includes(
         String(row.action),
       ) ||
@@ -52,7 +59,10 @@ export function parseAdminAudit(value: unknown): AdminAudit {
       (row.source === "moderation") !== (row.target_type === "listing") ||
       (row.source === "moderation") !== ["hide", "restore"].includes(String(row.action)) ||
       (row.source === "marketing") !== (row.target_type === "announcement") ||
-      (row.source === "marketing") !== ["create", "update"].includes(String(row.action))
+      (row.source === "marketing" && !["create", "update"].includes(String(row.action))) ||
+      (row.source === "settings") !== (row.target_type === "listing_creation") ||
+      (row.source === "settings" && row.action !== "update") ||
+      (row.source !== "marketing" && row.source !== "settings" && ["create", "update"].includes(String(row.action)))
     )
       throw new Error("Invalid audit source");
     return {

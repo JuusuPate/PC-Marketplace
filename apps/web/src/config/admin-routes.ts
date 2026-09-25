@@ -45,6 +45,10 @@ export function isAdminSystemPath(pathname: string) {
   return pathname.replace(/\/+$/, "") === `${ADMIN_PATH}/system`;
 }
 
+export function isAdminSettingsPath(pathname: string) {
+  return pathname.replace(/\/+$/, "") === `${ADMIN_PATH}/settings`;
+}
+
 export function isAdminReportsPath(pathname: string) {
   return pathname.replace(/\/+$/, "") === `${ADMIN_PATH}/reports`;
 }

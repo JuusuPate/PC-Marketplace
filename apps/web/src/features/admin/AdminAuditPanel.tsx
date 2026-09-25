@@ -96,11 +96,11 @@ export function AdminAuditPanel({ locale }: { locale: Locale }) {
                       </td>
                       <td>{row.actorId}</td>
                       <td>
-                        {row.targetType}
+                        {row.source === "settings" ? copy.settingTarget : row.targetType}
                         <br />
                         {row.targetId}
                       </td>
-                      <td>{copy[row.action]}</td>
+                      <td>{row.source === "settings" ? copy.settingUpdate : copy[row.action]}</td>
                       <td>
                         <details>
                           <summary>{copy.details}</summary>

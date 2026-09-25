@@ -37,12 +37,93 @@ beforeAll(async () => {
 
 beforeEach(async () => {
   await db.exec("truncate public.marketing_announcement_changes, public.marketing_announcements cascade;");
+  await db.exec("truncate public.marketplace_setting_changes;");
+  await db.exec("update public.marketplace_settings set enabled = true, version = 1, updated_by = null;");
   await db.exec("truncate auth.users cascade;");
   await db.query(
     "insert into auth.users (id, email, raw_user_meta_data) values ($1, 'admin@example.test', '{}'), ($2, 'user@example.test', '{\"role\":\"admin\"}')",
     [adminId, userId],
   );
   await db.query("insert into public.user_roles (user_id, role) values ($1, 'admin')", [adminId]);
+});
+
+describe("listing creation setting", () => {
+  const read = "select public.get_admin_listing_creation_setting() as setting";
+  const save = (enabled: string, version: string) =>
+    `select public.save_admin_listing_creation_setting(${enabled}, ${version}) as setting`;
+  const draft =
+    "select public.create_listing_draft('FI','A valid title','A sufficiently long description','gpu','good',12345,'EUR','Mikkeli','{}',array['FI'],null) as id";
+
+  it("exposes only a public boolean and keeps admin reads and writes protected", async () => {
+    expect((await asRole("anon", null, "select public.get_listing_creation_enabled() as enabled")).rows[0]).toEqual({
+      enabled: true,
+    });
+    for (const [role, identity] of [
+      ["anon", null],
+      ["authenticated", null],
+      ["authenticated", userId],
+      ["service_role", null],
+    ] as const) {
+      await expect(asRole(role, identity, read)).rejects.toMatchObject({ code: "42501" });
+      await expect(asRole(role, identity, save("false", "1"))).rejects.toMatchObject({ code: "42501" });
+    }
+    await expect(asRole("authenticated", userId, "select * from public.marketplace_settings")).rejects.toMatchObject({
+      code: "42501",
+    });
+    await expect(
+      asRole("authenticated", userId, "select * from public.marketplace_setting_changes"),
+    ).rejects.toMatchObject({ code: "42501" });
+    expect((await asRole("authenticated", adminId, read)).rows[0].setting).toMatchObject({
+      enabled: true,
+      version: 1,
+    });
+  });
+
+  it("blocks new drafts and publication during a pause but preserves existing listings", async () => {
+    const draftId = (await asRole("authenticated", userId, draft)).rows[0].id;
+    const activeId = await listing();
+    const hiddenId = await listing("removed");
+    const paused = (await asRole("authenticated", adminId, save("false", "1"))).rows[0].setting as any;
+    expect(paused).toMatchObject({ enabled: false, version: 2 });
+    expect((await asRole("anon", null, "select public.get_listing_creation_enabled() as enabled")).rows[0]).toEqual({
+      enabled: false,
+    });
+    await expect(asRole("authenticated", userId, draft)).rejects.toMatchObject({ code: "P0001" });
+    await expect(
+      asRole("authenticated", userId, `select public.publish_listing_draft('${draftId}')`),
+    ).rejects.toMatchObject({ code: "P0001" });
+    await db.query("update public.listings set title='Edited existing listing' where id=$1", [activeId]);
+    await db.query("update public.listings set status='active' where id=$1", [hiddenId]);
+    expect((await db.query("select status from public.listings where id=$1", [draftId])).rows[0]).toMatchObject({
+      status: "draft",
+    });
+    await asRole("authenticated", adminId, save("true", "2"));
+    await asRole("authenticated", userId, `select public.publish_listing_draft('${draftId}')`);
+    expect((await db.query("select status from public.listings where id=$1", [draftId])).rows[0]).toMatchObject({
+      status: "active",
+    });
+    const audit = (await asRole("authenticated", adminId, "select public.get_admin_audit('listing_creation') as data"))
+      .rows[0].data as any;
+    expect(audit.events).toMatchObject([
+      { source: "settings", target_type: "listing_creation", action: "update" },
+      { source: "settings", target_type: "listing_creation", action: "update" },
+    ]);
+  });
+
+  it("rejects stale, invalid and revoked writes without changing the setting", async () => {
+    await expect(asRole("authenticated", adminId, save("null", "1"))).rejects.toMatchObject({ code: "22023" });
+    await expect(asRole("authenticated", adminId, save("false", "0"))).rejects.toMatchObject({ code: "22023" });
+    await asRole("authenticated", adminId, save("false", "1"));
+    await expect(asRole("authenticated", adminId, save("true", "1"))).rejects.toMatchObject({ code: "40001" });
+    await db.query("delete from public.user_roles where user_id=$1", [adminId]);
+    await expect(asRole("authenticated", adminId, save("true", "2"))).rejects.toMatchObject({ code: "42501" });
+    expect((await asRole("anon", null, "select public.get_listing_creation_enabled() as enabled")).rows[0]).toEqual({
+      enabled: false,
+    });
+    expect((await db.query("select count(*)::int as total from public.marketplace_setting_changes")).rows[0]).toEqual({
+      total: 1,
+    });
+  });
 });
 
 afterAll(async () => {
