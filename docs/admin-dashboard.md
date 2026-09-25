@@ -189,3 +189,9 @@ Asenna migraatio Supabase-projektiin ennen uuden käyttöliittymäversion käytt
 `20260925143610_marketing_announcements.sql` pitää luonnokset ja muutoshistorian poissa selaimen suorista tauluoikeuksista. Julkinen funktio palauttaa vain yhden julkaistun tiedotteen valitulle kielelle. Tallennus tarkistaa admin-roolin jokaisella kutsulla ja hylkää vanhaan versioon perustuvan muokkauksen. Käyttäjän kirjoittama teksti näytetään tekstinä, ei HTML:nä.
 
 Asenna molemmat uudet migraatiot tässä järjestyksessä ennen käyttöliittymäversion käyttöönottoa. Tämä vaihe ei sisällä alennuskuponkeja, kumppanuusmainoksia, kampanja-aikatauluja tai maksujen muuttamista. Maksuihin vaikuttavat toiminnot odottavat myöhemmin valittavaa Stripe-integraatiota.
+
+## Vaihe 12: järjestelmän käsin tarkistettava tilannekuva
+
+`/admin/system` tekee ylläpitäjän pyynnöstä neljä suojattua, vain luku -hakua: yleiskatsaus, GPU-katalogin ylläpitohaku, tiedotteet ja tapahtumalokin ensimmäinen sivu. Kukin tulos näyttää onnistuiko kysely ja paljonko selainkäynnistettyyn pyyntöön kului aikaa. Näytetty aika on tarkistushetki käyttäjän selaimessa. Yhden haun epäonnistuminen ei peitä muiden tuloksia; admin-oikeuden menetys tyhjentää koko tilannekuvan. Päivitä-painike suorittaa haut uudelleen.
+
+Tämä on hetkellinen toimivuustarkistus, ei palvelimen jatkuva monitorointi. Maksut, tilitykset, sähköposti, toimitukset, ajastetut työt ja taustavirheet merkitään valvomattomiksi. Vasteaika ei ole palvelimen sisäinen viive eikä onnistunut haku todista kyseisen toiminnon muuta liiketoimintalogiikkaa. Uutta migraatiota ei tarvita.

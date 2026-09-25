@@ -1,0 +1,25 @@
+.admin-system-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+  gap: 1rem;
+  margin-block: 1.5rem;
+}
+
+.admin-system-check h2,
+.admin-system-unmonitored h2 {
+  margin-top: 0;
+}
+
+.admin-system-check--ok {
+  color: #146542;
+  font-weight: 700;
+}
+
+.admin-system-check--error {
+  color: #a12d2d;
+  font-weight: 700;
+}
+
+.admin-system-unmonitored {
+  margin-top: 1.5rem;
+}

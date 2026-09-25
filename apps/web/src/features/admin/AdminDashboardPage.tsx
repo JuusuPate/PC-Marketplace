@@ -27,6 +27,8 @@ import { AdminAuditPanel } from "./AdminAuditPanel";
 import { activityCopy } from "./admin-activity-copy";
 import { AdminMarketingPanel } from "./AdminMarketingPanel";
 import { marketingCopy } from "./admin-marketing-copy";
+import { AdminSystemPanel } from "./AdminSystemPanel";
+import { systemCopy } from "./admin-system-copy";
 
 interface AdminDashboardPageProps {
   locale: Locale;
@@ -41,6 +43,7 @@ interface AdminDashboardPageProps {
   marketData?: boolean;
   catalog?: boolean;
   marketing?: boolean;
+  system?: boolean;
   reports?: boolean;
   audit?: boolean;
   onLogin: () => void;
@@ -144,6 +147,7 @@ export function AdminDashboardPage({
   marketData = false,
   catalog = false,
   marketing = false,
+  system = false,
   reports = false,
   audit = false,
   onLogin,
@@ -209,6 +213,7 @@ export function AdminDashboardPage({
     !marketData &&
     !catalog &&
     !marketing &&
+    !system &&
     !reports &&
     !disputes &&
     !audit
@@ -328,6 +333,16 @@ export function AdminDashboardPage({
             {marketingCopy(locale).title}
           </a>
           <a
+            href={`${ADMIN_PATH}/system`}
+            aria-current={system ? "page" : undefined}
+            onClick={(event) => {
+              event.preventDefault();
+              onNavigate(`${ADMIN_PATH}/system`);
+            }}
+          >
+            {systemCopy(locale).title}
+          </a>
+          <a
             href={`${ADMIN_PATH}/audit`}
             aria-current={audit ? "page" : undefined}
             onClick={(event) => {
@@ -357,7 +372,9 @@ export function AdminDashboardPage({
           </a>
         </nav>
       </aside>
-      {marketing ? (
+      {system ? (
+        <AdminSystemPanel locale={locale} />
+      ) : marketing ? (
         <AdminMarketingPanel locale={locale} />
       ) : audit ? (
         <AdminAuditPanel locale={locale} />
