@@ -2,10 +2,10 @@ import { adminCount, adminRecord, adminRpc, adminTimestamp, adminUuid } from "./
 
 export interface AdminAuditEvent {
   id: string;
-  source: "catalog" | "report" | "moderation";
+  source: "catalog" | "report" | "moderation" | "marketing";
   targetType: string;
   targetId: string;
-  action: "created" | "updated" | "resolve" | "reopen" | "hide" | "restore";
+  action: "created" | "updated" | "resolve" | "reopen" | "hide" | "restore" | "create" | "update";
   actorId: string;
   createdAt: string;
   reason: string | null;
@@ -32,10 +32,17 @@ export function parseAdminAudit(value: unknown): AdminAudit {
   const events = data.events.map((value): AdminAuditEvent => {
     const row = adminRecord(value);
     if (
-      (row.source !== "catalog" && row.source !== "report" && row.source !== "moderation") ||
+      (row.source !== "catalog" &&
+        row.source !== "report" &&
+        row.source !== "moderation" &&
+        row.source !== "marketing") ||
       typeof row.target_type !== "string" ||
-      !["navigation_item", "listing_featured", "product_model", "report", "listing"].includes(row.target_type) ||
-      !["created", "updated", "resolve", "reopen", "hide", "restore"].includes(String(row.action)) ||
+      !["navigation_item", "listing_featured", "product_model", "report", "listing", "announcement"].includes(
+        row.target_type,
+      ) ||
+      !["created", "updated", "resolve", "reopen", "hide", "restore", "create", "update"].includes(
+        String(row.action),
+      ) ||
       (row.reason !== null && (typeof row.reason !== "string" || row.reason.length > 2000))
     )
       throw new Error("Invalid audit event");
@@ -43,7 +50,9 @@ export function parseAdminAudit(value: unknown): AdminAudit {
       (row.source === "report") !== (row.target_type === "report") ||
       (row.source === "report") !== ["resolve", "reopen"].includes(String(row.action)) ||
       (row.source === "moderation") !== (row.target_type === "listing") ||
-      (row.source === "moderation") !== ["hide", "restore"].includes(String(row.action))
+      (row.source === "moderation") !== ["hide", "restore"].includes(String(row.action)) ||
+      (row.source === "marketing") !== (row.target_type === "announcement") ||
+      (row.source === "marketing") !== ["create", "update"].includes(String(row.action))
     )
       throw new Error("Invalid audit source");
     return {

@@ -103,7 +103,7 @@ export async function moderateAdminListing(
     listing.moderationVersion < 0 ||
     listing.moderationVersion > 2147483647 ||
     !["hide", "restore"].includes(action) ||
-    cleanReason.length < 10 ||
+    (action === "hide" && cleanReason.length < 10) ||
     cleanReason.length > 2000
   )
     throw new Error("Invalid moderation decision");

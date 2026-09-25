@@ -4,6 +4,7 @@ import { Header } from "../components/Header";
 import { Icon } from "../components/Icon";
 import { ListingCard } from "../components/ListingCard";
 import { HomeHighlights } from "../features/home/HomeHighlights";
+import { HomeMarketingAnnouncement } from "../features/home/HomeMarketingAnnouncement";
 import {
   CATALOG_PAGES,
   getCatalogPage,
@@ -25,6 +26,7 @@ import {
   isAdminRevenuePath,
   isAdminMarketDataPath,
   isAdminCatalogPath,
+  isAdminMarketingPath,
   isAdminReportsPath,
 } from "../config/admin-routes";
 import {
@@ -796,6 +798,7 @@ export function App() {
             revenue={isAdminRevenuePath(adminPath)}
             marketData={isAdminMarketDataPath(adminPath)}
             catalog={isAdminCatalogPath(adminPath)}
+            marketing={isAdminMarketingPath(adminPath)}
             reports={isAdminReportsPath(adminPath)}
             onLogin={() => setAuthOpen(true)}
             onNavigate={navigateTo}
@@ -965,6 +968,7 @@ export function App() {
                 </div>
               </section>
 
+              <HomeMarketingAnnouncement locale={locale} />
               <HomeHighlights locale={locale} />
 
               <section className="trust-strip">

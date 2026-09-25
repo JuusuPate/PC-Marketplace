@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("moderation requires a reason, records a decision and clears data on revoked access", async ({ page }) => {
+test("hiding requires a reason, restoration does not, and revoked access clears data", async ({ page }) => {
   const id = "00000000-0000-4000-8000-000000000001";
   let version = 0;
   let hidden = false;
@@ -20,7 +20,7 @@ test("moderation requires a reason, records a decision and clears data on revoke
       expect(args).toMatchObject({
         p_listing_id: id,
         p_expected_version: version,
-        p_reason: "Reviewed listing evidence",
+        p_reason: hidden ? "" : "Reviewed listing evidence",
       });
       hidden = args.p_action === "hide";
       version++;
@@ -73,9 +73,14 @@ test("moderation requires a reason, records a decision and clears data on revoke
   await page.getByRole("button", { name: "Piilota ilmoitus" }).click();
   await expect(page.getByRole("button", { name: "Palauta ilmoitus" })).toBeVisible();
   expect(writes).toBe(1);
+  await expect(page.getByRole("textbox", { name: /Palautuksen perustelu/ })).toBeEmpty();
+  await expect(page.getByRole("button", { name: "Palauta ilmoitus" })).toBeEnabled();
+  await page.getByRole("button", { name: "Palauta ilmoitus" }).click();
+  await expect(page.getByRole("button", { name: "Piilota ilmoitus" })).toBeDisabled();
+  expect(writes).toBe(2);
   await reason.fill("Reviewed listing evidence");
   deny = true;
-  await page.getByRole("button", { name: "Palauta ilmoitus" }).click();
+  await page.getByRole("button", { name: "Piilota ilmoitus" }).click();
   await expect(reason).toHaveCount(0);
   await expect(page.getByRole("alert")).toBeVisible();
 });

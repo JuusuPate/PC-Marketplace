@@ -60,11 +60,11 @@ export function AdminListingModerationForm({
         }
       }}
     >
-      <label htmlFor={`moderation-${listing.id}`}>{copy.reason}</label>
+      <label htmlFor={`moderation-${listing.id}`}>{action === "hide" ? copy.reason : copy.restoreReason}</label>
       <textarea
         id={`moderation-${listing.id}`}
-        required
-        minLength={10}
+        required={action === "hide"}
+        minLength={action === "hide" ? 10 : undefined}
         maxLength={2000}
         value={reason}
         disabled={pending}
@@ -73,7 +73,7 @@ export function AdminListingModerationForm({
       <button
         type="submit"
         className="button button--outline"
-        disabled={pending || reason.trim().length < 10 || error === "conflict"}
+        disabled={pending || (action === "hide" && reason.trim().length < 10) || error === "conflict"}
       >
         {pending ? copy.saving : action === "hide" ? copy.hide : copy.restore}
       </button>

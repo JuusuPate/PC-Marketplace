@@ -1,0 +1,18 @@
+.home-marketing-announcement {
+  margin-top: 30px;
+}
+.home-marketing-announcement__content {
+  padding: clamp(20px, 3vw, 34px);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: linear-gradient(110deg, #e5f5e9, #e8efff);
+}
+.home-marketing-announcement h2 {
+  margin: 0 0 0.5rem;
+  color: var(--ink);
+}
+.home-marketing-announcement p {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}

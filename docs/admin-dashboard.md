@@ -37,7 +37,7 @@ Selaintarkistus yritettiin, mutta ympäristö esti paikallisen osoitteen avaamis
 - [x] Suomi, ruotsi ja englanti; uusin ensin ja tunniste tasatilanteen järjestyksenä.
 - [x] Käyttöoikeus-, tietokanta-, palvelu- ja näkymätestit: yhteensä 65 testiä.
 
-`get_admin_listings` tarkistaa ylläpitäjän roolin jokaisessa pyynnössä. Se ei palauta yksityistä nouto-osoitetta, sarjanumerotodisteita, sähköposteja tai maksutietoja. Taulujen käyttöoikeuksia ei laajenneta. Vaihe on vain luku; muokkaus, poistaminen ja muut moderointitoiminnot kuuluvat myöhempään Moderation-moduuliin.
+`get_admin_listings` tarkistaa ylläpitäjän roolin jokaisessa pyynnössä. Se ei palauta yksityistä nouto-osoitetta, sarjanumerotodisteita, sähköposteja tai maksutietoja. Taulujen käyttöoikeuksia ei laajenneta. Ilmoituksen piilotus ja palautus on toteutettu myöhemmin samassa näkymässä erillisen suojatun toiminnon kautta.
 
 Paikalliset testit, tyyppitarkistus, muotoilutarkistus ja tuotantokäännös on ajettu. Tuotannon Supabase-migraatioita ja oikealla ylläpitäjätilillä tehtävää selaintarkistusta ei ole suoritettu tässä vaiheessa.
 
@@ -174,8 +174,18 @@ Paikallinen puuttuvan ylläpitosivun virhe johtui portissa 4173 ajetusta vanhast
 
 ## Vaihe 10: ilmoituksen moderointi
 
-`/admin/listings` tarjoaa aktiivisen FI/EUR-ilmoituksen piilottamisen ja moderoinnissa piilotetun ilmoituksen palauttamisen. Päätökselle vaaditaan 10–2000 merkin perustelu. Piilotettu ilmoitus poistuu julkisesta hausta; myyjä näkee sen edelleen omassa tilissään. Palautus on sallittu vain ylläpidon piilottamalle ilmoitukselle. Käynnissä oleva tilaus estää piilottamisen, jotta tilauksen käsittely ei muutu ilmoituksen mukana.
+`/admin/listings` tarjoaa aktiivisen FI/EUR-ilmoituksen piilottamisen ja moderoinnissa piilotetun ilmoituksen palauttamisen. Piilotus vaatii 10–2000 merkin perustelun. Palautuksen perustelu on valinnainen; tyhjä palautus kirjataan päätöslokiin ilman perustelua. Piilotettu ilmoitus poistuu julkisesta hausta; myyjä näkee sen edelleen omassa tilissään. Palautus on sallittu vain ylläpidon piilottamalle ilmoitukselle. Käynnissä oleva tilaus estää piilottamisen, jotta tilauksen käsittely ei muutu ilmoituksen mukana.
 
 `20260925135653_listing_moderation.sql` lisää tilaversion ja erillisen päätöslokin. `moderate_admin_listing` tarkistaa suojatun admin-roolin jokaisella pyynnöllä, lukitsee ilmoituksen ja hylkää vanhentuneen päätöksen. Tilan muutos ja lokimerkintä tallentuvat samassa tietokantatapahtumassa. Päätökset näkyvät tapahtumalokissa; selaimelle ei avata suoria kirjoitusoikeuksia ilmoitustauluun tai päätöslokiin.
 
 Asenna migraatio Supabase-projektiin ennen uuden käyttöliittymäversion käyttöönottoa. Tämä ei vielä sisällä käyttäjäsanktioita, duplikaattitunnistusta tai automaattista riskipisteytystä.
+
+`20260925143400_optional_listing_restore_reason.sql` muuttaa palautuksen perustelun valinnaiseksi myös tietokannassa. Aiemmin asennettua migraatiota ei muokata.
+
+## Vaihe 11: markkinoinnin ensimmäinen osa
+
+`/admin/marketing` hallitsee lyhyitä kielikohtaisia etusivutiedotteita. Ylläpitäjä voi luoda luonnoksen, julkaista sen, muokata tekstiä ja poistaa julkaisun. Kunkin kielen viimeksi päivitetty julkaistu tiedote näytetään etusivulla. Muutokset näkyvät myös `/admin/audit`-näkymässä ennen/jälkeen-tietoineen.
+
+`20260925143610_marketing_announcements.sql` pitää luonnokset ja muutoshistorian poissa selaimen suorista tauluoikeuksista. Julkinen funktio palauttaa vain yhden julkaistun tiedotteen valitulle kielelle. Tallennus tarkistaa admin-roolin jokaisella kutsulla ja hylkää vanhaan versioon perustuvan muokkauksen. Käyttäjän kirjoittama teksti näytetään tekstinä, ei HTML:nä.
+
+Asenna molemmat uudet migraatiot tässä järjestyksessä ennen käyttöliittymäversion käyttöönottoa. Tämä vaihe ei sisällä alennuskuponkeja, kumppanuusmainoksia, kampanja-aikatauluja tai maksujen muuttamista. Maksuihin vaikuttavat toiminnot odottavat myöhemmin valittavaa Stripe-integraatiota.

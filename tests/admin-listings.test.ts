@@ -101,6 +101,20 @@ it("sends an authorized moderation decision with the expected revision", async (
   });
 });
 
+it("restores without a reason but still rejects an empty hiding reason", async () => {
+  const listing = { id: response().listings[0].id, moderationVersion: 1 };
+  mock.rpc.mockResolvedValue({ data: null, error: null });
+  await moderateAdminListing(listing, "restore", "  ");
+  expect(mock.rpc).toHaveBeenCalledExactlyOnceWith("moderate_admin_listing", {
+    p_listing_id: listing.id,
+    p_action: "restore",
+    p_reason: "",
+    p_expected_version: 1,
+  });
+  await expect(moderateAdminListing(listing, "hide", "")).rejects.toThrow("Invalid moderation decision");
+  expect(mock.rpc).toHaveBeenCalledTimes(1);
+});
+
 it("keeps the existing listing directory readable before the moderation migration is installed", () => {
   const old = response();
   const { moderation_hidden: _hidden, moderation_version: _version, ...row } = old.listings[0];
