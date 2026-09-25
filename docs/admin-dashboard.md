@@ -170,4 +170,12 @@ Asenna `20260924175915_admin_activity_and_audit.sql` ja `20260924181012_admin_de
 
 Paikallisesti 24.9.2026: 175 automaattista testiä, tyyppitarkistus, tuotantokäännös ja kaikki seitsemän selaintestiä läpäisivät. Näistä kolme uutta selaintestiä kattaa aikavälin vaihdon, lokin haun/sivutuksen ja yksityistietojen poistumisen oikeuden menetyksessä. Migraatioiden etäasennus ja oikean palvelun selaintarkistus varmistetaan erikseen käyttöönotossa.
 
-Paikallinen puuttuvan ylläpitosivun virhe johtui portissa 4173 ajetusta vanhasta `Documents/Github/PC-Marketplace`-kopiosta. Oikean `OneDrive/Tiedostot/ChatGPT/PC-Marketplace`-kopion käynnistäminen samaan porttiin korjasi `/admin/disputes`-sivun. Varmista aina palvelimen todellinen projektikansio, älä pelkkää porttia.
+Paikallinen puuttuvan ylläpitosivun virhe johtui portissa 4173 ajetusta vanhasta `Documents/Github/PC-Marketplace`-kopiosta, joka on sittemmin poistettu. Oikean `OneDrive/Tiedostot/ChatGPT/PC-Marketplace`-kopion käynnistäminen samaan porttiin korjasi `/admin/disputes`-sivun. Varmista aina palvelimen todellinen projektikansio, älä pelkkää porttia.
+
+## Vaihe 10: ilmoituksen moderointi
+
+`/admin/listings` tarjoaa aktiivisen FI/EUR-ilmoituksen piilottamisen ja moderoinnissa piilotetun ilmoituksen palauttamisen. Päätökselle vaaditaan 10–2000 merkin perustelu. Piilotettu ilmoitus poistuu julkisesta hausta; myyjä näkee sen edelleen omassa tilissään. Palautus on sallittu vain ylläpidon piilottamalle ilmoitukselle. Käynnissä oleva tilaus estää piilottamisen, jotta tilauksen käsittely ei muutu ilmoituksen mukana.
+
+`20260925135653_listing_moderation.sql` lisää tilaversion ja erillisen päätöslokin. `moderate_admin_listing` tarkistaa suojatun admin-roolin jokaisella pyynnöllä, lukitsee ilmoituksen ja hylkää vanhentuneen päätöksen. Tilan muutos ja lokimerkintä tallentuvat samassa tietokantatapahtumassa. Päätökset näkyvät tapahtumalokissa; selaimelle ei avata suoria kirjoitusoikeuksia ilmoitustauluun tai päätöslokiin.
+
+Asenna migraatio Supabase-projektiin ennen uuden käyttöliittymäversion käyttöönottoa. Tämä ei vielä sisällä käyttäjäsanktioita, duplikaattitunnistusta tai automaattista riskipisteytystä.

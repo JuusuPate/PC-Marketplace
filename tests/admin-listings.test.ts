@@ -1,7 +1,14 @@
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { beforeEach, expect, it, vi } from "vitest";
-import { getAdminListings, parseAdminListings, type ListingFilter } from "../apps/web/src/lib/admin-listings-service";
+import {
+  getAdminListings,
+  moderateAdminListing,
+  ListingModerationConflictError,
+  ListingModerationOrderError,
+  parseAdminListings,
+  type ListingFilter,
+} from "../apps/web/src/lib/admin-listings-service";
 import { AdminAccessError } from "../apps/web/src/lib/admin-service";
 import { AdminListingsTable } from "../apps/web/src/features/admin/AdminListingsPanel";
 import { AdminDashboardPage } from "../apps/web/src/features/admin/AdminDashboardPage";
@@ -23,6 +30,8 @@ const response = () => ({
       status: "draft",
       price_minor: 12599,
       created_at: "2026-09-17T12:00:00Z",
+      moderation_hidden: false,
+      moderation_version: 0,
     },
   ],
 });
@@ -69,6 +78,9 @@ it("rejects invalid records and unsafe money values", () => {
     { price_minor: -1 },
     { price_minor: 1.5 },
     { price_minor: Number.MAX_SAFE_INTEGER + 1 },
+    { moderation_hidden: null },
+    { moderation_hidden: true },
+    { moderation_version: -1 },
   ]) {
     const value = response();
     Object.assign(value.listings[0], change);
@@ -76,6 +88,37 @@ it("rejects invalid records and unsafe money values", () => {
   }
   for (const change of [{ market: "SE" }, { currency: "SEK" }, { page_size: 100 }, { total: -1 }, { listings: null }])
     expect(() => parseAdminListings({ ...response(), ...change })).toThrow();
+});
+
+it("sends an authorized moderation decision with the expected revision", async () => {
+  mock.rpc.mockResolvedValue({ data: null, error: null });
+  await moderateAdminListing({ id: response().listings[0].id, moderationVersion: 0 }, "hide", "  Reviewed evidence  ");
+  expect(mock.rpc).toHaveBeenCalledExactlyOnceWith("moderate_admin_listing", {
+    p_listing_id: response().listings[0].id,
+    p_action: "hide",
+    p_reason: "Reviewed evidence",
+    p_expected_version: 0,
+  });
+});
+
+it("keeps the existing listing directory readable before the moderation migration is installed", () => {
+  const old = response();
+  const { moderation_hidden: _hidden, moderation_version: _version, ...row } = old.listings[0];
+  expect(parseAdminListings({ ...old, listings: [row] }).listings[0]).toMatchObject({ moderationAvailable: false });
+});
+
+it("keeps authorization, stale decision and active order failures distinct", async () => {
+  const listing = { id: response().listings[0].id, moderationVersion: 0 };
+  for (const [code, expected] of [
+    ["42501", AdminAccessError],
+    ["40001", ListingModerationConflictError],
+    ["23514", ListingModerationOrderError],
+  ] as const) {
+    mock.rpc.mockResolvedValueOnce({ data: null, error: { code } });
+    await expect(moderateAdminListing(listing, "hide", "Reviewed evidence")).rejects.toBeInstanceOf(expected);
+  }
+  await expect(moderateAdminListing(listing, "hide", "short")).rejects.toThrow();
+  expect(mock.rpc).toHaveBeenCalledTimes(3);
 });
 it("renders localized, escaped titles and prices with cents", () => {
   for (const locale of ["fi", "sv", "en"] as const) {

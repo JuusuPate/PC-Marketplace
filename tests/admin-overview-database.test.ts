@@ -591,7 +591,17 @@ describe("admin listing directory", () => {
     expect(result.listings).toHaveLength(5);
     for (const row of result.listings) {
       expect(Object.keys(row).sort()).toEqual(
-        ["id", "title", "seller_id", "seller_name", "status", "price_minor", "created_at"].sort(),
+        [
+          "id",
+          "title",
+          "seller_id",
+          "seller_name",
+          "status",
+          "price_minor",
+          "created_at",
+          "moderation_hidden",
+          "moderation_version",
+        ].sort(),
       );
       expect(row.price_minor).toBe(12500);
     }
@@ -637,6 +647,75 @@ describe("admin listing directory", () => {
       await expect(asRole("authenticated", adminId, `select public.get_admin_listings(${args})`)).rejects.toMatchObject(
         { code: "22023" },
       );
+  });
+});
+
+describe("listing moderation", () => {
+  const decision = (id: string, action: "hide" | "restore", version: number, reason = "Reviewed listing evidence") =>
+    `select public.moderate_admin_listing('${id}', '${action}', '${reason}', ${version})`;
+
+  it("hides and restores an active FI listing with an auditable reason", async () => {
+    const id = await listing();
+    await asRole("authenticated", adminId, decision(id, "hide", 0));
+    expect(
+      (await db.query("select status, moderation_hidden, moderation_version from public.listings where id=$1", [id]))
+        .rows[0],
+    ).toMatchObject({ status: "removed", moderation_hidden: true, moderation_version: 1 });
+    expect(
+      (await asRole("anon", null, `select count(*)::int as total from public.listings where id='${id}'`)).rows[0],
+    ).toMatchObject({ total: 0 });
+    const audit = (await asRole("authenticated", adminId, `select public.get_admin_audit('${id}', 0) as audit`)).rows[0]
+      .audit as any;
+    expect(audit.events).toMatchObject([{ source: "moderation", action: "hide", reason: "Reviewed listing evidence" }]);
+    await expect(asRole("authenticated", adminId, decision(id, "restore", 0))).rejects.toMatchObject({ code: "40001" });
+    await asRole("authenticated", adminId, decision(id, "restore", 1));
+    expect(
+      (await db.query("select status, moderation_hidden, moderation_version from public.listings where id=$1", [id]))
+        .rows[0],
+    ).toMatchObject({ status: "active", moderation_hidden: false, moderation_version: 2 });
+    expect(
+      (
+        await db.query(
+          "select action, version from public.listing_moderation_decisions where listing_id=$1 order by version",
+          [id],
+        )
+      ).rows,
+    ).toMatchObject([
+      { action: "hide", version: 1 },
+      { action: "restore", version: 2 },
+    ]);
+  });
+
+  it("denies non-admin identities, revoked admin access, invalid decisions and manual removals", async () => {
+    const id = await listing();
+    for (const [role, identity] of [
+      ["anon", adminId],
+      ["authenticated", userId],
+      ["authenticated", null],
+      ["service_role", null],
+    ] as const)
+      await expect(asRole(role, identity, decision(id, "hide", 0))).rejects.toMatchObject({ code: "42501" });
+    for (const sql of [
+      decision(id, "hide", 0, "short"),
+      `select public.moderate_admin_listing('${id}', 'delete', 'Long enough reason', 0)`,
+    ])
+      await expect(asRole("authenticated", adminId, sql)).rejects.toMatchObject({ code: "22023" });
+    await db.query("update public.listings set status='removed' where id=$1", [id]);
+    await expect(asRole("authenticated", adminId, decision(id, "restore", 0))).rejects.toMatchObject({ code: "40001" });
+    await db.query("delete from public.user_roles where user_id=$1", [adminId]);
+    await expect(asRole("authenticated", adminId, decision(id, "hide", 0))).rejects.toMatchObject({ code: "42501" });
+    expect(
+      (await db.query("select count(*)::int as total from public.listing_moderation_decisions")).rows[0],
+    ).toMatchObject({ total: 0 });
+  });
+
+  it("does not hide a listing with an active order", async () => {
+    await order("paid", 12500, 100);
+    const id = (await db.query<{ listing_id: string }>("select listing_id from public.orders")).rows[0].listing_id;
+    await expect(asRole("authenticated", adminId, decision(id, "hide", 0))).rejects.toMatchObject({ code: "23514" });
+    expect(
+      (await db.query("select status, moderation_version from public.listings where id=$1", [id])).rows[0],
+    ).toMatchObject({ status: "active", moderation_version: 0 });
   });
 });
 
