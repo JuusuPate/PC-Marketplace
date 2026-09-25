@@ -34,7 +34,7 @@ Lähde: käyttäjän nimeämä keskustelu **Rigin admin dashboardin sisältö**.
 5. **Conversion funnels:** tarvitsee yhteisesti määritellyt tapahtumat ja mittauksen kävijästä valmistuneeseen tilaukseen.
 6. **Cohort/retention:** tarvitsee käyttöaktiivisuuden historian; rekisteröintipäivä ei osoita paluuta palveluun.
 7. **Feature flags:** palvelinpuolen hallinta, auditointi ja kunkin ominaisuuden todellinen käyttökohde puuttuvat.
-8. **System monitoring:** virhe-, ajastus-, integraatio- ja viivetiedot sekä hälytyskynnykset puuttuvat. Staattista vihreää tilaa ei näytetä.
+8. **System monitoring:** `/admin/system` tekee pyynnöstä neljä nykyhetken suojattua lukutarkistusta ja näyttää kunkin tuloksen sekä selaimesta mitatun vasteajan. Jatkuva virhe-, ajastus-, integraatio- ja viiveseuranta sekä hälytyskynnykset puuttuvat. Valvomattomia toimintoja ei merkitä terveiksi.
 
 ## Yhteiset vaatimukset
 
