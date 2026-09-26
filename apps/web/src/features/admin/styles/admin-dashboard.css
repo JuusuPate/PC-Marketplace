@@ -23,12 +23,12 @@
 }
 .admin-brand svg {
   flex-shrink: 0;
-  color: var(--lime);
+  color: var(--accent);
 }
 .admin-market {
   display: block;
   margin-block: 12px 24px;
-  color: #b6c7c2;
+  color: #b6bdc7;
   font-size: 13px;
 }
 .admin-sidebar nav {
@@ -47,17 +47,17 @@
 }
 .admin-sidebar a[aria-current="page"] {
   color: var(--ink);
-  background: var(--lime);
+  background: var(--accent);
   font-weight: 700;
 }
 .admin-sidebar a:hover {
-  color: var(--lime);
+  color: var(--accent);
   background: rgba(255, 255, 255, 0.08);
   transform: translateX(2px);
 }
 .admin-sidebar a[aria-current="page"]:hover {
   color: var(--ink);
-  background: var(--lime);
+  background: var(--accent);
 }
 .admin-dashboard a:focus-visible,
 .admin-dashboard button:focus-visible,
@@ -114,10 +114,10 @@
 }
 .admin-metric {
   border-top: 3px solid var(--blue);
-  box-shadow: 0 8px 28px rgba(10, 21, 21, 0.04);
+  box-shadow: 0 8px 28px rgba(10, 15, 21, 0.04);
 }
 .admin-metric:nth-child(even) {
-  border-top-color: var(--lime-dark);
+  border-top-color: var(--accent-strong);
 }
 .admin-metric h2 {
   min-height: 36px;
@@ -422,7 +422,7 @@
   gap: 1rem;
   margin-block: 1rem;
   padding: 1.2rem;
-  border: 1px solid #ccd2cf;
+  border: 1px solid #cccfd2;
   border-radius: 12px;
 }
 .admin-model-editor label {
@@ -432,7 +432,7 @@
 .admin-model-editor input:not([type="checkbox"]) {
   width: 100%;
   padding: 0.65rem;
-  border: 1px solid #ccd2cf;
+  border: 1px solid #cccfd2;
   border-radius: 6px;
 }
 

@@ -19,7 +19,7 @@
   animation: toast-in 0.3s ease both;
 }
 .toast svg {
-  color: var(--lime);
+  color: var(--accent);
 }
 @keyframes toast-in {
   from {

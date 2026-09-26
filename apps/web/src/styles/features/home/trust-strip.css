@@ -19,7 +19,7 @@
 .trust-strip svg {
   width: 23px;
   height: 23px;
-  color: var(--lime);
+  color: var(--accent);
 }
 .trust-strip span {
   display: flex;

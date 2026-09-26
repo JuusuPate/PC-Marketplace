@@ -61,7 +61,7 @@
 .button--dark {
   color: white;
   background: var(--ink);
-  box-shadow: 0 8px 20px rgba(10, 21, 21, 0.12);
+  box-shadow: 0 8px 20px rgba(10, 15, 21, 0.12);
 }
 .button--ghost {
   background: transparent;
@@ -69,22 +69,22 @@
 }
 .button--primary {
   color: var(--ink);
-  background: var(--lime);
-  border-color: #b7ec39;
-  box-shadow: 0 8px 22px rgba(147, 193, 38, 0.2);
+  background: var(--accent);
+  border-color: #3984ec;
+  box-shadow: 0 8px 22px rgba(38, 103, 193, 0.2);
 }
 .button--primary:hover {
-  background: #d0ff63;
-  box-shadow: 0 11px 26px rgba(147, 193, 38, 0.28);
+  background: var(--accent-hover);
+  box-shadow: 0 11px 26px rgba(38, 103, 193, 0.28);
 }
 .button--outline {
   background: rgba(255, 255, 255, 0.54);
-  border-color: rgba(10, 21, 21, 0.2);
+  border-color: rgba(10, 15, 21, 0.2);
 }
 .button--outline.is-active {
-  color: #6e980b;
-  border-color: #9ed01d;
-  background: #f4ffda;
+  color: #0b4698;
+  border-color: #1d68d0;
+  background: var(--accent-soft);
 }
 .button--light {
   color: var(--ink);

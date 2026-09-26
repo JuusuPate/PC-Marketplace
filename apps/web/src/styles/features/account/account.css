@@ -17,7 +17,7 @@
   display: grid;
   place-items: center;
   color: var(--ink);
-  background: var(--lime);
+  background: var(--accent);
   border-radius: 50%;
   font-size: 23px;
   font-weight: 950;
@@ -55,7 +55,7 @@
   font-size: 13px;
 }
 .section-heading-mini > span {
-  color: #7b8583;
+  color: #7b7f85;
   font-size: 7px;
   font-weight: 950;
   letter-spacing: 0.08em;
@@ -63,8 +63,8 @@
 .empty-copy {
   padding: 22px;
   margin: 0;
-  color: #818b88;
-  background: #f1f2ec;
+  color: #81858b;
+  background: #eceff2;
   border-radius: 8px;
   font-size: 10px;
   text-align: center;
@@ -87,7 +87,7 @@
   display: grid;
   place-items: center;
   color: var(--ink);
-  background: #e8eae3;
+  background: #e3e6ea;
   border-radius: 6px;
   font-size: 6px;
   font-weight: 950;
@@ -120,7 +120,7 @@
 }
 .account-listing__open:hover strong,
 .account-listing__open:focus-visible strong {
-  color: #4f7900;
+  color: #003279;
   text-decoration: underline;
 }
 .account-listing__open:disabled,
@@ -141,9 +141,9 @@
 }
 .account-listing__edit {
   padding: 4px 7px;
-  color: #244000;
-  background: #dfff9b;
-  border: 1px solid #a9d94c;
+  color: #001b40;
+  background: #9bc5ff;
+  border: 1px solid #4c87d9;
   border-radius: 5px;
   font-size: 7px;
   font-weight: 950;
@@ -151,10 +151,10 @@
 }
 .account-listing__edit:hover,
 .account-listing__edit:focus-visible {
-  background: var(--lime);
+  background: var(--accent);
 }
 .account-list article small {
-  color: #7a8582;
+  color: #7a7f85;
   font-size: 7px;
 }
 .order-value {
@@ -177,16 +177,16 @@
   text-transform: uppercase;
 }
 .status--live {
-  color: #3c5700;
-  background: #ddff91;
+  color: #002457;
+  background: #91bfff;
 }
 .status--beta {
   color: #24488f;
   background: #dce6ff;
 }
 .status--soon {
-  color: #6a716f;
-  background: #e6e8e3;
+  color: #6a6d71;
+  background: #e3e5e8;
 }
 .market-status-grid {
   display: grid;
@@ -199,7 +199,7 @@
   display: flex;
   align-items: center;
   gap: 9px;
-  background: #f1f2ec;
+  background: #eceff2;
   border-radius: 7px;
 }
 .market-status-grid article > span:first-child {
@@ -214,7 +214,7 @@
   font-size: 9px;
 }
 .market-status-grid small {
-  color: #78827f;
+  color: #787c82;
   font-size: 7px;
 }
 .market-status-grid .status-chip {

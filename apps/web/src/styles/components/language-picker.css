@@ -71,7 +71,7 @@
 }
 
 .language-picker__option.is-active {
-  background: rgba(160, 214, 35, 0.14);
+  background: rgba(35, 110, 214, 0.14);
 }
 
 .language-picker__option svg {

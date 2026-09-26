@@ -1,12 +1,12 @@
 .admin-trends-section {
   --chart-muted: #a4a4a9;
-  --chart-line: #2b2b2e;
+  --chart-line: #2b3c56;
   margin-block: 28px;
   padding: 24px;
-  border: 1px solid #252527;
+  border: 1px solid #23334c;
   border-radius: 20px;
   color: #f5f5f5;
-  background: #0c0c0d;
+  background: #0b1220;
   color-scheme: dark;
 }
 .admin-trends-section .admin-section-heading {
@@ -33,9 +33,9 @@
   flex-wrap: wrap;
   gap: 6px;
   padding: 5px;
-  border: 1px solid #303033;
+  border: 1px solid #30415d;
   border-radius: 14px;
-  background: #18181a;
+  background: #152238;
 }
 .admin-period-options button {
   padding: 8px 12px;
@@ -51,7 +51,7 @@
   color: #161616;
 }
 .admin-period-options button:hover:not([aria-pressed="true"]) {
-  background: #2a2a2c;
+  background: #233751;
 }
 .admin-chart-range,
 .admin-chart-status {
@@ -67,9 +67,9 @@
 .admin-panel.admin-trend-card,
 .admin-panel.admin-category-card {
   min-width: 0;
-  border-color: #2b2b2e;
+  border-color: #2b3c56;
   color: #f5f5f5;
-  background: #171718;
+  background: #111c2e;
   box-shadow: none;
 }
 .admin-trend-heading {
@@ -106,9 +106,9 @@
   flex-direction: column;
   gap: 5px;
   padding: 8px;
-  border: 1px solid #2b2b2e;
+  border: 1px solid #2b3c56;
   border-radius: 16px;
-  background: #171718;
+  background: #111c2e;
 }
 .admin-trend-menu button {
   display: grid;
@@ -127,7 +127,7 @@
 }
 .admin-trend-menu button[aria-pressed="true"],
 .admin-trend-menu button:hover {
-  background: #272729;
+  background: #20334f;
 }
 .admin-trend-menu button > span > span {
   display: block;
@@ -147,7 +147,7 @@
   background: #757579;
 }
 .admin-trend-menu button[aria-pressed="true"] .admin-trend-menu-dot {
-  background: var(--lime);
+  background: var(--accent);
 }
 .admin-trend-menu svg {
   width: 100%;
@@ -160,7 +160,7 @@
   vector-effect: non-scaling-stroke;
 }
 .admin-trend-menu button[aria-pressed="true"] path {
-  stroke: #f4f4f4;
+  stroke: var(--accent);
 }
 .admin-chart-readout {
   min-height: 32px;
@@ -180,13 +180,13 @@
   font-size: 11px;
 }
 .admin-line-grid {
-  stroke: #2b2b2e;
+  stroke: #2b3c56;
   stroke-width: 1;
   vector-effect: non-scaling-stroke;
 }
 .admin-line-stroke {
   fill: none;
-  stroke: #eeeeef;
+  stroke: var(--accent);
   stroke-width: 1.6;
   vector-effect: non-scaling-stroke;
 }
@@ -196,7 +196,7 @@
   vector-effect: non-scaling-stroke;
 }
 .admin-line-point {
-  fill: #171718;
+  fill: #111c2e;
   stroke: #fff;
   stroke-width: 2;
 }
@@ -223,7 +223,7 @@
 .admin-chart-details .admin-users-table th,
 .admin-chart-details .admin-users-table td {
   color: #dedee1;
-  border-color: #333336;
+  border-color: #2b3d58;
 }
 .admin-category-bars {
   display: grid;
@@ -249,7 +249,7 @@
 .admin-category-track {
   height: 6px;
   border-radius: 99px;
-  background: #333336;
+  background: #2b3d58;
   overflow: hidden;
 }
 .admin-category-track span {
@@ -297,7 +297,7 @@
   background: var(--blue);
 }
 .admin-comparison-track--previous span {
-  background: var(--lime-dark);
+  background: var(--accent-strong);
 }
 .admin-period-options button:focus-visible,
 .admin-chart-details summary:focus-visible {

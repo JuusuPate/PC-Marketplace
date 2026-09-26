@@ -7,7 +7,7 @@
   display: flex;
   flex-direction: column;
   gap: 7px;
-  color: #3f4b48;
+  color: #3f444b;
   font-size: 9px;
   font-weight: 900;
   letter-spacing: 0.045em;
@@ -18,8 +18,8 @@
   width: 100%;
   padding: 12px 13px;
   color: var(--ink);
-  background: #f8f8f4;
-  border: 1px solid rgba(10, 21, 21, 0.16);
+  background: #f4f6f8;
+  border: 1px solid rgba(10, 15, 21, 0.16);
   border-radius: 7px;
   outline: none;
   font-size: 12px;
@@ -28,8 +28,8 @@
 .stack-form input:focus,
 .stack-form select:focus,
 .stack-form textarea:focus {
-  border-color: #8ab715;
-  box-shadow: 0 0 0 3px rgba(160, 210, 37, 0.13);
+  border-color: #1558b7;
+  box-shadow: 0 0 0 3px rgba(37, 109, 210, 0.13);
 }
 .form-error {
   margin: -3px 0 0;
@@ -40,9 +40,9 @@
 .form-notice {
   margin: -3px 0 0;
   padding: 10px 11px;
-  color: #3d530a;
-  background: #efffc9;
-  border: 1px solid #d5f48c;
+  color: var(--accent-ink);
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-border);
   border-radius: 7px;
   font-size: 10px;
   line-height: 1.4;
@@ -52,7 +52,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  color: #929b99;
+  color: #92969b;
   font-size: 7px;
   font-weight: 900;
 }
@@ -69,11 +69,11 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  color: #7a8582;
+  color: #7a7f85;
   font-size: 8px;
 }
 .demo-privacy svg {
   width: 12px;
   height: 12px;
-  color: #709600;
+  color: #003e96;
 }

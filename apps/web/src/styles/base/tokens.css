@@ -1,17 +1,21 @@
 :root {
-  color: #111b1b;
+  color: #11151b;
   background: #fff;
   font-family: Inter, Aptos, "Segoe UI", sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
-  --ink: #0a1515;
-  --ink-soft: #475452;
+  --ink: #0a0f15;
+  --ink-soft: #474c54;
   --paper: #fff;
-  --paper-2: #e8e9e2;
+  --paper-2: #e2e5e9;
   --white: #fffefa;
-  --lime: #c8ff48;
-  --lime-dark: #87b719;
+  --accent: #93c5fd;
+  --accent-strong: #1d4ed8;
+  --accent-ink: #1e3a8a;
+  --accent-soft: #eff6ff;
+  --accent-border: #bfdbfe;
+  --accent-hover: #bfdbfe;
   --blue: #4778ff;
-  --line: rgba(10, 21, 21, 0.14);
-  --shadow: 0 18px 50px rgba(10, 21, 21, 0.12);
+  --line: rgba(10, 15, 21, 0.14);
+  --shadow: 0 18px 50px rgba(10, 15, 21, 0.12);
 }
