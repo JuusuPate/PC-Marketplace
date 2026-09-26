@@ -14,7 +14,7 @@
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.9);
   border-radius: 22px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(241, 248, 244, 0.9));
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(241, 244, 248, 0.9));
   box-shadow: 0 18px 48px rgba(56, 67, 122, 0.1);
 }
 
@@ -44,8 +44,8 @@
 
 .home-hero-card__art--one::before {
   background:
-    linear-gradient(180deg, rgba(10, 25, 19, 0.18) 0%, rgba(10, 25, 19, 0.62) 100%),
-    linear-gradient(120deg, #d3f3d9 0%, #b4dbef 100%);
+    linear-gradient(180deg, rgba(10, 16, 25, 0.18) 0%, rgba(10, 16, 25, 0.62) 100%),
+    linear-gradient(120deg, #d3e0f3 0%, #b4dbef 100%);
 }
 
 .home-hero-card__art--two::before {
@@ -58,7 +58,7 @@
 .home-hero-card__art--three::before {
   background:
     linear-gradient(180deg, rgba(41, 26, 12, 0.14) 0%, rgba(41, 26, 12, 0.64) 100%),
-    linear-gradient(120deg, #f6e1b3 0%, #d5f0d8 100%);
+    linear-gradient(120deg, #f6e1b3 0%, #d5e0f0 100%);
 }
 
 .home-hero-card__content {

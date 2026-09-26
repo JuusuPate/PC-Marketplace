@@ -18,7 +18,7 @@
   border: 0;
 }
 .step-number {
-  color: #8c9693;
+  color: #8c9096;
   font-size: 9px;
   font-weight: 900;
   letter-spacing: 0.1em;
@@ -30,7 +30,7 @@
   display: grid;
   place-items: center;
   color: var(--ink);
-  background: var(--lime);
+  background: var(--accent);
   border-radius: 50%;
 }
 .step-icon svg {
@@ -50,7 +50,7 @@
   right: -10px;
   z-index: 2;
   padding: 4px;
-  color: #8a9491;
+  color: #8a8e94;
   background: var(--paper);
   border: 1px solid var(--line);
   border-radius: 50%;

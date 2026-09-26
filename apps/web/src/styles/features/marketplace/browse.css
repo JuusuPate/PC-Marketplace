@@ -17,7 +17,7 @@
   gap: 8px;
 }
 .section-index {
-  color: #7b8683;
+  color: #7b8086;
   font-size: 9px;
   font-weight: 900;
   letter-spacing: 0.14em;
@@ -33,7 +33,7 @@
   letter-spacing: -0.055em;
 }
 .listing-count {
-  color: #687370;
+  color: #686d73;
   font-size: 11px;
   font-weight: 800;
 }
@@ -51,10 +51,10 @@
   background: var(--white);
   border: 1px solid var(--line);
   border-radius: 9px;
-  box-shadow: 0 4px 18px rgba(10, 21, 21, 0.03);
+  box-shadow: 0 4px 18px rgba(10, 15, 21, 0.03);
 }
 .search-box svg {
-  color: #77827f;
+  color: #777c82;
 }
 .search-box input {
   flex: 1;
@@ -66,9 +66,9 @@
 }
 .search-box kbd {
   padding: 4px 7px;
-  color: #7c8784;
-  background: #eeefe9;
-  border: 1px solid #dde0d8;
+  color: #7c8187;
+  background: #e9ecef;
+  border: 1px solid #d8dbe0;
   border-radius: 5px;
   font-size: 9px;
 }
@@ -97,7 +97,7 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  color: #56615f;
+  color: #565b61;
   background: transparent;
   border: 1px solid var(--line);
   border-radius: 7px;
@@ -106,7 +106,7 @@
   font-weight: 800;
 }
 .category-row button span {
-  color: #8b9693;
+  color: #8b9096;
   font-size: 15px;
 }
 .category-row button.active {
@@ -115,5 +115,5 @@
   border-color: var(--ink);
 }
 .category-row button.active span {
-  color: var(--lime);
+  color: var(--accent);
 }

@@ -7,7 +7,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  background: #f0f1eb;
+  background: #ebeef1;
   border-radius: 8px;
 }
 .checkout-item > div:last-child {
@@ -19,7 +19,7 @@
   font-size: 11px;
 }
 .checkout-item span {
-  color: #77817f;
+  color: #777b81;
   font-size: 8px;
 }
 .checkout-thumb {
@@ -38,7 +38,7 @@
   padding: 8px 0;
   display: flex;
   justify-content: space-between;
-  color: #64706d;
+  color: #646970;
   font-size: 10px;
 }
 .checkout-totals dd {
@@ -59,9 +59,9 @@
   padding: 13px;
   display: flex;
   gap: 10px;
-  color: #3d530a;
-  background: #efffc9;
-  border: 1px solid #d5f48c;
+  color: var(--accent-ink);
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-border);
   border-radius: 8px;
 }
 .safe-note svg {
@@ -76,7 +76,7 @@
   font-size: 9px;
 }
 .safe-note small {
-  color: #62752f;
+  color: #2f4c75;
   font-size: 8px;
   line-height: 1.4;
 }

@@ -35,7 +35,7 @@
   position: absolute;
   width: 19px;
   height: 6px;
-  background: var(--lime);
+  background: var(--accent);
   border-radius: 2px;
   transform: skew(-18deg);
 }
@@ -64,7 +64,7 @@
 }
 .brand small {
   margin-top: 5px;
-  color: #74807e;
+  color: #747980;
   font-size: 8px;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -80,9 +80,9 @@
   align-items: center;
   flex: 1 1 420px;
   gap: 10px;
-  color: #66736f;
+  color: #666b73;
   background: rgba(255, 255, 255, 0.78);
-  border: 1px solid rgba(10, 21, 21, 0.18);
+  border: 1px solid rgba(10, 15, 21, 0.18);
   border-radius: 10px;
   transition:
     border-color 0.18s ease,
@@ -92,8 +92,8 @@
 .header-search:focus-within {
   color: var(--ink);
   background: white;
-  border-color: #7ba921;
-  box-shadow: 0 0 0 3px rgba(160, 214, 35, 0.18);
+  border-color: #215aa9;
+  box-shadow: 0 0 0 3px rgba(35, 110, 214, 0.18);
 }
 .header-search > svg {
   width: 19px;
@@ -113,7 +113,7 @@
 }
 .header-search input::placeholder {
   overflow: hidden;
-  color: #66736f;
+  color: #666b73;
   text-overflow: ellipsis;
 }
 .header-search input::-webkit-search-cancel-button {
@@ -126,14 +126,14 @@
   place-items: center;
   flex: 0 0 auto;
   color: var(--ink);
-  background: var(--lime);
+  background: var(--accent);
   border: 0;
-  border-left: 1px solid rgba(10, 21, 21, 0.12);
+  border-left: 1px solid rgba(10, 15, 21, 0.12);
   border-radius: 0 9px 9px 0;
   cursor: pointer;
 }
 .header-search__submit:hover {
-  background: #d0ff63;
+  background: #63a4ff;
 }
 .header-search__submit:focus-visible {
   outline: 3px solid var(--ink);
@@ -145,7 +145,7 @@
   top: 78px;
   z-index: 39;
   color: white;
-  background: rgba(7, 20, 20, 0.96);
+  background: rgba(7, 12, 20, 0.96);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(8px);
 }
@@ -166,7 +166,7 @@
   overscroll-behavior-inline: contain;
   list-style: none;
   scrollbar-width: thin;
-  scrollbar-color: rgba(200, 255, 72, 0.4) transparent;
+  scrollbar-color: rgba(72, 148, 255, 0.4) transparent;
 }
 .category-navigation-item {
   position: relative;
@@ -225,7 +225,7 @@
   bottom: 3px;
   left: 50%;
   border-radius: 999px;
-  background: var(--lime);
+  background: var(--accent);
   opacity: 0;
   pointer-events: none;
   transform: translateX(-50%) scaleX(0.4);
@@ -245,8 +245,8 @@
 .category-navigation-item.is-active > .category-navigation-link,
 .category-navigation-item.is-active > .category-navigation-trigger {
   color: var(--ink);
-  background: var(--lime);
-  border-color: rgba(200, 255, 72, 0.45);
+  background: var(--accent);
+  border-color: rgba(72, 148, 255, 0.45);
 }
 .category-navigation-item.is-active .category-navigation-link,
 .category-navigation-item.is-active .category-navigation-toggle,
@@ -281,9 +281,9 @@
   z-index: 5;
   color: var(--ink);
   background: rgba(255, 255, 255, 0.98);
-  border: 1px solid rgba(10, 21, 21, 0.08);
+  border: 1px solid rgba(10, 15, 21, 0.08);
   border-radius: 14px;
-  box-shadow: 0 18px 40px rgba(4, 15, 14, 0.18);
+  box-shadow: 0 18px 40px rgba(4, 9, 15, 0.18);
   list-style: none;
   transform: none;
 }
@@ -308,29 +308,29 @@
   grid-column: 1 / -1;
   margin-bottom: 6px;
   padding-bottom: 6px;
-  border-bottom: 1px solid rgba(10, 21, 21, 0.08);
+  border-bottom: 1px solid rgba(10, 15, 21, 0.08);
 }
 .category-navigation-submenu li:first-child a {
   min-height: 46px;
   padding: 0 14px;
   background: #ffffff;
-  border: 1px solid rgba(10, 21, 21, 0.08);
+  border: 1px solid rgba(10, 15, 21, 0.08);
   font-size: 14px;
   font-weight: 800;
 }
 .category-navigation-submenu li:first-child a:hover {
-  background: rgba(160, 214, 35, 0.06);
+  background: rgba(35, 110, 214, 0.06);
 }
 .category-navigation-submenu a > span {
   display: none;
 }
 .category-navigation-submenu a:hover {
   color: var(--ink);
-  background: rgba(160, 214, 35, 0.12);
+  background: rgba(35, 110, 214, 0.12);
 }
 .category-navigation-submenu li.is-active a {
   color: var(--ink);
-  background: var(--lime);
+  background: var(--accent);
 }
 .category-navigation-submenu a:focus-visible {
   outline-color: var(--ink);

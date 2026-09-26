@@ -45,3 +45,7 @@ Git-työnkulku: [Yhteinen työskentely](../../../../docs/team-workflow.md).
 - Jos siirrät olemassa olevia sääntöjä tiedostosta toiseen, tarkista myös latausjärjestys. Pelkkä siirtäminen voi muuttaa ulkoasua.
 
 Refaktoroinnissa ei lisätty CSS Modules -rajausta tai cascade layers -kerroksia: nykyiset luokkanimet ja sääntöjen järjestys säilytettiin.
+
+## Sininen väriteema
+
+Yhteiset siniset korostusvärit ovat `base/tokens.css`-tiedostossa: `--accent` (vaaleansininen painike / tumman taustan korostus), `--accent-strong` (vahva sininen), `--accent-ink` (tumma teksti), `--accent-soft` (vaalea pinta), `--accent-border` ja `--accent-hover`. Ominaisuuskohtaiset siniset sävyt pysyvät niiden omissa CSS-tiedostoissa. Ylläpidon kaavioissa käytetään tummansinisiä pintoja ja vaaleansinisiä käyriä. Virheiden punainen ja varoitusten keltainen säilyttävät merkityksensä; tuotekuvien todellisia värejä ei muuteta. Historiallinen `visual--lime`-luokka säilyy tallennettujen ilmoitusten yhteensopivuuden vuoksi, mutta sen esitysväri on nyt sininen.

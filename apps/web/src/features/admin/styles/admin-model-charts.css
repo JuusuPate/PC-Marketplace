@@ -15,9 +15,9 @@
   width: 100%;
   min-width: 0;
   padding: 12px;
-  border: 1px solid #363639;
+  border: 1px solid #354865;
   border-radius: 10px;
-  background: #222224;
+  background: #19283f;
   color: #f5f5f5;
   font: inherit;
 }
@@ -29,8 +29,8 @@
 .admin-model-detail {
   min-width: 0;
   padding: 20px;
-  background: #171718;
-  border: 1px solid #2b2b2e;
+  background: #111c2e;
+  border: 1px solid #2b3c56;
   border-radius: 16px;
 }
 .admin-model-detail > h3 {
@@ -47,7 +47,7 @@
 .admin-model-metrics > div {
   padding: 14px 12px;
   border-radius: 12px;
-  background: #222224;
+  background: #19283f;
 }
 .admin-model-metrics dt {
   color: #aaaab0;
@@ -87,9 +87,9 @@
   font-size: 12px;
 }
 .admin-model-pagination button {
-  border: 1px solid #363639;
+  border: 1px solid #354865;
   border-radius: 8px;
-  background: #222224;
+  background: #19283f;
   color: #f5f5f5;
   padding: 10px;
   cursor: pointer;

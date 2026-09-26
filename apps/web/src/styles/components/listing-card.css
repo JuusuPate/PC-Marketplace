@@ -27,7 +27,7 @@
 }
 .card-media-link:focus-visible,
 .card-title:focus-visible {
-  outline: 3px solid var(--lime-dark);
+  outline: 3px solid var(--accent-strong);
   outline-offset: 3px;
 }
 .listing-visual {
@@ -56,7 +56,7 @@
   display: none;
 }
 .listing-visual--photo {
-  background: #18201f;
+  background: #181b20;
 }
 .listing-visual__backdrop {
   width: 116%;
@@ -97,9 +97,9 @@
   object-position: center;
   filter: none;
 }
-.visual--lime {
-  color: #17220a;
-  background: linear-gradient(145deg, #d8ff79, #a6d934);
+.visual--accent {
+  color: #0a1422;
+  background: linear-gradient(145deg, #79b1ff, #3479d9);
 }
 .visual--blue {
   color: white;
@@ -114,8 +114,8 @@
   background: linear-gradient(145deg, #ffb35d, #e46c22);
 }
 .visual--silver {
-  color: #17211f;
-  background: linear-gradient(145deg, #e6e9e2, #9fa9a3);
+  color: #171b21;
+  background: linear-gradient(145deg, #e2e5e9, #9fa3a9);
 }
 .visual--pink {
   color: white;
@@ -140,10 +140,10 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background: rgba(10, 21, 21, 0.91);
+  background: rgba(10, 15, 21, 0.91);
   border: 2px solid rgba(255, 255, 255, 0.34);
   border-radius: 8px;
-  box-shadow: 11px 14px 25px rgba(10, 21, 21, 0.26);
+  box-shadow: 11px 14px 25px rgba(10, 15, 21, 0.26);
   transform: perspective(500px) rotateX(7deg) rotateY(-12deg) rotateZ(-3deg);
   color: white;
 }
@@ -156,23 +156,23 @@
   top: 50%;
   right: 13px;
   translate: 0 -50%;
-  border: 5px solid #40504c;
+  border: 5px solid #404750;
   border-radius: 50%;
-  box-shadow: inset 0 0 0 2px #9caaa6;
+  box-shadow: inset 0 0 0 2px #9ca2aa;
 }
 .hardware-shape::after {
   right: 68px;
   opacity: 0.85;
 }
 .hardware-shape strong {
-  color: var(--lime);
+  color: var(--accent);
   font-size: 25px;
   line-height: 1;
   letter-spacing: -0.04em;
 }
 .hardware-brand {
   margin-bottom: 3px;
-  color: #91a29d;
+  color: #9198a2;
   font-size: 6px;
   font-weight: 900;
   letter-spacing: 0.15em;
@@ -180,7 +180,7 @@
 .hardware-model {
   margin-top: 5px;
   max-width: 60px;
-  color: #cdd8d4;
+  color: #cdd2d8;
   font-size: 6px;
   font-weight: 800;
 }
@@ -196,9 +196,9 @@
   height: 58px;
   inset: 50% auto auto 50%;
   translate: -50% -50%;
-  border: 1px solid #5c6966;
+  border: 1px solid #5c6169;
   border-radius: 4px;
-  box-shadow: inset 0 0 0 8px #1d2a27;
+  box-shadow: inset 0 0 0 8px #1d222a;
 }
 .hardware-shape--cpu::after {
   display: none;
@@ -256,7 +256,7 @@
   height: 142px;
   min-height: 0;
   align-items: center;
-  background: rgba(10, 21, 21, 0.77);
+  background: rgba(10, 15, 21, 0.77);
   border-color: rgba(255, 255, 255, 0.5);
 }
 .hardware-shape--pc::before {
@@ -294,8 +294,8 @@
   top: 17px;
 }
 .signal--great {
-  color: #365000;
-  background: #dcff8e;
+  color: #002150;
+  background: #8ebdff;
 }
 .signal--fair {
   color: #17306e;
@@ -319,7 +319,7 @@
   z-index: 5;
   top: 16px;
   right: 16px;
-  color: #23302d;
+  color: #232830;
   background: rgba(255, 255, 255, 0.8);
   border-radius: 50%;
   backdrop-filter: blur(10px);
@@ -340,14 +340,14 @@
   align-items: center;
   justify-content: space-between;
   gap: 6px;
-  color: #111b1b;
+  color: #11151b;
   font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
 .card-topline > span {
-  color: #111b1b;
+  color: #11151b;
 }
 .card-topline > span:first-child {
   margin-right: auto;
@@ -406,12 +406,12 @@
   align-items: center;
   gap: 6px;
   border-top: 1px solid transparent;
-  color: #111b1b;
+  color: #11151b;
   font-size: 11px;
   font-weight: 700;
 }
 .card-footer > span:not(.seller-avatar):not(.verified-dot):not(.seller-rating) {
-  color: #111b1b;
+  color: #11151b;
   font-weight: 600;
 }
 .seller-avatar {
@@ -420,7 +420,7 @@
   display: grid;
   place-items: center;
   color: white;
-  background: #22302d;
+  background: #222830;
   border-radius: 50%;
   font-size: 7px;
   font-weight: 900;
@@ -436,7 +436,7 @@
   display: inline-grid;
   place-items: center;
   color: var(--ink);
-  background: var(--lime);
+  background: var(--accent);
   border-radius: 50%;
 }
 .verified-dot svg {
@@ -464,12 +464,12 @@
   place-items: center;
   align-content: center;
   gap: 12px;
-  border: 1px dashed rgba(10, 21, 21, 0.24);
+  border: 1px dashed rgba(10, 15, 21, 0.24);
   border-radius: 11px;
 }
 .empty-state > div {
   font-size: 50px;
-  color: #9ba4a0;
+  color: #9b9fa4;
 }
 .empty-state h3 {
   margin: 0 0 7px;

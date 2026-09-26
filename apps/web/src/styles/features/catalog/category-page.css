@@ -1,6 +1,6 @@
 .category-route-hero {
   overflow: hidden;
-  background: radial-gradient(circle at 78% 30%, rgba(200, 255, 72, 0.22), transparent 23%), #fff;
+  background: radial-gradient(circle at 78% 30%, rgba(72, 148, 255, 0.22), transparent 23%), #fff;
   border-bottom: 1px solid var(--line);
 }
 .category-route-hero-inner {
@@ -19,17 +19,17 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  color: #697572;
+  color: #696e75;
   font-size: 14px;
 }
 .breadcrumbs a {
   text-decoration: underline;
-  text-decoration-color: rgba(10, 21, 21, 0.28);
+  text-decoration-color: rgba(10, 15, 21, 0.28);
   text-underline-offset: 4px;
 }
 .breadcrumbs a:hover {
   color: var(--ink);
-  text-decoration-color: var(--lime-dark);
+  text-decoration-color: var(--accent-strong);
 }
 .breadcrumbs strong {
   color: var(--ink);
@@ -38,7 +38,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  color: #56625f;
+  color: #565b62;
   font-size: 13px;
   font-weight: 900;
   letter-spacing: 0.12em;
@@ -96,8 +96,8 @@
   inset: 0;
   z-index: 1;
   background:
-    linear-gradient(180deg, rgba(5, 15, 14, 0.78) 0%, rgba(5, 15, 14, 0.04) 34%, rgba(5, 15, 14, 0.12) 55%),
-    linear-gradient(0deg, rgba(5, 15, 14, 0.9) 0%, transparent 46%);
+    linear-gradient(180deg, rgba(5, 9, 15, 0.78) 0%, rgba(5, 9, 15, 0.04) 34%, rgba(5, 9, 15, 0.12) 55%),
+    linear-gradient(0deg, rgba(5, 9, 15, 0.9) 0%, transparent 46%);
 }
 .category-route-card::before {
   content: "";
@@ -107,16 +107,16 @@
   top: 42px;
   right: -74px;
   z-index: 1;
-  border: 1px solid rgba(200, 255, 72, 0.28);
+  border: 1px solid rgba(72, 148, 255, 0.28);
   border-radius: 50%;
   box-shadow:
-    0 0 0 35px rgba(200, 255, 72, 0.04),
-    0 0 0 70px rgba(200, 255, 72, 0.025);
+    0 0 0 35px rgba(72, 148, 255, 0.04),
+    0 0 0 70px rgba(72, 148, 255, 0.025);
 }
 .category-route-card-status {
   position: relative;
   z-index: 2;
-  color: var(--lime);
+  color: var(--accent);
   font-size: 12px;
   font-weight: 900;
   letter-spacing: 0.12em;
@@ -130,9 +130,9 @@
   z-index: 2;
   display: grid;
   place-items: center;
-  color: var(--lime);
-  background: rgba(5, 15, 14, 0.7);
-  border: 1px solid rgba(200, 255, 72, 0.32);
+  color: var(--accent);
+  background: rgba(5, 9, 15, 0.7);
+  border: 1px solid rgba(72, 148, 255, 0.32);
   border-radius: 9px;
   backdrop-filter: blur(8px);
   font-size: 26px;

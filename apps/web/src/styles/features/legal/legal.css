@@ -25,7 +25,7 @@
 .legal-page__header p {
   max-width: 800px;
   margin: 0;
-  color: #53615e;
+  color: #535961;
   font-size: 18px;
   line-height: 1.65;
 }
@@ -40,9 +40,9 @@
   align-items: center;
   gap: 8px;
   padding: 9px 12px;
-  color: #19320b;
-  background: rgba(167, 255, 33, 0.22);
-  border: 1px solid rgba(94, 144, 18, 0.28);
+  color: #0b1b32;
+  background: rgba(33, 125, 255, 0.22);
+  border: 1px solid rgba(18, 70, 144, 0.28);
   border-radius: 999px;
   font-size: 12px;
   font-weight: 850;
@@ -61,7 +61,7 @@
   background: #fff;
   border: 1px solid var(--line);
   border-radius: 18px;
-  box-shadow: 0 24px 70px rgba(8, 24, 20, 0.07);
+  box-shadow: 0 24px 70px rgba(8, 15, 24, 0.07);
 }
 .legal-document h2 {
   margin: 0 0 12px;
@@ -75,7 +75,7 @@
 }
 .legal-document p {
   margin: 0;
-  color: #394844;
+  color: #393f48;
   font-size: 17px;
   line-height: 1.78;
   white-space: pre-line;
@@ -87,9 +87,9 @@
   gap: 9px;
   margin: 0 0 18px;
   padding: 13px 16px;
-  color: #20400c;
-  background: rgba(167, 255, 33, 0.16);
-  border: 1px solid rgba(94, 144, 18, 0.25);
+  color: #0c2240;
+  background: rgba(33, 125, 255, 0.16);
+  border: 1px solid rgba(18, 70, 144, 0.25);
   border-radius: 10px;
   font-size: 14px;
   font-weight: 750;
@@ -106,7 +106,7 @@
 }
 .legal-editor__heading p {
   margin: 0;
-  color: #5b6865;
+  color: #5b6068;
   font-size: 15px;
 }
 .legal-editor label {
@@ -121,8 +121,8 @@
   width: 100%;
   padding: 14px 16px;
   color: var(--ink);
-  background: #fbfcfa;
-  border: 1px solid #cbd3d0;
+  background: #fafbfc;
+  border: 1px solid #cbced3;
   border-radius: 9px;
   font: inherit;
   font-size: 16px;
@@ -132,11 +132,11 @@
 }
 .legal-editor input:focus,
 .legal-editor textarea:focus {
-  outline: 3px solid rgba(167, 255, 33, 0.25);
-  border-color: #77a72e;
+  outline: 3px solid rgba(33, 125, 255, 0.25);
+  border-color: #2e60a7;
 }
 .legal-editor label > small {
-  color: #66736f;
+  color: #666b73;
   font-size: 12px;
   font-weight: 600;
 }
@@ -147,7 +147,7 @@
 }
 .legal-page__updated {
   margin: 20px 0 0;
-  color: #687470;
+  color: #686d74;
   font-size: 13px;
   font-weight: 650;
 }

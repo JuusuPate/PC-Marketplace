@@ -18,7 +18,7 @@
   padding: 6px 8px;
   display: inline-flex;
   color: var(--ink);
-  background: var(--lime);
+  background: var(--accent);
   border-radius: 5px;
   font-size: 7px;
   font-weight: 950;
@@ -56,9 +56,9 @@
   display: grid;
   place-items: center;
   color: var(--ink);
-  background: var(--lime);
+  background: var(--accent);
   border-radius: 50%;
-  box-shadow: 0 0 0 18px rgba(200, 255, 72, 0.08);
+  box-shadow: 0 0 0 18px rgba(72, 148, 255, 0.08);
 }
 .auth-shield svg {
   width: 48px;
@@ -93,7 +93,7 @@
 }
 .auth-tabs button {
   padding: 11px;
-  color: #77817f;
+  color: #777b81;
   background: none;
   border: 0;
   border-bottom: 2px solid transparent;
@@ -108,7 +108,7 @@
 .auth-link-button {
   margin-top: 16px;
   padding: 6px 0;
-  color: #334a16;
+  color: #162c4a;
   background: transparent;
   border: 0;
   cursor: pointer;
@@ -118,7 +118,7 @@
   text-underline-offset: 3px;
 }
 .auth-link-button:focus-visible {
-  outline: 3px solid #8ab715;
+  outline: 3px solid #1558b7;
   outline-offset: 3px;
 }
 .auth-recovery {

@@ -5,7 +5,7 @@
   z-index: 100;
   display: grid;
   place-items: center;
-  background: rgba(3, 10, 9, 0.74);
+  background: rgba(3, 6, 10, 0.74);
   backdrop-filter: blur(8px);
   animation: backdrop-in 0.18s ease both;
 }
@@ -30,9 +30,9 @@
   z-index: 4;
   top: 13px;
   right: 13px;
-  color: #3a4744;
+  color: #3a3f47;
   background: rgba(255, 255, 255, 0.82);
-  border: 1px solid rgba(10, 21, 21, 0.12);
+  border: 1px solid rgba(10, 15, 21, 0.12);
   border-radius: 50%;
   backdrop-filter: blur(9px);
 }
@@ -52,7 +52,7 @@
   }
 }
 .modal-kicker {
-  color: #788380;
+  color: #787d83;
   font-size: 8px;
   font-weight: 950;
   letter-spacing: 0.14em;
@@ -64,7 +64,7 @@
 }
 .modal-lead {
   margin: 0 0 23px;
-  color: #687370;
+  color: #686d73;
   font-size: 12px;
   line-height: 1.55;
 }

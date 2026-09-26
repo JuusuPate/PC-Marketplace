@@ -9,8 +9,8 @@
 }
 .header-favourites-button.is-active {
   color: var(--ink);
-  border-color: #9ed01d;
-  background: #f4ffda;
+  border-color: #1d68d0;
+  background: var(--accent-soft);
 }
 .header-favourites-count {
   min-width: 18px;
@@ -22,7 +22,7 @@
   display: grid;
   place-items: center;
   color: var(--ink);
-  background: var(--lime);
+  background: var(--accent);
   border: 2px solid white;
   border-radius: 999px;
   font-size: 10px;
@@ -41,6 +41,6 @@
   place-items: center;
   border-radius: 50%;
   color: var(--ink);
-  background: var(--lime);
+  background: var(--accent);
   font-size: 9px;
 }

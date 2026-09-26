@@ -42,7 +42,7 @@
 .large-shield svg {
   width: 170px;
   height: 190px;
-  fill: var(--lime);
+  fill: var(--accent);
   stroke-width: 0.7;
 }
 .large-shield span {
@@ -59,14 +59,14 @@
   align-items: center;
   gap: 11px;
   color: var(--ink);
-  background: rgba(255, 255, 252, 0.94);
+  background: rgba(252, 253, 255, 0.94);
   border-radius: 8px;
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
 }
 .protection-chip > svg {
   width: 24px;
   height: 24px;
-  color: #78a50b;
+  color: #0b4ba5;
 }
 .protection-chip span {
   display: flex;
@@ -77,7 +77,7 @@
 }
 .protection-chip small {
   margin-top: 3px;
-  color: #697572;
+  color: #696e75;
   font-size: 8px;
   font-weight: 650;
   letter-spacing: 0;
@@ -126,5 +126,5 @@
 .protection-points svg {
   width: 13px;
   height: 13px;
-  color: var(--lime);
+  color: var(--accent);
 }

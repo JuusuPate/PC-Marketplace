@@ -62,14 +62,14 @@
   font-weight: 950;
 }
 .map-country small {
-  color: #66736f;
+  color: #666b73;
   font-size: 6px;
   letter-spacing: 0.11em;
 }
 .map-fi {
   left: 30%;
   top: 42%;
-  background-color: var(--lime);
+  background-color: var(--accent);
 }
 .cta-map--finland {
   display: grid;
