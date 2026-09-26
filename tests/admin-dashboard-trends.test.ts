@@ -20,6 +20,7 @@ function response() {
     buckets: Array.from({ length: 7 }, (_, index) => ({
       day: `2026-09-${19 + index}`,
       users_new: index,
+      users_total: 100 + (index * (index + 1)) / 2,
       listings_new: 0,
       orders_new: 1,
       orders_completed: 1,
@@ -64,6 +65,10 @@ it("rejects malformed periods, gaps, counts, category samples and denied access"
   for (const value of [
     { ...response(), days: 8 },
     { ...response(), buckets: response().buckets.slice(1) },
+    {
+      ...response(),
+      buckets: response().buckets.map((row, index) => (index === 3 ? { ...row, users_total: 0 } : row)),
+    },
     {
       ...response(),
       buckets: response().buckets.map((row, index) => (index === 3 ? { ...row, day: "2026-09-24" } : row)),

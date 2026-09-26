@@ -27,6 +27,8 @@ test("dashboard curves support every period, exact values, keyboard and mobile, 
         fees_minor: index * 300,
         reports_new: index % 4,
       }));
+      let userTotal = 100;
+      const totals = buckets.map((b) => ({ ...b, users_total: (userTotal += b.users_new) }));
       return route.fulfill({
         json: {
           data: {
@@ -37,7 +39,7 @@ test("dashboard curves support every period, exact values, keyboard and mobile, 
             start_date: buckets[0].day,
             end_date: buckets.at(-1)!.day,
             generated_at: "2026-09-25T12:00:00Z",
-            buckets,
+            buckets: totals,
             categories: [],
           },
           error: null,
@@ -115,6 +117,14 @@ test("dashboard curves support every period, exact values, keyboard and mobile, 
     expect(requested.at(-1)).toBe(days);
     await expect(board.getByRole("button", { name: label, exact: true })).toHaveAttribute("aria-pressed", "true");
   }
+  await board.getByRole("button", { name: /Kaikki käyttäjät/ }).click();
+  await expect(board.locator(".admin-trend-card h3")).toHaveText("Kaikki käyttäjät");
+  await board.locator(".admin-line-interaction").focus();
+  await page.keyboard.press("Home");
+  await expect(board.locator(".admin-chart-readout")).toContainText("120");
+  await page.keyboard.press("End");
+  const lastValue = (await board.locator(".admin-chart-readout").innerText()).split(" · ").at(-1)!;
+  await expect(board.locator(".admin-trend-heading > strong")).toHaveText(lastValue);
   await board.getByRole("button", { name: /Uudet ilmoitukset/ }).click();
   await expect(board.locator(".admin-trend-card h3")).toHaveText("Uudet ilmoitukset");
   await board.locator(".admin-line-interaction").focus();

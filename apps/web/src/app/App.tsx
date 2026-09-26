@@ -172,8 +172,8 @@ export function App() {
   const [locale, setLocale] = useState<Locale>("fi");
   const market = LAUNCH_MARKET;
   const [catalogPage, setCatalogPage] = useState(() => getCatalogPage(window.location.pathname));
-  const [catalogNavigationPages, setCatalogNavigationPages] = useState<readonly CatalogPage[]>(
-    () => CATALOG_PAGES.filter((page) => PRIMARY_NAVIGATION_PAGE_IDS.has(page.id)),
+  const [catalogNavigationPages, setCatalogNavigationPages] = useState<readonly CatalogPage[]>(() =>
+    CATALOG_PAGES.filter((page) => PRIMARY_NAVIGATION_PAGE_IDS.has(page.id)),
   );
   const [catalogNavigationFilter, setCatalogNavigationFilter] = useState<CatalogNavigationFilter | null>(
     () => getCatalogRouteFilter(window.location.pathname, window.location.search).filter,

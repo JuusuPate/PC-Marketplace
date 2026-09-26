@@ -490,6 +490,16 @@ describe("admin dashboard trends", () => {
   const sql = (days: string) => `select public.get_admin_dashboard_trends(${days}) as data`;
   const read = async (days = "7") => (await asRole("authenticated", adminId, sql(days))).rows[0].data as any;
 
+  it("carries forward users registered before the window and excludes future profiles", async () => {
+    await db.query("update public.profiles set joined_at=now()-interval '400 days' where id=$1", [adminId]);
+    await db.query("update public.profiles set joined_at=now()-interval '3 days' where id=$1", [userId]);
+    const data = await read();
+    expect(data.buckets.map((b: any) => b.users_total)).toEqual([1, 1, 1, 2, 2, 2, 2]);
+    expect(data.buckets.reduce((sum: number, b: any) => sum + b.users_new, 0)).toBe(1);
+    await db.query("update public.profiles set joined_at=now()+interval '1 day' where id=$1", [userId]);
+    expect((await read()).buckets.map((b: any) => b.users_total)).toEqual([1, 1, 1, 1, 1, 1, 1]);
+  });
+
   it("allows only current admins and validates the five supported periods", async () => {
     for (const [role, identity] of [
       ["anon", adminId],
@@ -543,6 +553,71 @@ describe("admin dashboard trends", () => {
       expect((await read()).buckets.map((row: any) => row.day)).toEqual(older.buckets.map((row: any) => row.day));
     } finally {
       await db.exec("set timezone='UTC'");
+    }
+  });
+});
+
+describe("model price trends", () => {
+  const sql = (id: string, days = "7") => `select public.get_admin_model_price_trends('${id}', ${days}) as data`;
+  const modelId = async () =>
+    (
+      await db.query<{ id: string }>(
+        "select id from public.catalog_product_models where category='pc' order by id limit 1",
+      )
+    ).rows[0].id;
+  const read = async (id: string, days = "7") =>
+    (await asRole("authenticated", adminId, sql(id, days))).rows[0].data as any;
+
+  it("denies non-admin and revoked identities, invalid models and periods", async () => {
+    const id = await modelId();
+    for (const [role, identity] of [
+      ["anon", adminId],
+      ["authenticated", null],
+      ["authenticated", userId],
+      ["service_role", null],
+    ] as const)
+      await expect(asRole(role, identity, sql(id))).rejects.toMatchObject({ code: "42501" });
+    for (const days of ["null", "0", "8", "366"]) await expect(read(id, days)).rejects.toMatchObject({ code: "22023" });
+    await expect(read("00000000-0000-4000-8000-000000000000")).rejects.toMatchObject({ code: "22023" });
+    for (const days of [7, 30, 90, 180, 365]) {
+      const data = await read(id, String(days));
+      expect(data.buckets).toHaveLength(days);
+      expect(data.current).toEqual({ sales_count: 0, value_minor: 0, average_minor: null });
+      expect(data.buckets.every((b: any) => b.average_minor === null)).toBe(true);
+    }
+    await db.query("delete from public.user_roles where user_id=$1", [adminId]);
+    await expect(read(id)).rejects.toMatchObject({ code: "42501" });
+  });
+
+  it("uses weighted completed-order prices, exact Helsinki period boundaries and model isolation", async () => {
+    const id = await modelId();
+    for (const price of [10000, 30000, 30000, 20000, 90000, 80000]) await order("completed", price, 200);
+    await order("refunded", 99999, 200);
+    await db.query("update public.listings set catalog_model_id=$1", [id]);
+    const midnight = "((now() at time zone 'Europe/Helsinki')::date::timestamp at time zone 'Europe/Helsinki')";
+    await db.exec(`update public.orders set created_at=${midnight}-interval '6 days' where item_price_minor=10000;
+      update public.orders set created_at=${midnight}-interval '13 days' where item_price_minor=20000;
+      update public.orders set created_at=${midnight}-interval '13 days 1 second' where item_price_minor=90000;
+      update public.orders set created_at=now()+interval '1 day' where item_price_minor=80000;`);
+    // An eligible sale without the selected catalog link must not contaminate its price.
+    await order("completed", 77777, 200);
+    const data = await read(id);
+    expect(data.current).toEqual({ sales_count: 3, value_minor: 70000, average_minor: 23333 });
+    expect(data.previous).toEqual({ sales_count: 1, value_minor: 20000, average_minor: 20000 });
+    expect(data.buckets[0]).toMatchObject({ sales_count: 1, average_minor: 10000 });
+    expect(data.buckets[1]).toMatchObject({ sales_count: 0, average_minor: null });
+    expect(data.buckets.at(-1)).toMatchObject({ sales_count: 2, average_minor: 30000 });
+    await db.exec("set timezone='America/New_York'");
+    try {
+      expect((await read(id)).buckets).toEqual(data.buckets);
+    } finally {
+      await db.exec("set timezone='UTC'");
+    }
+    await db.query("update public.catalog_product_models set is_active=false where id=$1", [id]);
+    try {
+      expect((await read(id)).current).toEqual(data.current);
+    } finally {
+      await db.query("update public.catalog_product_models set is_active=true where id=$1", [id]);
     }
   });
 });

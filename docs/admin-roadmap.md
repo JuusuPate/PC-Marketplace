@@ -17,7 +17,7 @@ Lähde: käyttäjän nimeämä keskustelu **Rigin admin dashboardin sisältö**.
 
 ## V2 – laajennukset
 
-1. **Analytics:** luontiaikaan perustuva aikavertailu sekä päivittäiset 7/30/90/180/365 vrk käyrät ja saman aikavälin tuoteryhmävertailut on toteutettu. Uusi kaaviorajapinta odottaa Supabase-migraation etäasennusta. Kävijä-/käyttötapahtumia ei vielä kerätä; aktiivisuutta tai konversiota ei voi päätellä nolliksi.
+1. **Analytics:** luontiaikaan perustuva aikavertailu sekä päivittäiset 7/30/90/180/365 vrk käyrät, nykyisten käyttäjätilien kertymä sekä katalogituotteen toteutuneiden hintojen aikavertailut on toteutettu. Kaksi uutta kaaviomigraatiota odottaa Supabasen etäasennusta. Kävijä-/käyttötapahtumia ei vielä kerätä; aktiivisuutta tai konversiota ei voi päätellä nolliksi.
 2. **Finance:** nykyinen vuosi-/kuukausiyhteenveto näyttää nykytilaltaan valmiiden tilausten tuotearvon ja palvelumaksut. Kirjanpidon tapahtumakirja, hyvitykset, chargebackit, kulujen täsmäytys, ALV-erittely, tilitykset ja vienti puuttuvat. Rahaliikenteen integraatio on ensin toteutettava.
 3. **Moderation:** raportin käsittely sekä ilmoituksen perusteltu piilotus ja palautus on toteutettu. Sanktiot, duplikaatit ja ihmisen tarkistamat riskisignaalit puuttuvat.
 4. **DAC7:** alkuperäinen ehdotus edellyttää oikeudellisesti varmennettua määrittelyä ennen raportointilogiikkaa. Raportointivuoden, myyjän tunnistamisen, soveltamisalan, kynnysten ja henkilötietojen säilytyksen määrittely puuttuu.

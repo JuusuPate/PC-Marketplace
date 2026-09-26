@@ -127,17 +127,53 @@ export function AdminTrendChart({
   locale: Locale;
   money?: boolean;
 }) {
+  return (
+    <AdminDailyChart
+      days={data.days}
+      buckets={data.buckets.map((day) => ({ day: day.day, value: day[field] }))}
+      total={
+        field === "usersTotal"
+          ? data.buckets.at(-1)!.usersTotal
+          : data.buckets.reduce((sum, day) => sum + day[field], 0)
+      }
+      label={label}
+      locale={locale}
+      money={money}
+    />
+  );
+}
+
+export function AdminDailyChart({
+  days,
+  buckets,
+  total,
+  label,
+  locale,
+  money = false,
+}: {
+  days: DashboardPeriod;
+  buckets: { day: string; value: number | null }[];
+  total: number | null;
+  label: string;
+  locale: Locale;
+  money?: boolean;
+}) {
   const copy = chartCopy(locale);
   const gradientId = useId();
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const values = data.buckets.map((day) => day[field]);
-  const total = values.reduce((sum, value) => sum + value, 0);
-  const maximum = Math.max(...values, money ? 100 : 1);
+  const values = buckets.map((day) => day.value);
+  const display = (value: number | null) => (value === null ? copy.noSample : formatMetric(value, money, locale));
+  const maximum = Math.max(...values.filter((value): value is number => value !== null), money ? 100 : 1);
   const points = values.map((value, index) => ({
     x: 82 + (index / (values.length - 1)) * 618,
-    y: 220 - (value / maximum) * 192,
+    y: 220 - ((value ?? 0) / maximum) * 192,
   }));
-  const line = smoothLine(points);
+  const segments: { x: number; y: number }[][] = [];
+  points.forEach((point, index) => {
+    if (values[index] === null) return;
+    if (index === 0 || values[index - 1] === null) segments.push([]);
+    segments[segments.length - 1].push(point);
+  });
   const active = activeIndex === null ? null : Math.min(activeIndex, points.length - 1);
   const axisValue = (value: number) =>
     new Intl.NumberFormat(locale, { notation: "compact", maximumFractionDigits: 1 }).format(
@@ -150,15 +186,13 @@ export function AdminTrendChart({
         <div>
           <h3>{label}</h3>
           <span>
-            {copy.periods[data.days]} · {copy.daily}
+            {copy.periods[days]} · {copy.daily}
           </span>
         </div>
-        <strong>{formatMetric(total, money, locale)}</strong>
+        <strong>{display(total)}</strong>
       </div>
       <div className="admin-chart-readout" aria-live="polite">
-        {active === null
-          ? copy.inspect
-          : `${formatDay(data.buckets[active].day, locale)} · ${formatMetric(values[active], money, locale)}`}
+        {active === null ? copy.inspect : `${formatDay(buckets[active].day, locale)} · ${display(values[active])}`}
       </div>
       <div
         className="admin-line-interaction"
@@ -218,8 +252,18 @@ export function AdminTrendChart({
               </text>
             </g>
           ))}
-          <path d={`${line} L 700 220 L 82 220 Z`} fill={`url(#${gradientId})`} />
-          <path className="admin-line-stroke" d={line} />
+          {segments.map((segment, index) => (
+            <g key={index}>
+              <path
+                d={smoothLine(segment) + " L " + segment.at(-1)!.x + " 220 L " + segment[0].x + " 220 Z"}
+                fill={`url(#${gradientId})`}
+              />
+              <path className="admin-line-stroke" d={smoothLine(segment)} />
+              {segment.length === 1 && (
+                <circle className="admin-line-point" cx={segment[0].x} cy={segment[0].y} r="4" />
+              )}
+            </g>
+          ))}
           {[0, Math.floor((values.length - 1) / 2), values.length - 1].map((index, tick) => (
             <text
               key={index}
@@ -228,19 +272,21 @@ export function AdminTrendChart({
               textAnchor={tick === 0 ? "start" : tick === 2 ? "end" : "middle"}
             >
               {new Intl.DateTimeFormat(locale, { day: "numeric", month: "short", timeZone: "UTC" }).format(
-                new Date(`${data.buckets[index].day}T00:00:00Z`),
+                new Date(`${buckets[index].day}T00:00:00Z`),
               )}
             </text>
           ))}
           {active !== null && (
             <g>
               <line className="admin-line-guide" x1={points[active].x} x2={points[active].x} y1="20" y2="220" />
-              <circle className="admin-line-point" cx={points[active].x} cy={points[active].y} r="4" />
+              {values[active] !== null && (
+                <circle className="admin-line-point" cx={points[active].x} cy={points[active].y} r="4" />
+              )}
             </g>
           )}
         </svg>
       </div>
-      {total === 0 && <p className="admin-chart-empty">{copy.empty}</p>}
+      {(total === null || (!money && total === 0)) && <p className="admin-chart-empty">{copy.empty}</p>}
       <details className="admin-chart-details">
         <summary>{copy.breakdown}</summary>
         <div className="admin-table-scroll">
@@ -252,10 +298,10 @@ export function AdminTrendChart({
               </tr>
             </thead>
             <tbody>
-              {data.buckets.map((day) => (
+              {buckets.map((day) => (
                 <tr key={day.day}>
                   <th scope="row">{formatDay(day.day, locale)}</th>
-                  <td>{formatMetric(day[field], money, locale)}</td>
+                  <td>{display(day.value)}</td>
                 </tr>
               ))}
             </tbody>
@@ -319,7 +365,9 @@ export function AdminTrendExplorer({
                 <span>{item.label}</span>
                 <strong>
                   {formatMetric(
-                    values.reduce((sum, value) => sum + value, 0),
+                    item.field === "usersTotal"
+                      ? values[values.length - 1]
+                      : values.reduce((sum, value) => sum + value, 0),
                     item.money ?? false,
                     locale,
                   )}

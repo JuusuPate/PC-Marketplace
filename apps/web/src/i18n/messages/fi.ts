@@ -22,8 +22,7 @@ export const fi = {
   heroEyebrow: "Rakennettu Harrastajalta harrastajille",
   heroTitleA: "Hyvät osat ansaitsevat",
   heroTitleB: "uuden kokoonpanon.",
-  heroBody:
-    "",
+  heroBody: "",
   featuredShowcase: "Nostetut ilmoitukset",
   featuredListing: "Nostettu ilmoitus",
   featuredLogic: "Suosio + uudet löydöt",

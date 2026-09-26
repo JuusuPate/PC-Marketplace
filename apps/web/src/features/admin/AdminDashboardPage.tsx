@@ -151,6 +151,7 @@ function AdminOverviewTrends({ locale }: { locale: Locale }) {
       <div className="admin-section-heading">
         <h2>{copy.periodData}</h2>
         <p>{copy.overviewNote}</p>
+        <p>{copy.usersNote}</p>
       </div>
       <AdminPeriodPicker locale={locale} period={trends.period} onChange={trends.setPeriod} />
       <AdminTrendStatus locale={locale} state={trends.state} />
@@ -159,6 +160,7 @@ function AdminOverviewTrends({ locale }: { locale: Locale }) {
           data={trends.state.data}
           locale={locale}
           metrics={[
+            { field: "usersTotal", label: copy.usersTotal },
             { field: "usersNew", label: copy.users },
             { field: "listingsNew", label: copy.listings },
             { field: "ordersNew", label: copy.orders },

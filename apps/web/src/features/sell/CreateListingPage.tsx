@@ -192,11 +192,7 @@ export function CreateListingPage({
         ? formCopy.optionalTitle
         : formCopy.componentTitle;
   const technicalSectionHelp =
-    safeCategory === "pc"
-      ? formCopy.pcHelp
-      : safeCategory === "other"
-        ? formCopy.optionalHelp
-        : formCopy.componentHelp;
+    safeCategory === "pc" ? formCopy.pcHelp : safeCategory === "other" ? formCopy.optionalHelp : formCopy.componentHelp;
   const numericPrice = Number(price.replace(",", "."));
   const formattedPrice =
     Number.isFinite(numericPrice) && numericPrice > 0
@@ -970,7 +966,9 @@ export function CreateListingPage({
               <section>
                 <span>{wizardCopy.steps[0]}</span>
                 <strong>{copy[safeCategory]}</strong>
-                <p>{copy[condition === "fair" ? "conditionFair" : condition]} · {formattedPrice}</p>
+                <p>
+                  {copy[condition === "fair" ? "conditionFair" : condition]} · {formattedPrice}
+                </p>
                 <button type="button" onClick={() => moveToStep(1)}>
                   {wizardCopy.edit}
                 </button>

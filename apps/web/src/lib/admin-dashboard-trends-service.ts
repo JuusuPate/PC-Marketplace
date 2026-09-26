@@ -6,6 +6,7 @@ export type DashboardPeriod = (typeof dashboardPeriods)[number];
 export interface DashboardDay {
   day: string;
   usersNew: number;
+  usersTotal: number;
   listingsNew: number;
   ordersNew: number;
   ordersCompleted: number;
@@ -32,7 +33,7 @@ export interface AdminDashboardTrends {
   categories: DashboardCategory[];
 }
 
-function date(value: unknown): string {
+export function dashboardDate(value: unknown): string {
   if (
     typeof value !== "string" ||
     !/^\d{4}-\d{2}-\d{2}$/.test(value) ||
@@ -62,8 +63,8 @@ export function parseAdminDashboardTrends(value: unknown): AdminDashboardTrends 
   )
     throw new Error("Invalid dashboard trends");
   const days = row.days as DashboardPeriod;
-  const startDate = date(row.start_date),
-    endDate = date(row.end_date);
+  const startDate = dashboardDate(row.start_date),
+    endDate = dashboardDate(row.end_date);
   if (
     row.buckets.length !== days ||
     Date.parse(`${endDate}T00:00:00Z`) - Date.parse(`${startDate}T00:00:00Z`) !== (days - 1) * 86400000
@@ -71,12 +72,13 @@ export function parseAdminDashboardTrends(value: unknown): AdminDashboardTrends 
     throw new Error("Invalid dashboard period");
   const buckets = row.buckets.map((value, index): DashboardDay => {
     const item = adminRecord(value);
-    const day = date(item.day);
+    const day = dashboardDate(item.day);
     if (Date.parse(`${day}T00:00:00Z`) !== Date.parse(`${startDate}T00:00:00Z`) + index * 86400000)
       throw new Error("Invalid dashboard bucket order");
     const result = {
       day,
       usersNew: adminCount(item.users_new),
+      usersTotal: adminCount(item.users_total),
       listingsNew: adminCount(item.listings_new),
       ordersNew: adminCount(item.orders_new),
       ordersCompleted: adminCount(item.orders_completed),
@@ -85,7 +87,12 @@ export function parseAdminDashboardTrends(value: unknown): AdminDashboardTrends 
       reportsNew: adminCount(item.reports_new),
     };
     if (result.ordersCompleted > result.ordersNew) throw new Error("Invalid completed order count");
+    if (result.usersTotal < result.usersNew) throw new Error("Invalid cumulative users");
     return result;
+  });
+  buckets.forEach((bucket, index) => {
+    if (index > 0 && bucket.usersTotal !== buckets[index - 1].usersTotal + bucket.usersNew)
+      throw new Error("Inconsistent cumulative users");
   });
   const seen = new Set<string>();
   const categories = row.categories.map((value): DashboardCategory => {

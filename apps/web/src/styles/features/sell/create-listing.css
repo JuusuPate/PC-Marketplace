@@ -183,7 +183,7 @@
   gap: 18px;
 }
 .create-listing-form__error {
-  display: none;
+  display: block;
 }
 
 .required-fields-note {
