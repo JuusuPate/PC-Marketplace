@@ -1,10 +1,9 @@
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { CategoryNavigation } from "../components/CategoryNavigation";
 import { Header } from "../components/Header";
 import { Icon } from "../components/Icon";
 import { ListingCard } from "../components/ListingCard";
-import { HomeHighlights } from "../features/home/HomeHighlights";
-import { HomeMarketingAnnouncement } from "../features/home/HomeMarketingAnnouncement";
+import { HomePage } from "../features/home/HomePage";
 import {
   CATALOG_PAGES,
   getCatalogPage,
@@ -31,11 +30,6 @@ import {
   isAdminSettingsPath,
   isAdminReportsPath,
 } from "../config/admin-routes";
-import {
-  HOME_HERO_BACKGROUND_IMAGE,
-  HOME_HERO_BACKGROUND_POSITION,
-  HOME_HERO_BACKGROUND_SIZE,
-} from "../config/home-hero";
 import { LAUNCH_MARKET, MARKETS } from "../config/markets";
 import { DEMO_LISTINGS } from "../data/demo-listings";
 import { AccountModal } from "../features/account/AccountModal";
@@ -46,7 +40,6 @@ import { PasswordRecoveryModal } from "../features/auth/PasswordRecoveryModal";
 import { CategoryHero } from "../features/catalog/CategoryHero";
 import { CheckoutModal } from "../features/checkout/CheckoutModal";
 import { FavouritesModal } from "../features/favourites/FavouritesModal";
-import { FeaturedShowcase } from "../features/home/FeaturedShowcase";
 import { ListingDetailPage } from "../features/listings/ListingDetailPage";
 import { LegalPage } from "../features/legal/LegalPage";
 import { CreateListingPage } from "../features/sell/CreateListingPage";
@@ -67,14 +60,6 @@ type SortOption = "newest" | "oldest" | "priceLow" | "priceHigh" | "bestDeals";
 
 const CREATE_LISTING_PATH = "/myy/uusi";
 const MAX_NAVIGATION_PRICE_MINOR = 100_000_000;
-const HOME_HERO_BACKGROUND_STYLE = HOME_HERO_BACKGROUND_IMAGE
-  ? ({
-      "--home-hero-background-image": `url(${JSON.stringify(HOME_HERO_BACKGROUND_IMAGE)})`,
-      "--home-hero-background-position": HOME_HERO_BACKGROUND_POSITION,
-      "--home-hero-background-size": HOME_HERO_BACKGROUND_SIZE,
-    } as CSSProperties)
-  : undefined;
-
 function toNavigationFilter(filter: CatalogRuntimeFilter): CatalogNavigationFilter | null {
   if (filter.kind === "price_max_minor") return { maxPriceMinor: filter.maxPriceMinor };
   if (filter.kind === "featured") return { featuredOnly: true };
@@ -223,6 +208,20 @@ export function App() {
   const [pendingSell, setPendingSell] = useState(false);
   const [pendingCheckout, setPendingCheckout] = useState<Listing | null>(null);
   const [toast, setToast] = useState<string | null>(null);
+  const [homeExpanded, setHomeExpanded] = useState(false);
+  const [homeSeed] = useState(() => Math.floor(Math.random() * 4294967296));
+  const [rankingTime] = useState(() => Date.now());
+  const [viewedIds, setViewedIds] = useState<string[]>([]);
+  const [listingsLoading, setListingsLoading] = useState(backendMode === "supabase");
+  const [listingsError, setListingsError] = useState(false);
+  const [listingReload, setListingReload] = useState(0);
+  useEffect(() => {
+    setViewedIds([]);
+  }, [user?.id]);
+  useEffect(() => {
+    if (listingPageId)
+      setViewedIds((previous) => [listingPageId, ...previous.filter((id) => id !== listingPageId)].slice(0, 40));
+  }, [listingPageId, user?.id]);
 
   const copy = getMessages(locale);
   const runtimeCopy = getRuntimeCopy(locale);
@@ -521,6 +520,8 @@ export function App() {
     if (backendMode !== "supabase") return;
     let isCurrent = true;
 
+    setListingsLoading(true);
+    setListingsError(false);
     listingService
       .listActive()
       .then((nextListings) => {
@@ -528,14 +529,18 @@ export function App() {
       })
       .catch(() => {
         if (!isCurrent) return;
+        setListingsError(true);
         setToast(getRuntimeCopy(locale).listingError);
         window.setTimeout(() => setToast(null), 3200);
+      })
+      .finally(() => {
+        if (isCurrent) setListingsLoading(false);
       });
 
     return () => {
       isCurrent = false;
     };
-  }, []);
+  }, [listingReload]);
 
   const visibleListings = useMemo(() => {
     const normalizedQuery = query.trim().toLocaleLowerCase();
@@ -926,198 +931,117 @@ export function App() {
               onSell={requireSellAuth}
             />
           ) : (
-            <>
-              <section
-                className={`home-hero${HOME_HERO_BACKGROUND_STYLE ? " home-hero--with-background" : ""}`}
-                style={HOME_HERO_BACKGROUND_STYLE}
-              >
-                <div className="hero section-shell">
-                  <div className="hero-copy">
-                    <div className="eyebrow">{copy.heroEyebrow}</div>
-                    <h1>
-                      {copy.heroTitleA}
-                      <br />
-                      <em>{copy.heroTitleB}</em>
-                    </h1>
-                    <p>{copy.heroBody}</p>
-                    <div className="hero-actions">
-                      <a className="button button--primary" href="#marketplace">
-                        {copy.browseDeals}
-                        <Icon name="arrow" />
-                      </a>
-                      <button className="button button--outline" type="button" onClick={requireSellAuth}>
-                        <Icon name="plus" />
-                        {copy.listForSale}
-                      </button>
-                    </div>
-                    <div className="hero-proof">
-                      <div>
-                        <strong>1.5%</strong>
-                        <span>demo fee</span>
-                      </div>
-                      <div>
-                        <strong>48 h</strong>
-                        <span>inspection</span>
-                      </div>
-                      <div>
-                        <strong>7</strong>
-                        <span>{copy.categoryNavigation}</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="hero-art">
-                    <FeaturedShowcase
-                      listings={listings}
-                      locale={locale}
-                      copy={copy}
-                      onOpen={(listing) => navigateTo(getListingPath(listing.id))}
-                    />
-                  </div>
-                </div>
-              </section>
-
-              <HomeMarketingAnnouncement locale={locale} />
-              <HomeHighlights locale={locale} />
-
-              <section className="trust-strip">
-                <div>
-                  <Icon name="shield" />
-                  <span>
-                    <strong>{copy.protectedPurchases}</strong>
-                    <small>48 h inspection window</small>
-                  </span>
-                </div>
-                <div>
-                  <Icon name="check" />
-                  <span>
-                    <strong>{copy.verifiedSellers}</strong>
-                    <small>Identity & trade history</small>
-                  </span>
-                </div>
-                <div>
-                  <Icon name="truck" />
-                  <span>
-                    <strong>{copy.marketShipping}</strong>
-                  </span>
-                </div>
-              </section>
-            </>
+            <HomePage
+              locale={locale}
+              copy={copy}
+              listings={listings}
+              favourites={favourites}
+              favouriteListings={favouriteListings}
+              viewedIds={viewedIds}
+              userId={user?.id}
+              seed={homeSeed}
+              rankingTime={rankingTime}
+              expanded={homeExpanded}
+              onExpand={() => setHomeExpanded(true)}
+              loading={listingsLoading}
+              error={listingsError}
+              onRetry={() => setListingReload((value) => value + 1)}
+              onNavigate={navigateTo}
+              onFavourite={toggleFavourite}
+            />
           ))}
 
-        {!adminPath && !legalRoute && !listingPageId && !editListingId && (!createListingPage || !user) && (
-          <section
-            className={`marketplace-section section-shell${catalogPage ? " marketplace-section--category" : ""}`}
-            id="marketplace"
-          >
-            <div className="section-heading">
-              <div>
-                <span className="section-index">{catalogPage ? "01 / CATEGORY" : "01 / MARKET"}</span>
-                <h2>{catalogPage ? copy.categoryListings : copy.marketplace}</h2>
-              </div>
-              <span className="listing-count">
-                {visibleListings.length} {copy.listings}
-              </span>
-            </div>
-            <div className="market-toolbar">
-              <label className="search-box">
-                <Icon name="search" />
-                <input
-                  value={query}
-                  onChange={(event) => setQuery(event.target.value)}
-                  placeholder={copy.searchPlaceholder}
-                />
-                <kbd>⌘ K</kbd>
-              </label>
-              <label className="sort-select">
-                <select value={sort} onChange={(event) => setSort(event.target.value as SortOption)}>
-                  <option value="newest">{copy.newest}</option>
-                  <option value="oldest">{copy.oldest}</option>
-                  <option value="priceLow">{copy.priceLow}</option>
-                  <option value="priceHigh">{copy.priceHigh}</option>
-                  <option value="bestDeals">{copy.bestDeals}</option>
-                </select>
-                <Icon name="chevron" />
-              </label>
-            </div>
-            {categoryFilters.length > 0 && (
-              <div className="category-row">
-                {categoryFilters.map((item) => (
-                  <button
-                    key={item.key}
-                    type="button"
-                    className={category === item.key ? "active" : ""}
-                    onClick={() => setCategory(item.key)}
-                  >
-                    <span>{item.glyph}</span>
-                    {copy[item.key]}
-                  </button>
-                ))}
-              </div>
-            )}
-            {visibleListings.length > 0 ? (
-              <div className="listing-grid">
-                {visibleListings.map((listing) => (
-                  <ListingCard
-                    key={listing.id}
-                    listing={listing}
-                    locale={locale}
-                    copy={copy}
-                    favourite={favourites.includes(listing.id)}
-                    href={getListingPath(listing.id)}
-                    onFavourite={() => toggleFavourite(listing.id)}
-                    onOpen={() => navigateTo(getListingPath(listing.id))}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="empty-state">
-                <div>⌁</div>
-                <h3>{copy.noResults}</h3>
-                <button
-                  className="button button--outline"
-                  type="button"
-                  onClick={() => {
-                    if (catalogNavigationFilter && catalogPage) {
-                      navigateTo(catalogPage.path, "#marketplace");
-                      return;
-                    }
-                    setQuery("");
-                    setCategory("all");
-                  }}
-                >
-                  {copy.resetFilters}
-                </button>
-              </div>
-            )}
-          </section>
-        )}
-
-        {!adminPath &&
+        {catalogPage &&
+          !adminPath &&
           !legalRoute &&
           !listingPageId &&
           !editListingId &&
-          (!createListingPage || !user) &&
-          !catalogPage && (
-            <>
-              <section className="cta-section section-shell">
+          (!createListingPage || !user) && (
+            <section
+              className={`marketplace-section section-shell${catalogPage ? " marketplace-section--category" : ""}`}
+              id="marketplace"
+            >
+              <div className="section-heading">
                 <div>
-                  <span className="section-index section-index--light">{copy.launchBadge}</span>
-                  <h2>{copy.ctaTitle}</h2>
-                  <p>{copy.ctaBody}</p>
+                  <span className="section-index">{catalogPage ? "01 / CATEGORY" : "01 / MARKET"}</span>
+                  <h2>{catalogPage ? copy.categoryListings : copy.marketplace}</h2>
+                </div>
+                <span className="listing-count">
+                  {visibleListings.length} {copy.listings}
+                </span>
+              </div>
+              <div className="market-toolbar">
+                <label className="search-box">
+                  <Icon name="search" />
+                  <input
+                    value={query}
+                    onChange={(event) => setQuery(event.target.value)}
+                    placeholder={copy.searchPlaceholder}
+                  />
+                  <kbd>⌘ K</kbd>
+                </label>
+                <label className="sort-select">
+                  <select value={sort} onChange={(event) => setSort(event.target.value as SortOption)}>
+                    <option value="newest">{copy.newest}</option>
+                    <option value="oldest">{copy.oldest}</option>
+                    <option value="priceLow">{copy.priceLow}</option>
+                    <option value="priceHigh">{copy.priceHigh}</option>
+                    <option value="bestDeals">{copy.bestDeals}</option>
+                  </select>
+                  <Icon name="chevron" />
+                </label>
+              </div>
+              {categoryFilters.length > 0 && (
+                <div className="category-row">
+                  {categoryFilters.map((item) => (
+                    <button
+                      key={item.key}
+                      type="button"
+                      className={category === item.key ? "active" : ""}
+                      onClick={() => setCategory(item.key)}
+                    >
+                      <span>{item.glyph}</span>
+                      {copy[item.key]}
+                    </button>
+                  ))}
+                </div>
+              )}
+              {visibleListings.length > 0 ? (
+                <div className="listing-grid">
+                  {visibleListings.map((listing) => (
+                    <ListingCard
+                      key={listing.id}
+                      listing={listing}
+                      locale={locale}
+                      copy={copy}
+                      favourite={favourites.includes(listing.id)}
+                      href={getListingPath(listing.id)}
+                      onFavourite={() => toggleFavourite(listing.id)}
+                      onOpen={() => navigateTo(getListingPath(listing.id))}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="empty-state">
+                  <div>⌁</div>
+                  <h3>{copy.noResults}</h3>
                   <button
-                    className="button button--light"
+                    className="button button--outline"
                     type="button"
-                    onClick={() => (user ? setAccountOpen(true) : setAuthOpen(true))}
+                    onClick={() => {
+                      if (catalogNavigationFilter && catalogPage) {
+                        navigateTo(catalogPage.path, "#marketplace");
+                        return;
+                      }
+                      setQuery("");
+                      setCategory("all");
+                    }}
                   >
-                    {copy.joinDemo}
-                    <Icon name="arrow" />
+                    {copy.resetFilters}
                   </button>
                 </div>
-                <div className="cta-map cta-map--finland" aria-label={copy.marketShipping}>
-                  <span className="map-country map-fi">✓</span>
-                </div>
-              </section>
-            </>
+              )}
+            </section>
           )}
       </main>
 

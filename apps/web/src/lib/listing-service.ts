@@ -15,7 +15,7 @@ import { backendMode, supabase } from "./supabase";
 
 const LISTING_IMAGES_BUCKET = "listing-images";
 const LISTING_SELECT =
-  "id,catalog_model_id,title,description,category,condition,price_minor,currency,city,specs,status,is_featured,created_at,seller:profiles!listings_seller_id_fkey(id,display_name,country_code,joined_at,reviews:reviews!reviews_subject_id_fkey(rating)),destinations:listing_shipping_countries(country_code),images:listing_images(id,storage_path,alt_text,width,height,sort_order)";
+  "id,catalog_model_id,title,description,category,condition,price_minor,currency,city,specs,status,is_featured,created_at,published_at,seller:profiles!listings_seller_id_fkey(id,display_name,country_code,joined_at,reviews:reviews!reviews_subject_id_fkey(rating)),destinations:listing_shipping_countries(country_code),images:listing_images(id,storage_path,alt_text,width,height,sort_order)";
 
 interface DbListingImage {
   id: string;
@@ -48,6 +48,7 @@ interface DbListing {
   catalog_model_id: string | null;
   is_featured: boolean;
   created_at: string;
+  published_at?: string | null;
   seller: DbSeller | DbSeller[];
   destinations: Array<{ country_code: CountryCode }>;
   images?: DbListingImage[];
@@ -164,6 +165,7 @@ function mapListing(row: DbListing): Listing {
     serialVerified: false,
     createdLabel: new Date(row.created_at).toLocaleDateString(),
     createdAt: row.created_at,
+    publishedAt: row.published_at,
     visual: visualFor(row.id),
     images: (row.images ?? []).sort((a, b) => a.sort_order - b.sort_order).map(mapImage),
   };
@@ -179,7 +181,8 @@ export const listingService = {
       .from("listings")
       .select(LISTING_SELECT)
       .eq("status", "active")
-      .order("published_at", { ascending: false })
+      .order("published_at", { ascending: false, nullsFirst: false })
+      .order("id", { ascending: true })
       .limit(60);
 
     if (error) throw error;

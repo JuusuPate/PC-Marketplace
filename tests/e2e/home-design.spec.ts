@@ -4,18 +4,18 @@ for (const width of [1440, 1024, 390]) {
   test(`merged home design keeps navigation and content usable at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/");
-    const highlights = page.getByRole("region", { name: "Markkinapaikan esittely" });
-    await expect(highlights.getByRole("heading")).toHaveCount(3);
-    await expect(highlights.getByRole("heading", { name: "Harrastajilta toisille" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Löydä seuraava päivityksesi." })).toBeVisible();
+    await expect(page.getByRole("region", { name: "Uusimmat ilmoitukset" }).locator(".listing-card")).toHaveCount(5);
+    await expect(page.getByRole("region", { name: "Sinulle suositeltua" })).toBeVisible();
+    await expect(page.locator("#marketplace")).toHaveCount(0);
+    expect(await page.locator(".storefront-hero").evaluate((el) => Math.round(el.getBoundingClientRect().width))).toBe(
+      width,
+    );
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
     await page.getByRole("button", { name: "Suomi", exact: true }).click();
     await expect(page.getByRole("menu", { name: "Select language" })).toBeVisible();
     await page.getByRole("menuitemradio", { name: "English", exact: true }).click();
-    await expect(
-      page
-        .getByRole("region", { name: "Marketplace highlights" })
-        .getByRole("heading", { name: "Ready-made solutions" }),
-    ).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Find your next upgrade." })).toBeVisible();
     await page.getByRole("button", { name: "English", exact: true }).click();
     await page.keyboard.press("Escape");
     await expect(page.getByRole("menu", { name: "Select language" })).toHaveCount(0);
@@ -28,3 +28,42 @@ for (const width of [1440, 1024, 390]) {
     await expect(page.getByRole("heading", { name: "Dashboard tarvitsee palveluyhteyden" })).toBeVisible();
   });
 }
+
+test("recommendations expand once to 48, survive navigation, and reset on reload", async ({ page }) => {
+  await page.goto("/");
+  await page.evaluate(async () => {
+    const { DEMO_LISTINGS } = await import("/src/data/demo-listings.ts");
+    const source = DEMO_LISTINGS.find((item: any) => item.seller.countryCode === "FI");
+    localStorage.setItem(
+      "pc-marketplace.demo-listings",
+      JSON.stringify(
+        Array.from({ length: 80 }, (_, i) => ({
+          ...source,
+          id: `recommendation-${i}`,
+          title: `Component ${i}`,
+          seller: { ...source.seller, id: `seller-${i}` },
+          status: "active",
+          publishedAt: new Date(Date.now() - i * 1000).toISOString(),
+        })),
+      ),
+    );
+  });
+  await page.reload();
+  const grid = page.locator("#recommendation-grid");
+  await expect(grid.locator(".listing-card")).toHaveCount(24);
+  const first = await grid.locator(".card-title").allTextContents();
+  await page.getByRole("button", { name: "Lisää suositeltuja", exact: true }).click();
+  await expect(grid.locator(".listing-card")).toHaveCount(48);
+  expect((await grid.locator(".card-title").allTextContents()).slice(0, 24)).toEqual(first);
+  await expect(page.getByRole("button", { name: "Lisää suositeltuja", exact: true })).toHaveCount(0);
+  await page.getByRole("link", { name: "Selaa tuotteita", exact: true }).click();
+  await expect(page.locator("#marketplace")).toBeVisible();
+  await page.locator(".site-footer .brand").click();
+  await expect(grid.locator(".listing-card")).toHaveCount(48);
+  await page.reload();
+  await expect(grid.locator(".listing-card")).toHaveCount(24);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  expect(await page.locator(".storefront-hero").evaluate((el) => getComputedStyle(el, "::before").animationName)).toBe(
+    "none",
+  );
+});
