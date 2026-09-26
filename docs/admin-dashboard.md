@@ -203,3 +203,27 @@ Tämä on hetkellinen toimivuustarkistus, ei palvelimen jatkuva monitorointi. Ma
 Keskeytys estää uuden luonnoksen luomisen ja ennen keskeytystä tehdyn luonnoksen julkaisemisen tietokannan triggerissä. Julkaistujen ilmoitusten muokkaus, ylläpidon piilottaman ilmoituksen palautus ja luonnoksen hylkääminen pysyvät käytössä. Ilmoituksen luontisivu tarkistaa julkisen kyllä/ei-tilan ja näyttää keskeytyksen tai tarkistusvirheen; tietokanta tekee lopullisen päätöksen myös tilan muuttuessa lomakkeen täytön aikana. Paikallinen demo ei käytä tätä palvelinasetusta.
 
 Migraatio on asennettu Supabase-projektiin PC-Marketplace SUOMI. Se ei muuta maksujen, tilausten, muiden ominaisuuksien tai käyttäjätilien asetuksia.
+
+## Vaihe 14: aikavälikaaviot ja tumma analyysinäkymä
+
+Yleiskatsauksen ja tulojen analyysiosioissa on tumma mittarivalikko, pienet esikatselukäyrät ja valitun mittarin päivittäinen aluekäyrä. Valinnat ovat viikko (7 vrk), 30 vrk, 90 vrk, puolivuosi (180 vrk) ja vuosi (365 vrk). Päivät perustuvat Europe/Helsinki-aikavyöhykkeeseen; kuluva päivä on osittainen. Hiiri ja vasen/oikea nuolinäppäin näyttävät päivän tarkan arvon. Sama aineisto avautuu myös taulukkona. Nollapäivät näytetään nollina; selaimessa ei luoda tuotantolukuihin keinotekoista trendiä.
+
+Markkinatiedoissa samat aikavälit rajaavat valitun katalogituotteen toteutuneiden hintojen päivittäisen keskiarvon. Vasemmalla on katalogista haettu, tuoteryhmän ja hakutekstin mukaan rajattu tuotelista (20 tuotetta sivulla), myös arkistoidut tuotteet. Kauppaotos sisältää valitulla aikavälillä luodut ja nyt valmiit FI/EUR-tilaukset, joiden ilmoitus on liitetty valittuun katalogimalliin. Kaupan luontipäivä ei ole maksun tai valmistumisen ajankohta; myöhempi hyvitys muuttaa myös aiemman päivän arvoa. Vanha koko ajan markkinataulukko ja vuosi-/kuukausierittely säilyvät erikseen otsikoituina.
+
+Uusi `20260926084548_admin_dashboard_trends.sql` lisää vain ylläpitäjän lukurajapinnan. Se tarkistaa identiteetin ja admin-roolin jokaisella kutsulla, hyväksyy vain viisi rajattua aikaväliä eikä palauta henkilötietoja. Taulujen selainoikeudet eivät laajene. Migraatio on luotu CLI:llä ja sijoitettu tiedostojärjestyksessä aiemman katalogimigraation jälkeen. **Asennettu Supabase-projektiin PC-Marketplace SUOMI 26.9.2026.** Tiedoston versionumero vastaa toteutunutta migraatiohistoriaa.
+
+Kaavioiden tyylit ovat `apps/web/src/features/admin/styles/admin-charts.css`-tiedostossa. Sivurungon ja navigaation tyylit pysyvät `admin-dashboard.css`-tiedostossa. Selaintestin esikatselukuvat käyttävät selvästi testiin kuuluvaa aineistoa; ne eivät todista etätietokannan tilaa.
+
+## Vaihe 15: käyttäjien kokonaismäärä ja katalogin hintakäyrät
+
+Yleiskatsauksen **Kaikki käyttäjät** näyttää nykyisten FI-profiilien kertymän rekisteröintipäivästä alkaen. Aikaväliä vanhemmat rekisteröinnit sisältyvät lähtötasoon. Pääarvo ja sivuvalikon luku ovat viimeisen päivän kokonaismäärä, eivät päivittäisten kokonaismäärien summa. Poistetut profiilit puuttuvat myös historiasta: kyse ei ole muuttumattomasta historiallisesta käyttäjämääräsnapshotista.
+
+Markkinatietojen kortit näyttävät valitun jakson kauppojen määrän ja tilauskohtaisesti painotetun keskihinnan. Muutos euroina on nykyisen ja edellisen jakson senttiin pyöristettyjen keskihintojen erotus; prosentti on erotus jaettuna edellisellä keskihinnalla. Vertailu käyttää välittömästi edeltävää yhtä pitkää kalenterijaksoa, kuluva päivä on osittainen. Puuttuva otos merkitään puuttuvaksi ja nollavertailun prosentti jätetään näyttämättä. Hintakäyrän tyhjät päivät ovat aukkoja, eivät nollahintoja. Refundoitu tilaus ei ole toteutuneen hinnan otoksessa, eikä tilauksen kokonaissumma korvaa tuotteen hintaa.
+
+Lisämigraatio `20260926084553_admin_user_and_model_trends.sql` laajentaa aiemman kaaviorajapinnan vastetta ja lisää suojatun `get_admin_model_price_trends`-lukurajapinnan. Molemmat migraatiot on asennettu Supabase-projektiin PC-Marketplace SUOMI 26.9.2026 käyttäjän luvalla. Paikalliset versionumerot vastaavat etähistoriaa; SQL-sisältö säilyi testattuna. Oikeassa Supabasessa vahvistettiin molempien rajapintojen kaikki viisi aikaväliä ylläpitäjän identiteetillä sekä puuttuvan identiteetin esto ja anonyymin suoritusoikeuden puuttuminen. Tarkistukset eivät muuttaneet tuote-, käyttäjä- tai kauppatietoja.
+
+Tuotekohtaiset tyylit: `features/admin/styles/admin-model-charts.css`. Yhteisen käyrän ja mittarivalikon tyylit: `admin-charts.css`. Käyrää voi käyttää hiirellä tai näppäimistöllä, ja arvot saa taulukkona. Nopea tuotteen, kategorian, haun tai aikavälin vaihto tyhjentää vanhan tuloksen eikä myöhästynyt vastaus korvaa uutta valintaa. Käyttöoikeuden menetys poistaa tiedot näkyvistä.
+
+Käyttäjän paikalliset navigaatio-, ulkoasu- ja kuusivaiheisen ilmoituslomakkeen muutokset säilytettiin erillisessä commitissa `59e8094`. Yhdistämisessä tallennusvirheen teksti palautettiin näkyviin ja tuotemallivalitsimen selaintestin React-fixture korjattiin. Salaisuuksia tai paikallisia ympäristöasetuksia ei muutettu.
+
+Supabasen turvallisuustarkistus tunnistaa ylläpitäjän lukurajapinnat kirjautuneiden kutsuttaviksi SECURITY DEFINER -funktioiksi. Tämä on tarkoituksellista: suojattu admin-roolitarkistus rajoittaa palautetut tiedot ja anonyymin suoritusoikeus on poistettu. [Tarkistuksen kuvaus](https://supabase.com/docs/guides/database/database-linter?lint=0029_authenticated_security_definer_function_executable). Aiemmin myöhemmäksi jätetty vuotaneiden salasanojen suojaus jäi ennalleen.

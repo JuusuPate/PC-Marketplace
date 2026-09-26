@@ -31,7 +31,7 @@ interface SpecificationRow {
   value: string;
 }
 
-type ListingStep = 1 | 2 | 3 | 4 | 5;
+type ListingStep = 1 | 2 | 3 | 4 | 5 | 6;
 
 interface ValidationIssue {
   field: string;
@@ -127,7 +127,7 @@ export function CreateListingPage({
     ),
   );
   const [title, setTitle] = useState(initialListing?.title ?? "");
-  const [category, setCategory] = useState<Category>(initialCategory);
+  const [category, setCategory] = useState<Category | "">(initialListing ? (initialCategory as Category) : "");
   const [condition, setCondition] = useState<Condition>(initialListing?.condition ?? "good");
   const [price, setPrice] = useState(initialListing ? String(initialListing.priceMinor / 100).replace(".", ",") : "");
   const [brand, setBrand] = useState(initialListing?.brand ?? initialListing?.specs[copy.brand] ?? "");
@@ -183,11 +183,16 @@ export function CreateListingPage({
       current = false;
     };
   }, [initialListing, creationRefresh]);
-  const guidedFields = getGuidedSpecificationFields(category, locale);
+  const safeCategory = (category || "gpu") as Category;
+  const guidedFields = getGuidedSpecificationFields(safeCategory, locale);
   const technicalSectionTitle =
-    category === "pc" ? formCopy.pcTitle : category === "other" ? formCopy.optionalTitle : formCopy.componentTitle;
+    safeCategory === "pc"
+      ? formCopy.pcTitle
+      : safeCategory === "other"
+        ? formCopy.optionalTitle
+        : formCopy.componentTitle;
   const technicalSectionHelp =
-    category === "pc" ? formCopy.pcHelp : category === "other" ? formCopy.optionalHelp : formCopy.componentHelp;
+    safeCategory === "pc" ? formCopy.pcHelp : safeCategory === "other" ? formCopy.optionalHelp : formCopy.componentHelp;
   const numericPrice = Number(price.replace(",", "."));
   const formattedPrice =
     Number.isFinite(numericPrice) && numericPrice > 0
@@ -196,7 +201,7 @@ export function CreateListingPage({
   const wizardCopy =
     locale === "fi"
       ? {
-          steps: ["Tuote", "Tiedot", "Kuvat", "Sijainti", "Tarkistus"],
+          steps: ["Kategoria", "Tuote", "Tiedot", "Kuvat", "Sijainti", "Tarkistus"],
           previous: "Takaisin",
           next: "Jatka",
           edit: "Muokkaa",
@@ -204,6 +209,7 @@ export function CreateListingPage({
           reviewTitle: "Tarkista ilmoitus",
           reviewHelp: "Varmista vielä tiedot ennen julkaisemista. Pääset takaisin muokkaamaan aiempia vaiheita.",
           titleError: "Kirjoita ilmoitukselle vähintään 5 merkkiä pitkä otsikko.",
+          categoryError: "Valitse kategoria ennen jatkamista.",
           priceError: "Anna tuotteelle kelvollinen, nollaa suurempi hinta.",
           descriptionError: (length: number) =>
             `Kirjoita kuvaukseen vähintään 20 merkkiä. Nyt kuvauksessa on ${length} merkkiä.`,
@@ -225,7 +231,7 @@ export function CreateListingPage({
           replacePhotos: "Vaihda kuvat",
         }
       : {
-          steps: ["Item", "Details", "Photos", "Location", "Review"],
+          steps: ["Category", "Item", "Details", "Photos", "Location", "Review"],
           previous: "Back",
           next: "Continue",
           edit: "Edit",
@@ -233,6 +239,7 @@ export function CreateListingPage({
           reviewTitle: "Review your listing",
           reviewHelp: "Check the details before publishing. You can return to any earlier step to make changes.",
           titleError: "Enter a listing title with at least 5 characters.",
+          categoryError: "Select a category before continuing.",
           priceError: "Enter a valid price greater than zero.",
           descriptionError: (length: number) =>
             `Write a description with at least 20 characters. It currently has ${length} characters.`,
@@ -292,14 +299,18 @@ export function CreateListingPage({
     const issues: ValidationIssue[] = [];
     const includes = (step: ListingStep) => steps.includes(step);
 
-    if (includes(1)) {
-      if (title.trim().length < 5) issues.push({ field: "title", message: wizardCopy.titleError, step: 1 });
-      if (!Number.isFinite(numericPrice) || numericPrice <= 0) {
-        issues.push({ field: "price", message: wizardCopy.priceError, step: 1 });
-      }
+    if (includes(1) && !category) {
+      issues.push({ field: "category", message: wizardCopy.categoryError, step: 1 });
     }
 
     if (includes(2)) {
+      if (title.trim().length < 5) issues.push({ field: "title", message: wizardCopy.titleError, step: 2 });
+      if (!Number.isFinite(numericPrice) || numericPrice <= 0) {
+        issues.push({ field: "price", message: wizardCopy.priceError, step: 2 });
+      }
+    }
+
+    if (includes(3)) {
       const incompleteSpecification =
         !technicalDetailsUnknown &&
         specifications.some(
@@ -307,28 +318,28 @@ export function CreateListingPage({
             (row.name.trim().length > 0 || row.value.trim().length > 0) && (!row.name.trim() || !row.value.trim()),
         );
       if (incompleteSpecification) {
-        issues.push({ field: "specifications", message: copy.specIncomplete, step: 2 });
+        issues.push({ field: "specifications", message: copy.specIncomplete, step: 3 });
       }
       if (description.trim().length < 20) {
         issues.push({
           field: "description",
           message: wizardCopy.descriptionError(description.trim().length),
-          step: 2,
+          step: 3,
         });
       }
     }
 
-    if (includes(3) && photosRequired && images.length === 0) {
-      issues.push({ field: "photos", message: formCopy.photoRequired, step: 3 });
+    if (includes(4) && photosRequired && images.length === 0) {
+      issues.push({ field: "photos", message: formCopy.photoRequired, step: 4 });
     }
 
-    if (includes(4)) {
-      if (!city.trim()) issues.push({ field: "city", message: wizardCopy.cityError, step: 4 });
+    if (includes(5)) {
+      if (!city.trim()) issues.push({ field: "city", message: wizardCopy.cityError, step: 5 });
       if (!/^\d{5}$/.test(postalCode.trim())) {
-        issues.push({ field: "postalCode", message: wizardCopy.postalCodeError, step: 4 });
+        issues.push({ field: "postalCode", message: wizardCopy.postalCodeError, step: 5 });
       }
       if (streetAddress.trim().length < 5) {
-        issues.push({ field: "streetAddress", message: wizardCopy.streetAddressError, step: 4 });
+        issues.push({ field: "streetAddress", message: wizardCopy.streetAddressError, step: 5 });
       }
     }
 
@@ -358,7 +369,7 @@ export function CreateListingPage({
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (currentStep < 5) {
+    if (currentStep < 6) {
       const issues = getValidationIssues([currentStep]);
       if (issues.length > 0) {
         showValidationIssues(issues);
@@ -373,7 +384,7 @@ export function CreateListingPage({
 
     if (!initialListing && creationState !== "enabled") return;
 
-    const issues = getValidationIssues([1, 2, 3, 4]);
+    const issues = getValidationIssues([1, 2, 3, 4, 5]);
     if (issues.length > 0) {
       showValidationIssues(issues);
       return;
@@ -406,8 +417,8 @@ export function CreateListingPage({
       ...(initialListing ?? {}),
       id: initialListing?.id ?? `listing-${Date.now()}`,
       title: title.trim(),
-      subtitle: `${identity || copy[category]} · ${conditionLabel}`,
-      category,
+      subtitle: `${identity || copy[safeCategory]} · ${conditionLabel}`,
+      category: safeCategory,
       catalogModelId,
       brand: brand.trim(),
       priceMinor: Math.round(numericPrice * 100),
@@ -438,7 +449,7 @@ export function CreateListingPage({
       serialVerified: initialListing?.serialVerified ?? false,
       createdLabel: initialListing?.createdLabel ?? copy.justNow,
       createdAt: initialListing?.createdAt ?? new Date().toISOString(),
-      visual: visualByCategory[category],
+      visual: visualByCategory[safeCategory],
       images: existingImages,
     };
 
@@ -537,19 +548,73 @@ export function CreateListingPage({
           </p>
           <section
             className="create-listing-section"
-            aria-labelledby="product-details-title"
+            aria-labelledby="category-selection-title"
             hidden={currentStep !== 1}
           >
             <div className="create-listing-section__heading">
               <span className="create-listing-section__number">01</span>
+              <div>
+                <h2 id="category-selection-title">{copy.category}</h2>
+                <p>Valitse ilmoituksen kategoria ennen jatkamista.</p>
+              </div>
+            </div>
+            <div className="create-listing-fields">
+              <label className="field-wide">
+                <FieldLabel label={copy.category} required requiredText={formCopy.required} />
+                <select
+                  required
+                  value={category}
+                  onChange={(event) => {
+                    const nextCategory = event.target.value as Category;
+                    setCategory(nextCategory || "");
+                    setCatalogModelId(null);
+                    if (nextCategory && nextCategory !== "pc") setTechnicalDetailsUnknown(false);
+                    clearFieldError("category");
+                  }}
+                  aria-invalid={Boolean(fieldErrors.category)}
+                  aria-describedby={fieldErrors.category ? "category-error" : undefined}
+                  data-listing-field="category"
+                >
+                  <option value="">Valitse kategoria</option>
+                  {(
+                    [
+                      "gpu",
+                      "cpu",
+                      "memory",
+                      "motherboard",
+                      "psu",
+                      "storage",
+                      "case",
+                      "cooling",
+                      "pc",
+                      "other",
+                    ] as Category[]
+                  ).map((item) => (
+                    <option key={item} value={item}>
+                      {copy[item]}
+                    </option>
+                  ))}
+                </select>
+                <FieldError id="category-error" message={fieldErrors.category} />
+              </label>
+            </div>
+          </section>
+
+          <section
+            className="create-listing-section"
+            aria-labelledby="product-details-title"
+            hidden={currentStep !== 2}
+          >
+            <div className="create-listing-section__heading">
+              <span className="create-listing-section__number">02</span>
               <div>
                 <h2 id="product-details-title">{copy.productDetails}</h2>
                 <p>{copy.productDetailsHelp}</p>
               </div>
             </div>
             <ProductModelPicker
-              key={category}
-              category={category}
+              key={safeCategory}
+              category={safeCategory}
               locale={locale}
               selectedId={catalogModelId}
               onSelect={(m) => {
@@ -579,38 +644,6 @@ export function CreateListingPage({
                   data-listing-field="title"
                 />
                 <FieldError id="title-error" message={fieldErrors.title} />
-              </label>
-              <label>
-                <FieldLabel label={copy.category} required requiredText={formCopy.required} />
-                <select
-                  required
-                  value={category}
-                  onChange={(event) => {
-                    const nextCategory = event.target.value as Category;
-                    setCategory(nextCategory);
-                    setCatalogModelId(null);
-                    if (nextCategory !== "pc") setTechnicalDetailsUnknown(false);
-                  }}
-                >
-                  {(
-                    [
-                      "gpu",
-                      "cpu",
-                      "memory",
-                      "motherboard",
-                      "psu",
-                      "storage",
-                      "case",
-                      "cooling",
-                      "pc",
-                      "other",
-                    ] as Category[]
-                  ).map((item) => (
-                    <option key={item} value={item}>
-                      {copy[item]}
-                    </option>
-                  ))}
-                </select>
               </label>
               <label>
                 <FieldLabel label={copy.condition} required requiredText={formCopy.required} />
@@ -671,10 +704,10 @@ export function CreateListingPage({
           <section
             className="create-listing-section"
             aria-labelledby="technical-details-title"
-            hidden={currentStep !== 2}
+            hidden={currentStep !== 3}
           >
             <div className="create-listing-section__heading">
-              <span className="create-listing-section__number">02</span>
+              <span className="create-listing-section__number">03</span>
               <div>
                 <h2 id="technical-details-title">{technicalSectionTitle}</h2>
                 <p>{technicalSectionHelp}</p>
@@ -759,9 +792,9 @@ export function CreateListingPage({
             )}
           </section>
 
-          <section className="create-listing-section" aria-labelledby="description-title" hidden={currentStep !== 2}>
+          <section className="create-listing-section" aria-labelledby="description-title" hidden={currentStep !== 3}>
             <div className="create-listing-section__heading">
-              <span className="create-listing-section__number">03</span>
+              <span className="create-listing-section__number">04</span>
               <div>
                 <h2 id="description-title">
                   <FieldLabel label={copy.description} required requiredText={formCopy.required} />
@@ -791,9 +824,9 @@ export function CreateListingPage({
             <FieldError id="description-error" message={fieldErrors.description} />
           </section>
 
-          <section className="create-listing-section" aria-labelledby="photos-title" hidden={currentStep !== 3}>
+          <section className="create-listing-section" aria-labelledby="photos-title" hidden={currentStep !== 4}>
             <div className="create-listing-section__heading">
-              <span className="create-listing-section__number">03</span>
+              <span className="create-listing-section__number">05</span>
               <div>
                 <h2 id="photos-title">
                   <FieldLabel
@@ -829,9 +862,9 @@ export function CreateListingPage({
             </div>
           </section>
 
-          <section className="create-listing-section" aria-labelledby="seller-details-title" hidden={currentStep !== 4}>
+          <section className="create-listing-section" aria-labelledby="seller-details-title" hidden={currentStep !== 5}>
             <div className="create-listing-section__heading">
-              <span className="create-listing-section__number">04</span>
+              <span className="create-listing-section__number">06</span>
               <div>
                 <h2 id="seller-details-title">{copy.sellerDetails}</h2>
                 <p>{copy.sellerDetailsHelp}</p>
@@ -921,9 +954,9 @@ export function CreateListingPage({
             </div>
           </section>
 
-          <section className="create-listing-section" aria-labelledby="review-listing-title" hidden={currentStep !== 5}>
+          <section className="create-listing-section" aria-labelledby="review-listing-title" hidden={currentStep !== 6}>
             <div className="create-listing-section__heading">
-              <span className="create-listing-section__number">05</span>
+              <span className="create-listing-section__number">07</span>
               <div>
                 <h2 id="review-listing-title">{wizardCopy.reviewTitle}</h2>
                 <p>{wizardCopy.reviewHelp}</p>
@@ -932,11 +965,21 @@ export function CreateListingPage({
             <div className="listing-review-grid">
               <section>
                 <span>{wizardCopy.steps[0]}</span>
-                <strong>{title}</strong>
+                <strong>{copy[safeCategory]}</strong>
                 <p>
-                  {copy[category]} · {copy[condition === "fair" ? "conditionFair" : condition]} · {formattedPrice}
+                  {copy[condition === "fair" ? "conditionFair" : condition]} · {formattedPrice}
                 </p>
                 <button type="button" onClick={() => moveToStep(1)}>
+                  {wizardCopy.edit}
+                </button>
+              </section>
+              <section>
+                <span>{wizardCopy.steps[1]}</span>
+                <strong>{title}</strong>
+                <p>
+                  {copy[safeCategory]} · {copy[condition === "fair" ? "conditionFair" : condition]} · {formattedPrice}
+                </p>
+                <button type="button" onClick={() => moveToStep(2)}>
                   {wizardCopy.edit}
                 </button>
               </section>
@@ -948,7 +991,7 @@ export function CreateListingPage({
                     : `${Object.values(guidedSpecifications).filter((value) => value.trim()).length + specifications.filter((row) => row.name.trim() && row.value.trim()).length} ${wizardCopy.technicalSummary.toLocaleLowerCase()}`}
                 </strong>
                 <p className="listing-review-grid__description">{description}</p>
-                <button type="button" onClick={() => moveToStep(2)}>
+                <button type="button" onClick={() => moveToStep(3)}>
                   {wizardCopy.edit}
                 </button>
               </section>
@@ -956,7 +999,7 @@ export function CreateListingPage({
                 <span>{wizardCopy.photosSummary}</span>
                 <strong>{displayedImageCount}</strong>
                 <p>{displayedImageCount > 0 ? `${displayedImageCount} / 5` : formCopy.optional}</p>
-                <button type="button" onClick={() => moveToStep(3)}>
+                <button type="button" onClick={() => moveToStep(4)}>
                   {wizardCopy.edit}
                 </button>
               </section>
@@ -966,7 +1009,7 @@ export function CreateListingPage({
                 <p>
                   {streetAddress}, {postalCode} {city}
                 </p>
-                <button type="button" onClick={() => moveToStep(4)}>
+                <button type="button" onClick={() => moveToStep(5)}>
                   {wizardCopy.edit}
                 </button>
               </section>
@@ -989,14 +1032,14 @@ export function CreateListingPage({
               {wizardCopy.previous}
             </button>
             <span>
-              {wizardCopy.step} {currentStep} / 5
+              {wizardCopy.step} {currentStep} / {wizardSteps.length}
             </span>
             <button
               className="button button--primary"
               type="submit"
-              disabled={busy || (!initialListing && currentStep === 5 && creationState !== "enabled")}
+              disabled={busy || (!initialListing && currentStep === wizardSteps.length && creationState !== "enabled")}
             >
-              {currentStep === 5
+              {currentStep === wizardSteps.length
                 ? busy
                   ? runtimeCopy.publishing
                   : initialListing
@@ -1013,7 +1056,7 @@ export function CreateListingPage({
             <span className="section-kicker">{copy.listingPreview}</span>
             <h2 id="listing-preview-title">{title.trim() || copy.previewTitlePlaceholder}</h2>
             <p>{copy.reviewBeforePublish}</p>
-            <div className={`create-listing-preview__image visual--${visualByCategory[category]}`}>
+            <div className={`create-listing-preview__image visual--${visualByCategory[safeCategory]}`}>
               {images[0] ? (
                 <img src={images[0].previewUrl} alt={images[0].alt || title} />
               ) : existingPreviewUrl ? (

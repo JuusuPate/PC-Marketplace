@@ -46,7 +46,14 @@ test("model search shows exact variants and can reach later result pages", async
     const {default:React}=await import('/node_modules/.vite/deps/react.js');
     const {default:ReactDOM}=await import('/node_modules/.vite/deps/react-dom_client.js');
     const {ProductModelPicker}=await import('/src/features/sell/ProductModelPicker.tsx');
-    ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(ProductModelPicker,{category:'gpu',locale:'fi',onSelect:()=>{}}));
+    // Keep fixture state outside React: Vite may version component imports separately
+    // from this inline script, so hooks here could use a second React instance.
+    let selected = null;
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    function render(){
+      root.render(React.createElement(ProductModelPicker,{category:'gpu',locale:'fi',selectedId:selected && selected.id,onSelect:(model)=>{selected=model;render();}}));
+    }
+    render();
     </script></body></html>`,
     }),
   );
@@ -60,4 +67,12 @@ test("model search shows exact variants and can reach later result pages", async
   await page.getByRole("searchbox", { name: "Hae tuotemallia" }).clear();
   await expect(page.getByRole("button", { name: "Seuraava" })).toHaveCount(0);
   expect(calls).toEqual([0, 1]);
+  await page.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("Radeon");
+  const option = page.getByRole("button", { name: /Radeon RX 6800 XT.*16 GB/ });
+  await expect(option).toBeVisible();
+  await option.click();
+  await expect(page.getByText("Katalogimalli valittu")).toBeVisible();
+  await expect(page.getByRole("button", { name: /Radeon RX 6800 XT.*16 GB/ })).toHaveCount(0);
+  await page.locator("body").click({ position: { x: 10, y: 10 } });
+  await expect(page.getByText("Katalogimalli valittu")).toBeVisible();
 });

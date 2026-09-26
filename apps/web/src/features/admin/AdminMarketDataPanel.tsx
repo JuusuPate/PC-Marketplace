@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { Locale } from "../../types";
 import { AdminAccessError } from "../../lib/admin-service";
 import { getAdminMarketData, type AdminMarketData } from "../../lib/admin-market-data-service";
 import { formatMoney } from "../../lib/money";
 import { getAdminCopy } from "./admin-copy";
 import { getAdminMarketDataCopy } from "./admin-market-data-copy";
+import { AdminModelPriceExplorer } from "./AdminModelPriceExplorer";
 
 type State = { status: "loading" } | { status: "ready"; data: AdminMarketData } | { status: "error" | "denied" };
 export function AdminMarketDataSummary({ data, locale }: { data: AdminMarketData; locale: Locale }) {
@@ -59,15 +60,21 @@ export function AdminMarketDataPanel({ locale }: { locale: Locale }) {
     common = getAdminCopy(locale);
   const [refresh, setRefresh] = useState(0);
   const [state, setState] = useState<State>({ status: "loading" });
+  const onDenied = useCallback(() => setState({ status: "denied" }), []);
   useEffect(() => {
     let current = true;
     setState({ status: "loading" });
     getAdminMarketData().then(
       (data) => {
-        if (current) setState({ status: "ready", data });
+        if (current) setState((previous) => (previous.status === "denied" ? previous : { status: "ready", data }));
       },
       (error) => {
-        if (current) setState({ status: error instanceof AdminAccessError ? "denied" : "error" });
+        if (current)
+          setState((previous) =>
+            previous.status === "denied"
+              ? previous
+              : { status: error instanceof AdminAccessError ? "denied" : "error" },
+          );
       },
     );
     return () => {
@@ -103,6 +110,10 @@ export function AdminMarketDataPanel({ locale }: { locale: Locale }) {
           {common.refresh}
         </button>
       </header>
+      <AdminModelPriceExplorer locale={locale} refresh={refresh} onDenied={onDenied} />
+      <div className="admin-section-heading admin-year-heading">
+        <h2>{copy.description}</h2>
+      </div>
       <p className="admin-note">{copy.note}</p>
       {state.status === "loading" && <p role="status">{copy.loading}</p>}
       {state.status === "error" && (

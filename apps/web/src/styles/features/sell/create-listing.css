@@ -55,7 +55,7 @@
   max-width: 790px;
 }
 .section-kicker {
-  display: inline-block;
+  display: none;
   color: #668a08;
   font-size: 13px;
   font-weight: 950;
@@ -75,6 +75,9 @@
   font-size: 18px;
   line-height: 1.6;
 }
+.create-listing-section__heading p {
+  display: none;
+}
 .listing-wizard {
   margin: 0 0 30px;
   padding: 22px 26px;
@@ -87,7 +90,7 @@
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   list-style: none;
 }
 .listing-wizard li {
@@ -97,9 +100,9 @@
 .listing-wizard li:not(:last-child)::after {
   height: 2px;
   position: absolute;
-  top: 18px;
-  left: calc(50% + 24px);
-  right: calc(-50% + 24px);
+  top: 15px;
+  left: calc(50% + 18px);
+  right: calc(-50% + 18px);
   z-index: 0;
   content: "";
   background: #dfe3dc;
@@ -109,13 +112,13 @@
 }
 .listing-wizard button {
   width: 100%;
-  padding: 0 8px;
+  padding: 0 4px;
   position: relative;
   z-index: 1;
   display: flex;
   align-items: center;
   flex-direction: column;
-  gap: 8px;
+  gap: 0;
   color: #75807d;
   background: transparent;
   border: 0;
@@ -131,21 +134,25 @@
   border-color: #8db721;
 }
 .listing-wizard button > span {
-  width: 36px;
-  height: 36px;
+  width: 30px;
+  height: 30px;
   display: grid;
   place-items: center;
   color: #64706d;
   background: white;
   border: 2px solid #d5dad3;
   border-radius: 50%;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 900;
 }
 .listing-wizard button > strong {
-  overflow: hidden;
-  font-size: 14px;
-  text-overflow: ellipsis;
+  display: block;
+  margin-top: 7px;
+  color: #5a6660;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
   white-space: nowrap;
 }
 .listing-wizard .is-current button,
@@ -175,6 +182,10 @@
   flex-direction: column;
   gap: 18px;
 }
+.create-listing-form__error {
+  display: block;
+}
+
 .required-fields-note {
   margin: 0 3px -5px;
   color: #586460;

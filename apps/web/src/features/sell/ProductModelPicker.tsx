@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Category, Locale } from "../../types";
 import { loadProductModels, modelLabel, type ProductModel } from "../../lib/product-model-service";
 import { productCopy } from "./product-model-copy";
@@ -14,6 +14,7 @@ export function ProductModelPicker({
   onSelect: (model: ProductModel | null) => void;
 }) {
   const c = productCopy(locale);
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(0);
   const [state, setState] = useState<{ status: "loading" | "error" | "ready"; items: ProductModel[]; total: number }>({
@@ -21,6 +22,26 @@ export function ProductModelPicker({
     items: [],
     total: 0,
   });
+
+  useEffect(() => {
+    const handlePointerDown = (event: MouseEvent | TouchEvent) => {
+      const target = event.target;
+      if (wrapperRef.current && target instanceof Node && !wrapperRef.current.contains(target)) {
+        setQuery("");
+        setPage(0);
+        setState({ status: "ready", items: [], total: 0 });
+      }
+    };
+
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("touchstart", handlePointerDown);
+
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("touchstart", handlePointerDown);
+    };
+  }, []);
+
   useEffect(() => {
     const normalized = query.trim();
     if (normalized.length < 1) {
@@ -45,8 +66,10 @@ export function ProductModelPicker({
       clearTimeout(timer);
     };
   }, [category, query, page]);
+  const shouldShowResults = query.trim().length >= 1 && !selectedId;
+
   return (
-    <div className="field-wide product-model-picker">
+    <div ref={wrapperRef} className="field-wide product-model-picker">
       <input
         type="search"
         value={query}
@@ -72,17 +95,17 @@ export function ProductModelPicker({
           </button>
         </p>
       )}
-      {state.status === "loading" && (
+      {state.status === "loading" && shouldShowResults && (
         <p className="product-model-picker__meta" role="status">
           {c.loading}
         </p>
       )}
-      {state.status === "error" && (
+      {state.status === "error" && shouldShowResults && (
         <p className="product-model-picker__meta product-model-picker__meta--error" role="alert">
           {c.error}
         </p>
       )}
-      {state.status === "ready" && query.trim().length >= 1 && (
+      {state.status === "ready" && shouldShowResults && (
         <div className="product-model-picker__results">
           {state.items.length === 0 ? (
             <p className="product-model-picker__empty">{c.empty}</p>
@@ -94,7 +117,12 @@ export function ProductModelPicker({
                     type="button"
                     className="product-model-picker__option"
                     aria-pressed={selectedId === m.id}
-                    onClick={() => onSelect(m)}
+                    onClick={() => {
+                      onSelect(m);
+                      setQuery("");
+                      setPage(0);
+                      setState({ status: "ready", items: [], total: 0 });
+                    }}
                   >
                     {modelLabel(m)}
                   </button>

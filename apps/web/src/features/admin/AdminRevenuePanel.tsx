@@ -5,6 +5,8 @@ import { currentRevenueYear, getAdminRevenue, type AdminRevenue } from "../../li
 import { formatMoney } from "../../lib/money";
 import { getAdminCopy } from "./admin-copy";
 import { getAdminRevenueCopy } from "./admin-revenue-copy";
+import { AdminPeriodPicker, AdminTrendExplorer, AdminTrendStatus, useAdminTrends } from "./AdminCharts";
+import { chartCopy } from "./admin-chart-copy";
 
 type State = { status: "loading" } | { status: "ready"; data: AdminRevenue } | { status: "error" | "denied" };
 export function AdminRevenueSummary({ data, locale }: { data: AdminRevenue; locale: Locale }) {
@@ -70,6 +72,8 @@ export function AdminRevenueSummary({ data, locale }: { data: AdminRevenue; loca
 export function AdminRevenuePanel({ locale }: { locale: Locale }) {
   const copy = getAdminRevenueCopy(locale),
     common = getAdminCopy(locale);
+  const trends = useAdminTrends();
+  const charts = chartCopy(locale);
   const [query, setQuery] = useState(() => ({ year: currentRevenueYear(), refresh: 0 }));
   const [year, setYear] = useState(String(query.year));
   const [state, setState] = useState<State>({ status: "loading" });
@@ -113,11 +117,40 @@ export function AdminRevenuePanel({ locale }: { locale: Locale }) {
           className="button button--dark"
           type="button"
           disabled={state.status === "loading"}
-          onClick={() => load(query.year)}
+          onClick={() => {
+            load(query.year);
+            trends.refresh();
+          }}
         >
           {common.refresh}
         </button>
       </header>
+      <section
+        className="admin-trends-section"
+        aria-label={charts.periodData}
+        aria-busy={trends.state.status === "loading"}
+      >
+        <div className="admin-section-heading">
+          <h2>{charts.periodData}</h2>
+          <p>{charts.revenueNote}</p>
+        </div>
+        <AdminPeriodPicker locale={locale} period={trends.period} onChange={trends.setPeriod} />
+        <AdminTrendStatus locale={locale} state={trends.state} />
+        {trends.state.status === "ready" && (
+          <AdminTrendExplorer
+            data={trends.state.data}
+            locale={locale}
+            metrics={[
+              { field: "ordersCompleted", label: charts.completed },
+              { field: "itemValueMinor", label: charts.itemValue, money: true },
+              { field: "feesMinor", label: charts.fees, money: true },
+            ]}
+          />
+        )}
+      </section>
+      <div className="admin-section-heading admin-year-heading">
+        <h2>{copy.monthly}</h2>
+      </div>
       <form
         className="admin-listing-search"
         onSubmit={(event) => {

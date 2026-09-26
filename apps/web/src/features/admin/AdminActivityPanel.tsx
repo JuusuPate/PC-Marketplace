@@ -67,9 +67,17 @@ export function AdminActivityPanel({ locale }: { locale: Locale }) {
       >
         <label htmlFor="admin-activity-period">{copy.period}</label>
         <select id="admin-activity-period" value={days} onChange={(event) => setDays(event.target.value)}>
-          {[1, 7, 30, 90, 365].map((value) => (
+          {[1, 7, 30, 90, 180, 365].map((value) => (
             <option key={value} value={value}>
-              {value === 1 ? "24 h" : `${value} ${locale === "fi" ? "päivää" : locale === "sv" ? "dagar" : "days"}`}
+              {value === 1
+                ? "24 h"
+                : value === 180
+                  ? locale === "fi"
+                    ? "Puolivuosi"
+                    : locale === "sv"
+                      ? "Halvår"
+                      : "6 months"
+                  : `${value} ${locale === "fi" ? "päivää" : locale === "sv" ? "dagar" : "days"}`}
             </option>
           ))}
           <option value="custom">{copy.custom}</option>
@@ -111,6 +119,36 @@ export function AdminActivityPanel({ locale }: { locale: Locale }) {
           <p>
             {copy.previous}: {date(state.data.previous.start)} – {date(state.data.previous.end)} (Europe/Helsinki)
           </p>
+          <div className="admin-comparison-chart" aria-label={copy.activity}>
+            {(["users", "listings", "orders", "completed", "value", "fees"] as const).map((key) => {
+              const current = state.data.current[key];
+              const previous = state.data.previous[key];
+              const maximum = Math.max(current, previous, 1);
+              const format = (value: number) =>
+                key === "value" || key === "fees" ? formatMoney(value, "EUR", locale, 2) : value.toLocaleString(locale);
+              return (
+                <div className="admin-comparison-row" key={key}>
+                  <strong>{copy[key]}</strong>
+                  <div className="admin-comparison-pair">
+                    <div>
+                      <span>{copy.current}</span>
+                      <span className="admin-comparison-track">
+                        <span style={{ width: `${(current / maximum) * 100}%` }} />
+                      </span>
+                      <b>{format(current)}</b>
+                    </div>
+                    <div>
+                      <span>{copy.previous}</span>
+                      <span className="admin-comparison-track admin-comparison-track--previous">
+                        <span style={{ width: `${(previous / maximum) * 100}%` }} />
+                      </span>
+                      <b>{format(previous)}</b>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
           <div className="admin-table-scroll">
             <table className="admin-users-table">
               <thead>
