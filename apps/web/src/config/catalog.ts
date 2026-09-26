@@ -52,6 +52,17 @@ export const CATALOG_PAGES: CatalogPage[] = [
     glyph: "▦",
     image: componentsImage,
     categories: ["gpu", "cpu", "memory", "motherboard", "psu", "storage", "case", "cooling"],
+    submenu: [
+      { id: "components-all", label: "Kaikki komponentit", href: "/kategoriat/komponentit", filters: {} },
+      { id: "components-gpu", label: "Näytönohjaimet", href: "/kategoriat/naytonohjaimet", filters: {} },
+      { id: "components-cpu", label: "Prosessorit", href: "/kategoriat/prosessorit", filters: {} },
+      { id: "components-memory", label: "Muistit", href: "/kategoriat/muistit", filters: {} },
+      { id: "components-motherboard", label: "Emolevyt", href: "/kategoriat/emolevyt", filters: {} },
+      { id: "components-psu", label: "Virtalähteet", href: "/kategoriat/virtalahteet", filters: {} },
+      { id: "components-storage", label: "Tallennuslaitteet", href: "/kategoriat/tallennuslaitteet", filters: {} },
+      { id: "components-case", label: "Kotelot", href: "/kategoriat/kotelot", filters: {} },
+      { id: "components-cooling", label: "Jäähdytys", href: "/kategoriat/jaahdytys", filters: {} },
+    ],
   },
   {
     id: "pc",
@@ -62,16 +73,22 @@ export const CATALOG_PAGES: CatalogPage[] = [
     categories: ["pc"],
     submenu: [
       {
-        id: "pc-under-1000",
-        label: "Alle 1 000 €",
-        href: "/kategoriat/pelitietokoneet?maxPrice=1000",
-        filters: { maxPriceMinor: 100_000 },
+        id: "pc-all",
+        label: "Kaikki pelikoneet",
+        href: "/kategoriat/pelitietokoneet",
+        filters: {},
       },
       {
         id: "pc-featured",
         label: "Nostetut",
         href: "/kategoriat/pelitietokoneet?featured=true",
         filters: { featuredOnly: true },
+      },
+      {
+        id: "pc-under-1000",
+        label: "Alle 1 000 €",
+        href: "/kategoriat/pelitietokoneet?maxPrice=1000",
+        filters: { maxPriceMinor: 100_000 },
       },
     ],
   },
@@ -83,6 +100,12 @@ export const CATALOG_PAGES: CatalogPage[] = [
     image: gpuImage,
     categories: ["gpu"],
     submenu: [
+      {
+        id: "gpu-all",
+        label: "Kaikki näytöohjaimet",
+        href: "/kategoriat/naytonohjaimet",
+        filters: {},
+      },
       {
         id: "gpu-nvidia",
         label: "NVIDIA",

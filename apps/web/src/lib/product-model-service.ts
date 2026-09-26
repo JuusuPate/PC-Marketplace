@@ -42,7 +42,7 @@ const sanitizeModelText = (value: string) =>
     .trim();
 
 export const modelLabel = (m: Pick<ProductModel, "brand" | "name" | "variant">) =>
-  [m.brand, m.name, m.variant].map(sanitizeModelText).filter(Boolean).join(" · ");
+  [m.brand, m.name, m.variant].map(sanitizeModelText).filter(Boolean).join(" ");
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 function integer(v: unknown) {
   if (typeof v !== "number" || !Number.isSafeInteger(v) || v < 0) throw Error("Invalid model metric");

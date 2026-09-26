@@ -88,10 +88,12 @@ function toNavigationFilter(filter: CatalogRuntimeFilter): CatalogNavigationFilt
   return null;
 }
 
+const PRIMARY_NAVIGATION_PAGE_IDS = new Set<CatalogPage["id"]>(["all", "components", "pc", "gpu", "other"]);
+
 function mergeCatalogNavigation(categories: readonly CatalogNavigationCategory[]): CatalogPage[] {
   const categoriesBySlug = new Map(categories.map((category) => [category.slug, category]));
 
-  return CATALOG_PAGES.map((page) => {
+  return CATALOG_PAGES.filter((page) => PRIMARY_NAVIGATION_PAGE_IDS.has(page.id)).map((page) => {
     const runtimeCategory = categoriesBySlug.get(page.id);
     if (!runtimeCategory) return page;
 
@@ -100,7 +102,7 @@ function mergeCatalogNavigation(categories: readonly CatalogNavigationCategory[]
       return filters ? [{ id: item.id, label: item.label, href: item.href, filters }] : [];
     });
 
-    return { ...page, submenu: submenu.length > 0 ? submenu : undefined };
+    return { ...page, submenu: submenu.length > 0 ? submenu : page.submenu };
   });
 }
 
@@ -170,7 +172,9 @@ export function App() {
   const [locale, setLocale] = useState<Locale>("fi");
   const market = LAUNCH_MARKET;
   const [catalogPage, setCatalogPage] = useState(() => getCatalogPage(window.location.pathname));
-  const [catalogNavigationPages, setCatalogNavigationPages] = useState<readonly CatalogPage[]>(CATALOG_PAGES);
+  const [catalogNavigationPages, setCatalogNavigationPages] = useState<readonly CatalogPage[]>(
+    () => CATALOG_PAGES.filter((page) => PRIMARY_NAVIGATION_PAGE_IDS.has(page.id)),
+  );
   const [catalogNavigationFilter, setCatalogNavigationFilter] = useState<CatalogNavigationFilter | null>(
     () => getCatalogRouteFilter(window.location.pathname, window.location.search).filter,
   );

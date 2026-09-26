@@ -77,6 +77,10 @@ export function CategoryNavigation({
         className="category-navigation section-shell"
         aria-label={copy.categoryNavigation}
         onKeyDown={handleEscape}
+        onMouseLeave={(event) => {
+          if (event.relatedTarget instanceof Node && event.currentTarget.contains(event.relatedTarget)) return;
+          closeMenu();
+        }}
       >
         <ul className="category-navigation-links">
           {pages.map((page) => {
@@ -98,9 +102,6 @@ export function CategoryNavigation({
                   onNavigate(page.path);
                 }}
               >
-                <span className="category-navigation-glyph" aria-hidden="true">
-                  {page.glyph}
-                </span>
                 <span>{pageLabel}</span>
               </a>
             );
@@ -113,7 +114,7 @@ export function CategoryNavigation({
                   if (hasSubmenu) openMenu(page.id);
                 }}
                 onMouseLeave={() => {
-                  if (isOpen) closeMenu();
+                  // Intentionally left blank: the parent nav owns the hover lifecycle.
                 }}
                 onFocusCapture={(event) => {
                   // Focusing the category link exposes its submenu. The disclosure

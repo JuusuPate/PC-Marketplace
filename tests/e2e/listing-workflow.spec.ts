@@ -29,6 +29,11 @@ test("demoilmoitus julkaistaan, kuvat selataan ja säilyvät muokkauksessa", asy
   await page.getByRole("button", { name: "Käytä demotunnusta" }).click();
   await expect(page.getByRole("heading", { name: "Luo uusi ilmoitus" })).toBeVisible();
 
+  await next(page);
+  await expect(page.locator("#category-error")).toContainText("Valitse kategoria");
+  await page.locator('[data-listing-field="category"]').selectOption("gpu");
+  await next(page);
+
   await page.locator('[data-listing-field="title"]').fill("Testinäytönohjain RTX 4070");
   await page.locator('[data-listing-field="price"]').fill("499");
   await next(page);
@@ -65,7 +70,7 @@ test("demoilmoitus julkaistaan, kuvat selataan ja säilyvät muokkauksessa", asy
   await expect(page.getByRole("heading", { name: "Muokkaa ilmoitusta" })).toBeVisible();
   await page
     .getByRole("navigation", { name: "Ilmoituksen muokkauksen vaiheet" })
-    .getByRole("button", { name: "3 Kuvat" })
+    .getByRole("button", { name: "4 Kuvat" })
     .click();
   await expect(page.locator(".image-picker__stored .image-picker__previews li")).toHaveCount(2);
 

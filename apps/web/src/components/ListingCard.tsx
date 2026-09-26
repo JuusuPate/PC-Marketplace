@@ -49,8 +49,6 @@ export function ListingCard({ listing, locale, copy, favourite, href, onFavourit
       </div>
       <div className="card-content">
         <div className="card-topline">
-          <span>{conditionLabel}</span>
-          <span>·</span>
           <span>{listing.city}</span>
           <span className="card-time">{listing.createdLabel}</span>
         </div>

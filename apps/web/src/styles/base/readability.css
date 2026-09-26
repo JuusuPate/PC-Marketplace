@@ -52,8 +52,34 @@
 .protection-mini {
   font-size: 11px;
 }
-.card-title {
-  font-size: 17px;
+.listing-card .card-topline {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 8px;
+  color: #111b1b;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.listing-card .card-topline > span {
+  color: #111b1b;
+}
+.listing-card .card-topline > span:first-child {
+  margin-right: auto;
+}
+.listing-card .card-time {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  transform: translateY(2px);
+}
+.listing-card .card-title {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.2;
+  transform: translateY(-1px);
 }
 .card-content > p,
 .card-footer {
