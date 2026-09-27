@@ -442,6 +442,9 @@ export function CreateListingPage({
         ...(model.trim() ? { [copy.model]: model.trim() } : {}),
         ...guidedTechnicalSpecifications,
         ...technicalSpecifications,
+        ...(technicalDetailsUnknown && guidedSpecifications.freeShipping?.trim()
+          ? { [formCopy.fields.freeShipping[0]]: guidedSpecifications.freeShipping.trim() }
+          : {}),
       },
       description: description.trim(),
       priceSignal: initialListing?.priceSignal ?? "fair",
@@ -730,6 +733,42 @@ export function CreateListingPage({
               </label>
             )}
 
+            {technicalDetailsUnknown &&
+              guidedFields
+                .filter((field) => field.key === "freeShipping")
+                .map((field) => (
+                  <label key={field.key}>
+                    <FieldLabel label={field.label} requiredText={formCopy.required} />
+                    {field.options ? (
+                      <select
+                        value={guidedSpecifications[field.key] ?? ""}
+                        onChange={(event) =>
+                          setGuidedSpecifications((values) => ({ ...values, [field.key]: event.target.value }))
+                        }
+                      >
+                        <option value="">—</option>
+                        {guidedSpecifications[field.key] &&
+                          !field.options.includes(guidedSpecifications[field.key]) && (
+                            <option value={guidedSpecifications[field.key]}>{guidedSpecifications[field.key]}</option>
+                          )}
+                        {field.options.map((option) => (
+                          <option key={option} value={option}>
+                            {option}
+                          </option>
+                        ))}
+                      </select>
+                    ) : (
+                      <input
+                        value={guidedSpecifications[field.key] ?? ""}
+                        onChange={(event) =>
+                          setGuidedSpecifications((values) => ({ ...values, [field.key]: event.target.value }))
+                        }
+                        placeholder={field.placeholder}
+                      />
+                    )}
+                  </label>
+                ))}
+
             {!technicalDetailsUnknown && (
               <div className="specification-editor">
                 {guidedFields.length > 0 && (
@@ -737,13 +776,35 @@ export function CreateListingPage({
                     {guidedFields.map((field) => (
                       <label key={field.key}>
                         <FieldLabel label={field.label} requiredText={formCopy.required} />
-                        <input
-                          value={guidedSpecifications[field.key] ?? ""}
-                          onChange={(event) =>
-                            setGuidedSpecifications((values) => ({ ...values, [field.key]: event.target.value }))
-                          }
-                          placeholder={field.placeholder}
-                        />
+                        {field.options ? (
+                          <select
+                            value={guidedSpecifications[field.key] ?? ""}
+                            onChange={(event) =>
+                              setGuidedSpecifications((values) => ({ ...values, [field.key]: event.target.value }))
+                            }
+                          >
+                            <option value="">—</option>
+                            {guidedSpecifications[field.key] &&
+                              !field.options.includes(guidedSpecifications[field.key]) && (
+                                <option value={guidedSpecifications[field.key]}>
+                                  {guidedSpecifications[field.key]}
+                                </option>
+                              )}
+                            {field.options.map((option) => (
+                              <option key={option} value={option}>
+                                {option}
+                              </option>
+                            ))}
+                          </select>
+                        ) : (
+                          <input
+                            value={guidedSpecifications[field.key] ?? ""}
+                            onChange={(event) =>
+                              setGuidedSpecifications((values) => ({ ...values, [field.key]: event.target.value }))
+                            }
+                            placeholder={field.placeholder}
+                          />
+                        )}
                       </label>
                     ))}
                   </div>
