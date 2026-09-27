@@ -33,3 +33,5 @@ Käynnistä projektikansiosta `npm.cmd run dev:demo` ja avaa http://localhost:41
 Etusivun adminin julkaisemat markkinointitiedotteet säilyvät käytössä. Ylänavigaatioon ja footeriin ei tehdä muutoksia.
 
 Ilmoituskortin aika lasketaan julkaisuajasta: 0–59min, 1–23h, 1–7pv ja kahdeksannesta vuorokaudesta alkaen julkaisupäivämäärä Helsingin ajassa. Aika päivittyy puolen minuutin välein sekä palattaessa ikkunaan. Lajittelu käyttää samaa julkaisuhetkeä; vanha demodata käyttää luontiaikaa varalla, tuntematon aika näytetään viivana ja järjestetään viimeiseksi.
+
+Kategorioiden tuotelistoilla näytetään 24 ilmoitusta sivulla. Sivunvalinta ja tulosväli ovat listan alla. Haku, kategoria ja lajittelu koskevat koko aktiivista valikoimaa ennen sivutusta; niiden muutos avaa sivun 1. Viimeinen sivu voi olla vajaampi. Etusivun suositusten 24/48-raja säilyy erillisenä.

@@ -37,3 +37,5 @@
 @import "./features/home/storefront.css";
 
 @import "./components/infinite-spiral.css";
+
+@import "./features/marketplace/pagination.css";
