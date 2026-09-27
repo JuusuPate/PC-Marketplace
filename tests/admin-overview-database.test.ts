@@ -523,10 +523,14 @@ describe("admin dashboard trends", () => {
     const listingId = await listing();
     await order("completed", 12000, 240);
     await order("refunded", 99000, 990);
-    await db.query("insert into public.reports (reporter_id, listing_id, reason) values ($1, $2, 'Other')", [
-      userId,
-      listingId,
-    ]);
+    // PGlite has millisecond clock resolution: insertion and snapshot may share
+    // now(), while the chart deliberately uses a half-open upper time boundary.
+    // Place this fixture at a known point in today's Helsinki bucket instead.
+    await db.query(
+      `insert into public.reports (reporter_id, listing_id, reason, created_at)
+       values ($1, $2, 'Other', (now() at time zone 'Europe/Helsinki')::date::timestamp at time zone 'Europe/Helsinki')`,
+      [userId, listingId],
+    );
     const data = await read();
     expect(data).toMatchObject({ days: 7, market: "FI", currency: "EUR", timezone: "Europe/Helsinki" });
     expect(data.buckets.at(-1)).toMatchObject({
