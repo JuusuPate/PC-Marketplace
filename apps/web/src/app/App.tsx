@@ -1,3 +1,4 @@
+import { sortListingsByPublication } from "../lib/listing-time";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { CategoryNavigation } from "../components/CategoryNavigation";
 import { Header } from "../components/Header";
@@ -554,17 +555,7 @@ export function App() {
         (!normalizedQuery || haystack.includes(normalizedQuery))
       );
     });
-    if (sort === "newest" || sort === "oldest") {
-      const timestamps = new Map(
-        matches.map((listing, index) => {
-          const parsedTimestamp = listing.createdAt ? Date.parse(listing.createdAt) : Number.NaN;
-          const timestamp = Number.isFinite(parsedTimestamp) ? parsedTimestamp : Number.MAX_SAFE_INTEGER - index;
-          return [listing.id, timestamp] as const;
-        }),
-      );
-      const direction = sort === "newest" ? -1 : 1;
-      return matches.sort((a, b) => direction * ((timestamps.get(a.id) ?? 0) - (timestamps.get(b.id) ?? 0)));
-    }
+    if (sort === "newest" || sort === "oldest") return sortListingsByPublication(matches, sort);
     if (sort === "priceLow") return matches.sort((a, b) => a.priceMinor - b.priceMinor);
     if (sort === "priceHigh") return matches.sort((a, b) => b.priceMinor - a.priceMinor);
     if (sort === "bestDeals")

@@ -1,3 +1,4 @@
+import { ListingAge } from "./ListingAge";
 import type { MouseEvent } from "react";
 import type { Messages } from "../i18n/messages/fi";
 import { formatMoney } from "../lib/money";
@@ -50,7 +51,7 @@ export function ListingCard({ listing, locale, copy, favourite, href, onFavourit
       <div className="card-content">
         <div className="card-topline">
           <span>{listing.city}</span>
-          <span className="card-time">{listing.createdLabel}</span>
+          <ListingAge listing={listing} locale={locale} />
         </div>
         <a className="card-title" href={href} onClick={handleOpen}>
           {listing.title}

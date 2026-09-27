@@ -12,7 +12,7 @@ Heron korkeutta säädetään `--storefront-hero-height`-muuttujalla (oletus 360
 
 ## Suositusten pisteytys
 
-Pohjana on nykyisen ilmoituspalvelun enintään 60 uusinta aktiivista ilmoitusta. Suosikki antaa tuoteryhmälle 4 pistettä, samalla vierailulla katsottu ilmoitus 2; kiinnostuspisteet rajataan 12:een. Tuoreus antaa enintään 4 pistettä viikon aikajänteellä vähentyen. Sivun latauskohtainen satunnaissiemen tuo 0–5 pistettä vaihtelua. Jokainen jo valittu saman tuoteryhmän tuote vähentää seuraavien pisteitä 1,5 ja saman myyjän tuote 0,75: monipuolisuus säilyy. Algoritmi valitsee enintään 48 yksilöllistä tuotetta. Laajennus ei muuta ensimmäisten 24 järjestystä.
+Pohjana ovat ilmoituspalvelun aktiiviset ilmoitukset. Palvelu lukee valikoiman 200 ilmoituksen sivuina, jotta myös vanhat ilmoitukset ovat mukana haussa ja lajittelussa. Suosikki antaa tuoteryhmälle 4 pistettä, samalla vierailulla katsottu ilmoitus 2; kiinnostuspisteet rajataan 12:een. Tuoreus antaa enintään 4 pistettä viikon aikajänteellä vähentyen. Sivun latauskohtainen satunnaissiemen tuo 0–5 pistettä vaihtelua. Jokainen jo valittu saman tuoteryhmän tuote vähentää seuraavien pisteitä 1,5 ja saman myyjän tuote 0,75: monipuolisuus säilyy. Algoritmi valitsee enintään 48 yksilöllistä tuotetta. Laajennus ei muuta ensimmäisten 24 järjestystä.
 
 Katseluhistoria sisältää enintään 40 tunnistetta vain Reactin muistissa. Sitä ei lähetetä analytiikkapalveluun tai tallenneta selaimen pysyvään muistiin. Se tyhjennetään käyttäjän vaihtuessa. Suosikit tulevat nykyisestä käyttäjäkohtaisesta suosikkitoiminnosta. Sivun päivitys vaihtaa satunnaissiementä, joten ehdotukset voivat vaihtua; identtinen järjestys ei ole poissuljettu pienessä valikoimassa.
 
@@ -31,3 +31,5 @@ Supabasen tarkistin huomauttaa julkisesta SECURITY DEFINER -hausta. Julkinen kä
 Käynnistä projektikansiosta `npm.cmd run dev:demo` ja avaa http://localhost:4174/. Komento tyhjentää Supabase-asetukset vain käynnistettävän esittelypalvelimen ympäristöstä. `.env`-tiedostoja tai tietokantaa ei muuteta. Tavallinen Supabase-esikatselu säilyy osoitteessa http://localhost:4173/. Molemmat käyttävät samaa koodikansiota.
 
 Etusivun adminin julkaisemat markkinointitiedotteet säilyvät käytössä. Ylänavigaatioon ja footeriin ei tehdä muutoksia.
+
+Ilmoituskortin aika lasketaan julkaisuajasta: 0–59min, 1–23h, 1–7pv ja kahdeksannesta vuorokaudesta alkaen julkaisupäivämäärä Helsingin ajassa. Aika päivittyy puolen minuutin välein sekä palattaessa ikkunaan. Lajittelu käyttää samaa julkaisuhetkeä; vanha demodata käyttää luontiaikaa varalla, tuntematon aika näytetään viivana ja järjestetään viimeiseksi.
