@@ -39,3 +39,5 @@
 @import "./components/infinite-spiral.css";
 
 @import "./features/marketplace/pagination.css";
+
+@import "./features/marketplace/filters.css";

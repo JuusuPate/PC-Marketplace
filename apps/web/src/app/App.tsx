@@ -1,3 +1,9 @@
+import { MarketplaceFilterSidebar } from "../features/catalog/MarketplaceFilterSidebar";
+import {
+  EMPTY_MARKETPLACE_FILTERS,
+  matchesMarketplaceFilters,
+  type MarketplaceFilters,
+} from "../features/catalog/marketplace-filters";
 import { CatalogPagination } from "../features/catalog/CatalogPagination";
 import { sortListingsByPublication } from "../lib/listing-time";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -203,6 +209,24 @@ export function App() {
   currentUserId.current = user?.id;
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<"all" | Category>("all");
+  const [filterState, setFilterState] = useState<{ scope: string; filters: MarketplaceFilters }>({
+    scope: "",
+    filters: EMPTY_MARKETPLACE_FILTERS,
+  });
+  const filterScope = `${catalogPage?.id ?? "all"}:${category}`;
+  const marketplaceFilters = filterState.scope === filterScope ? filterState.filters : EMPTY_MARKETPLACE_FILTERS;
+  const changeMarketplaceFilters = (filters: MarketplaceFilters) => setFilterState({ scope: filterScope, filters });
+  const selectedFilterCategories = marketplaceFilters.values.category ?? [];
+  const filterCategory: Category | "all" =
+    selectedFilterCategories.length === 1
+      ? (selectedFilterCategories[0] as Category)
+      : selectedFilterCategories.length > 1
+        ? "all"
+        : category !== "all"
+          ? category
+          : catalogPage?.categories?.length === 1
+            ? catalogPage.categories[0]
+            : "all";
   const [sort, setSort] = useState<SortOption>("newest");
   const [catalogPagination, setCatalogPagination] = useState({ scope: "", page: 1 });
   const [checkoutListing, setCheckoutListing] = useState<Listing | null>(null);
@@ -281,14 +305,6 @@ export function App() {
       return listing ? [listing] : [];
     });
   }, [favourites, listings, savedListings]);
-
-  const categoryFilters = useMemo(() => {
-    if (!catalogPage || catalogPage.id === "all") return categories;
-    if (catalogPage.id === "components") {
-      return categories.filter((item) => item.key === "all" || (item.key !== "pc" && item.key !== "other"));
-    }
-    return [];
-  }, [catalogPage]);
 
   useEffect(
     () =>
@@ -547,7 +563,11 @@ export function App() {
     };
   }, [listingReload]);
 
-  const visibleListings = useMemo(() => {
+  const filterOptionListings = useMemo(
+    () => navigationFilteredListings.filter((listing) => category === "all" || listing.category === category),
+    [navigationFilteredListings, category],
+  );
+  const searchListings = useMemo(() => {
     const normalizedQuery = query.trim().toLocaleLowerCase();
     const matches = navigationFilteredListings.filter((listing) => {
       const haystack =
@@ -558,17 +578,23 @@ export function App() {
         (!normalizedQuery || haystack.includes(normalizedQuery))
       );
     });
+    return matches;
+  }, [category, market, navigationFilteredListings, query]);
+
+  const visibleListings = useMemo(() => {
+    const matches = searchListings.filter((listing) => matchesMarketplaceFilters(listing, marketplaceFilters));
     if (sort === "newest" || sort === "oldest") return sortListingsByPublication(matches, sort);
     if (sort === "priceLow") return matches.sort((a, b) => a.priceMinor - b.priceMinor);
     if (sort === "priceHigh") return matches.sort((a, b) => b.priceMinor - a.priceMinor);
     if (sort === "bestDeals")
       return matches.sort((a, b) => Number(b.priceSignal === "great") - Number(a.priceSignal === "great"));
     return matches;
-  }, [category, market, navigationFilteredListings, query, sort]);
+  }, [searchListings, marketplaceFilters, sort]);
 
   const paginationScope = JSON.stringify([
     catalogPage?.id,
     activeCatalogSubmenuHref,
+    marketplaceFilters,
     query.trim().toLowerCase(),
     category,
     sort,
@@ -984,84 +1010,87 @@ export function App() {
                   {visibleListings.length} {copy.listings}
                 </span>
               </div>
-              <div className="market-toolbar">
-                <label className="search-box">
-                  <Icon name="search" />
-                  <input
-                    value={query}
-                    onChange={(event) => setQuery(event.target.value)}
-                    placeholder={copy.searchPlaceholder}
+              <div className="marketplace-layout">
+                <MarketplaceFilterSidebar
+                  key={filterScope}
+                  category={filterCategory}
+                  categoryOptions={(
+                    catalogPage?.categories ??
+                    categories.filter((item) => item.key !== "all").map((item) => item.key as Category)
+                  ).map((key) => ({ value: key, label: copy[key] }))}
+                  locale={locale}
+                  listings={filterOptionListings}
+                  matchingListings={searchListings}
+                  value={marketplaceFilters}
+                  onChange={changeMarketplaceFilters}
+                />
+                <div className="marketplace-results">
+                  <div className="market-toolbar">
+                    <label className="search-box">
+                      <Icon name="search" />
+                      <input
+                        value={query}
+                        onChange={(event) => setQuery(event.target.value)}
+                        placeholder={copy.searchPlaceholder}
+                      />
+                      <kbd>⌘ K</kbd>
+                    </label>
+                    <label className="sort-select">
+                      <select value={sort} onChange={(event) => setSort(event.target.value as SortOption)}>
+                        <option value="newest">{copy.newest}</option>
+                        <option value="oldest">{copy.oldest}</option>
+                        <option value="priceLow">{copy.priceLow}</option>
+                        <option value="priceHigh">{copy.priceHigh}</option>
+                        <option value="bestDeals">{copy.bestDeals}</option>
+                      </select>
+                      <Icon name="chevron" />
+                    </label>
+                  </div>
+                  {visibleListings.length > 0 ? (
+                    <div className="listing-grid">
+                      {pageListings.map((listing) => (
+                        <ListingCard
+                          key={listing.id}
+                          listing={listing}
+                          locale={locale}
+                          copy={copy}
+                          favourite={favourites.includes(listing.id)}
+                          href={getListingPath(listing.id)}
+                          onFavourite={() => toggleFavourite(listing.id)}
+                          onOpen={() => navigateTo(getListingPath(listing.id))}
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="empty-state">
+                      <div>⌁</div>
+                      <h3>{copy.noResults}</h3>
+                      <button
+                        className="button button--outline"
+                        type="button"
+                        onClick={() => {
+                          changeMarketplaceFilters(EMPTY_MARKETPLACE_FILTERS);
+                          if (catalogNavigationFilter && catalogPage) {
+                            navigateTo(catalogPage.path, "#marketplace");
+                            return;
+                          }
+                          setQuery("");
+                          setCategory("all");
+                        }}
+                      >
+                        {copy.resetFilters}
+                      </button>
+                    </div>
+                  )}
+                  <CatalogPagination
+                    page={cataloguePageNumber}
+                    pageSize={CATALOG_PAGE_SIZE}
+                    total={visibleListings.length}
+                    locale={locale}
+                    onPage={changeCataloguePage}
                   />
-                  <kbd>⌘ K</kbd>
-                </label>
-                <label className="sort-select">
-                  <select value={sort} onChange={(event) => setSort(event.target.value as SortOption)}>
-                    <option value="newest">{copy.newest}</option>
-                    <option value="oldest">{copy.oldest}</option>
-                    <option value="priceLow">{copy.priceLow}</option>
-                    <option value="priceHigh">{copy.priceHigh}</option>
-                    <option value="bestDeals">{copy.bestDeals}</option>
-                  </select>
-                  <Icon name="chevron" />
-                </label>
+                </div>
               </div>
-              {categoryFilters.length > 0 && (
-                <div className="category-row">
-                  {categoryFilters.map((item) => (
-                    <button
-                      key={item.key}
-                      type="button"
-                      className={category === item.key ? "active" : ""}
-                      onClick={() => setCategory(item.key)}
-                    >
-                      <span>{item.glyph}</span>
-                      {copy[item.key]}
-                    </button>
-                  ))}
-                </div>
-              )}
-              {visibleListings.length > 0 ? (
-                <div className="listing-grid">
-                  {pageListings.map((listing) => (
-                    <ListingCard
-                      key={listing.id}
-                      listing={listing}
-                      locale={locale}
-                      copy={copy}
-                      favourite={favourites.includes(listing.id)}
-                      href={getListingPath(listing.id)}
-                      onFavourite={() => toggleFavourite(listing.id)}
-                      onOpen={() => navigateTo(getListingPath(listing.id))}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <div className="empty-state">
-                  <div>⌁</div>
-                  <h3>{copy.noResults}</h3>
-                  <button
-                    className="button button--outline"
-                    type="button"
-                    onClick={() => {
-                      if (catalogNavigationFilter && catalogPage) {
-                        navigateTo(catalogPage.path, "#marketplace");
-                        return;
-                      }
-                      setQuery("");
-                      setCategory("all");
-                    }}
-                  >
-                    {copy.resetFilters}
-                  </button>
-                </div>
-              )}
-              <CatalogPagination
-                page={cataloguePageNumber}
-                pageSize={CATALOG_PAGE_SIZE}
-                total={visibleListings.length}
-                locale={locale}
-                onPage={changeCataloguePage}
-              />
             </section>
           )}
       </main>

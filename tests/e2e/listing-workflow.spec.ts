@@ -38,6 +38,9 @@ test("demoilmoitus julkaistaan, kuvat selataan ja säilyvät muokkauksessa", asy
   await page.locator('[data-listing-field="price"]').fill("499");
   await next(page);
 
+  await page.getByLabel("Piirin valmistaja").fill("NVIDIA");
+  await page.getByLabel("Näyttömuisti").fill("12 GB");
+  await page.getByLabel("Ilmainen postitus").selectOption("Kyllä");
   await next(page);
   await expect(page.locator("#description-error")).toContainText("vähintään 20 merkkiä");
   await page
@@ -68,6 +71,13 @@ test("demoilmoitus julkaistaan, kuvat selataan ja säilyvät muokkauksessa", asy
   await page.reload();
   await page.getByRole("button", { name: "Muokkaa ilmoitusta" }).click();
   await expect(page.getByRole("heading", { name: "Muokkaa ilmoitusta" })).toBeVisible();
+  await page
+    .getByRole("navigation", { name: "Ilmoituksen muokkauksen vaiheet" })
+    .getByRole("button", { name: /Tiedot$/ })
+    .click();
+  await expect(page.getByLabel("Piirin valmistaja")).toHaveValue("NVIDIA");
+  await expect(page.getByLabel("Näyttömuisti")).toHaveValue("12 GB");
+  await expect(page.getByLabel("Ilmainen postitus")).toHaveValue("Kyllä");
   await page
     .getByRole("navigation", { name: "Ilmoituksen muokkauksen vaiheet" })
     .getByRole("button", { name: "4 Kuvat" })

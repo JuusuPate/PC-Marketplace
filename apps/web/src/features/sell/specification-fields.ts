@@ -4,6 +4,7 @@ export interface GuidedSpecificationField {
   key: string;
   label: string;
   placeholder: string;
+  options?: string[];
 }
 
 interface SpecificationCopy {
@@ -45,6 +46,17 @@ const englishCopy: SpecificationCopy = {
     case: ["Case", "Fractal Design North"],
     cooling: ["Cooling", "Noctua NH-D15"],
     operatingSystem: ["Operating system", "Windows 11 Home"],
+    chipVendor: ["Chip manufacturer", "NVIDIA / AMD / Intel"],
+    modules: ["Memory module count", "2"],
+    moduleFormat: ["Memory module format", "DIMM / SO-DIMM"],
+    wifi: ["Wi-Fi", "Yes / No"],
+    bluetooth: ["Bluetooth", "Yes / No"],
+    storageType: ["Drive type", "NVMe SSD / SATA SSD / SATA HDD"],
+    driveFormat: ["Drive size / form factor", 'M.2 / 2.5" / 3.5" / mSATA'],
+    coolingType: ["Cooling type", "Air / AIO / Custom Loop"],
+    wattage: ["Power (W)", "750 W"],
+    efficiency: ["Efficiency rating", "80+ Gold"],
+    freeShipping: ["Free shipping", "Yes / No"],
     vram: ["Video memory", "12 GB GDDR6X"],
     interface: ["Interface", "PCIe 4.0"],
     powerConnector: ["Power connector", "2 × 8-pin"],
@@ -82,6 +94,17 @@ const finnishCopy: SpecificationCopy = {
     case: ["Kotelo", "Fractal Design North"],
     cooling: ["Jäähdytys", "Noctua NH-D15"],
     operatingSystem: ["Käyttöjärjestelmä", "Windows 11 Home"],
+    chipVendor: ["Piirin valmistaja", "NVIDIA / AMD / Intel"],
+    modules: ["Muistimoduulien määrä", "2"],
+    moduleFormat: ["Muistimoduulin koko", "DIMM / SO-DIMM"],
+    wifi: ["Wi-Fi", "Kyllä / Ei"],
+    bluetooth: ["Bluetooth", "Kyllä / Ei"],
+    storageType: ["Tallennuslaitteen tyyppi", "NVMe SSD / SATA SSD / SATA HDD"],
+    driveFormat: ["Tallennuslaitteen koko", 'M.2 / 2.5" / 3.5" / mSATA'],
+    coolingType: ["Jäähdytyksen tyyppi", "Ilmajäähy / AIO / Custom Loop"],
+    wattage: ["Teho (W)", "750 W"],
+    efficiency: ["Hyötysuhdeluokitus", "80+ Gold"],
+    freeShipping: ["Ilmainen postitus", "Kyllä / Ei"],
     vram: ["Näyttömuisti", "12 GB GDDR6X"],
     interface: ["Liitäntä", "PCIe 4.0"],
     powerConnector: ["Virtaliitin", "2 × 8-pin"],
@@ -132,21 +155,26 @@ const fieldKeysByCategory: Record<Category, string[]> = {
     "cooling",
     "operatingSystem",
   ],
-  gpu: ["vram", "interface", "powerConnector"],
+  gpu: ["chipVendor", "vram", "interface", "powerConnector"],
   cpu: ["socket", "cores", "clock"],
-  memory: ["capacity", "memoryType", "speed"],
-  motherboard: ["socket", "chipset", "formFactor", "memoryType"],
+  memory: ["capacity", "memoryType", "modules", "moduleFormat", "speed"],
+  motherboard: ["socket", "chipset", "formFactor", "memoryType", "wifi", "bluetooth"],
   other: [],
-  psu: [],
-  storage: ["capacity", "interface"],
+  psu: ["wattage", "efficiency", "formFactor"],
+  storage: ["capacity", "storageType", "driveFormat", "interface"],
   case: ["formFactor"],
-  cooling: [],
+  cooling: ["coolingType", "socket"],
 };
 
 export function getGuidedSpecificationFields(category: Category, locale: Locale): GuidedSpecificationField[] {
   const copy = specificationCopy[locale];
-  return fieldKeysByCategory[category].map((key) => {
+  return [...fieldKeysByCategory[category], "freeShipping"].map((key) => {
     const [label, placeholder] = copy.fields[key] ?? englishCopy.fields[key];
-    return { key, label, placeholder };
+    const options = ["freeShipping", "wifi", "bluetooth"].includes(key)
+      ? locale === "fi"
+        ? ["Kyllä", "Ei"]
+        : ["Yes", "No"]
+      : undefined;
+    return { key, label, placeholder, options };
   });
 }

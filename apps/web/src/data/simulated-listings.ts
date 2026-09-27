@@ -29,6 +29,29 @@ const models: [Category, string, number, string?][] = [
   ["other", "Keychron Q1 HE", 12900, keyboard],
   ["other", "Logitech G Pro X Superlight", 6900],
 ];
+// Illustrative specifications for the simulated listings only.
+const modelSpecifications: Record<string, string>[] = [
+  { "Piirin valmistaja": "NVIDIA", Näyttömuisti: "16 GB" },
+  { "Piirin valmistaja": "NVIDIA", Näyttömuisti: "12 GB" },
+  { "Piirin valmistaja": "AMD", Näyttömuisti: "24 GB" },
+  { "Piirin valmistaja": "NVIDIA", Näyttömuisti: "10 GB" },
+  { "Ytimet / säikeet": "8 / 16", Prosessorikanta: "AM5" },
+  { "Ytimet / säikeet": "8 / 16", Prosessorikanta: "AM5" },
+  { "Ytimet / säikeet": "14 / 20", Prosessorikanta: "LGA 1700" },
+  { Koko: "ATX", "Wi-Fi": "Kyllä", Bluetooth: "Kyllä", Prosessorikanta: "AM5" },
+  { Koko: "ATX", "Wi-Fi": "Ei", Bluetooth: "Ei", Prosessorikanta: "LGA 1700" },
+  { Kapasiteetti: "32 GB", Muistityyppi: "DDR5", "Muistimoduulien määrä": "2", "Muistimoduulin koko": "DIMM" },
+  { Kapasiteetti: "64 GB", Muistityyppi: "DDR5", "Muistimoduulien määrä": "2", "Muistimoduulin koko": "DIMM" },
+  { Kapasiteetti: "1 TB", "Tallennuslaitteen tyyppi": "NVMe SSD", "Tallennuslaitteen koko": "M.2" },
+  { Kapasiteetti: "2 TB", "Tallennuslaitteen tyyppi": "NVMe SSD", "Tallennuslaitteen koko": "M.2" },
+  { "Teho (W)": "850 W", Hyötysuhdeluokitus: "80+ Gold", Koko: "ATX" },
+  { Koko: "ATX" },
+  { "Jäähdytyksen tyyppi": "Ilmajäähy", Prosessorikanta: "AM4, AM5, LGA 1200, LGA 1700" },
+  {},
+  {},
+  {},
+  {},
+];
 const cities = [
   "Helsinki",
   "Espoo",
@@ -71,7 +94,11 @@ export function createSimulatedListings(now = Date.now()): Listing[] {
         joinedYear: 2026,
       },
       shipsTo: ["FI"],
-      specs: { Malli: model },
+      specs: {
+        Malli: model,
+        ...modelSpecifications[index % models.length],
+        "Ilmainen postitus": index % 4 === 0 ? "Kyllä" : "Ei",
+      },
       description:
         "Simuloitu esimerkkituote sivuston ulkoasun ja toimintojen kokeiluun. Tämä ei ole oikea myynti-ilmoitus. Kuva on havainnollistava.",
       priceSignal: "fair",
