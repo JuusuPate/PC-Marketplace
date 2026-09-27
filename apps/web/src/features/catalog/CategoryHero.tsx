@@ -6,12 +6,11 @@ import { Icon } from "../../components/Icon";
 interface CategoryHeroProps {
   page: CatalogPage;
   copy: Messages;
-  listingCount: number;
   onHome: () => void;
   onSell: () => void;
 }
 
-export function CategoryHero({ page, copy, listingCount, onHome, onSell }: CategoryHeroProps) {
+export function CategoryHero({ page, copy, onHome, onSell }: CategoryHeroProps) {
   const title = copy[page.labelKey];
 
   const handleHome = (event: MouseEvent<HTMLAnchorElement>) => {
@@ -40,28 +39,6 @@ export function CategoryHero({ page, copy, listingCount, onHome, onSell }: Categ
             <Icon name="plus" />
             {copy.sell}
           </button>
-        </div>
-
-        <div className="category-route-card">
-          <img
-            className={`category-route-card-image category-route-card-image--${page.id}`}
-            src={page.image}
-            alt=""
-            width="1024"
-            height="1024"
-            loading="eager"
-            decoding="async"
-            fetchPriority="high"
-          />
-          <span className="category-route-card-shade" aria-hidden="true" />
-          <span className="category-route-card-status">{copy.marketplace}</span>
-          <strong className="category-route-glyph" aria-hidden="true">
-            {page.glyph}
-          </strong>
-          <div>
-            <strong>{listingCount}</strong>
-            <span>{copy.listings}</span>
-          </div>
         </div>
       </div>
     </section>

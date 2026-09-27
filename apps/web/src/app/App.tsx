@@ -941,13 +941,7 @@ export function App() {
           !editListingId &&
           (!createListingPage || !user) &&
           (catalogPage ? (
-            <CategoryHero
-              page={catalogPage}
-              copy={copy}
-              listingCount={navigationFilteredListings.length}
-              onHome={() => navigateTo("/")}
-              onSell={requireSellAuth}
-            />
+            <CategoryHero page={catalogPage} copy={copy} onHome={() => navigateTo("/")} onSell={requireSellAuth} />
           ) : (
             <HomePage
               locale={locale}
