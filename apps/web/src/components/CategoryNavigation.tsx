@@ -112,6 +112,7 @@ export function CategoryNavigation({
                 className={`category-navigation-item${hasSubmenu ? " has-submenu" : ""}${isActive ? " is-active" : ""}${isOpen ? " is-menu-open" : ""}`}
                 onMouseEnter={() => {
                   if (hasSubmenu) openMenu(page.id);
+                  else closeMenu();
                 }}
                 onMouseLeave={() => {
                   // Intentionally left blank: the parent nav owns the hover lifecycle.
