@@ -1,3 +1,4 @@
+import { canonicalMunicipality } from "../../lib/finnish-locations";
 import type { Category, Listing, Locale } from "../../types";
 import { specificationCopy } from "../sell/specification-fields";
 
@@ -58,7 +59,7 @@ export const FILTER_DEFINITIONS: FilterDefinition[] = [
     ],
   },
   { key: "brand", label: ["Valmistaja / merkki", "Manufacturer / brand", "Tillverkare / märke"], options: [] },
-  { key: "city", label: ["Kaupunki", "City", "Stad"], options: [] },
+  { key: "city", label: ["Sijainti", "Location", "Plats"], options: [] },
   {
     key: "freeShipping",
     label: ["Muut rajaukset", "Other filters", "Övriga filter"],
@@ -225,7 +226,8 @@ export function listingFilterValues(listing: Listing, key: string): string[] {
   const raw = readListingSpec(listing, key);
   const value = norm(raw);
   let result = raw;
-  if (key === "brand" || key === "city") result = norm(listing[key]);
+  if (key === "city") result = canonicalMunicipality(listing.city);
+  else if (key === "brand") result = norm(listing.brand);
   else if (key === "condition") result = listing.condition;
   else if (key === "category") result = listing.category;
   else if (["freeShipping", "wifi", "bluetooth"].includes(key))
@@ -367,7 +369,9 @@ export function matchesMarketplaceFilters(listing: Listing, filters: Marketplace
       !selected.length ||
       selected.some((value) =>
         listingFilterValues(listing, key).some((actual) =>
-          value === ">500" && key === "wattage" ? Number(actual) > 500 : norm(actual) === norm(value),
+          value === ">500" && key === "wattage"
+            ? Number(actual) > 500
+            : norm(actual) === (key === "city" ? canonicalMunicipality(value) : norm(value)),
         ),
       ),
   );

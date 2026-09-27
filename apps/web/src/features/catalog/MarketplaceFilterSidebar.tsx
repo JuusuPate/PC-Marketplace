@@ -1,3 +1,4 @@
+import { LocationFilter } from "./LocationFilter";
 import { useMemo, useState } from "react";
 import type { Category, Listing, Locale } from "../../types";
 import {
@@ -124,27 +125,38 @@ export function MarketplaceFilterSidebar({
             </p>
           )}
         </details>
-        {definitions.map((definition) => (
-          <details className="market-filter-group" key={definition.key} open>
-            <summary>{filterLabel(definition.label, locale)}</summary>
-            <div className="market-filter-options">
-              {definition.options.map((option) => {
-                const checked = (value.values[definition.key] ?? []).includes(option.value);
-                const optionFilter = { ...value, values: { ...value.values, [definition.key]: [option.value] } };
-                const matches = matchingListings.filter((listing) =>
-                  matchesMarketplaceFilters(listing, optionFilter),
-                ).length;
-                return (
-                  <label key={option.value} className={matches ? "" : "market-filter-option--empty"}>
-                    <input type="checkbox" checked={checked} onChange={() => toggle(definition.key, option.value)} />
-                    <span>{filterLabel(option.label, locale)}</span>
-                    <small aria-hidden="true">{matches}</small>
-                  </label>
-                );
-              })}
-            </div>
-          </details>
-        ))}
+        {definitions.map((definition) =>
+          definition.key === "city" ? (
+            <LocationFilter
+              key="city"
+              locale={locale}
+              listings={listings}
+              matchingListings={matchingListings}
+              filters={value}
+              onChange={onChange}
+            />
+          ) : (
+            <details className="market-filter-group" key={definition.key} open>
+              <summary>{filterLabel(definition.label, locale)}</summary>
+              <div className="market-filter-options">
+                {definition.options.map((option) => {
+                  const checked = (value.values[definition.key] ?? []).includes(option.value);
+                  const optionFilter = { ...value, values: { ...value.values, [definition.key]: [option.value] } };
+                  const matches = matchingListings.filter((listing) =>
+                    matchesMarketplaceFilters(listing, optionFilter),
+                  ).length;
+                  return (
+                    <label key={option.value} className={matches ? "" : "market-filter-option--empty"}>
+                      <input type="checkbox" checked={checked} onChange={() => toggle(definition.key, option.value)} />
+                      <span>{filterLabel(option.label, locale)}</span>
+                      <small aria-hidden="true">{matches}</small>
+                    </label>
+                  );
+                })}
+              </div>
+            </details>
+          ),
+        )}
         <p className="market-filters__hint">
           {filterLabel(category === "all" ? filterCopy.hint : filterCopy.unknown, locale)}
         </p>
