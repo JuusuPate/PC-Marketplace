@@ -70,17 +70,6 @@
   .category-route-copy h1 {
     font-size: 45px;
   }
-  .category-route-hero-inner {
-    gap: 32px;
-  }
-  .category-route-card {
-    min-height: 270px;
-    padding: 22px;
-  }
-  .category-route-glyph {
-    top: 17px;
-    right: 17px;
-  }
   .create-listing-page {
     width: calc(100% - 24px);
     padding: 38px 0 72px;

@@ -21,10 +21,6 @@
     left: 24px;
     transform: none;
   }
-  .category-route-hero-inner {
-    grid-template-columns: minmax(0, 1fr) 290px;
-    gap: 38px;
-  }
   .hero {
     grid-template-columns: 1fr 0.9fr;
     gap: 18px;
@@ -95,14 +91,7 @@
     left: 12px;
   }
   .category-route-hero-inner {
-    min-height: 0;
     padding-block: 48px 54px;
-    grid-template-columns: 1fr;
-  }
-  .category-route-card {
-    width: min(100%, 520px);
-    min-height: 320px;
-    transform: none;
   }
   .brand small,
   .header-sell,
