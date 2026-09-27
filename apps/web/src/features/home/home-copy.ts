@@ -1,5 +1,7 @@
 import type { Locale } from "../../types";
 const en = {
+  pauseAnimation: "Pause animation",
+  resumeAnimation: "Resume animation",
   title: "Find your next upgrade.",
   body: "Buy and sell PC components easily and safely.",
   browse: "Browse products",
@@ -30,6 +32,8 @@ const en = {
   safety: "Read our safety guide",
 };
 const fi: typeof en = {
+  pauseAnimation: "Pysäytä animaatio",
+  resumeAnimation: "Jatka animaatiota",
   title: "Löydä seuraava päivityksesi.",
   body: "Osta ja myy PC-komponentteja helposti ja turvallisesti.",
   browse: "Selaa tuotteita",
@@ -60,6 +64,8 @@ const fi: typeof en = {
   safety: "Lue turvallisuusohjeet",
 };
 const sv: typeof en = {
+  pauseAnimation: "Pausa animationen",
+  resumeAnimation: "Fortsätt animationen",
   title: "Hitta din nästa uppgradering.",
   body: "Köp och sälj datorkomponenter enkelt och tryggt.",
   browse: "Bläddra bland produkter",

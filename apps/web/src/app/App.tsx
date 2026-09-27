@@ -32,6 +32,7 @@ import {
 } from "../config/admin-routes";
 import { LAUNCH_MARKET, MARKETS } from "../config/markets";
 import { DEMO_LISTINGS } from "../data/demo-listings";
+import { SIMULATED_LISTINGS } from "../data/simulated-listings";
 import { AccountModal } from "../features/account/AccountModal";
 import { AdminDashboardPage } from "../features/admin/AdminDashboardPage";
 import { getAdminCopy } from "../features/admin/admin-copy";
@@ -227,7 +228,7 @@ export function App() {
   const runtimeCopy = getRuntimeCopy(locale);
   const listings = useMemo(
     () =>
-      [...customListings, ...(backendMode === "demo" ? DEMO_LISTINGS : [])]
+      [...customListings, ...(backendMode === "demo" ? [...DEMO_LISTINGS, ...SIMULATED_LISTINGS] : [])]
         .filter(isLaunchListing)
         .map((listing) => ({ ...listing, shipsTo: [LAUNCH_MARKET] })),
     [customListings],

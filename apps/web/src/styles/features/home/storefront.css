@@ -27,11 +27,11 @@
 }
 .storefront-hero__inner {
   min-height: var(--storefront-hero-height);
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px minmax(0, 1fr);
   align-items: center;
-  justify-content: space-between;
-  gap: 48px;
-  padding-block: 54px;
+  gap: 24px;
+  padding-block: 28px;
 }
 .storefront-hero__inner > div {
   max-width: 720px;
@@ -43,7 +43,7 @@
   letter-spacing: 0.2em;
 }
 .storefront-hero h1 {
-  font-size: clamp(34px, 4.4vw, 66px);
+  font-size: clamp(32px, 3.7vw, 56px);
   line-height: 1.04;
   letter-spacing: -0.05em;
   margin: 20px 0;
@@ -267,4 +267,52 @@
 .home-storefront .text-button:focus-visible {
   outline: 2px solid var(--accent-strong);
   outline-offset: 4px;
+}
+
+.storefront-hero__inner > div {
+  min-width: 0;
+}
+.storefront-hero__inner > .button {
+  justify-self: end;
+}
+.storefront-hero__spiral {
+  height: 320px;
+  width: 320px;
+}
+.storefront-hero__spiral .infinite-spiral__image {
+  background: #edf3ff;
+}
+.storefront-hero__pause {
+  position: absolute;
+  right: 24px;
+  bottom: 12px;
+  border: 1px solid #7198ca;
+  border-radius: 20px;
+  background: #122747;
+  color: #e2ecff;
+  padding: 7px 12px;
+  font-size: 11px;
+  cursor: pointer;
+}
+.storefront-hero--paused::before {
+  animation-play-state: paused;
+}
+@media (max-width: 900px) {
+  .storefront-hero__inner {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding-block: 36px 56px;
+  }
+  .storefront-hero__spiral {
+    width: 100%;
+    max-width: 360px;
+    justify-self: center;
+    height: 280px;
+  }
+  .storefront-hero__spiral .infinite-spiral {
+    min-height: 280px;
+  }
+  .storefront-hero__inner > .button {
+    justify-self: start;
+  }
 }

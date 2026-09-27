@@ -1,10 +1,17 @@
+import { SIMULATED_LISTINGS, DEMO_RIGI_SELLER_ID } from "../data/simulated-listings";
 import { listingService } from "./listing-service";
 import { supabase } from "./supabase";
 import { activeHomeListings, newestHomeListings } from "./home-recommendations";
 
 export async function loadOfficialListings(offset = 0) {
-  // Demo roles are editable in the browser and must never certify an official seller.
-  if (!supabase) return { listings: [], hasMore: false, nextOffset: 0 };
+  // Only bundled, explicitly simulated fixtures; never trust browser session roles.
+  if (!supabase) {
+    const listings = SIMULATED_LISTINGS.filter((item) => item.seller.id === DEMO_RIGI_SELLER_ID).slice(
+      offset,
+      offset + 50,
+    );
+    return { listings, hasMore: false, nextOffset: offset + listings.length };
+  }
   const { data, error } = await supabase.rpc("get_rigi_listing_ids", { p_limit: 50, p_offset: offset });
   if (error) throw error;
   if (

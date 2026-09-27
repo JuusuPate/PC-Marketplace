@@ -1,3 +1,6 @@
+import InfiniteSpiral from "../../components/InfiniteSpiral";
+import { heroSpiralItems } from "./hero-spiral-items";
+import { HomeMarketingAnnouncement } from "./HomeMarketingAnnouncement";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ListingCard } from "../../components/ListingCard";
 import { Icon } from "../../components/Icon";
@@ -29,6 +32,7 @@ type Props = {
 export function HomePage(props: Props) {
   const { locale, copy, listings, favourites, onFavourite, onNavigate } = props;
   const text = getHomeCopy(locale);
+  const [motionPaused, setMotionPaused] = useState(false);
   const latest = useMemo(() => newestHomeListings(listings).slice(0, 5), [listings]);
   const recommended = useMemo(
     () =>
@@ -84,12 +88,29 @@ export function HomePage(props: Props) {
   );
   return (
     <div className="home-storefront">
-      <section className="storefront-hero" aria-labelledby="storefront-title">
+      <section
+        className={`storefront-hero${motionPaused ? " storefront-hero--paused" : ""}`}
+        aria-labelledby="storefront-title"
+      >
         <div className="storefront-hero__inner section-shell">
           <div>
             <span className="storefront-hero__eyebrow">RIGI / PC MARKETPLACE</span>
             <h1 id="storefront-title">{text.title}</h1>
             <p>{text.body}</p>
+          </div>
+          <div className="storefront-hero__spiral" aria-hidden="true">
+            <InfiniteSpiral
+              items={heroSpiralItems}
+              paused={motionPaused}
+              animationMode="auto"
+              speed={0.4}
+              radius={105}
+              cardWidth={85}
+              cardHeight={85}
+              verticalSpacing={45}
+              edgeBlur={4}
+              imageFit="contain"
+            />
           </div>
           <a
             className="button button--primary"
@@ -104,7 +125,16 @@ export function HomePage(props: Props) {
             <Icon name="arrow" />
           </a>
         </div>
+        <button
+          className="storefront-hero__pause"
+          type="button"
+          aria-pressed={motionPaused}
+          onClick={() => setMotionPaused(!motionPaused)}
+        >
+          {motionPaused ? text.resumeAnimation : text.pauseAnimation}
+        </button>
       </section>
+      <HomeMarketingAnnouncement locale={locale} />
       <section className="home-feed section-shell" aria-labelledby="home-latest">
         <div className="home-feed__heading">
           <h2 id="home-latest">
@@ -186,6 +216,20 @@ function OfficialSection({
   const [request, setRequest] = useState(0);
   const nextOffset = useRef(0);
   useEffect(() => {
+    const refresh = () => {
+      if (document.hidden) return;
+      setOffset(0);
+      setRequest((value) => value + 1);
+    };
+    window.addEventListener("focus", refresh);
+    const timer = window.setInterval(refresh, 60_000);
+    return () => {
+      window.removeEventListener("focus", refresh);
+      window.clearInterval(timer);
+    };
+  }, []);
+
+  useEffect(() => {
     let current = true;
     setLoading(true);
     setError(false);
@@ -210,6 +254,7 @@ function OfficialSection({
       current = false;
     };
   }, [offset, request]);
+  if (!loading && !error && items.length === 0) return null;
   return (
     <section className="home-feed home-feed--official section-shell" aria-labelledby="home-official">
       <div className="home-feed__heading">
@@ -250,7 +295,6 @@ function OfficialSection({
           </button>
         </p>
       )}
-      {!loading && !error && !items.length && <p className="home-feed__state">{text.officialEmpty}</p>}
       {expanded && hasMore && !loading && !error && (
         <div className="home-feed__more">
           <button className="button button--outline" onClick={() => setOffset(nextOffset.current)}>
