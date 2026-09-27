@@ -45,3 +45,21 @@ test("category submenu keeps keyboard disclosure and Escape focus", async ({ pag
   await expect(componentToggle).toHaveAttribute("aria-expanded", "false");
   await expect(componentToggle).toBeFocused();
 });
+
+for (const width of [982, 1440]) {
+  test(`hovering a category without a submenu closes the open menu at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 884 });
+    await page.goto("/kategoriat/komponentit");
+    const menu = page.locator(".category-navigation-submenu[aria-label='Komponentit']");
+    const components = page.locator(".category-navigation-link").filter({ hasText: "Komponentit" });
+    const plainLinks = page.locator(".category-navigation-item:not(.has-submenu) > .category-navigation-link");
+    expect(await plainLinks.count()).toBeGreaterThan(0);
+    for (const link of await plainLinks.all()) {
+      await components.hover();
+      await expect(menu).toBeVisible();
+      await link.hover();
+      await expect(menu).toBeHidden();
+      await expect(page.locator(".category-navigation-item.is-menu-open")).toHaveCount(0);
+    }
+  });
+}
