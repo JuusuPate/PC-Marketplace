@@ -147,7 +147,7 @@
   color: white;
   background: rgba(7, 12, 20, 0.96);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(8px);
+  /* Keep fixed submenus relative to the viewport, not this sticky wrapper. */
 }
 .category-navigation {
   min-height: 62px;
