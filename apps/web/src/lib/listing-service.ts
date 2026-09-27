@@ -177,16 +177,24 @@ export const listingService = {
   async listActive(): Promise<Listing[]> {
     if (!supabase) return demoStorage.getListings();
 
-    const { data, error } = await supabase
-      .from("listings")
-      .select(LISTING_SELECT)
-      .eq("status", "active")
-      .order("published_at", { ascending: false, nullsFirst: false })
-      .order("id", { ascending: true })
-      .limit(60);
-
-    if (error) throw error;
-    return ((data ?? []) as unknown as DbListing[]).map(mapListing);
+    // The current catalogue filters/sorts locally, so a newest-only cap would
+    // hide older matching listings. Fetch bounded pages in deterministic order.
+    const rows: DbListing[] = [];
+    const pageSize = 200;
+    for (let offset = 0; ; offset += pageSize) {
+      const { data, error } = await supabase
+        .from("listings")
+        .select(LISTING_SELECT)
+        .eq("status", "active")
+        .order("published_at", { ascending: false, nullsFirst: false })
+        .order("id", { ascending: true })
+        .range(offset, offset + pageSize - 1);
+      if (error) throw error;
+      const page = (data ?? []) as unknown as DbListing[];
+      rows.push(...page);
+      if (page.length < pageSize) break;
+    }
+    return [...new Map(rows.map((row) => [row.id, mapListing(row)])).values()];
   },
 
   async listMine(userId: string): Promise<Listing[]> {

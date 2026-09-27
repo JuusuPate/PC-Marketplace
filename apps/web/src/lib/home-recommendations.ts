@@ -1,3 +1,4 @@
+import { listingTimestamp, sortListingsByPublication } from "./listing-time";
 import type { Category, Listing } from "../types";
 
 export function activeHomeListings(listings: readonly Listing[]) {
@@ -16,13 +17,10 @@ export function activeHomeListings(listings: readonly Listing[]) {
   ];
 }
 export function publicationTime(listing: Listing) {
-  const value = Date.parse(listing.publishedAt ?? listing.createdAt ?? "");
-  return Number.isFinite(value) ? value : 0;
+  return listingTimestamp(listing) ?? 0;
 }
 export function newestHomeListings(listings: readonly Listing[]) {
-  return activeHomeListings(listings).sort(
-    (a, b) => publicationTime(b) - publicationTime(a) || a.id.localeCompare(b.id),
-  );
+  return sortListingsByPublication(activeHomeListings(listings), "newest");
 }
 function noise(id: string, seed: number) {
   let hash = seed >>> 0;

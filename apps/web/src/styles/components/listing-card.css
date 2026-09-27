@@ -353,6 +353,7 @@
   margin-right: auto;
 }
 .card-time {
+  text-transform: none;
   margin-left: auto;
   display: inline-flex;
   align-items: center;
