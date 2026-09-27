@@ -244,14 +244,12 @@
 }
 .category-navigation-item.is-active > .category-navigation-link,
 .category-navigation-item.is-active > .category-navigation-trigger {
-  color: var(--ink);
-  background: var(--accent);
-  border-color: rgba(72, 148, 255, 0.45);
+  color: white;
 }
 .category-navigation-item.is-active .category-navigation-link,
 .category-navigation-item.is-active .category-navigation-toggle,
 .category-navigation-item.is-active .category-navigation-glyph {
-  color: var(--ink);
+  color: white;
 }
 .category-navigation-link:focus-visible,
 .category-navigation-toggle:focus-visible,
@@ -264,9 +262,6 @@
 .category-navigation-item.is-menu-open .category-navigation-indicator {
   opacity: 1;
   transform: translateX(-50%) scaleX(1);
-}
-.category-navigation-item.is-active .category-navigation-indicator {
-  background: var(--ink);
 }
 .category-navigation-submenu {
   width: 520px;
