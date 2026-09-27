@@ -1,3 +1,4 @@
+import { CatalogPagination } from "../features/catalog/CatalogPagination";
 import { sortListingsByPublication } from "../lib/listing-time";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { CategoryNavigation } from "../components/CategoryNavigation";
@@ -62,6 +63,7 @@ type SortOption = "newest" | "oldest" | "priceLow" | "priceHigh" | "bestDeals";
 
 const CREATE_LISTING_PATH = "/myy/uusi";
 const MAX_NAVIGATION_PRICE_MINOR = 100_000_000;
+const CATALOG_PAGE_SIZE = 24;
 function toNavigationFilter(filter: CatalogRuntimeFilter): CatalogNavigationFilter | null {
   if (filter.kind === "price_max_minor") return { maxPriceMinor: filter.maxPriceMinor };
   if (filter.kind === "featured") return { featuredOnly: true };
@@ -202,6 +204,7 @@ export function App() {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<"all" | Category>("all");
   const [sort, setSort] = useState<SortOption>("newest");
+  const [catalogPagination, setCatalogPagination] = useState({ scope: "", page: 1 });
   const [checkoutListing, setCheckoutListing] = useState<Listing | null>(null);
   const [authOpen, setAuthOpen] = useState(false);
   const [passwordRecoveryOpen, setPasswordRecoveryOpen] = useState(false);
@@ -562,6 +565,29 @@ export function App() {
       return matches.sort((a, b) => Number(b.priceSignal === "great") - Number(a.priceSignal === "great"));
     return matches;
   }, [category, market, navigationFilteredListings, query, sort]);
+
+  const paginationScope = JSON.stringify([
+    catalogPage?.id,
+    activeCatalogSubmenuHref,
+    query.trim().toLowerCase(),
+    category,
+    sort,
+  ]);
+  const cataloguePageCount = Math.max(1, Math.ceil(visibleListings.length / CATALOG_PAGE_SIZE));
+  const cataloguePageNumber =
+    catalogPagination.scope === paginationScope ? Math.min(catalogPagination.page, cataloguePageCount) : 1;
+  const pageListings = visibleListings.slice(
+    (cataloguePageNumber - 1) * CATALOG_PAGE_SIZE,
+    cataloguePageNumber * CATALOG_PAGE_SIZE,
+  );
+  const changeCataloguePage = (page: number) => {
+    setCatalogPagination({ scope: paginationScope, page: Math.max(1, Math.min(page, cataloguePageCount)) });
+    window.requestAnimationFrame(() => {
+      const heading = document.getElementById("marketplace-list-title");
+      heading?.focus({ preventScroll: true });
+      heading?.scrollIntoView({ block: "start", behavior: "instant" });
+    });
+  };
 
   const navigateTo = (path: string, hash = "") => {
     const destination = new URL(path, window.location.origin);
@@ -956,7 +982,9 @@ export function App() {
               <div className="section-heading">
                 <div>
                   <span className="section-index">{catalogPage ? "01 / CATEGORY" : "01 / MARKET"}</span>
-                  <h2>{catalogPage ? copy.categoryListings : copy.marketplace}</h2>
+                  <h2 id="marketplace-list-title" tabIndex={-1}>
+                    {catalogPage ? copy.categoryListings : copy.marketplace}
+                  </h2>
                 </div>
                 <span className="listing-count">
                   {visibleListings.length} {copy.listings}
@@ -1000,7 +1028,7 @@ export function App() {
               )}
               {visibleListings.length > 0 ? (
                 <div className="listing-grid">
-                  {visibleListings.map((listing) => (
+                  {pageListings.map((listing) => (
                     <ListingCard
                       key={listing.id}
                       listing={listing}
@@ -1033,6 +1061,13 @@ export function App() {
                   </button>
                 </div>
               )}
+              <CatalogPagination
+                page={cataloguePageNumber}
+                pageSize={CATALOG_PAGE_SIZE}
+                total={visibleListings.length}
+                locale={locale}
+                onPage={changeCataloguePage}
+              />
             </section>
           )}
       </main>
