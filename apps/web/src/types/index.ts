@@ -79,6 +79,8 @@ export interface Listing {
   createdLabel: string;
   /** ISO timestamp used for deterministic sorting. Optional for legacy locally saved demo listings. */
   createdAt?: string;
+  /** Actual publication time; drafts may have no value. */
+  publishedAt?: string | null;
   visual: "lime" | "blue" | "violet" | "orange" | "silver" | "pink";
   /** Optional for backwards compatibility with previously saved demo listings. */
   images?: ListingImage[];

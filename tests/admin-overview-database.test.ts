@@ -523,10 +523,14 @@ describe("admin dashboard trends", () => {
     const listingId = await listing();
     await order("completed", 12000, 240);
     await order("refunded", 99000, 990);
-    await db.query("insert into public.reports (reporter_id, listing_id, reason) values ($1, $2, 'Other')", [
-      userId,
-      listingId,
-    ]);
+    // PGlite has millisecond clock resolution: insertion and snapshot may share
+    // now(), while the chart deliberately uses a half-open upper time boundary.
+    // Place this fixture at a known point in today's Helsinki bucket instead.
+    await db.query(
+      `insert into public.reports (reporter_id, listing_id, reason, created_at)
+       values ($1, $2, 'Other', (now() at time zone 'Europe/Helsinki')::date::timestamp at time zone 'Europe/Helsinki')`,
+      [userId, listingId],
+    );
     const data = await read();
     expect(data).toMatchObject({ days: 7, market: "FI", currency: "EUR", timezone: "Europe/Helsinki" });
     expect(data.buckets.at(-1)).toMatchObject({
@@ -1541,5 +1545,52 @@ describe("product model catalog", () => {
     await expect(asRole("anon", null, search("gpu", "a".repeat(101)))).rejects.toMatchObject({ code: "22023" });
     await db.query("delete from public.user_roles where user_id=$1", [adminId]);
     await expect(asRole("authenticated", adminId, market())).rejects.toMatchObject({ code: "42501" });
+  });
+});
+
+describe("public Rigi storefront", () => {
+  it("exposes only published active administrator listings, ignores forged metadata and revocation takes effect", async () => {
+    const official = await listing();
+    const regular = await listing();
+    await db.query("update public.listings set published_at=now() where id in ($1,$2)", [official, regular]);
+    await db.query("update public.listings set seller_id=$1 where id=$2", [userId, regular]);
+    await listing("draft");
+    await listing("sold");
+    await listing("reserved");
+    await listing("removed");
+    await listing();
+    await db.exec(
+      "insert into public.listing_shipping_countries(listing_id,country_code) select id,'FI' from public.listings",
+    );
+    for (const [role, id] of [
+      ["anon", null],
+      ["authenticated", userId],
+      ["authenticated", adminId],
+      ["authenticated", null],
+    ] as const) {
+      expect((await asRole(role, id, "select * from public.get_rigi_listing_ids()")).rows).toEqual([{ id: official }]);
+    }
+    await expect(asRole("anon", null, "select * from public.user_roles")).rejects.toMatchObject({ code: "42501" });
+    await db.query("delete from public.user_roles where user_id=$1", [adminId]);
+    expect((await asRole("anon", null, "select * from public.get_rigi_listing_ids()")).rows).toEqual([]);
+  });
+  it("bounds pagination and sorts by publication time", async () => {
+    const first = await listing();
+    const second = await listing();
+    await db.query("update public.listings set published_at='2026-09-01' where id=$1", [first]);
+    await db.query("update public.listings set published_at='2026-09-02' where id=$1", [second]);
+    await db.exec(
+      "insert into public.listing_shipping_countries(listing_id,country_code) select id,'FI' from public.listings",
+    );
+    expect((await asRole("anon", null, "select * from public.get_rigi_listing_ids(1,0)")).rows).toEqual([
+      { id: second },
+    ]);
+    expect((await asRole("anon", null, "select * from public.get_rigi_listing_ids(1,1)")).rows).toEqual([
+      { id: first },
+    ]);
+    for (const args of ["0,0", "51,0", "1,-1", "null,0", "1,null", "1,100001"])
+      await expect(asRole("anon", null, `select * from public.get_rigi_listing_ids(${args})`)).rejects.toMatchObject({
+        code: "22023",
+      });
   });
 });

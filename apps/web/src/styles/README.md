@@ -49,3 +49,7 @@ Refaktoroinnissa ei lisätty CSS Modules -rajausta tai cascade layers -kerroksia
 ## Sininen väriteema
 
 Yhteiset siniset korostusvärit ovat `base/tokens.css`-tiedostossa: `--accent` (vaaleansininen painike / tumman taustan korostus), `--accent-strong` (vahva sininen), `--accent-ink` (tumma teksti), `--accent-soft` (vaalea pinta), `--accent-border` ja `--accent-hover`. Ominaisuuskohtaiset siniset sävyt pysyvät niiden omissa CSS-tiedostoissa. Ylläpidon kaavioissa käytetään tummansinisiä pintoja ja vaaleansinisiä käyriä. Virheiden punainen ja varoitusten keltainen säilyttävät merkityksensä; tuotekuvien todellisia värejä ei muuteta. Historiallinen `visual--lime`-luokka säilyy tallennettujen ilmoitusten yhteensopivuuden vuoksi, mutta sen esitysväri on nyt sininen.
+
+Etusivun nykyisen tuoterakenteen ja koko ruudun levyisen gradienttiheron tyylit: `features/home/storefront.css`. Heron korkeutta ohjaa `--storefront-hero-height`. Ylä- ja alanavigaation tyylejä ei muuteta etusivun asettelua säädettäessä. [Etusivun toiminta](../../../../docs/home-storefront.md).
+
+Heron React Bits InfiniteSpiral -komponentin omat tyylit ovat `components/infinite-spiral.css`. Asettelu ja pysäytyspainike kuuluvat edelleen `features/home/storefront.css`-tiedostoon.

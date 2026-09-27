@@ -33,3 +33,7 @@
 @import "./responsive/mobile.css";
 @import "./base/reduced-motion.css";
 @import "./features/catalog/product-model-picker.css";
+
+@import "./features/home/storefront.css";
+
+@import "./components/infinite-spiral.css";
