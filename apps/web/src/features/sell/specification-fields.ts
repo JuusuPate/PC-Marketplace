@@ -45,6 +45,11 @@ const englishCopy: SpecificationCopy = {
     powerSupply: ["Power supply", "750 W 80+ Gold"],
     case: ["Case", "Fractal Design North"],
     cooling: ["Cooling", "Noctua NH-D15"],
+    fanSize: ["Fan size (mm)", "120"],
+    fanConnector: ["Fan connector", "4-pin"],
+    fanControl: ["Fan speed control", "PWM"],
+    fanLighting: ["Fan lighting", "ARGB"],
+    fanCount: ["Fan count", "1"],
     operatingSystem: ["Operating system", "Windows 11 Home"],
     chipVendor: ["Chip manufacturer", "NVIDIA / AMD / Intel"],
     modules: ["Memory module count", "2"],
@@ -93,6 +98,11 @@ const finnishCopy: SpecificationCopy = {
     powerSupply: ["Virtalähde", "750 W 80+ Gold"],
     case: ["Kotelo", "Fractal Design North"],
     cooling: ["Jäähdytys", "Noctua NH-D15"],
+    fanSize: ["Tuulettimen koko (mm)", "120"],
+    fanConnector: ["Tuulettimen liitin", "4-pin"],
+    fanControl: ["Tuulettimen nopeuden säätö", "PWM"],
+    fanLighting: ["Tuulettimen valaistus", "ARGB"],
+    fanCount: ["Tuulettimien määrä", "1"],
     operatingSystem: ["Käyttöjärjestelmä", "Windows 11 Home"],
     chipVendor: ["Piirin valmistaja", "NVIDIA / AMD / Intel"],
     modules: ["Muistimoduulien määrä", "2"],
@@ -164,6 +174,7 @@ const fieldKeysByCategory: Record<Category, string[]> = {
   storage: ["capacity", "storageType", "driveFormat", "interface"],
   case: ["formFactor"],
   cooling: ["coolingType", "socket"],
+  fans: ["fanSize", "fanConnector", "fanControl", "fanLighting", "fanCount"],
 };
 
 export function getGuidedSpecificationFields(category: Category, locale: Locale): GuidedSpecificationField[] {
@@ -174,7 +185,13 @@ export function getGuidedSpecificationFields(category: Category, locale: Locale)
       ? locale === "fi"
         ? ["Kyllä", "Ei"]
         : ["Yes", "No"]
-      : undefined;
+      : (
+          {
+            fanConnector: ["3-pin", "4-pin", "Molex", locale === "fi" ? "Valmistajakohtainen" : "Proprietary"],
+            fanControl: ["PWM", "DC", locale === "fi" ? "Kiinteä nopeus" : "Fixed speed"],
+            fanLighting: [locale === "fi" ? "Ei valaistusta" : "None", "RGB", "ARGB"],
+          } as Record<string, string[]>
+        )[key];
     return { key, label, placeholder, options };
   });
 }

@@ -48,6 +48,7 @@ export const en = {
   storage: "Storage",
   case: "Cases",
   cooling: "Cooling",
+  fans: "Fans",
   motherboard: "Motherboards",
   pc: "Gaming PCs",
   other: "Other",

@@ -2,7 +2,7 @@ export type Locale = "fi" | "sv" | "da" | "nb" | "en";
 export type Currency = "EUR" | "SEK" | "DKK" | "NOK";
 export type CountryCode = "FI" | "SE" | "DK" | "NO";
 export type Category =
-  "gpu" | "cpu" | "memory" | "motherboard" | "pc" | "other" | "psu" | "storage" | "case" | "cooling";
+  "gpu" | "cpu" | "memory" | "motherboard" | "pc" | "other" | "psu" | "storage" | "case" | "cooling" | "fans";
 export type Condition = "new" | "excellent" | "good" | "fair";
 export type ListingStatus = "draft" | "active" | "reserved" | "sold" | "removed";
 export type PriceSignal = "great" | "fair" | "high";

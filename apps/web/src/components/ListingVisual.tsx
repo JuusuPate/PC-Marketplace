@@ -10,6 +10,7 @@ const shortCategory: Record<Category, string> = {
   storage: "SSD",
   case: "CASE",
   cooling: "FAN",
+  fans: "FAN",
   pc: "PC",
   other: "HW",
 };

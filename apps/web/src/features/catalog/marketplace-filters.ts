@@ -49,6 +49,39 @@ const yesNo = [
 const capacities = [128, 256, 480, 500, 512, 800, 1000, 1500, 2000, 3000, 4000, 6000, 8000, 12000, 16000];
 export const FILTER_DEFINITIONS: FilterDefinition[] = [
   {
+    key: "fanSize",
+    categories: ["fans"],
+    label: ["Tuulettimen koko", "Fan size"],
+    options: numbered([40, 60, 80, 92, 120, 140, 180, 200], " mm"),
+  },
+  {
+    key: "fanCount",
+    categories: ["fans"],
+    label: ["Tuulettimien määrä", "Fan count"],
+    options: numbered([1, 2, 3, 5, 6]),
+  },
+  {
+    key: "fanConnector",
+    categories: ["fans"],
+    label: ["Liitin", "Connector"],
+    options: [
+      ...options(["3-pin", "4-pin", "Molex"]),
+      { value: "Proprietary", label: ["Valmistajakohtainen", "Proprietary"] },
+    ],
+  },
+  {
+    key: "fanControl",
+    categories: ["fans"],
+    label: ["Nopeuden säätö", "Speed control"],
+    options: [...options(["PWM", "DC"]), { value: "Fixed", label: ["Kiinteä nopeus", "Fixed speed"] }],
+  },
+  {
+    key: "fanLighting",
+    categories: ["fans"],
+    label: ["Valaistus", "Lighting"],
+    options: [{ value: "None", label: ["Ei valaistusta", "None"] }, ...options(["RGB", "ARGB"])],
+  },
+  {
     key: "condition",
     label: ["Kunto", "Condition", "Skick"],
     options: [
@@ -243,7 +276,15 @@ export function listingFilterValues(listing: Listing, key: string): string[] {
           ? "Intel"
           : "";
   } else if (key === "vram" || key === "capacity") result = capacity(raw);
-  else if (key === "cores" || key === "wattage") result = numeric(raw);
+  else if (["cores", "wattage", "fanSize", "fanCount"].includes(key)) result = numeric(raw);
+  else if (key === "fanConnector")
+    result = /^(3|4)[ -]?pin$/i.test(raw)
+      ? raw[0] + "-pin"
+      : /^(valmistajakohtainen|proprietary)$/i.test(raw)
+        ? "Proprietary"
+        : raw;
+  else if (key === "fanControl") result = /^(kiinteä nopeus|fixed speed|fixed)$/i.test(raw) ? "Fixed" : raw;
+  else if (key === "fanLighting") result = /^(ei valaistusta|none)$/i.test(raw) ? "None" : raw;
   else if (key === "modules")
     result = numeric(raw) || readListingSpec(listing, "capacity").match(/(\d+)\s*[x×]\s*\d/i)?.[1] || "";
   else if (key === "memoryType")

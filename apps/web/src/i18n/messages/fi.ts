@@ -46,6 +46,7 @@ export const fi = {
   storage: "Tallennuslaitteet",
   case: "Kotelot",
   cooling: "Jäähdytys",
+  fans: "Tuulettimet",
   motherboard: "Emolevyt",
   pc: "Pelikoneet",
   other: "Muut",

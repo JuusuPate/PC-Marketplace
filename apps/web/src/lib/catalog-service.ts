@@ -13,6 +13,7 @@ const CATEGORY_ROUTES: Readonly<Record<string, string>> = {
   storage: "/kategoriat/tallennuslaitteet",
   case: "/kategoriat/kotelot",
   cooling: "/kategoriat/jaahdytys",
+  fans: "/kategoriat/tuulettimet",
   other: "/kategoriat/oheislaitteet-ja-muut",
   components: "/kategoriat/komponentit",
 };

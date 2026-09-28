@@ -48,6 +48,7 @@ export const da = {
   storage: "Lager",
   case: "Kabinetter",
   cooling: "Køling",
+  fans: "Blæsere",
   motherboard: "Bundkort",
   pc: "Gaming-PC'er",
   other: "Andet",
