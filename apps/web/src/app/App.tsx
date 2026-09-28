@@ -160,6 +160,7 @@ const categories: Array<{ key: "all" | Category; glyph: string }> = [
   { key: "storage", glyph: "▦" },
   { key: "case", glyph: "▦" },
   { key: "cooling", glyph: "▦" },
+  { key: "fans", glyph: "▦" },
   { key: "other", glyph: "⌨" },
 ];
 

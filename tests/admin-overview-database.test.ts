@@ -1368,6 +1368,7 @@ describe("product model catalog", () => {
       "storage",
       "case",
       "cooling",
+      "fans",
       "pc",
       "other",
     ]) {
@@ -1389,6 +1390,38 @@ describe("product model catalog", () => {
         { name: "Radeon RX 6900 XT", variant: "16 GB" },
       ]),
     );
+  });
+  it("publishes the fan catalog and saves a linked fan draft under existing permissions", async () => {
+    const config = (
+      await db.query<any>(`select c.slug,p.slug as parent,m.is_enabled,
+      (select count(*)::integer from public.catalog_category_spec_fields f where f.category_id=c.id) as fields
+      from public.catalog_categories c join public.catalog_categories p on p.id=c.parent_id
+      join public.catalog_market_categories m on m.category_id=c.id
+      where c.slug='fans' and m.market_country_code='FI'`)
+    ).rows[0];
+    expect(config).toEqual({ slug: "fans", parent: "components", is_enabled: true, fields: 5 });
+    const found = (await asRole("anon", null, search("fans", "P12 PWM PST"))).rows[0].data as any;
+    expect(found.total).toBe(1);
+    expect(((await asRole("anon", null, search("cooling", "P12 PWM PST"))).rows[0].data as any).total).toBe(0);
+    const m = found.items[0];
+    const draft = (id: string) =>
+      `select public.create_listing_draft('FI','ARCTIC P12 PWM PST','A working case fan with its cable.','fans','good',1000,'EUR','Mikkeli','{"_catalog_model_id":"${id}","fanSize":"120","fanControl":"PWM"}',array['FI'],null) as id`;
+    const created = (await asRole("authenticated", userId, draft(m.id))).rows[0].id;
+    const stored = (
+      await db.query<any>("select category,catalog_model_id,specs from public.listings where id=$1", [created])
+    ).rows[0];
+    expect(stored).toEqual({ category: "fans", catalog_model_id: m.id, specs: { fanSize: "120", fanControl: "PWM" } });
+    await expect(asRole("authenticated", userId, draft((await model("cooling")).id))).rejects.toMatchObject({
+      code: "22023",
+    });
+    await expect(
+      asRole("authenticated", userId, save({ category: "fans", brand: "Test", name: "Forbidden" })),
+    ).rejects.toMatchObject({ code: "42501" });
+    expect(
+      ((await asRole("authenticated", adminId, market("fans"))).rows[0].data as any).items.some(
+        (item: any) => item.id === m.id,
+      ),
+    ).toBe(true);
   });
   it("allows public literal and alias search with category isolation", async () => {
     // Dedicated fixtures keep search assertions independent of user-added models.

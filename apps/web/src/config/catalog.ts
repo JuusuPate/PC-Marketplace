@@ -51,7 +51,7 @@ export const CATALOG_PAGES: CatalogPage[] = [
     labelKey: "components",
     glyph: "▦",
     image: componentsImage,
-    categories: ["gpu", "cpu", "memory", "motherboard", "psu", "storage", "case", "cooling"],
+    categories: ["gpu", "cpu", "memory", "motherboard", "psu", "storage", "case", "cooling", "fans"],
     submenu: [
       { id: "components-all", label: "Kaikki komponentit", href: "/kategoriat/komponentit", filters: {} },
       { id: "components-gpu", label: "Näytönohjaimet", href: "/kategoriat/naytonohjaimet", filters: {} },
@@ -62,6 +62,7 @@ export const CATALOG_PAGES: CatalogPage[] = [
       { id: "components-storage", label: "Tallennuslaitteet", href: "/kategoriat/tallennuslaitteet", filters: {} },
       { id: "components-case", label: "Kotelot", href: "/kategoriat/kotelot", filters: {} },
       { id: "components-cooling", label: "Jäähdytys", href: "/kategoriat/jaahdytys", filters: {} },
+      { id: "components-fans", label: "Tuulettimet", href: "/kategoriat/tuulettimet", filters: {} },
     ],
   },
   {
@@ -175,6 +176,14 @@ export const CATALOG_PAGES: CatalogPage[] = [
     glyph: "▦",
     image: componentsImage,
     categories: ["cooling"],
+  },
+  {
+    id: "fans",
+    path: "/kategoriat/tuulettimet",
+    labelKey: "fans",
+    glyph: "▦",
+    image: componentsImage,
+    categories: ["fans"],
   },
   {
     id: "other",

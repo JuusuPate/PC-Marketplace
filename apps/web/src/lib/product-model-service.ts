@@ -10,6 +10,7 @@ export const PRODUCT_CATEGORIES: Category[] = [
   "storage",
   "case",
   "cooling",
+  "fans",
   "pc",
   "other",
 ];

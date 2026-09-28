@@ -48,6 +48,7 @@ export const sv = {
   storage: "Lagring",
   case: "Chassin",
   cooling: "Kylning",
+  fans: "Fläktar",
   motherboard: "Moderkort",
   pc: "Gamingdatorer",
   other: "Övrigt",

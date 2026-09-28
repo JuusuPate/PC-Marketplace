@@ -48,6 +48,7 @@ export const nb = {
   storage: "Lagring",
   case: "Kabinetter",
   cooling: "Kjøling",
+  fans: "Vifter",
   motherboard: "Hovedkort",
   pc: "Gaming-PC-er",
   other: "Annet",

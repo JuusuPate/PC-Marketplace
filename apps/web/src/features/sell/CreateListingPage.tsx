@@ -68,6 +68,7 @@ const visualByCategory: Record<Category, Listing["visual"]> = {
   storage: "blue",
   case: "silver",
   cooling: "blue",
+  fans: "blue",
   pc: "blue",
   other: "pink",
 };
@@ -589,6 +590,7 @@ export function CreateListingPage({
                       "storage",
                       "case",
                       "cooling",
+                      "fans",
                       "pc",
                       "other",
                     ] as Category[]
