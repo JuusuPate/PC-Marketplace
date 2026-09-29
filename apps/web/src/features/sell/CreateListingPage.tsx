@@ -21,6 +21,19 @@ import type {
   PrivatePickupAddress,
   Seller,
 } from "../../types";
+import { ProfileField, PcComponentFields } from "./ProfileFields";
+import {
+  initialProfileValues,
+  readSpecification,
+  specificationAliases,
+  generateListingTitle,
+  profileErrors,
+  serializeProfile,
+  isRgbListing,
+  PC_PARTS,
+  PC_MEMORY_KEYS,
+  partStatusKey,
+} from "./listing-profile";
 import { ProductModelPicker } from "./ProductModelPicker";
 import { ImagePicker } from "./ImagePicker";
 import { getGuidedSpecificationFields, specificationCopy } from "./specification-fields";
@@ -123,19 +136,26 @@ export function CreateListingPage({
   const initialCategory = initialListing?.category ?? "gpu";
   const initialGuidedFields = getGuidedSpecificationFields(initialCategory, locale);
   const initialReservedSpecificationNames = new Set(
-    [copy.brand, copy.model, copy.technicalDetails, ...initialGuidedFields.map((field) => field.label)].map((label) =>
-      label.toLocaleLowerCase(),
-    ),
+    [
+      copy.technicalDetails,
+      ...specificationAliases("brand"),
+      ...specificationAliases("model"),
+      ...initialGuidedFields.flatMap((field) => specificationAliases(field.key)),
+      ...PC_PARTS.map((p) => partStatusKey(p.key)),
+    ].map((label) => label.toLocaleLowerCase()),
   );
-  const [title, setTitle] = useState(initialListing?.title ?? "");
+  const [manualTitle, setTitle] = useState(initialListing?.title ?? "");
+  const [automaticTitle, setAutomaticTitle] = useState(!initialListing);
   const [category, setCategory] = useState<Category | "">(initialListing ? (initialCategory as Category) : "");
   const [condition, setCondition] = useState<Condition>(initialListing?.condition ?? "good");
   const [price, setPrice] = useState(initialListing ? String(initialListing.priceMinor / 100).replace(".", ",") : "");
-  const [brand, setBrand] = useState(initialListing?.brand ?? initialListing?.specs[copy.brand] ?? "");
-  const [model, setModel] = useState(initialListing?.specs[copy.model] ?? "");
+  const [brand, setBrand] = useState(
+    readSpecification(initialListing?.specs ?? {}, "brand") || initialListing?.brand || "",
+  );
+  const [model, setModel] = useState(readSpecification(initialListing?.specs ?? {}, "model"));
   const [catalogModelId, setCatalogModelId] = useState<string | null>(initialListing?.catalogModelId ?? null);
   const [guidedSpecifications, setGuidedSpecifications] = useState<Record<string, string>>(() =>
-    Object.fromEntries(initialGuidedFields.map((field) => [field.key, initialListing?.specs[field.label] ?? ""])),
+    initialProfileValues(initialListing, initialCategory, locale),
   );
   const [specifications, setSpecifications] = useState<SpecificationRow[]>(() =>
     Object.entries(initialListing?.specs ?? {})
@@ -185,6 +205,26 @@ export function CreateListingPage({
     };
   }, [initialListing, creationRefresh]);
   const safeCategory = (category || "gpu") as Category;
+  const title = automaticTitle
+    ? generateListingTitle(
+        safeCategory,
+        brand,
+        model,
+        technicalDetailsUnknown
+          ? serializeProfile(safeCategory, guidedSpecifications, locale, true)
+          : guidedSpecifications,
+        copy[safeCategory],
+        locale,
+      )
+    : manualTitle;
+  const changeGuidedField = (key: string, value: string) => {
+    setGuidedSpecifications((values) => ({
+      ...values,
+      [key]: value,
+      ...(key === "fanLighting" ? { rgb: /^(a?rgb)$/i.test(value) ? "yes" : value ? "no" : "" } : {}),
+    }));
+    if (!["freeShipping", "rgb", "fanLighting"].includes(key)) setCatalogModelId(null);
+  };
   const guidedFields = getGuidedSpecificationFields(safeCategory, locale);
   const technicalSectionTitle =
     safeCategory === "pc"
@@ -312,6 +352,8 @@ export function CreateListingPage({
     }
 
     if (includes(3)) {
+      const profileIssue = profileErrors(safeCategory, guidedSpecifications, locale, technicalDetailsUnknown)[0];
+      if (profileIssue) issues.push({ field: "profile", message: profileIssue, step: 3 });
       const incompleteSpecification =
         !technicalDetailsUnknown &&
         specifications.some(
@@ -392,7 +434,14 @@ export function CreateListingPage({
     }
 
     const conditionLabel = copy[condition === "fair" ? "conditionFair" : condition];
-    const reservedSpecificationNames = new Set([copy.brand.toLocaleLowerCase(), copy.model.toLocaleLowerCase()]);
+    const reservedSpecificationNames = new Set(
+      [
+        ...specificationAliases("brand"),
+        ...specificationAliases("model"),
+        ...guidedFields.flatMap((f) => specificationAliases(f.key)),
+        ...PC_PARTS.map((p) => partStatusKey(p.key)),
+      ].map((s) => s.toLocaleLowerCase()),
+    );
     const technicalSpecifications = technicalDetailsUnknown
       ? {}
       : Object.fromEntries(
@@ -405,13 +454,12 @@ export function CreateListingPage({
             )
             .map((row) => [row.name.trim(), row.value.trim()]),
         );
-    const guidedTechnicalSpecifications = technicalDetailsUnknown
-      ? { [copy.technicalDetails]: formCopy.unknown }
-      : Object.fromEntries(
-          guidedFields
-            .map((field) => [field.label, guidedSpecifications[field.key]?.trim()] as const)
-            .filter((entry): entry is readonly [string, string] => Boolean(entry[1])),
-        );
+    const guidedTechnicalSpecifications = serializeProfile(
+      safeCategory,
+      guidedSpecifications,
+      locale,
+      technicalDetailsUnknown,
+    );
     const identity = [brand.trim(), model.trim()].filter(Boolean).join(" ");
 
     const listing: Listing = {
@@ -439,13 +487,10 @@ export function CreateListingPage({
       },
       shipsTo: [market],
       specs: {
-        ...(brand.trim() ? { [copy.brand]: brand.trim() } : {}),
-        ...(model.trim() ? { [copy.model]: model.trim() } : {}),
+        ...(brand.trim() ? { brand: brand.trim() } : {}),
+        ...(model.trim() ? { model: model.trim() } : {}),
         ...guidedTechnicalSpecifications,
         ...technicalSpecifications,
-        ...(technicalDetailsUnknown && guidedSpecifications.freeShipping?.trim()
-          ? { [formCopy.fields.freeShipping[0]]: guidedSpecifications.freeShipping.trim() }
-          : {}),
       },
       description: description.trim(),
       priceSignal: initialListing?.priceSignal ?? "fair",
@@ -572,6 +617,10 @@ export function CreateListingPage({
                     const nextCategory = event.target.value as Category;
                     setCategory(nextCategory || "");
                     setCatalogModelId(null);
+                    setBrand("");
+                    setModel("");
+                    setGuidedSpecifications({});
+                    setSpecifications([]);
                     if (nextCategory && nextCategory !== "pc") setTechnicalDetailsUnknown(false);
                     clearFieldError("category");
                   }}
@@ -614,24 +663,61 @@ export function CreateListingPage({
               <span className="create-listing-section__number">02</span>
               <div>
                 <h2 id="product-details-title">{copy.productDetails}</h2>
-                <p>{copy.productDetailsHelp}</p>
+                <p>
+                  {locale === "fi"
+                    ? safeCategory === "gpu"
+                      ? "Valitse piirimalli katalogista tai kirjoita se itse. Valmistaja ja malliversio täydentävät perusmallia."
+                      : safeCategory === "memory"
+                        ? "Kuvaile muisti kapasiteetin, DDR-tyypin ja moduulien avulla. Tarkkaa osanumeroa ei tarvita."
+                        : safeCategory === "pc"
+                          ? "Valmis pelikone tai keskeneräinen runko: erittele seuraavassa vaiheessa kaikki mukana olevat ja puuttuvat osat."
+                          : "Valitse katalogimalli tai täytä valmistaja ja malli itse. Seuraavassa vaiheessa näytetään tämän tuoteryhmän tiedot."
+                    : copy.productDetailsHelp}
+                </p>
               </div>
             </div>
-            <ProductModelPicker
-              key={safeCategory}
-              category={safeCategory}
-              locale={locale}
-              selectedId={catalogModelId}
-              onSelect={(m) => {
-                setCatalogModelId(m?.id ?? null);
-                if (m) {
-                  setBrand(m.brand);
-                  setModel([m.name, m.variant].filter(Boolean).join(" · "));
-                  if (!title.trim()) setTitle(`${m.brand} ${m.name}`);
-                }
-              }}
-            />
+            <details
+              className="listing-profile-catalog"
+              open={safeCategory !== "memory" && safeCategory !== "storage" && safeCategory !== "pc"}
+            >
+              <summary>
+                {locale === "fi" ? "Valitse katalogista (valinnainen)" : "Select from catalog (optional)"}
+              </summary>
+              <ProductModelPicker
+                key={safeCategory}
+                category={safeCategory}
+                locale={locale}
+                selectedId={catalogModelId}
+                onSelect={(m) => {
+                  setCatalogModelId(m?.id ?? null);
+                  if (m) {
+                    if (safeCategory === "gpu") {
+                      setGuidedSpecifications((values) => ({
+                        ...values,
+                        coreModel: m.name,
+                        vram: /^\d+\s*GB$/i.test(m.variant) ? m.variant : "",
+                        chipVendor: ["AMD", "NVIDIA", "Intel"].includes(m.brand) ? m.brand : "",
+                      }));
+                    } else {
+                      setBrand(m.brand);
+                      setModel([m.name, m.variant].filter(Boolean).join(" · "));
+                    }
+                  }
+                }}
+              />
+            </details>
             <div className="create-listing-fields">
+              <label className="field-wide listing-profile-auto-title">
+                <input
+                  type="checkbox"
+                  checked={automaticTitle}
+                  onChange={(e) => {
+                    if (!e.target.checked) setTitle(title);
+                    setAutomaticTitle(e.target.checked);
+                  }}
+                />
+                {locale === "fi" ? "Muodosta otsikko automaattisesti" : "Generate title automatically"}
+              </label>
               <label className="field-wide">
                 <FieldLabel label={copy.productTitle} required requiredText={formCopy.required} />
                 <input
@@ -641,9 +727,10 @@ export function CreateListingPage({
                   value={title}
                   onChange={(event) => {
                     setTitle(event.target.value);
+                    setAutomaticTitle(false);
                     clearFieldError("title");
                   }}
-                  placeholder="ASUS TUF RTX 4070 SUPER"
+                  placeholder={copy[safeCategory]}
                   aria-invalid={Boolean(fieldErrors.title)}
                   aria-describedby={fieldErrors.title ? "title-error" : undefined}
                   data-listing-field="title"
@@ -687,9 +774,12 @@ export function CreateListingPage({
                   value={brand}
                   onChange={(event) => {
                     setBrand(event.target.value);
-                    setCatalogModelId(null);
+                    if (safeCategory !== "gpu" || !guidedSpecifications.coreModel) setCatalogModelId(null);
                   }}
-                  placeholder="ASUS"
+                  placeholder={
+                    safeCategory === "memory" ? "Kingston" : safeCategory === "fans" ? "ARCTIC" : "ASUS / MSI / …"
+                  }
+                  maxLength={80}
                 />
               </label>
               <label>
@@ -698,9 +788,16 @@ export function CreateListingPage({
                   value={model}
                   onChange={(event) => {
                     setModel(event.target.value);
-                    setCatalogModelId(null);
+                    if (safeCategory !== "gpu" || !guidedSpecifications.coreModel) setCatalogModelId(null);
                   }}
-                  placeholder="TUF-RTX4070S-O12G-GAMING"
+                  placeholder={
+                    safeCategory === "gpu"
+                      ? "Gaming X Trio"
+                      : safeCategory === "memory"
+                        ? "Fury Beast (valinnainen)"
+                        : "Malli / versio"
+                  }
+                  maxLength={160}
                 />
               </label>
             </div>
@@ -721,6 +818,40 @@ export function CreateListingPage({
             <div tabIndex={-1} data-listing-field="specifications">
               <FieldError id="specifications-error" message={fieldErrors.specifications} />
             </div>
+            <div data-listing-field="profile" tabIndex={-1}>
+              <FieldError id="profile-error" message={fieldErrors.profile} />
+            </div>
+            {(category === "pc" || category === "fans") && (
+              <label className="listing-profile-rgb">
+                <input
+                  type="checkbox"
+                  checked={isRgbListing({ category: safeCategory, specs: guidedSpecifications })}
+                  onChange={(e) =>
+                    setGuidedSpecifications((values) => ({
+                      ...values,
+                      rgb: e.target.checked ? "yes" : "no",
+                      ...(safeCategory === "fans"
+                        ? {
+                            fanLighting: e.target.checked
+                              ? /^(a?rgb)$/i.test(values.fanLighting ?? "")
+                                ? values.fanLighting
+                                : "RGB"
+                              : locale === "fi"
+                                ? "Ei valaistusta"
+                                : "None",
+                          }
+                        : {}),
+                    }))
+                  }
+                />
+                {locale === "fi" ? "RGB-valaistus" : "RGB lighting"}
+                <small>
+                  {locale === "fi"
+                    ? "Näkyy RGB-tagina ja hakusuodattimessa. Myös ARGB sisältyy tähän."
+                    : "Shown as an RGB tag and search filter. Includes ARGB."}
+                </small>
+              </label>
+            )}
             {category === "pc" && (
               <label className={`unknown-details-toggle${technicalDetailsUnknown ? " is-selected" : ""}`}>
                 <input
@@ -773,45 +904,26 @@ export function CreateListingPage({
 
             {!technicalDetailsUnknown && (
               <div className="specification-editor">
-                {guidedFields.length > 0 && (
-                  <div className={`guided-specifications${category === "pc" ? " guided-specifications--pc" : ""}`}>
-                    {guidedFields.map((field) => (
-                      <label key={field.key}>
-                        <FieldLabel label={field.label} requiredText={formCopy.required} />
-                        {field.options ? (
-                          <select
-                            value={guidedSpecifications[field.key] ?? ""}
-                            onChange={(event) =>
-                              setGuidedSpecifications((values) => ({ ...values, [field.key]: event.target.value }))
-                            }
-                          >
-                            <option value="">—</option>
-                            {guidedSpecifications[field.key] &&
-                              !field.options.includes(guidedSpecifications[field.key]) && (
-                                <option value={guidedSpecifications[field.key]}>
-                                  {guidedSpecifications[field.key]}
-                                </option>
-                              )}
-                            {field.options.map((option) => (
-                              <option key={option} value={option}>
-                                {option}
-                              </option>
-                            ))}
-                          </select>
-                        ) : (
-                          <input
-                            value={guidedSpecifications[field.key] ?? ""}
-                            onChange={(event) =>
-                              setGuidedSpecifications((values) => ({ ...values, [field.key]: event.target.value }))
-                            }
-                            placeholder={field.placeholder}
-                          />
-                        )}
-                      </label>
-                    ))}
-                  </div>
+                {safeCategory === "pc" && (
+                  <PcComponentFields locale={locale} values={guidedSpecifications} onChange={setGuidedSpecifications} />
                 )}
-
+                <div className="guided-specifications">
+                  {guidedFields
+                    .filter(
+                      (field) =>
+                        field.key !== "rgb" &&
+                        (safeCategory !== "pc" ||
+                          (!PC_PARTS.some((p) => p.key === field.key) && !PC_MEMORY_KEYS.includes(field.key))),
+                    )
+                    .map((field) => (
+                      <ProfileField
+                        key={field.key}
+                        field={field}
+                        value={guidedSpecifications[field.key] ?? ""}
+                        onChange={(value) => changeGuidedField(field.key, value)}
+                      />
+                    ))}
+                </div>
                 <div className="custom-specifications">
                   {specifications.length > 0 && <h3>{formCopy.customDetails}</h3>}
                   {specifications.map((row, index) => (

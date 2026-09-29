@@ -12,7 +12,9 @@ Samaa valmistajaa, mallia ja versiota ei voi lisätä samaan ryhmään kahdesti 
 
 ## Ilmoituksen luonti
 
-Valitse tuoteryhmä ja kirjoita **Hae tuotemallia** -kenttään valmistaja, malli tai hakusana. Haku avautuu vasta kirjoitettaessa ja näyttää myös malliversion, jotta eri muistimäärät erottuvat. Jos osumia on yli 20, selaa hakutulosten sivuja. Valitse tulos: valmistaja ja mallikenttä täyttyvät, ja tyhjä otsikko saa mallin nimen. Valinta yhdistää ilmoituksen pysyvään malliin. Valmistajan, mallitekstin tai tuoteryhmän muuttaminen poistaa aiemman yhteyden. Mallia ei ole pakko valita: puuttuvan tuotteen voi syöttää käsin. Katalogin häiriö ei estä käsinsyöttöä.
+Ilmoituksen luonti käyttää kategoriakohtaista hybridimallia: katalogimalli ja myyjän täydentämät ominaisuudet yhdessä. GPU:n ydinkatalogimalli säilyy valittuna, kun kortin valmistajaa ja versiota täydennetään. RAMin voi kuvata kapasiteetin, DDR-tyypin ja moduulien avulla ilman osanumeroa. Pelikoneen komponentit eritellään mukana oleviin, puuttuviin ja tuntemattomiin. Otsikko muodostuu tiedoista, ja sen voi myös kirjoittaa itse. [Ilmoituslomakkeiden rakenne ja tallennus](hybrid-listings.md).
+
+Hae tarvittaessa tuotemalli kategoriakohtaisesta katalogihausta. Haku avautuu kirjoitettaessa ja näyttää malliversion. Yli 20 osumaa selataan sivuittain. Mallin valinta yhdistää ilmoituksen pysyvään malliin. Ilman valintaa tuotteen voi syöttää käsin myös katalogin häiriötilanteessa.
 
 Katalogi on palvelimen tieto; demotila ei luo kopioita oikeasta katalogista. Mallin piilottaminen ei riko olemassa olevan ilmoituksen myöhempää käsittelyä. Paikallisen sovelluksen ilmoituseditori säilyttää malliyhteyden tavallisessa muokkauksessa, kun mallin tietoja ei vaihdeta.
 

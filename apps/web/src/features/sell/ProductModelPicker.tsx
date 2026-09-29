@@ -2,6 +2,19 @@ import { useEffect, useRef, useState } from "react";
 import type { Category, Locale } from "../../types";
 import { loadProductModels, modelLabel, type ProductModel } from "../../lib/product-model-service";
 import { productCopy } from "./product-model-copy";
+const examples: Record<Category, string> = {
+  gpu: "RTX 3080, Radeon RX 6800 XT…",
+  cpu: "Ryzen 5 5600, Core i5…",
+  memory: "Fury Beast, DDR4…",
+  motherboard: "B550-A PRO, B650…",
+  storage: "970 EVO Plus, 990 EVO…",
+  psu: "RM750x…",
+  case: "Meshify C…",
+  cooling: "NH-D15…",
+  fans: "P12 PWM PST…",
+  pc: "Trident 3, Codex 3…",
+  other: "G502 HERO…",
+};
 export function ProductModelPicker({
   category,
   locale,
@@ -84,7 +97,7 @@ export function ProductModelPicker({
             setState({ status: "loading", items: [], total: 0 });
           }
         }}
-        placeholder="RTX 3070, Ryzen 5…"
+        placeholder={examples[category]}
         aria-label={c.search}
       />
       {selectedId && (

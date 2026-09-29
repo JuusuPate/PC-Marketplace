@@ -57,7 +57,7 @@ export function MarketplaceFilterSidebar({
       key === "category"
         ? Object.fromEntries(
             Object.entries(value.values).filter(([name]) =>
-              ["category", "condition", "brand", "city", "freeShipping"].includes(name),
+              ["category", "condition", "brand", "city", "freeShipping", "rgb"].includes(name),
             ),
           )
         : value.values;

@@ -1581,6 +1581,54 @@ describe("product model catalog", () => {
   });
 });
 
+describe("hybrid listing persistence", () => {
+  it("stores structured PC parts and RGB, updates them as owner, and rejects another account", async () => {
+    const specs = {
+      processor: "AMD Ryzen 5 5600",
+      componentStatus_processor: "included",
+      componentStatus_graphicsCard: "missing",
+      pcMemoryCapacity: "32",
+      pcMemoryType: "DDR4",
+      componentStatus_memory: "included",
+      rgb: "yes",
+    };
+    const created = (
+      await asRole(
+        "authenticated",
+        userId,
+        `select public.create_listing_draft('FI','Keskeneräinen kokoonpano Ryzen 5 5600','Keskeneräinen runko, ei näytönohjainta.','pc','good',30000,'EUR','Helsinki','${JSON.stringify(specs)}',array['FI'],null) as id`,
+      )
+    ).rows[0].id;
+    await db.query("update public.listings set status='active',published_at=now() where id=$1", [created]);
+    const stored = (await asRole("anon", null, `select specs from public.listings where id='${created}'`)).rows[0]
+      .specs;
+    expect(stored).toEqual(specs);
+    const revised = { ...specs, rgb: "no", graphicsCard: "GeForce RTX 3080", componentStatus_graphicsCard: "included" };
+    const update = `select public.update_listing_details('${created}','FI','Pelikone Ryzen 5 5600 RTX 3080','Toimiva pelikone, sisältää näytönohjaimen.','pc','good',50000,'EUR','Helsinki','${JSON.stringify(revised)}',null)`;
+    await expect(asRole("authenticated", adminId, update)).rejects.toThrow();
+    await asRole("authenticated", userId, update);
+    expect(
+      (await asRole("anon", null, `select specs from public.listings where id='${created}'`)).rows[0].specs,
+    ).toEqual(revised);
+  });
+  it("retains a GPU core link with an independent board brand and variant", async () => {
+    const model = (
+      await db.query<any>("select id from public.catalog_product_models where category='gpu' order by name limit 1")
+    ).rows[0];
+    const specs = { brand: "MSI", model: "Gaming X Trio", _catalog_model_id: model.id };
+    const id = (
+      await asRole(
+        "authenticated",
+        userId,
+        `select public.create_listing_draft('FI','MSI Gaming X Trio GPU','Näytönohjaimen myynti-ilmoituksen kuvaus.','gpu','good',30000,'EUR','Helsinki','${JSON.stringify(specs)}',array['FI'],null) as id`,
+      )
+    ).rows[0].id;
+    expect(
+      (await db.query<any>("select catalog_model_id,specs from public.listings where id=$1", [id])).rows[0],
+    ).toEqual({ catalog_model_id: model.id, specs: { brand: "MSI", model: "Gaming X Trio" } });
+  });
+});
+
 describe("public Rigi storefront", () => {
   it("exposes only published active administrator listings, ignores forged metadata and revocation takes effect", async () => {
     const official = await listing();
