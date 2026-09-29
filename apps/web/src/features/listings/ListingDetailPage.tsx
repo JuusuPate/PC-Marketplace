@@ -1,3 +1,4 @@
+import { displaySpecifications, isRgbListing } from "../sell/listing-profile";
 import { useEffect, useState, type MouseEvent } from "react";
 import { Icon } from "../../components/Icon";
 import { getSafeListingImageUrl, ListingVisual } from "../../components/ListingVisual";
@@ -276,9 +277,11 @@ export function ListingDetailPage({
 
               {Object.keys(listing.specs).length > 0 && (
                 <section className="detail-section">
-                  <h2>{copy.specs}</h2>
+                  <h2>
+                    {copy.specs} {isRgbListing(listing) && <span className="listing-rgb-tag">RGB</span>}
+                  </h2>
                   <dl>
-                    {Object.entries(listing.specs).map(([label, value]) => (
+                    {displaySpecifications(listing.specs, locale).map(([label, value]) => (
                       <div key={label}>
                         <dt>{label}</dt>
                         <dd>{value}</dd>

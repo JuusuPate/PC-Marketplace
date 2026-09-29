@@ -1,3 +1,4 @@
+import { isRgbListing } from "../features/sell/listing-profile";
 import { ListingAge } from "./ListingAge";
 import type { MouseEvent } from "react";
 import type { Messages } from "../i18n/messages/fi";
@@ -56,6 +57,7 @@ export function ListingCard({ listing, locale, copy, favourite, href, onFavourit
         <a className="card-title" href={href} onClick={handleOpen}>
           {listing.title}
         </a>
+        {isRgbListing(listing) && <span className="listing-rgb-tag">RGB</span>}
         <p>{listing.subtitle}</p>
         <div className="card-price-row">
           <strong>{formatMoney(listing.priceMinor, listing.currency, locale)}</strong>

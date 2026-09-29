@@ -1,3 +1,4 @@
+import { isRgbListing } from "../sell/listing-profile";
 import { canonicalMunicipality } from "../../lib/finnish-locations";
 import type { Category, Listing, Locale } from "../../types";
 import { specificationCopy } from "../sell/specification-fields";
@@ -48,6 +49,11 @@ const yesNo = [
 ];
 const capacities = [128, 256, 480, 500, 512, 800, 1000, 1500, 2000, 3000, 4000, 6000, 8000, 12000, 16000];
 export const FILTER_DEFINITIONS: FilterDefinition[] = [
+  {
+    key: "rgb",
+    label: ["Valaistustagi", "Lighting tag"],
+    options: [{ value: "yes", label: ["RGB-valaistus (myös ARGB)", "RGB lighting (includes ARGB)"] }],
+  },
   {
     key: "fanSize",
     categories: ["fans"],
@@ -233,6 +239,7 @@ const extraAliases: Record<string, string[]> = {
 };
 /** Reads explicit seller specifications across supported form languages and legacy keys. */
 export function readListingSpec(listing: Listing, key: string): string {
+  if (typeof listing.specs[key] === "string") return listing.specs[key].trim();
   const aliases = [
     key,
     ...(extraAliases[key] ?? []),
@@ -259,6 +266,7 @@ export function listingFilterValues(listing: Listing, key: string): string[] {
   const raw = readListingSpec(listing, key);
   const value = norm(raw);
   let result = raw;
+  if (key === "rgb") return isRgbListing(listing) ? ["yes"] : [];
   if (key === "city") result = canonicalMunicipality(listing.city);
   else if (key === "brand") result = norm(listing.brand);
   else if (key === "condition") result = listing.condition;

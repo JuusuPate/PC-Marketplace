@@ -1,3 +1,4 @@
+import { readSpecification } from "../features/sell/listing-profile";
 import type {
   Category,
   Condition,
@@ -140,7 +141,7 @@ function mapListing(row: DbListing): Listing {
     title: row.title,
     subtitle: Object.values(specs).slice(0, 2).join(" · ") || row.category.toUpperCase(),
     category: row.category,
-    brand: row.title.split(" ")[0],
+    brand: readSpecification(specs, "brand") || row.title.split(" ")[0],
     priceMinor: row.price_minor,
     currency: row.currency,
     condition: row.condition,

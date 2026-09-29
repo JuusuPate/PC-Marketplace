@@ -5,6 +5,7 @@ export interface GuidedSpecificationField {
   label: string;
   placeholder: string;
   options?: string[];
+  suggestions?: string[];
 }
 
 interface SpecificationCopy {
@@ -27,7 +28,7 @@ const englishCopy: SpecificationCopy = {
   pcTitle: "Gaming PC components",
   componentTitle: "Component specifications",
   optionalTitle: "Additional details",
-  pcHelp: "Add each known component. Every field in this section is optional.",
+  pcHelp: "Describe each component or mark it missing or unknown.",
   componentHelp: "Only relevant details are shown. Every field in this section is optional.",
   optionalHelp: "Add any useful product details you know.",
   unknown: "I don't know the specifications",
@@ -37,6 +38,18 @@ const englishCopy: SpecificationCopy = {
   photoRequired: "Add at least one product photo.",
   customDetails: "Other technical details",
   fields: {
+    coreModel: ["Chip model", "GeForce RTX 3080"],
+    rgb: ["RGB lighting", "Yes / No"],
+    pcFans: ["Case fans", "3 × 120 mm"],
+    pcMemoryCapacity: ["Total RAM (GB)", "32"],
+    pcMemoryType: ["RAM type", "DDR4"],
+    pcMemoryModules: ["RAM module count", "2"],
+    pcMemorySpeed: ["RAM speed (MHz)", "3200"],
+    moduleCapacity: ["Capacity per module (GB)", "16"],
+    latency: ["CAS latency (CL)", "16"],
+    pcieGeneration: ["PCIe generation", "Gen4"],
+    caseType: ["Case type", "Mid Tower"],
+    color: ["Colour", "Black"],
     processor: ["Processor", "AMD Ryzen 7 7800X3D"],
     graphicsCard: ["Graphics card", "NVIDIA GeForce RTX 4070 Super"],
     memory: ["Memory (RAM)", "32 GB DDR5 6000 MHz"],
@@ -80,7 +93,7 @@ const finnishCopy: SpecificationCopy = {
   pcTitle: "Pelikoneen komponentit",
   componentTitle: "Komponentin tekniset tiedot",
   optionalTitle: "Valinnaiset lisätiedot",
-  pcHelp: "Lisää tiedossasi olevat komponentit. Kaikki tämän osion kentät ovat vapaaehtoisia.",
+  pcHelp: "Kerro jokaisesta komponentista tai merkitse se puuttuvaksi tai tuntemattomaksi.",
   componentHelp: "Näytämme vain valitulle komponentille olennaiset tiedot. Kaikki kentät ovat vapaaehtoisia.",
   optionalHelp: "Lisää tuotteesta tiedossasi olevia hyödyllisiä lisätietoja.",
   unknown: "En tiedä teknisiä tietoja",
@@ -90,6 +103,18 @@ const finnishCopy: SpecificationCopy = {
   photoRequired: "Lisää vähintään yksi tuotekuva.",
   customDetails: "Muut tekniset tiedot",
   fields: {
+    coreModel: ["Piirimalli", "GeForce RTX 3080"],
+    rgb: ["RGB-valaistus", "Kyllä / Ei"],
+    pcFans: ["Kotelotuulettimet", "3 × 120 mm"],
+    pcMemoryCapacity: ["RAM yhteensä (GB)", "32"],
+    pcMemoryType: ["RAM-muistin tyyppi", "DDR4"],
+    pcMemoryModules: ["RAM-moduulien määrä", "2"],
+    pcMemorySpeed: ["RAM-nopeus (MHz)", "3200"],
+    moduleCapacity: ["Moduulin kapasiteetti (GB)", "16"],
+    latency: ["CAS-viive (CL)", "16"],
+    pcieGeneration: ["PCIe-sukupolvi", "Gen4"],
+    caseType: ["Kotelotyyppi", "Mid Tower"],
+    color: ["Väri", "Musta"],
     processor: ["Prosessori", "AMD Ryzen 7 7800X3D"],
     graphicsCard: ["Näytönohjain", "NVIDIA GeForce RTX 4070 Super"],
     memory: ["Keskusmuisti (RAM)", "32 GB DDR5 6000 MHz"],
@@ -134,7 +159,7 @@ const swedishCopy: SpecificationCopy = {
   pcTitle: "Komponenter i speldatorn",
   componentTitle: "Komponentens tekniska uppgifter",
   optionalTitle: "Valfria tilläggsuppgifter",
-  pcHelp: "Lägg till de komponenter du känner till. Alla fält i avsnittet är valfria.",
+  pcHelp: "Beskriv varje komponent eller markera den som saknad eller okänd.",
   componentHelp: "Endast relevanta uppgifter visas. Alla fält i avsnittet är valfria.",
   optionalHelp: "Lägg till användbara produktuppgifter som du känner till.",
   unknown: "Jag känner inte till de tekniska uppgifterna",
@@ -164,24 +189,30 @@ const fieldKeysByCategory: Record<Category, string[]> = {
     "case",
     "cooling",
     "operatingSystem",
+    "pcFans",
+    "pcMemoryCapacity",
+    "pcMemoryType",
+    "pcMemoryModules",
+    "pcMemorySpeed",
+    "rgb",
   ],
-  gpu: ["chipVendor", "vram", "interface", "powerConnector"],
+  gpu: ["coreModel", "chipVendor", "vram", "interface", "powerConnector"],
   cpu: ["socket", "cores", "clock"],
-  memory: ["capacity", "memoryType", "modules", "moduleFormat", "speed"],
+  memory: ["capacity", "memoryType", "modules", "moduleFormat", "moduleCapacity", "speed", "latency"],
   motherboard: ["socket", "chipset", "formFactor", "memoryType", "wifi", "bluetooth"],
   other: [],
   psu: ["wattage", "efficiency", "formFactor"],
-  storage: ["capacity", "storageType", "driveFormat", "interface"],
-  case: ["formFactor"],
+  storage: ["capacity", "storageType", "driveFormat", "interface", "pcieGeneration"],
+  case: ["formFactor", "caseType", "color"],
   cooling: ["coolingType", "socket"],
-  fans: ["fanSize", "fanConnector", "fanControl", "fanLighting", "fanCount"],
+  fans: ["fanSize", "fanConnector", "fanControl", "fanLighting", "fanCount", "rgb"],
 };
 
 export function getGuidedSpecificationFields(category: Category, locale: Locale): GuidedSpecificationField[] {
   const copy = specificationCopy[locale];
   return [...fieldKeysByCategory[category], "freeShipping"].map((key) => {
     const [label, placeholder] = copy.fields[key] ?? englishCopy.fields[key];
-    const options = ["freeShipping", "wifi", "bluetooth"].includes(key)
+    const options = ["freeShipping", "wifi", "bluetooth", "rgb"].includes(key)
       ? locale === "fi"
         ? ["Kyllä", "Ei"]
         : ["Yes", "No"]
@@ -192,6 +223,28 @@ export function getGuidedSpecificationFields(category: Category, locale: Locale)
             fanLighting: [locale === "fi" ? "Ei valaistusta" : "None", "RGB", "ARGB"],
           } as Record<string, string[]>
         )[key];
-    return { key, label, placeholder, options };
+    const suggestions = (
+      {
+        memoryType: ["DDR3", "DDR4", "DDR5"],
+        pcMemoryType: ["DDR3", "DDR4", "DDR5"],
+        capacity:
+          category === "memory"
+            ? ["8 GB", "16 GB", "32 GB", "64 GB", "96 GB", "128 GB"]
+            : ["256 GB", "512 GB", "1 TB", "2 TB", "4 TB"],
+        modules: ["1", "2", "4", "8"],
+        moduleCapacity: ["4", "8", "16", "24", "32", "48", "64"],
+        pcMemoryCapacity: ["8", "16", "32", "64", "96", "128"],
+        pcMemoryModules: ["1", "2", "4", "8"],
+        moduleFormat: ["DIMM", "SO-DIMM"],
+        storageType: ["NVMe SSD", "SATA SSD", "SATA HDD"],
+        driveFormat: ["M.2", '2.5"', '3.5"', "mSATA"],
+        pcieGeneration: ["Gen3", "Gen4", "Gen5"],
+        formFactor: category === "psu" ? ["ATX", "SFX", "SFX-L", "TFX"] : ["ATX", "Micro-ATX", "Mini-ITX", "E-ATX"],
+        socket: ["AM4", "AM5", "LGA 1200", "LGA 1700", "LGA 1851"],
+        fanSize: ["80", "92", "120", "140", "200"],
+        fanCount: ["1", "2", "3", "5", "6"],
+      } as Record<string, string[]>
+    )[key];
+    return { key, label, placeholder, options, suggestions };
   });
 }
