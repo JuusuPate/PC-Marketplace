@@ -10,6 +10,15 @@ async function start(page: Page, category: string) {
 test("catalog CPU specs are visible and locked, manual mode preserves them and hides the catalog", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await start(page, "cpu");
+  await expect(page.getByRole("radio", { name: "Tuotekatalogista" })).not.toBeChecked();
+  await expect(page.getByRole("radio", { name: "Kirjoitan itse" })).not.toBeChecked();
+  await expect(page.getByRole("searchbox", { name: "Hae tuotemallia" })).toHaveCount(0);
+  await expect(page.locator('[data-listing-field="title"]')).toHaveCount(0);
+  await expect(page.locator('[data-listing-field="description"]')).not.toBeVisible();
+  await page.getByRole("button", { name: "Jatka", exact: true }).click();
+  await expect(page.locator("#input-mode-error")).toHaveText("Valitse ensin, miten haluat antaa tuotteen tiedot.");
+  await page.getByRole("radio", { name: "Tuotekatalogista" }).check();
+  await expect(page.locator("#input-mode-error")).toHaveCount(0);
   await expect(page.locator('[data-listing-field="title"]')).toHaveValue("");
   await page.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("Ryzen 5 5600");
   await page.getByRole("button", { name: "AMD Ryzen 5 5600", exact: true }).click();
@@ -48,6 +57,7 @@ test("catalog CPU specs are visible and locked, manual mode preserves them and h
 
 test("RAM and storage expose capacities without SKU, PCIe or interface inputs; PSU has dropdowns", async ({ page }) => {
   await start(page, "memory");
+  await page.getByRole("radio", { name: "Tuotekatalogista" }).check();
   await page.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("KF432C16BBK2/32");
   const option = page.getByRole("button", { name: "Kingston FURY Beast 32 GB (2 x 16 GB) DDR4-3200", exact: true });
   await expect(option).not.toContainText("KF432");
@@ -59,6 +69,9 @@ test("RAM and storage expose capacities without SKU, PCIe or interface inputs; P
   await page.getByRole("button", { name: "Takaisin", exact: true }).click();
   await page.locator('[data-listing-field="category"]').selectOption("storage");
   await page.getByRole("button", { name: "Jatka", exact: true }).click();
+  await expect(page.getByRole("radio", { name: "Tuotekatalogista" })).not.toBeChecked();
+  await expect(page.getByRole("searchbox", { name: "Hae tuotemallia" })).toHaveCount(0);
+  await page.getByRole("radio", { name: "Tuotekatalogista" }).check();
   await page.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("990 PRO 2 TB");
   await page.getByRole("button", { name: "Samsung 990 PRO 2 TB", exact: true }).click();
   await expect(page.locator(".catalog-product-summary")).toContainText("Tallennuslaitteen kokoM.2");

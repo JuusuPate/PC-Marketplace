@@ -5,6 +5,7 @@ async function start(page: Page, category: string) {
   await page.getByRole("button", { name: "Käytä demotunnusta" }).click();
   await page.locator('[data-listing-field="category"]').selectOption(category);
   await page.getByRole("button", { name: "Jatka", exact: true }).click();
+  if (!["pc", "fans"].includes(category)) await page.getByRole("radio", { name: "Tuotekatalogista" }).check();
   await page.locator('[data-listing-field="price"]').fill("300");
 }
 const next = (page: Page) => page.getByRole("button", { name: "Jatka", exact: true }).click();

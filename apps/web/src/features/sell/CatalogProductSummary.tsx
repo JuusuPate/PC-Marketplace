@@ -62,7 +62,7 @@ export function CatalogInputMode({
   name,
 }: {
   locale: Locale;
-  value: "catalog" | "manual";
+  value: "catalog" | "manual" | null;
   onChange: (value: "catalog" | "manual") => void;
   name: string;
 }) {
