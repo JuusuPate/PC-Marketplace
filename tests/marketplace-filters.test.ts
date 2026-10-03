@@ -63,6 +63,7 @@ describe("marketplace filtering", () => {
     ["storageType", { "Tallennuslaitteen tyyppi": "SATA HDD" }, "SATA HDD"],
     ["coolingType", { "Jäähdytyksen tyyppi": "Ilmajäähy" }, "Air"],
     ["efficiency", { Hyötysuhdeluokitus: "80 PLUS gold" }, "80+ Gold"],
+    ["efficiency", { Hyötysuhdeluokitus: "Cybenetics gold" }, "Cybenetics Gold"],
   ])("normalizes %s specifications without confusing adjacent types", (key, specs, expected) => {
     expect(listingFilterValues(listing(specs), key)).toEqual([expected]);
   });

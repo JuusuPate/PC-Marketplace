@@ -34,17 +34,13 @@ import {
   PC_MEMORY_KEYS,
   partStatusKey,
 } from "./listing-profile";
+import { CatalogInputMode, CatalogProductSummary } from "./CatalogProductSummary";
+import { sanitizeModelText, type ProductModel } from "../../lib/product-model-service";
 import { ProductModelPicker } from "./ProductModelPicker";
 import { ImagePicker } from "./ImagePicker";
 import { getGuidedSpecificationFields, specificationCopy } from "./specification-fields";
 
-interface SpecificationRow {
-  id: string;
-  name: string;
-  value: string;
-}
-
-type ListingStep = 1 | 2 | 3 | 4 | 5 | 6;
+type ListingStep = 1 | 2 | 3 | 4 | 5;
 
 interface ValidationIssue {
   field: string;
@@ -65,12 +61,6 @@ export interface CreateListingPageProps {
   onCancel: () => void;
   onPublish: (listing: Listing, images: PreparedListingImage[], pickupAddress: PrivatePickupAddress) => Promise<void>;
 }
-
-const newSpecification = (): SpecificationRow => ({
-  id: crypto.randomUUID(),
-  name: "",
-  value: "",
-});
 
 const visualByCategory: Record<Category, Listing["visual"]> = {
   gpu: "lime",
@@ -157,10 +147,15 @@ export function CreateListingPage({
   const [guidedSpecifications, setGuidedSpecifications] = useState<Record<string, string>>(() =>
     initialProfileValues(initialListing, initialCategory, locale),
   );
-  const [specifications, setSpecifications] = useState<SpecificationRow[]>(() =>
-    Object.entries(initialListing?.specs ?? {})
-      .filter(([name]) => !initialReservedSpecificationNames.has(name.toLocaleLowerCase()))
-      .map(([name, value]) => ({ id: crypto.randomUUID(), name, value })),
+  const [legacySpecifications, setLegacySpecifications] = useState<Record<string, string>>(() =>
+    Object.fromEntries(
+      Object.entries(initialListing?.specs ?? {}).filter(
+        ([name]) => !initialReservedSpecificationNames.has(name.toLocaleLowerCase()),
+      ),
+    ),
+  );
+  const [inputMode, setInputMode] = useState<"catalog" | "manual">(
+    initialListing && !initialListing.catalogModelId ? "manual" : "catalog",
   );
   const [technicalDetailsUnknown, setTechnicalDetailsUnknown] = useState(
     initialListing?.specs[copy.technicalDetails] === formCopy.unknown,
@@ -226,6 +221,42 @@ export function CreateListingPage({
     if (!["freeShipping", "rgb", "fanLighting"].includes(key)) setCatalogModelId(null);
   };
   const guidedFields = getGuidedSpecificationFields(safeCategory, locale);
+  const hasCatalog = !["pc", "fans"].includes(safeCategory);
+  const catalogLocked = hasCatalog && safeCategory !== "gpu" && inputMode === "catalog" && !!catalogModelId;
+  const showIdentity =
+    safeCategory !== "pc" && (safeCategory === "fans" || safeCategory === "gpu" || inputMode === "manual");
+  const changeInputMode = (mode: "catalog" | "manual") => {
+    setInputMode(mode);
+    if (mode === "manual") setCatalogModelId(null);
+    clearFieldError("catalog");
+  };
+  const selectProduct = (m: ProductModel | null) => {
+    setCatalogModelId(m?.id ?? null);
+    clearFieldError("catalog");
+    if (!m) return;
+    const fields = Object.fromEntries(
+      guidedFields.filter((f) => f.key !== "freeShipping").map((f) => [f.key, m.specs?.[f.key] ?? ""]),
+    );
+    setGuidedSpecifications((values) => ({
+      ...fields,
+      freeShipping: values.freeShipping ?? "",
+      ...(safeCategory === "gpu"
+        ? {
+            coreModel: sanitizeModelText(m.name),
+            vram: m.specs?.vram ?? (/^\d+\s*GB$/i.test(m.variant) ? m.variant : ""),
+            chipVendor: m.specs?.chipVendor ?? m.brand,
+          }
+        : {}),
+    }));
+    if (safeCategory !== "gpu") {
+      setBrand(m.brand);
+      setModel(
+        sanitizeModelText(
+          [m.name, ...(["memory", "storage"].includes(safeCategory) ? [] : [m.variant])].filter(Boolean).join(" "),
+        ),
+      );
+    }
+  };
   const technicalSectionTitle =
     safeCategory === "pc"
       ? formCopy.pcTitle
@@ -242,7 +273,7 @@ export function CreateListingPage({
   const wizardCopy =
     locale === "fi"
       ? {
-          steps: ["Kategoria", "Tuote", "Tiedot", "Kuvat", "Sijainti", "Tarkistus"],
+          steps: ["Kategoria", "Tuotetiedot", "Kuvat", "Sijainti", "Tarkistus"],
           previous: "Takaisin",
           next: "Jatka",
           edit: "Muokkaa",
@@ -272,7 +303,7 @@ export function CreateListingPage({
           replacePhotos: "Vaihda kuvat",
         }
       : {
-          steps: ["Category", "Item", "Details", "Photos", "Location", "Review"],
+          steps: ["Category", "Product details", "Photos", "Location", "Review"],
           previous: "Back",
           next: "Continue",
           edit: "Edit",
@@ -316,16 +347,6 @@ export function CreateListingPage({
     [user.name],
   );
 
-  const updateSpecification = (id: string, key: "name" | "value", value: string) => {
-    setSpecifications((rows) => rows.map((row) => (row.id === id ? { ...row, [key]: value } : row)));
-    clearFieldError("specifications");
-  };
-
-  const removeSpecification = (id: string) => {
-    setSpecifications((rows) => rows.filter((row) => row.id !== id));
-    clearFieldError("specifications");
-  };
-
   const clearFieldError = (field: string) => {
     setFieldErrors((current) => {
       if (!current[field]) return current;
@@ -345,44 +366,44 @@ export function CreateListingPage({
     }
 
     if (includes(2)) {
+      if (hasCatalog && inputMode === "catalog" && !catalogModelId)
+        issues.push({
+          field: "catalog",
+          message:
+            locale === "fi"
+              ? "Valitse katalogituote tai valitse Kirjoitan itse."
+              : "Select a catalog product or choose manual entry.",
+          step: 2,
+        });
       if (title.trim().length < 5) issues.push({ field: "title", message: wizardCopy.titleError, step: 2 });
       if (!Number.isFinite(numericPrice) || numericPrice <= 0) {
         issues.push({ field: "price", message: wizardCopy.priceError, step: 2 });
       }
     }
 
-    if (includes(3)) {
+    if (includes(2)) {
       const profileIssue = profileErrors(safeCategory, guidedSpecifications, locale, technicalDetailsUnknown)[0];
-      if (profileIssue) issues.push({ field: "profile", message: profileIssue, step: 3 });
-      const incompleteSpecification =
-        !technicalDetailsUnknown &&
-        specifications.some(
-          (row) =>
-            (row.name.trim().length > 0 || row.value.trim().length > 0) && (!row.name.trim() || !row.value.trim()),
-        );
-      if (incompleteSpecification) {
-        issues.push({ field: "specifications", message: copy.specIncomplete, step: 3 });
-      }
+      if (profileIssue) issues.push({ field: "profile", message: profileIssue, step: 2 });
       if (description.trim().length < 20) {
         issues.push({
           field: "description",
           message: wizardCopy.descriptionError(description.trim().length),
-          step: 3,
+          step: 2,
         });
       }
     }
 
-    if (includes(4) && photosRequired && images.length === 0) {
-      issues.push({ field: "photos", message: formCopy.photoRequired, step: 4 });
+    if (includes(3) && photosRequired && images.length === 0) {
+      issues.push({ field: "photos", message: formCopy.photoRequired, step: 3 });
     }
 
-    if (includes(5)) {
-      if (!city.trim()) issues.push({ field: "city", message: wizardCopy.cityError, step: 5 });
+    if (includes(4)) {
+      if (!city.trim()) issues.push({ field: "city", message: wizardCopy.cityError, step: 4 });
       if (!/^\d{5}$/.test(postalCode.trim())) {
-        issues.push({ field: "postalCode", message: wizardCopy.postalCodeError, step: 5 });
+        issues.push({ field: "postalCode", message: wizardCopy.postalCodeError, step: 4 });
       }
       if (streetAddress.trim().length < 5) {
-        issues.push({ field: "streetAddress", message: wizardCopy.streetAddressError, step: 5 });
+        issues.push({ field: "streetAddress", message: wizardCopy.streetAddressError, step: 4 });
       }
     }
 
@@ -412,7 +433,7 @@ export function CreateListingPage({
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (currentStep < 6) {
+    if (currentStep < 5) {
       const issues = getValidationIssues([currentStep]);
       if (issues.length > 0) {
         showValidationIssues(issues);
@@ -427,33 +448,14 @@ export function CreateListingPage({
 
     if (!initialListing && creationState !== "enabled") return;
 
-    const issues = getValidationIssues([1, 2, 3, 4, 5]);
+    const issues = getValidationIssues([1, 2, 3, 4]);
     if (issues.length > 0) {
       showValidationIssues(issues);
       return;
     }
 
     const conditionLabel = copy[condition === "fair" ? "conditionFair" : condition];
-    const reservedSpecificationNames = new Set(
-      [
-        ...specificationAliases("brand"),
-        ...specificationAliases("model"),
-        ...guidedFields.flatMap((f) => specificationAliases(f.key)),
-        ...PC_PARTS.map((p) => partStatusKey(p.key)),
-      ].map((s) => s.toLocaleLowerCase()),
-    );
-    const technicalSpecifications = technicalDetailsUnknown
-      ? {}
-      : Object.fromEntries(
-          specifications
-            .filter(
-              (row) =>
-                row.name.trim() &&
-                row.value.trim() &&
-                !reservedSpecificationNames.has(row.name.trim().toLocaleLowerCase()),
-            )
-            .map((row) => [row.name.trim(), row.value.trim()]),
-        );
+    const technicalSpecifications = technicalDetailsUnknown ? {} : legacySpecifications;
     const guidedTechnicalSpecifications = serializeProfile(
       safeCategory,
       guidedSpecifications,
@@ -620,7 +622,9 @@ export function CreateListingPage({
                     setBrand("");
                     setModel("");
                     setGuidedSpecifications({});
-                    setSpecifications([]);
+                    setLegacySpecifications({});
+                    setInputMode("catalog");
+                    if (!initialListing) setAutomaticTitle(nextCategory !== "fans");
                     if (nextCategory && nextCategory !== "pc") setTechnicalDetailsUnknown(false);
                     clearFieldError("category");
                   }}
@@ -676,48 +680,52 @@ export function CreateListingPage({
                 </p>
               </div>
             </div>
-            <details
-              className="listing-profile-catalog"
-              open={safeCategory !== "memory" && safeCategory !== "storage" && safeCategory !== "pc"}
-            >
-              <summary>
-                {locale === "fi" ? "Valitse katalogista (valinnainen)" : "Select from catalog (optional)"}
-              </summary>
-              <ProductModelPicker
-                key={safeCategory}
-                category={safeCategory}
-                locale={locale}
-                selectedId={catalogModelId}
-                onSelect={(m) => {
-                  setCatalogModelId(m?.id ?? null);
-                  if (m) {
-                    if (safeCategory === "gpu") {
-                      setGuidedSpecifications((values) => ({
-                        ...values,
-                        coreModel: m.name,
-                        vram: /^\d+\s*GB$/i.test(m.variant) ? m.variant : "",
-                        chipVendor: ["AMD", "NVIDIA", "Intel"].includes(m.brand) ? m.brand : "",
-                      }));
-                    } else {
-                      setBrand(m.brand);
-                      setModel([m.name, m.variant].filter(Boolean).join(" · "));
-                    }
-                  }
-                }}
-              />
-            </details>
-            <div className="create-listing-fields">
-              <label className="field-wide listing-profile-auto-title">
-                <input
-                  type="checkbox"
-                  checked={automaticTitle}
-                  onChange={(e) => {
-                    if (!e.target.checked) setTitle(title);
-                    setAutomaticTitle(e.target.checked);
-                  }}
+            {hasCatalog && (
+              <>
+                <CatalogInputMode
+                  locale={locale}
+                  name="product-input-mode"
+                  value={inputMode}
+                  onChange={changeInputMode}
                 />
-                {locale === "fi" ? "Muodosta otsikko automaattisesti" : "Generate title automatically"}
-              </label>
+                {inputMode === "catalog" && (
+                  <div className="listing-profile-catalog" data-listing-field="catalog" tabIndex={-1}>
+                    <ProductModelPicker
+                      key={safeCategory}
+                      category={safeCategory}
+                      locale={locale}
+                      selectedId={catalogModelId}
+                      onSelect={selectProduct}
+                    />
+                    <FieldError id="catalog-error" message={fieldErrors.catalog} />
+                  </div>
+                )}
+                {catalogLocked && (
+                  <CatalogProductSummary
+                    category={safeCategory}
+                    locale={locale}
+                    brand={brand}
+                    model={model}
+                    specs={guidedSpecifications}
+                    onEdit={() => changeInputMode("manual")}
+                  />
+                )}
+              </>
+            )}
+            <div className="create-listing-fields">
+              {safeCategory !== "fans" && (
+                <label className="field-wide listing-profile-auto-title">
+                  <input
+                    type="checkbox"
+                    checked={automaticTitle}
+                    onChange={(e) => {
+                      if (!e.target.checked) setTitle(title);
+                      setAutomaticTitle(e.target.checked);
+                    }}
+                  />
+                  {locale === "fi" ? "Muodosta otsikko automaattisesti" : "Generate title automatically"}
+                </label>
+              )}
               <label className="field-wide">
                 <FieldLabel label={copy.productTitle} required requiredText={formCopy.required} />
                 <input
@@ -730,7 +738,7 @@ export function CreateListingPage({
                     setAutomaticTitle(false);
                     clearFieldError("title");
                   }}
-                  placeholder={copy[safeCategory]}
+                  placeholder={locale === "fi" ? "Kirjoita tuotetta kuvaava otsikko" : "Describe your item"}
                   aria-invalid={Boolean(fieldErrors.title)}
                   aria-describedby={fieldErrors.title ? "title-error" : undefined}
                   data-listing-field="title"
@@ -768,48 +776,62 @@ export function CreateListingPage({
                 />
                 <FieldError id="price-error" message={fieldErrors.price} />
               </label>
-              <label>
-                <FieldLabel label={copy.brand} requiredText={formCopy.required} optionalText={formCopy.optional} />
-                <input
-                  value={brand}
-                  onChange={(event) => {
-                    setBrand(event.target.value);
-                    if (safeCategory !== "gpu" || !guidedSpecifications.coreModel) setCatalogModelId(null);
-                  }}
-                  placeholder={
-                    safeCategory === "memory" ? "Kingston" : safeCategory === "fans" ? "ARCTIC" : "ASUS / MSI / …"
-                  }
-                  maxLength={80}
-                />
-              </label>
-              <label>
-                <FieldLabel label={copy.model} requiredText={formCopy.required} optionalText={formCopy.optional} />
-                <input
-                  value={model}
-                  onChange={(event) => {
-                    setModel(event.target.value);
-                    if (safeCategory !== "gpu" || !guidedSpecifications.coreModel) setCatalogModelId(null);
-                  }}
-                  placeholder={
-                    safeCategory === "gpu"
-                      ? "Gaming X Trio"
-                      : safeCategory === "memory"
-                        ? "Fury Beast (valinnainen)"
-                        : "Malli / versio"
-                  }
-                  maxLength={160}
-                />
-              </label>
+              {showIdentity && (
+                <>
+                  <label>
+                    <FieldLabel
+                      label={safeCategory === "cpu" ? (locale === "fi" ? "Valmistaja" : "Manufacturer") : copy.brand}
+                      requiredText={formCopy.required}
+                      optionalText={formCopy.optional}
+                    />
+                    <input
+                      value={brand}
+                      onChange={(event) => {
+                        setBrand(event.target.value);
+                        if (safeCategory !== "gpu" || !guidedSpecifications.coreModel) setCatalogModelId(null);
+                      }}
+                      placeholder={
+                        safeCategory === "memory" ? "Kingston" : safeCategory === "fans" ? "ARCTIC" : "ASUS / MSI / …"
+                      }
+                      maxLength={80}
+                    />
+                  </label>
+                  {safeCategory !== "fans" && (
+                    <label>
+                      <FieldLabel
+                        label={copy.model}
+                        requiredText={formCopy.required}
+                        optionalText={formCopy.optional}
+                      />
+                      <input
+                        value={model}
+                        onChange={(event) => {
+                          setModel(event.target.value);
+                          if (safeCategory !== "gpu" || !guidedSpecifications.coreModel) setCatalogModelId(null);
+                        }}
+                        placeholder={
+                          safeCategory === "gpu"
+                            ? "Gaming X Trio"
+                            : safeCategory === "memory"
+                              ? "Fury Beast (valinnainen)"
+                              : "Malli / versio"
+                        }
+                        maxLength={160}
+                      />
+                    </label>
+                  )}
+                </>
+              )}
             </div>
           </section>
 
           <section
             className="create-listing-section"
             aria-labelledby="technical-details-title"
-            hidden={currentStep !== 3}
+            hidden={currentStep !== 2}
           >
             <div className="create-listing-section__heading">
-              <span className="create-listing-section__number">03</span>
+              <span className="create-listing-section__number">02</span>
               <div>
                 <h2 id="technical-details-title">{technicalSectionTitle}</h2>
                 <p>{technicalSectionHelp}</p>
@@ -821,7 +843,7 @@ export function CreateListingPage({
             <div data-listing-field="profile" tabIndex={-1}>
               <FieldError id="profile-error" message={fieldErrors.profile} />
             </div>
-            {(category === "pc" || category === "fans") && (
+            {category === "pc" && (
               <label className="listing-profile-rgb">
                 <input
                   type="checkbox"
@@ -830,17 +852,6 @@ export function CreateListingPage({
                     setGuidedSpecifications((values) => ({
                       ...values,
                       rgb: e.target.checked ? "yes" : "no",
-                      ...(safeCategory === "fans"
-                        ? {
-                            fanLighting: e.target.checked
-                              ? /^(a?rgb)$/i.test(values.fanLighting ?? "")
-                                ? values.fanLighting
-                                : "RGB"
-                              : locale === "fi"
-                                ? "Ei valaistusta"
-                                : "None",
-                          }
-                        : {}),
                     }))
                   }
                 />
@@ -912,6 +923,10 @@ export function CreateListingPage({
                     .filter(
                       (field) =>
                         field.key !== "rgb" &&
+                        (field.key === "freeShipping" ||
+                          !hasCatalog ||
+                          inputMode === "manual" ||
+                          safeCategory === "gpu") &&
                         (safeCategory !== "pc" ||
                           (!PC_PARTS.some((p) => p.key === field.key) && !PC_MEMORY_KEYS.includes(field.key))),
                     )
@@ -924,52 +939,13 @@ export function CreateListingPage({
                       />
                     ))}
                 </div>
-                <div className="custom-specifications">
-                  {specifications.length > 0 && <h3>{formCopy.customDetails}</h3>}
-                  {specifications.map((row, index) => (
-                    <div className="specification-editor__row" key={row.id}>
-                      <label>
-                        {copy.specName}
-                        <input
-                          value={row.name}
-                          onChange={(event) => updateSpecification(row.id, "name", event.target.value)}
-                          placeholder={index === 0 ? copy.memory : "PCIe"}
-                        />
-                      </label>
-                      <label>
-                        {copy.specValue}
-                        <input
-                          value={row.value}
-                          onChange={(event) => updateSpecification(row.id, "value", event.target.value)}
-                          placeholder={index === 0 ? "12 GB GDDR6X" : "4.0"}
-                        />
-                      </label>
-                      <button
-                        className="specification-editor__remove"
-                        type="button"
-                        aria-label={`${copy.remove}: ${index + 1}`}
-                        onClick={() => removeSpecification(row.id)}
-                      >
-                        <Icon name="close" />
-                      </button>
-                    </div>
-                  ))}
-                  <button
-                    className="button button--outline specification-editor__add"
-                    type="button"
-                    onClick={() => setSpecifications((rows) => [...rows, newSpecification()])}
-                  >
-                    <Icon name="plus" />
-                    {copy.addSpec}
-                  </button>
-                </div>
               </div>
             )}
           </section>
 
-          <section className="create-listing-section" aria-labelledby="description-title" hidden={currentStep !== 3}>
+          <section className="create-listing-section" aria-labelledby="description-title" hidden={currentStep !== 2}>
             <div className="create-listing-section__heading">
-              <span className="create-listing-section__number">04</span>
+              <span className="create-listing-section__number">02</span>
               <div>
                 <h2 id="description-title">
                   <FieldLabel label={copy.description} required requiredText={formCopy.required} />
@@ -999,9 +975,9 @@ export function CreateListingPage({
             <FieldError id="description-error" message={fieldErrors.description} />
           </section>
 
-          <section className="create-listing-section" aria-labelledby="photos-title" hidden={currentStep !== 4}>
+          <section className="create-listing-section" aria-labelledby="photos-title" hidden={currentStep !== 3}>
             <div className="create-listing-section__heading">
-              <span className="create-listing-section__number">05</span>
+              <span className="create-listing-section__number">03</span>
               <div>
                 <h2 id="photos-title">
                   <FieldLabel
@@ -1037,9 +1013,9 @@ export function CreateListingPage({
             </div>
           </section>
 
-          <section className="create-listing-section" aria-labelledby="seller-details-title" hidden={currentStep !== 5}>
+          <section className="create-listing-section" aria-labelledby="seller-details-title" hidden={currentStep !== 4}>
             <div className="create-listing-section__heading">
-              <span className="create-listing-section__number">06</span>
+              <span className="create-listing-section__number">04</span>
               <div>
                 <h2 id="seller-details-title">{copy.sellerDetails}</h2>
                 <p>{copy.sellerDetailsHelp}</p>
@@ -1129,9 +1105,9 @@ export function CreateListingPage({
             </div>
           </section>
 
-          <section className="create-listing-section" aria-labelledby="review-listing-title" hidden={currentStep !== 6}>
+          <section className="create-listing-section" aria-labelledby="review-listing-title" hidden={currentStep !== 5}>
             <div className="create-listing-section__heading">
-              <span className="create-listing-section__number">07</span>
+              <span className="create-listing-section__number">05</span>
               <div>
                 <h2 id="review-listing-title">{wizardCopy.reviewTitle}</h2>
                 <p>{wizardCopy.reviewHelp}</p>
@@ -1163,10 +1139,10 @@ export function CreateListingPage({
                 <strong>
                   {technicalDetailsUnknown
                     ? formCopy.unknown
-                    : `${Object.values(guidedSpecifications).filter((value) => value.trim()).length + specifications.filter((row) => row.name.trim() && row.value.trim()).length} ${wizardCopy.technicalSummary.toLocaleLowerCase()}`}
+                    : `${Object.values(guidedSpecifications).filter((value) => value.trim()).length + Object.keys(legacySpecifications).length} ${wizardCopy.technicalSummary.toLocaleLowerCase()}`}
                 </strong>
                 <p className="listing-review-grid__description">{description}</p>
-                <button type="button" onClick={() => moveToStep(3)}>
+                <button type="button" onClick={() => moveToStep(2)}>
                   {wizardCopy.edit}
                 </button>
               </section>
@@ -1174,7 +1150,7 @@ export function CreateListingPage({
                 <span>{wizardCopy.photosSummary}</span>
                 <strong>{displayedImageCount}</strong>
                 <p>{displayedImageCount > 0 ? `${displayedImageCount} / 5` : formCopy.optional}</p>
-                <button type="button" onClick={() => moveToStep(4)}>
+                <button type="button" onClick={() => moveToStep(3)}>
                   {wizardCopy.edit}
                 </button>
               </section>
@@ -1184,7 +1160,7 @@ export function CreateListingPage({
                 <p>
                   {streetAddress}, {postalCode} {city}
                 </p>
-                <button type="button" onClick={() => moveToStep(5)}>
+                <button type="button" onClick={() => moveToStep(4)}>
                   {wizardCopy.edit}
                 </button>
               </section>

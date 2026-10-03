@@ -42,11 +42,11 @@ describe("hybrid listing profiles", () => {
   it.each([
     ["cpu", { socket: "AM5" }, "AM5"],
     ["motherboard", { chipset: "B650", formFactor: "ATX" }, "B650 ATX"],
-    ["storage", { capacity: "1 TB", storageType: "NVMe SSD", pcieGeneration: "Gen4" }, "1 TB NVMe SSD Gen4"],
+    ["storage", { capacity: "1 TB", storageType: "NVMe SSD", pcieGeneration: "Gen4" }, "1 TB NVMe SSD"],
     ["psu", { wattage: "750", efficiency: "80+ Gold" }, "750 W 80+ Gold"],
     ["case", { formFactor: "ATX" }, "ATX kotelo"],
     ["cooling", { coolingType: "AIO", socket: "AM5" }, "AIO AM5"],
-    ["fans", { fanSize: "120", fanControl: "PWM", fanCount: "3", fanLighting: "ARGB" }, "120 mm PWM 3 kpl RGB"],
+    ["fans", { fanSize: "120", fanControl: "PWM", fanCount: "3", fanLighting: "ARGB" }, "Acme Model"],
     ["other", {}, "Acme Model"],
   ] as [Category, Record<string, string>, string][])("uses the %s title profile", (category, values, suffix) => {
     expect(title(category, "Acme", "Model", values)).toContain(suffix);
@@ -105,6 +105,14 @@ describe("hybrid listing profiles", () => {
     expect(matchesMarketplaceFilters(fixture("pc", {}), filters)).toBe(false);
     expect(isRgbListing(fixture("fans", { rgb: "no", fanLighting: "RGB" }))).toBe(false);
     expect(isRgbListing(fixture("cpu", { rgb: "yes" }))).toBe(false);
-    expect(serializeProfile("fans", { fanLighting: "Ei valaistusta", rgb: "yes" }, "fi").rgb).toBe("no");
+    expect(serializeProfile("fans", { fanLighting: "Ei valaistusta", rgb: "yes" }, "fi")).toEqual({});
+  });
+  it("starts with a blank title and omits chip vendors, GeForce and middle dots", () => {
+    for (const category of ["gpu", "cpu", "memory", "psu", "storage", "case", "cooling", "fans", "pc"] as Category[])
+      expect(title(category, "", "", {})).toBe("");
+    expect(title("gpu", "NVIDIA", "", { coreModel: "GeForce RTX 3080", vram: "10 GB" })).toBe("RTX 3080 10 GB");
+    expect(title("gpu", "AMD", "", { coreModel: "Radeon RX 6800 XT ·", vram: "16 GB" })).toBe(
+      "Radeon RX 6800 XT 16 GB",
+    );
   });
 });

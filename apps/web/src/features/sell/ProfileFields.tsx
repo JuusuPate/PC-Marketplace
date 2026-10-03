@@ -1,10 +1,11 @@
-import { useId } from "react";
+import { useId, useState } from "react";
 import type { Locale } from "../../types";
 import type { GuidedSpecificationField } from "./specification-fields";
 import { getGuidedSpecificationFields, specificationCopy } from "./specification-fields";
 import { PC_MEMORY_KEYS, PC_PARTS, partStatusKey } from "./listing-profile";
 import { ProductModelPicker } from "./ProductModelPicker";
 import { modelLabel } from "../../lib/product-model-service";
+import { CatalogInputMode } from "./CatalogProductSummary";
 
 export function ProfileField({
   field,
@@ -64,12 +65,14 @@ export function PcComponentFields({
   const fi = locale === "fi";
   const copy = specificationCopy[locale];
   const fields = getGuidedSpecificationFields("pc", locale);
+  const [modes, setModes] = useState<Record<string, "catalog" | "manual">>({});
   return (
     <div className="pc-component-list">
       {PC_PARTS.map((part) => {
         const field = fields.find((f) => f.key === part.key)!;
         const status = values[partStatusKey(part.key)] ?? "";
         const disabled = status === "missing" || status === "unknown";
+        const mode = modes[part.key] ?? "manual";
         const set = (value: string) =>
           onChange({ ...values, [part.key]: value, [partStatusKey(part.key)]: "included" });
         return (
@@ -99,39 +102,64 @@ export function PcComponentFields({
             </div>
             {!disabled && (
               <div className="pc-component__details">
-                <ProfileField field={field} value={values[part.key] ?? ""} onChange={set} />
-                {part.key === "memory" && (
+                {part.category && (
+                  <CatalogInputMode
+                    locale={locale}
+                    name={`pc-${part.key}`}
+                    value={mode}
+                    onChange={(mode) => setModes((current) => ({ ...current, [part.key]: mode }))}
+                  />
+                )}
+                {mode === "manual" && (
                   <>
-                    <p className="listing-profile-help">
-                      {fi
-                        ? "Osanumeroa ei tarvita. Anna kokonaismuisti ja tyyppi; mallisarja on vapaaehtoinen."
-                        : "No part number needed. Enter total capacity and type; the model series is optional."}
-                    </p>
-                    <div className="guided-specifications">
-                      {PC_MEMORY_KEYS.map((key) => (
-                        <ProfileField
-                          key={key}
-                          field={fields.find((f) => f.key === key)!}
-                          value={values[key] ?? ""}
-                          onChange={(value) =>
-                            onChange({ ...values, [key]: value, [partStatusKey("memory")]: "included" })
-                          }
-                        />
-                      ))}
-                    </div>
+                    <ProfileField field={field} value={values[part.key] ?? ""} onChange={set} />
+                    {part.key === "memory" && (
+                      <>
+                        <p className="listing-profile-help">
+                          {fi
+                            ? "Osanumeroa ei tarvita. Anna kokonaismuisti ja tyyppi; mallisarja on vapaaehtoinen."
+                            : "No part number needed. Enter total capacity and type; the model series is optional."}
+                        </p>
+                        <div className="guided-specifications">
+                          {PC_MEMORY_KEYS.map((key) => (
+                            <ProfileField
+                              key={key}
+                              field={fields.find((f) => f.key === key)!}
+                              value={values[key] ?? ""}
+                              onChange={(value) =>
+                                onChange({ ...values, [key]: value, [partStatusKey("memory")]: "included" })
+                              }
+                            />
+                          ))}
+                        </div>
+                      </>
+                    )}
                   </>
                 )}
-                {part.category && part.key !== "memory" && (
-                  <details className="pc-component__catalog">
-                    <summary>{fi ? "Hae katalogista (valinnainen)" : "Search catalog (optional)"}</summary>
+                {part.category && mode === "catalog" && (
+                  <div className="pc-component__catalog">
                     <ProductModelPicker
                       category={part.category}
                       locale={locale}
                       onSelect={(model) => {
-                        if (model) set(modelLabel(model));
+                        if (!model) return;
+                        onChange({
+                          ...values,
+                          [part.key]: modelLabel(model),
+                          [partStatusKey(part.key)]: "included",
+                          ...(part.key === "memory"
+                            ? {
+                                pcMemoryCapacity: model.specs?.capacity ?? "",
+                                pcMemoryType: model.specs?.memoryType ?? "",
+                                pcMemoryModules: model.specs?.modules ?? "",
+                                pcMemorySpeed: model.specs?.speed ?? "",
+                              }
+                            : {}),
+                        });
                       }}
                     />
-                  </details>
+                    {values[part.key] && <p className="pc-component__selection">{values[part.key]}</p>}
+                  </div>
                 )}
               </div>
             )}

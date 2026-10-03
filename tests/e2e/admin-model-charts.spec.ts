@@ -106,7 +106,7 @@ test("catalog price explorer filters categories, pages and periods, clears stale
   await page.goto("/model-chart-test");
   const board = page.getByRole("region", { name: "Tuotteiden hintakehitys" });
   const selectedTitle = board.locator(".admin-model-detail > h3");
-  await expect(selectedTitle).toHaveText("NVIDIA GeForce RTX 3070");
+  await expect(selectedTitle).toHaveText("NVIDIA RTX 3070");
   await expect(board.locator(".admin-model-metrics dt")).toHaveText([
     "Keskihinta",
     "Keskihinnan muutos €",
@@ -132,7 +132,7 @@ test("catalog price explorer filters categories, pages and periods, clears stale
   }
   await board.screenshot({ path: "test-results/admin-model-charts-desktop.png" });
   await board.getByRole("button", { name: /RTX 3080/ }).click();
-  await expect(selectedTitle).toHaveText("NVIDIA GeForce RTX 3080");
+  await expect(selectedTitle).toHaveText("NVIDIA RTX 3080");
   await expect(board.locator(".admin-line-stroke")).toHaveCount(0);
   await expect(board.locator(".admin-model-metrics")).toContainText("Ei vertailuhavaintoja");
   // A slow response for the previous selection must not overwrite the current model.
@@ -142,13 +142,13 @@ test("catalog price explorer filters categories, pages and periods, clears stale
     .poll(() => calls.filter((c) => c.name === "get_admin_model_price_trends").at(-1)!.args.p_model_id)
     .toBe(id(1));
   await board.getByRole("button", { name: /RTX 3080/ }).click();
-  await expect(selectedTitle).toHaveText("NVIDIA GeForce RTX 3080");
+  await expect(selectedTitle).toHaveText("NVIDIA RTX 3080");
   await page.waitForTimeout(800);
-  await expect(selectedTitle).toHaveText("NVIDIA GeForce RTX 3080");
+  await expect(selectedTitle).toHaveText("NVIDIA RTX 3080");
   await board.getByRole("button", { name: "Seuraava", exact: true }).click();
   await expect(selectedTitle).toHaveText("NVIDIA Catalog GPU 21");
   await board.getByRole("searchbox", { name: "Hae katalogista" }).fill("3070");
-  await expect(selectedTitle).toHaveText("NVIDIA GeForce RTX 3070");
+  await expect(selectedTitle).toHaveText("NVIDIA RTX 3070");
   await board.getByLabel("Tuotekategoria").selectOption("cpu");
   await expect(selectedTitle).toHaveText("AMD Ryzen 5 5600");
   await expect(board.getByRole("searchbox")).toHaveValue("");

@@ -18,6 +18,8 @@ export const partStatusKey = (key: string) => `componentStatus_${key}`;
 export const PC_MEMORY_KEYS = ["pcMemoryCapacity", "pcMemoryType", "pcMemoryModules", "pcMemorySpeed"];
 const norm = (s: string) => s.trim().toLocaleLowerCase();
 const identityAliases: Record<string, string[]> = {
+  chipVendor: ["Piirin valmistaja", "Chip manufacturer"],
+  cores: ["Ytimet / säikeet", "Cores / threads"],
   brand: ["Valmistaja", "Merkki", "Brand", "Manufacturer", "Märke", "Mærke", "Merke"],
   model: ["Malli", "Model", "Modell"],
 };
@@ -120,7 +122,12 @@ export function profileErrors(
   }
   return errors;
 }
-const clean = (s = "") => s.trim().replace(/\s+/g, " ");
+const clean = (s = "") =>
+  s
+    .replace(/\bGeForce\s*/gi, "")
+    .replace(/·/g, " ")
+    .trim()
+    .replace(/\s+/g, " ");
 function unit(value = "", suffix: string) {
   const v = clean(value);
   return /^\d+(?:[.,]\d+)?$/.test(v) ? `${v} ${suffix}` : v;
@@ -142,7 +149,13 @@ export function generateListingTitle(
   categoryLabel: string,
   locale: Locale,
 ) {
-  const identity = uniqueParts([brand, model]);
+  const identity = uniqueParts([category === "gpu" && /^(NVIDIA|AMD|Intel)$/i.test(brand.trim()) ? "" : brand, model]);
+  if (
+    category !== "pc" &&
+    !identity &&
+    !Object.entries(values).some(([key, value]) => key !== "freeShipping" && value.trim())
+  )
+    return "";
   let details: (string | undefined)[] = [];
   switch (category) {
     case "gpu":
@@ -164,7 +177,7 @@ export function generateListingTitle(
       break;
     }
     case "storage":
-      details = [unit(values.capacity, "GB"), values.storageType, values.pcieGeneration];
+      details = [unit(values.capacity, "GB"), values.storageType];
       break;
     case "motherboard":
       details = [values.socket, values.chipset, values.formFactor];
@@ -179,12 +192,7 @@ export function generateListingTitle(
       details = [values.coolingType, values.socket];
       break;
     case "fans":
-      details = [
-        unit(values.fanSize, "mm"),
-        values.fanControl,
-        values.fanCount ? `${values.fanCount} ${locale === "fi" ? "kpl" : "pcs"}` : "",
-        isRgbListing({ category, specs: values }) ? "RGB" : "",
-      ];
+      details = [];
       break;
     case "pc": {
       const available = (key: string) => (values[partStatusKey(key)] === "included" ? values[key] : "");
@@ -192,6 +200,7 @@ export function generateListingTitle(
         (p) => !["operatingSystem", "pcFans"].includes(p.key) && values[partStatusKey(p.key)] === "missing",
       );
       const prefix = partial ? (locale === "fi" ? "Keskeneräinen kokoonpano" : "Incomplete PC") : categoryLabel;
+      if (!PC_PARTS.some((p) => available(p.key)) && !values.pcMemoryCapacity && !partial) return "";
       return uniqueParts([
         prefix,
         available("processor"),
@@ -205,11 +214,9 @@ export function generateListingTitle(
         .trim();
     }
   }
-  return (
-    uniqueParts([identity, ...details])
-      .slice(0, 100)
-      .trim() || categoryLabel
-  );
+  return uniqueParts([identity, ...details])
+    .slice(0, 100)
+    .trim();
 }
 export function displaySpecifications(specs: Record<string, string>, locale: Locale): [string, string][] {
   const labels = specificationCopy[locale].fields;
