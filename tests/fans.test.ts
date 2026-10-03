@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { CATALOG_PAGES, getCatalogPage } from "../apps/web/src/config/catalog";
 import { PRODUCT_CATEGORIES } from "../apps/web/src/lib/product-model-service";
-import { getGuidedSpecificationFields } from "../apps/web/src/features/sell/specification-fields";
+import { getGuidedSpecificationFields, specificationCopy } from "../apps/web/src/features/sell/specification-fields";
 import { getFilterDefinitions, matchesMarketplaceFilters } from "../apps/web/src/features/catalog/marketplace-filters";
 import type { Listing, Locale } from "../apps/web/src/types";
 
@@ -19,9 +19,10 @@ describe("fan category", () => {
     expect(getFilterDefinitions("fans", []).some((d) => d.key === "coolingType")).toBe(false);
   });
   it.each(["fi", "en", "sv", "da", "nb"] as Locale[])(
-    "matches the actual seller form values in %s, including negative and missing specifications",
+    "preserves legacy fan filtering in %s while the new form only asks for common shipping details",
     (locale) => {
-      const fields = getGuidedSpecificationFields("fans", locale);
+      expect(getGuidedSpecificationFields("fans", locale).map((f) => f.key)).toEqual(["freeShipping"]);
+      const fields = specificationCopy[locale].fields;
       const values: Record<string, string> = {
         fanSize: "120 mm",
         fanCount: "3 kpl",
@@ -32,7 +33,7 @@ describe("fan category", () => {
       const item = {
         category: "fans",
         priceMinor: 2500,
-        specs: Object.fromEntries(fields.map((f) => [f.label, values[f.key] ?? ""])),
+        specs: Object.fromEntries(Object.entries(values).map(([key, value]) => [fields[key][0], value])),
       } as Listing;
       const filters = {
         minPrice: "20",
@@ -55,11 +56,17 @@ describe("fan category", () => {
         ["fanControl", "Fixed"],
         ["fanLighting", "None"],
       ]) {
-        const f = fields.find((f) => f.key === key)!;
-        const option = key === "fanLighting" ? f.options![0] : f.options!.at(-1)!;
+        const label = fields[key][0];
+        const option = (
+          {
+            fanConnector: locale === "fi" ? "Valmistajakohtainen" : "Proprietary",
+            fanControl: locale === "fi" ? "Kiinteä nopeus" : "Fixed speed",
+            fanLighting: locale === "fi" ? "Ei valaistusta" : "None",
+          } as Record<string, string>
+        )[key];
         expect(
           matchesMarketplaceFilters(
-            { ...item, specs: { [f.label]: option } },
+            { ...item, specs: { [label]: option } },
             { ...filters, values: { [key]: [normalized] } },
           ),
         ).toBe(true);

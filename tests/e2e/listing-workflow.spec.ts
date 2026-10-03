@@ -33,12 +33,11 @@ test("demoilmoitus julkaistaan, kuvat selataan ja säilyvät muokkauksessa", asy
   await expect(page.locator("#category-error")).toContainText("Valitse kategoria");
   await page.locator('[data-listing-field="category"]').selectOption("gpu");
   await next(page);
+  await page.getByRole("radio", { name: "Kirjoitan itse" }).check();
 
   await page.locator('[data-listing-field="title"]').fill("Testinäytönohjain RTX 4070");
   await page.locator('[data-listing-field="price"]').fill("499");
-  await next(page);
-
-  await page.getByLabel("Piirin valmistaja").fill("NVIDIA");
+  await page.getByLabel("Piirisarja", { exact: true }).fill("NVIDIA");
   await page.getByLabel("Näyttömuisti").fill("12 GB");
   await page.getByLabel("Ilmainen postitus").selectOption("Kyllä");
   await next(page);
@@ -73,20 +72,20 @@ test("demoilmoitus julkaistaan, kuvat selataan ja säilyvät muokkauksessa", asy
   await expect(page.getByRole("heading", { name: "Muokkaa ilmoitusta" })).toBeVisible();
   await page
     .getByRole("navigation", { name: "Ilmoituksen muokkauksen vaiheet" })
-    .getByRole("button", { name: /Tiedot$/ })
+    .getByRole("button", { name: /Tuotetiedot$/ })
     .click();
-  await expect(page.getByLabel("Piirin valmistaja")).toHaveValue("NVIDIA");
+  await expect(page.getByLabel("Piirisarja", { exact: true })).toHaveValue("NVIDIA");
   await expect(page.getByLabel("Näyttömuisti")).toHaveValue("12 GB");
   await expect(page.getByLabel("Ilmainen postitus")).toHaveValue("Kyllä");
   await page
     .getByRole("navigation", { name: "Ilmoituksen muokkauksen vaiheet" })
-    .getByRole("button", { name: "4 Kuvat" })
+    .getByRole("button", { name: "3 Kuvat" })
     .click();
   await expect(page.locator(".image-picker__stored .image-picker__previews li")).toHaveCount(2);
 
   await page
     .getByRole("navigation", { name: "Ilmoituksen muokkauksen vaiheet" })
-    .getByRole("button", { name: /Tuote$/ })
+    .getByRole("button", { name: /Tuotetiedot$/ })
     .click();
   await page.locator('[data-listing-field="title"]').fill("Testinäytönohjain RTX 4070 päivitetty");
   await page

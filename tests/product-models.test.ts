@@ -94,3 +94,21 @@ it("localizes all ten categories and protects the editor route", () => {
   expect(html).not.toContain("admin-model-editor");
   expect(html).toContain("Kirjaudu");
 });
+it("validates catalog specifications and source links, and cleans visible model labels", () => {
+  expect(
+    parseModelPage({ total: 1, items: [{ ...model(), specs: { cores: "8" }, source_url: "https://www.amd.com/" }] })
+      .items[0].specs,
+  ).toEqual({ cores: "8" });
+  for (const specs of [
+    null,
+    [],
+    { cores: 8 },
+    { cores: "8".repeat(301) },
+    { "invalid key": "8" },
+    Object.fromEntries(Array.from({ length: 41 }, (_, i) => [`key${i}`, "v"])),
+  ])
+    expect(() => parseModelPage({ total: 1, items: [{ ...model(), specs }] })).toThrow();
+  for (const source_url of ["javascript:alert(1)", "http://example.test/", null])
+    expect(() => parseModelPage({ total: 1, items: [{ ...model(), source_url }] })).toThrow();
+  expect(modelLabel({ brand: "NVIDIA", name: "GeForce RTX 3080", variant: "10 GB ·" })).toBe("NVIDIA RTX 3080 10 GB");
+});

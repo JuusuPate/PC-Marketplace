@@ -14,6 +14,8 @@ import {
 import { formatMoney } from "../../lib/money";
 import { productCopy } from "../sell/product-model-copy";
 import { getAdminCopy } from "./admin-copy";
+import { ProfileField } from "../sell/ProfileFields";
+import { getGuidedSpecificationFields } from "../sell/specification-fields";
 function ModelEditor({
   model,
   category,
@@ -35,6 +37,8 @@ function ModelEditor({
   const [variant, setVariant] = useState(model?.variant ?? "");
   const [aliases, setAliases] = useState(model?.aliases ?? "");
   const [active, setActive] = useState(model?.is_active ?? true);
+  const [specs, setSpecs] = useState<Record<string, string>>(model?.specs ?? {});
+  const [sourceUrl, setSourceUrl] = useState(model?.source_url ?? "");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(false);
   async function submit(e: FormEvent) {
@@ -50,6 +54,8 @@ function ModelEditor({
         variant,
         aliases,
         is_active: active,
+        specs: Object.fromEntries(Object.entries(specs).filter(([, value]) => value.trim())),
+        source_url: sourceUrl.trim(),
       });
       onDone();
     } catch (e) {
@@ -79,6 +85,28 @@ function ModelEditor({
           {c.aliases}
           <input maxLength={500} value={aliases} onChange={(e) => setAliases(e.target.value)} />
         </label>
+        <label>
+          {locale === "fi" ? "Valmistajan lähdesivu" : "Manufacturer source"}
+          <input
+            type="url"
+            maxLength={1000}
+            value={sourceUrl}
+            onChange={(e) => setSourceUrl(e.target.value)}
+            placeholder="https://"
+          />
+        </label>
+        <div className="guided-specifications">
+          {getGuidedSpecificationFields(category, locale)
+            .filter((f) => f.key !== "freeShipping")
+            .map((field) => (
+              <ProfileField
+                key={field.key}
+                field={field}
+                value={specs[field.key] ?? ""}
+                onChange={(value) => setSpecs((current) => ({ ...current, [field.key]: value }))}
+              />
+            ))}
+        </div>
         <label>
           <input type="checkbox" checked={active} onChange={(e) => setActive(e.target.checked)} />
           {c.active}

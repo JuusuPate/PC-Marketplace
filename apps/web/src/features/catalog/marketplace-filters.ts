@@ -1,7 +1,6 @@
-import { isRgbListing } from "../sell/listing-profile";
+import { isRgbListing, specificationAliases } from "../sell/listing-profile";
 import { canonicalMunicipality } from "../../lib/finnish-locations";
 import type { Category, Listing, Locale } from "../../types";
-import { specificationCopy } from "../sell/specification-fields";
 
 export interface MarketplaceFilters {
   minPrice: string;
@@ -221,7 +220,16 @@ export const FILTER_DEFINITIONS: FilterDefinition[] = [
     key: "efficiency",
     categories: ["psu"],
     label: ["Hyötysuhdeluokitus", "Efficiency rating", "Effektivitetsklass"],
-    options: options(["80+ Standard", "80+ Bronze", "80+ Silver", "80+ Gold", "80+ Platinum", "80+ Titanium"]),
+    options: options([
+      "80+ Standard",
+      "80+ Bronze",
+      "80+ Silver",
+      "80+ Gold",
+      "80+ Platinum",
+      "80+ Titanium",
+      "Cybenetics Gold",
+      "Cybenetics Platinum",
+    ]),
   },
 ];
 const norm = (value: string) => value.trim().toLocaleLowerCase().replace(/\s+/g, " ");
@@ -240,11 +248,7 @@ const extraAliases: Record<string, string[]> = {
 /** Reads explicit seller specifications across supported form languages and legacy keys. */
 export function readListingSpec(listing: Listing, key: string): string {
   if (typeof listing.specs[key] === "string") return listing.specs[key].trim();
-  const aliases = [
-    key,
-    ...(extraAliases[key] ?? []),
-    ...Object.values(specificationCopy).flatMap((copy) => copy.fields[key]?.[0] ?? []),
-  ].map(norm);
+  const aliases = [key, ...(extraAliases[key] ?? []), ...specificationAliases(key)].map(norm);
   return (
     Object.entries(listing.specs)
       .find(([name]) => aliases.includes(norm(name)))?.[1]
@@ -341,7 +345,7 @@ export function listingFilterValues(listing: Listing, key: string): string[] {
   else if (key === "efficiency") {
     const tier = raw.match(/bronze|silver|gold|platinum|titanium|standard/i)?.[0];
     result = tier
-      ? `80+ ${tier[0].toUpperCase()}${tier.slice(1).toLowerCase()}`
+      ? `${/cybenetics/i.test(raw) ? "Cybenetics" : "80+"} ${tier[0].toUpperCase()}${tier.slice(1).toLowerCase()}`
       : /80\s*\+/.test(raw)
         ? "80+ Standard"
         : raw;

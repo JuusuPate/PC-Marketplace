@@ -35,16 +35,15 @@ test("hybrid GPU core survives maker/variant edits and custom titles stay under 
   });
   await start(page, "gpu");
   await page.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("3080");
-  await page.getByRole("button", { name: "NVIDIA GeForce RTX 3080 10 GB", exact: true }).click();
+  await page.getByRole("button", { name: "NVIDIA RTX 3080 10 GB", exact: true }).click();
   await page.getByLabel("Merkki", { exact: false }).fill("MSI");
   await page.getByLabel(/^Malli/).fill("Gaming X Trio");
   await expect(page.getByText("Katalogimalli valittu")).toBeVisible();
-  await expect(page.locator('[data-listing-field="title"]')).toHaveValue("MSI Gaming X Trio GeForce RTX 3080 10 GB");
+  await expect(page.locator('[data-listing-field="title"]')).toHaveValue("MSI Gaming X Trio RTX 3080 10 GB");
   await page.locator('[data-listing-field="title"]').fill("Oma näytönohjaimen otsikko");
   await page.getByLabel(/^Malli/).fill("Ventus");
   await expect(page.locator('[data-listing-field="title"]')).toHaveValue("Oma näytönohjaimen otsikko");
-  await next(page);
-  await expect(page.getByLabel("Piirimalli", { exact: true })).toHaveValue("GeForce RTX 3080");
+  await expect(page.getByLabel("Piirimalli", { exact: true })).toHaveValue("RTX 3080");
   await publish(page);
   const saved = await page.evaluate(() =>
     JSON.parse(localStorage.getItem("pc-marketplace.demo-listings")!).find(
@@ -54,16 +53,16 @@ test("hybrid GPU core survives maker/variant edits and custom titles stay under 
   expect(saved).toMatchObject({
     catalogModelId: modelId,
     brand: "MSI",
-    specs: { brand: "MSI", model: "Ventus", coreModel: "GeForce RTX 3080", vram: "10 GB" },
+    specs: { brand: "MSI", model: "Ventus", coreModel: "RTX 3080", vram: "10 GB" },
   });
 });
 
 test("RAM uses capacity and module fields without an exact model number", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await start(page, "memory");
+  await page.getByRole("radio", { name: "Kirjoitan itse" }).check();
   await page.getByLabel("Merkki", { exact: false }).fill("Kingston");
   await page.getByLabel(/^Malli/).fill("Fury Beast");
-  await next(page);
   await page.getByLabel("Kapasiteetti", { exact: true }).fill("32 GB");
   await page.getByLabel("Muistityyppi", { exact: true }).fill("DDR4");
   await page.getByLabel("Muistimoduulien määrä", { exact: true }).fill("2");
@@ -78,7 +77,7 @@ test("RAM uses capacity and module fields without an exact model number", async 
   await page.getByRole("button", { name: "Muokkaa ilmoitusta" }).click();
   await page
     .getByRole("navigation", { name: "Ilmoituksen muokkauksen vaiheet" })
-    .getByRole("button", { name: /Tiedot$/ })
+    .getByRole("button", { name: /Tuotetiedot$/ })
     .click();
   await expect(page.getByLabel("Moduulin kapasiteetti (GB)", { exact: true })).toHaveValue("16");
   await expect(page.getByLabel("Muistityyppi", { exact: true })).toHaveValue("DDR4");
@@ -86,7 +85,6 @@ test("RAM uses capacity and module fields without an exact model number", async 
 
 test("incomplete PC parts and RGB persist, edit correctly and filter in marketplace", async ({ page }) => {
   await start(page, "pc");
-  await next(page);
   await page.getByLabel("RGB-valaistus", { exact: false }).check();
   const parts = page.locator(".pc-component");
   for (const part of await parts.all()) await part.getByRole("checkbox", { name: "En tiedä", exact: true }).check();
@@ -103,7 +101,7 @@ test("incomplete PC parts and RGB persist, edit correctly and filter in marketpl
   await page.getByRole("button", { name: "Muokkaa ilmoitusta" }).click();
   await page
     .getByRole("navigation", { name: "Ilmoituksen muokkauksen vaiheet" })
-    .getByRole("button", { name: /Tiedot$/ })
+    .getByRole("button", { name: /Tuotetiedot$/ })
     .click();
   await expect(gpu.getByRole("checkbox", { name: "Puuttuu / ei mukana", exact: true })).toBeChecked();
   await expect(page.getByLabel("RGB-valaistus", { exact: false })).toBeChecked();

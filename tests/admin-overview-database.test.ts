@@ -1355,6 +1355,116 @@ describe("product model catalog", () => {
     ).rows[0];
   const save = (data: unknown) =>
     `select public.save_product_model('${JSON.stringify(data).replaceAll("'", "''")}'::jsonb) as id`;
+  it("populates manufacturer specs and searchable legacy SKUs without merging capacity variants", async () => {
+    const cpu = (await asRole("anon", null, search("cpu", "Ryzen 5 5600"))).rows[0].data as any;
+    expect(cpu.items.find((m: any) => m.name === "Ryzen 5 5600").specs).toMatchObject({
+      cores: "6",
+      threads: "12",
+      socket: "AM4",
+      series: "Ryzen 5",
+    });
+    const ram = (await asRole("anon", null, search("memory", "KF432C16BBK2/32"))).rows[0].data as any;
+    expect(ram.total).toBe(1);
+    expect(ram.items[0]).toMatchObject({
+      name: "FURY Beast",
+      variant: "32 GB (2 x 16 GB) DDR4-3200",
+      specs: { capacity: "32 GB", memoryType: "DDR4", modules: "2", moduleCapacity: "16" },
+    });
+    const ssds = (await asRole("anon", null, search("storage", "990 PRO"))).rows[0].data as any;
+    expect(ssds.items.map((m: any) => m.variant).sort()).toEqual(["1 TB", "2 TB", "4 TB"]);
+    expect(ssds.items.every((m: any) => m.specs.driveFormat === "M.2" && m.source_url.startsWith("https://"))).toBe(
+      true,
+    );
+    expect(
+      (
+        await db.query<any>(
+          "select count(*)::int n from public.catalog_product_models where name ilike '%GeForce%' or name||variant like '%·%' ",
+        )
+      ).rows[0].n,
+    ).toBe(0);
+    expect(
+      (await db.query<any>("select count(*)::int n from public.catalog_product_models where source_url<>''")).rows[0].n,
+    ).toBeGreaterThan(1100);
+  });
+  it("validates specs on admin writes, preserves old-client data, and normalizes future labels", async () => {
+    const payload = {
+      category: "memory",
+      brand: "Test",
+      name: "GeForce Test · model",
+      variant: "KF432C16BBK2/16 · 16GB",
+      specs: { capacity: "16 GB" },
+      source_url: "https://example.test/specs",
+    };
+    const id = (await asRole("authenticated", adminId, save(payload))).rows[0].id;
+    try {
+      let row = (await db.query<any>("select * from public.catalog_product_models where id=$1", [id])).rows[0];
+      expect(row).toMatchObject({ name: "Test model", variant: "16 GB", specs: { capacity: "16 GB" } });
+      const { specs, source_url, ...oldClient } = row;
+      await asRole("authenticated", adminId, save({ ...oldClient, aliases: "Older editor" }));
+      row = (await db.query<any>("select * from public.catalog_product_models where id=$1", [id])).rows[0];
+      expect(row).toMatchObject({ specs, source_url });
+      for (const invalid of [null, [], { cores: 4 }, { cores: "a".repeat(301) }, { "bad key": "value" }])
+        await expect(asRole("authenticated", adminId, save({ ...row, specs: invalid }))).rejects.toMatchObject({
+          code: "23514",
+        });
+      await expect(
+        asRole("authenticated", adminId, save({ ...row, source_url: "javascript:alert(1)" })),
+      ).rejects.toMatchObject({ code: "23514" });
+      for (const identity of [null, userId])
+        await expect(
+          asRole("authenticated", identity, save({ ...row, specs: { capacity: "32 GB" } })),
+        ).rejects.toMatchObject({ code: "42501" });
+      await asRole("authenticated", adminId, save({ ...row, specs: { capacity: "32 GB" } }));
+      await expect(
+        asRole("authenticated", adminId, save({ ...row, specs: { capacity: "64 GB" } })),
+      ).rejects.toMatchObject({ code: "40001" });
+    } finally {
+      await db.query("delete from public.catalog_product_models where id=$1", [id]);
+    }
+  });
+  it("reapplying the seed keeps IDs, listing references, inactive state and administrator corrections", async () => {
+    const row = (
+      await db.query<any>(
+        "select * from public.catalog_product_models where category='cpu' and name='Ryzen 5 5600' and variant=''",
+      )
+    ).rows[0];
+    const listingId = await listing();
+    await db.query(
+      "update public.listings set category='cpu',specs=jsonb_build_object('_catalog_model_id',$1::text) where id=$2",
+      [row.id, listingId],
+    );
+    try {
+      await db.query(
+        "update public.catalog_product_models set is_active=false,specs=specs||'{\"clock\":\"Admin correction\"}',aliases='Custom alias' where id=$1",
+        [row.id],
+      );
+      await db.exec(
+        await readFile(
+          new URL("../supabase/migrations/20261003201905_expanded_component_catalog.sql", import.meta.url),
+          "utf8",
+        ),
+      );
+      const after = (await db.query<any>("select * from public.catalog_product_models where id=$1", [row.id])).rows[0];
+      expect(after).toMatchObject({
+        id: row.id,
+        is_active: false,
+        aliases: "Custom alias",
+        specs: { clock: "Admin correction" },
+      });
+      expect(
+        (await db.query<any>("select catalog_model_id from public.listings where id=$1", [listingId])).rows[0]
+          .catalog_model_id,
+      ).toBe(row.id);
+      expect(((await asRole("anon", null, search("cpu", "Custom alias"))).rows[0].data as any).total).toBe(0);
+    } finally {
+      await db.query("update public.catalog_product_models set is_active=$2,specs=$3,aliases=$4 where id=$1", [
+        row.id,
+        row.is_active,
+        JSON.stringify(row.specs),
+        row.aliases,
+      ]);
+    }
+  });
   it("keeps at least three starter models in every launch category while allowing catalog growth", async () => {
     const rows = (
       await db.query<any>("select category,count(*)::integer as n from public.catalog_product_models group by category")

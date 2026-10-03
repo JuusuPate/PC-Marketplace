@@ -23,6 +23,8 @@ export interface ProductModel {
   aliases: string;
   is_active: boolean;
   updated_at: string;
+  specs?: Record<string, string>;
+  source_url?: string;
 }
 export interface ModelMarketRow extends ProductModel {
   active_listings: number;
@@ -35,9 +37,11 @@ export interface ModelPage<T = ProductModel> {
   items: T[];
   unlinked_listings: number;
 }
-const sanitizeModelText = (value: string) =>
+export const sanitizeModelText = (value: string) =>
   value
     .trim()
+    .replace(/\bGeForce\s*/gi, "")
+    .replace(/·/g, " ")
     .replace(/^\*+\s*/, "")
     .replace(/\s+/g, " ")
     .trim();
@@ -75,6 +79,25 @@ export function parseModelPage(data: unknown, admin = false): ModelPage<ModelMar
     )
       throw Error("Invalid product model");
     seen.add(r.id);
+    if (
+      r.specs !== undefined &&
+      (!r.specs ||
+        typeof r.specs !== "object" ||
+        Array.isArray(r.specs) ||
+        Object.entries(r.specs).length > 40 ||
+        Object.entries(r.specs).some(
+          ([key, value]) =>
+            !/^[a-zA-Z][a-zA-Z0-9_]{0,63}$/.test(key) || typeof value !== "string" || value.length > 300,
+        ))
+    )
+      throw Error("Invalid product specifications");
+    if (
+      r.source_url !== undefined &&
+      (typeof r.source_url !== "string" ||
+        r.source_url.length > 1000 ||
+        (r.source_url !== "" && !/^https:\/\//.test(r.source_url)))
+    )
+      throw Error("Invalid product source");
     const m = r as unknown as ModelMarketRow;
     if (admin)
       for (const [sample, price] of [
@@ -106,7 +129,25 @@ export async function loadProductModels(
     throw Error("Invalid model search");
   if (!supabase) {
     if (admin) throw Error("Supabase required");
-    return { items: [], total: 0, unlinked_listings: 0 };
+    const { default: models } = await import("../data/demo-catalog.json");
+    const needle = query.trim().toLowerCase();
+    const found = models.filter(
+      (m) =>
+        m.category === category && [m.brand, m.name, m.variant, m.aliases].join(" ").toLowerCase().includes(needle),
+    );
+    return {
+      items: found.slice(page * 20, (page + 1) * 20).map((m) => ({
+        ...m,
+        category: m.category as Category,
+        specs: m.specs as Record<string, string>,
+        active_listings: 0,
+        completed_orders: 0,
+        asking_average_minor: null,
+        sold_average_minor: null,
+      })),
+      total: found.length,
+      unlinked_listings: 0,
+    };
   }
   const { data, error } = await supabase.rpc(admin ? "get_admin_model_market" : "search_product_models", {
     p_category: category,
