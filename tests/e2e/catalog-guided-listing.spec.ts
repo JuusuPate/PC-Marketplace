@@ -1,4 +1,4 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Page, type Locator } from "@playwright/test";
 
 async function start(page: Page, category: string) {
   await page.goto("/myy/uusi");
@@ -7,17 +7,30 @@ async function start(page: Page, category: string) {
   await page.getByRole("button", { name: "Jatka", exact: true }).click();
 }
 
+async function chooseMode(scope: Page | Locator, name: "Tuotekatalogista" | "Kirjoitan itse") {
+  const change = scope.getByRole("button", { name: "Vaihda syöttötapaa", exact: true });
+  if (await change.isVisible()) {
+    await change.click();
+    await expect(scope.getByRole("button", { name: "Tuotekatalogista", exact: true })).toBeFocused();
+  }
+  await scope.getByRole("button", { name, exact: true }).click();
+  await expect(change).toBeFocused();
+  await expect(scope.getByRole("button", { name: "Tuotekatalogista", exact: true })).toHaveCount(0);
+  await expect(scope.getByRole("button", { name: "Kirjoitan itse", exact: true })).toHaveCount(0);
+}
+
 test("catalog CPU specs are visible and locked, manual mode preserves them and hides the catalog", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await start(page, "cpu");
-  await expect(page.getByRole("radio", { name: "Tuotekatalogista" })).not.toBeChecked();
-  await expect(page.getByRole("radio", { name: "Kirjoitan itse" })).not.toBeChecked();
+  await expect(page.getByRole("button", { name: "Tuotekatalogista", exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Kirjoitan itse", exact: true })).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
   await expect(page.getByRole("searchbox", { name: "Hae tuotemallia" })).toHaveCount(0);
   await expect(page.locator('[data-listing-field="title"]')).toHaveCount(0);
   await expect(page.locator('[data-listing-field="description"]')).not.toBeVisible();
   await page.getByRole("button", { name: "Seuraava", exact: true }).click();
   await expect(page.locator("#input-mode-error")).toHaveText("Valitse ensin, miten haluat antaa tuotteen tiedot.");
-  await page.getByRole("radio", { name: "Tuotekatalogista" }).check();
+  await chooseMode(page, "Tuotekatalogista");
   await expect(page.locator("#input-mode-error")).toHaveCount(0);
   await expect(page.locator('[data-listing-field="title"]')).toHaveValue("");
   await page.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("Ryzen 5 5600");
@@ -28,12 +41,12 @@ test("catalog CPU specs are visible and locked, manual mode preserves them and h
   await expect(page.getByLabel("Ytimien määrä", { exact: true })).toHaveCount(0);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
   await page.getByRole("button", { name: "Muokkaa manuaalisesti" }).click();
-  await expect(page.getByRole("radio", { name: "Kirjoitan itse" })).toBeChecked();
-  await expect(page.getByRole("radio", { name: "Tuotekatalogista" })).not.toBeChecked();
+  await expect(page.locator(".catalog-input-mode-selected")).toContainText("Kirjoitan itse");
+  await expect(page.getByRole("button", { name: "Tuotekatalogista", exact: true })).toHaveCount(0);
   await expect(page.getByRole("searchbox", { name: "Hae tuotemallia" })).toHaveCount(0);
   await expect(page.getByLabel("Ytimien määrä", { exact: true })).toHaveValue("6");
   await expect(page.getByLabel("Valmistaja", { exact: false })).toHaveValue("AMD");
-  await page.getByRole("radio", { name: "Tuotekatalogista" }).check();
+  await chooseMode(page, "Tuotekatalogista");
   await expect(page.getByLabel("Ytimien määrä", { exact: true })).toHaveCount(0);
   await page.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("Ryzen 7 5800X");
   await page.getByRole("button", { name: "AMD Ryzen 7 5800X", exact: true }).click();
@@ -73,7 +86,7 @@ test("catalog CPU specs are visible and locked, manual mode preserves them and h
 
 test("RAM and storage expose capacities without SKU, PCIe or interface inputs; PSU has dropdowns", async ({ page }) => {
   await start(page, "memory");
-  await page.getByRole("radio", { name: "Tuotekatalogista" }).check();
+  await chooseMode(page, "Tuotekatalogista");
   await page.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("KF432C16BBK2/32");
   const option = page.getByRole("button", { name: "Kingston FURY Beast 32 GB (2 x 16 GB) DDR4-3200", exact: true });
   await expect(option).not.toContainText("KF432");
@@ -85,9 +98,9 @@ test("RAM and storage expose capacities without SKU, PCIe or interface inputs; P
   await page.getByRole("button", { name: "Takaisin", exact: true }).click();
   await page.locator('[data-listing-field="category"]').selectOption("storage");
   await page.getByRole("button", { name: "Jatka", exact: true }).click();
-  await expect(page.getByRole("radio", { name: "Tuotekatalogista" })).not.toBeChecked();
+  await expect(page.getByRole("button", { name: "Tuotekatalogista", exact: true })).toBeVisible();
   await expect(page.getByRole("searchbox", { name: "Hae tuotemallia" })).toHaveCount(0);
-  await page.getByRole("radio", { name: "Tuotekatalogista" }).check();
+  await chooseMode(page, "Tuotekatalogista");
   await page.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("990 PRO 2 TB");
   await page.getByRole("button", { name: "Samsung 990 PRO 2 TB", exact: true }).click();
   await expect(page.locator(".catalog-product-summary")).toContainText("Tallennuslaitteen kokoM.2");
@@ -98,7 +111,7 @@ test("RAM and storage expose capacities without SKU, PCIe or interface inputs; P
   await page.getByRole("button", { name: "Takaisin", exact: true }).click();
   await page.locator('[data-listing-field="category"]').selectOption("psu");
   await page.getByRole("button", { name: "Jatka", exact: true }).click();
-  await page.getByRole("radio", { name: "Kirjoitan itse" }).check();
+  await chooseMode(page, "Kirjoitan itse");
   await page.getByRole("combobox", { name: "Hyötysuhdeluokitus", exact: true }).selectOption("80+ Gold");
   await page.getByRole("combobox", { name: "Koko", exact: true }).selectOption("SFX");
 });
@@ -107,29 +120,29 @@ test("PC has separate component catalogs and no whole-PC catalog", async ({ page
   await start(page, "pc");
   await expect(page.getByRole("searchbox", { name: "Hae tuotemallia" })).toHaveCount(0);
   const cpu = page.getByRole("group", { name: "Prosessori", exact: true });
-  await cpu.getByRole("radio", { name: "Tuotekatalogista" }).check();
+  await chooseMode(cpu, "Tuotekatalogista");
   await cpu.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("Ryzen 5 5600");
   await cpu.getByRole("button", { name: "AMD Ryzen 5 5600", exact: true }).click();
   await expect(cpu.locator(".pc-component__selection")).toHaveText("AMD Ryzen 5 5600");
   const ram = page.getByRole("group", { name: "Keskusmuisti (RAM)", exact: true });
-  await ram.getByRole("radio", { name: "Tuotekatalogista" }).check();
+  await chooseMode(ram, "Tuotekatalogista");
   await ram.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("KF432C16BBK2/32");
   await ram.getByRole("button", { name: "Kingston FURY Beast 32 GB (2 x 16 GB) DDR4-3200", exact: true }).click();
-  await ram.getByRole("radio", { name: "Kirjoitan itse" }).check();
+  await chooseMode(ram, "Kirjoitan itse");
   await expect(ram.getByLabel("RAM yhteensä (GB)", { exact: true })).toHaveValue("32 GB");
   await expect(ram.getByLabel("RAM-muistin tyyppi", { exact: true })).toHaveValue("DDR4");
 });
 
 test("changing a catalog product clears its title and specifications", async ({ page }) => {
   await start(page, "cpu");
-  await page.getByRole("radio", { name: "Tuotekatalogista" }).check();
+  await chooseMode(page, "Tuotekatalogista");
   await page.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("Ryzen 5 5600");
   await page.getByRole("button", { name: "AMD Ryzen 5 5600", exact: true }).click();
   await page.locator('[data-listing-field="title"]').fill("Oma Ryzen-otsikko");
   await page.getByRole("button", { name: "Vaihda tuotetta", exact: true }).click();
   await expect(page.locator('[data-listing-field="title"]')).toHaveValue("");
   await expect(page.locator(".catalog-product-summary")).toHaveCount(0);
-  await page.getByRole("radio", { name: "Kirjoitan itse" }).check();
+  await chooseMode(page, "Kirjoitan itse");
   await expect(page.getByLabel("Ytimien määrä", { exact: true })).toHaveValue("");
   await expect(page.getByLabel("Valmistaja", { exact: false })).toHaveValue("");
   await page.locator('[data-listing-field="title"]').fill("Vanha otsikko");
@@ -141,7 +154,7 @@ test("changing a catalog product clears its title and specifications", async ({ 
 
 test("expanded RAM kits and legacy GTX VRAM versions populate the listing correctly", async ({ page }) => {
   await start(page, "memory");
-  await page.getByRole("radio", { name: "Tuotekatalogista" }).check();
+  await chooseMode(page, "Tuotekatalogista");
   await page.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("CMK32GX4M4B3200C16");
   await page
     .getByRole("button", { name: "Corsair VENGEANCE LPX 32 GB (4 x 8 GB) DDR4-3200 CL16 DIMM", exact: true })
@@ -154,7 +167,7 @@ test("expanded RAM kits and legacy GTX VRAM versions populate the listing correc
   await page.getByRole("button", { name: "Takaisin", exact: true }).click();
   await page.locator('[data-listing-field="category"]').selectOption("gpu");
   await page.getByRole("button", { name: "Jatka", exact: true }).click();
-  await page.getByRole("radio", { name: "Tuotekatalogista" }).check();
+  await chooseMode(page, "Tuotekatalogista");
   await page.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("GTX1060");
   await expect(page.getByRole("button", { name: "NVIDIA GTX 1060 3 GB", exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "NVIDIA GTX 1060 6 GB", exact: true })).toBeVisible();
@@ -164,7 +177,7 @@ test("expanded RAM kits and legacy GTX VRAM versions populate the listing correc
 
 test("new laptop RAM, HDD and Wi-Fi motherboard populate locked specifications", async ({ page }) => {
   await start(page, "memory");
-  await page.getByRole("radio", { name: "Tuotekatalogista" }).check();
+  await chooseMode(page, "Tuotekatalogista");
   await page.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("PVS416G320C8S");
   await page
     .getByRole("button", { name: "Patriot Viper Steel 16 GB (1 x 16 GB) DDR4-3200 CL18 SO-DIMM", exact: true })
@@ -177,7 +190,7 @@ test("new laptop RAM, HDD and Wi-Fi motherboard populate locked specifications",
   await page.getByRole("button", { name: "Takaisin", exact: true }).click();
   await page.locator('[data-listing-field="category"]').selectOption("storage");
   await page.getByRole("button", { name: "Jatka", exact: true }).click();
-  await page.getByRole("radio", { name: "Tuotekatalogista" }).check();
+  await chooseMode(page, "Tuotekatalogista");
   await page.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("ST2000DM");
   await expect(page.getByRole("button", { name: "Seagate BarraCuda 2 TB 5400 rpm", exact: true })).toBeVisible();
   await page.getByRole("button", { name: "Seagate BarraCuda 2 TB 7200 rpm", exact: true }).click();
@@ -186,7 +199,7 @@ test("new laptop RAM, HDD and Wi-Fi motherboard populate locked specifications",
   await page.getByRole("button", { name: "Takaisin", exact: true }).click();
   await page.locator('[data-listing-field="category"]').selectOption("motherboard");
   await page.getByRole("button", { name: "Jatka", exact: true }).click();
-  await page.getByRole("radio", { name: "Tuotekatalogista" }).check();
+  await chooseMode(page, "Tuotekatalogista");
   await page.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("B860 Pro RS WiFi");
   await page.getByRole("button", { name: "ASRock B860 Pro RS WiFi", exact: true }).click();
   await expect(summary).toContainText("LGA 1851");
@@ -196,7 +209,7 @@ test("new laptop RAM, HDD and Wi-Fi motherboard populate locked specifications",
 
 test("ADATA DDR5 kits and fractional GTX memory keep the correct title and specifications", async ({ page }) => {
   await start(page, "memory");
-  await page.getByRole("radio", { name: "Tuotekatalogista" }).check();
+  await chooseMode(page, "Tuotekatalogista");
   await page.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("AX5U6000C3016G-DTLABBK");
   await page
     .getByRole("button", { name: "ADATA XPG LANCER BLADE 32 GB (2 x 16 GB) DDR5-6000 CL30 DIMM", exact: true })
@@ -208,7 +221,7 @@ test("ADATA DDR5 kits and fractional GTX memory keep the correct title and speci
   await page.getByRole("button", { name: "Takaisin", exact: true }).click();
   await page.locator('[data-listing-field="category"]').selectOption("gpu");
   await page.getByRole("button", { name: "Jatka", exact: true }).click();
-  await page.getByRole("radio", { name: "Tuotekatalogista" }).check();
+  await chooseMode(page, "Tuotekatalogista");
   await page.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("GTX460");
   await expect(page.getByRole("button", { name: "NVIDIA GTX 460 1 GB", exact: true })).toBeVisible();
   await page.getByRole("button", { name: "NVIDIA GTX 460 0.75 GB", exact: true }).click();
@@ -223,7 +236,7 @@ test("ADATA DDR5 kits and fractional GTX memory keep the correct title and speci
 
 test("new cases and PSUs fill locked compatibility, size and correct efficiency in the title", async ({ page }) => {
   await start(page, "case");
-  await page.getByRole("radio", { name: "Tuotekatalogista" }).check();
+  await chooseMode(page, "Tuotekatalogista");
   await page.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("Terra");
   await page.getByRole("button", { name: "Fractal Design Terra", exact: true }).click();
   const summary = page.locator(".catalog-product-summary");
@@ -234,7 +247,7 @@ test("new cases and PSUs fill locked compatibility, size and correct efficiency 
   await page.getByRole("button", { name: "Takaisin", exact: true }).click();
   await page.locator('[data-listing-field="category"]').selectOption("psu");
   await page.getByRole("button", { name: "Jatka", exact: true }).click();
-  await page.getByRole("radio", { name: "Tuotekatalogista" }).check();
+  await chooseMode(page, "Tuotekatalogista");
   await page.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("SFX L Power");
   await page.getByRole("button", { name: "be quiet! SFX L Power 600 W", exact: true }).click();
   await expect(summary).toContainText("SFX-L");
@@ -252,7 +265,7 @@ test("new cases and PSUs fill locked compatibility, size and correct efficiency 
 
 test("new manufacturers expose case width constraints and small PSU efficiency in the listing", async ({ page }) => {
   await start(page, "case");
-  await page.getByRole("radio", { name: "Tuotekatalogista" }).check();
+  await chooseMode(page, "Tuotekatalogista");
   await page.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("Antec C8");
   await page.getByRole("button", { name: "Antec C8 ARGB", exact: true }).click();
   const summary = page.locator(".catalog-product-summary");
@@ -262,7 +275,7 @@ test("new manufacturers expose case width constraints and small PSU efficiency i
   await page.getByRole("button", { name: "Takaisin", exact: true }).click();
   await page.locator('[data-listing-field="category"]').selectOption("psu");
   await page.getByRole("button", { name: "Jatka", exact: true }).click();
-  await page.getByRole("radio", { name: "Tuotekatalogista" }).check();
+  await chooseMode(page, "Tuotekatalogista");
   await page.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("ROG Loki");
   await page.getByRole("button", { name: "ASUS ROG Loki 1200 W ATX 3.1", exact: true }).click();
   await expect(summary).toContainText("80+ Titanium");

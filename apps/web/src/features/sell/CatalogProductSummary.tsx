@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import type { Category, Locale } from "../../types";
 import { getGuidedSpecificationFields } from "./specification-fields";
 
@@ -66,19 +67,69 @@ export function CatalogInputMode({
   onChange: (value: "catalog" | "manual") => void;
   name: string;
 }) {
+  const fi = locale === "fi";
+  const [choosing, setChoosing] = useState(false);
+  const firstChoice = useRef<HTMLButtonElement>(null);
+  const changeButton = useRef<HTMLButtonElement>(null);
+  const focusTarget = useRef<"choice" | "change" | null>(null);
+  useEffect(() => {
+    if (focusTarget.current === "choice") firstChoice.current?.focus();
+    if (focusTarget.current === "change") changeButton.current?.focus();
+    focusTarget.current = null;
+  }, [choosing, value]);
+  const select = (mode: "catalog" | "manual") => {
+    focusTarget.current = "change";
+    setChoosing(false);
+    onChange(mode);
+  };
+  if (value !== null && !choosing) {
+    return (
+      <div className="catalog-input-mode-selected">
+        <span>
+          {value === "catalog" ? (fi ? "Tuotekatalogista" : "From catalog") : fi ? "Kirjoitan itse" : "Manual entry"}
+        </span>
+        <button
+          type="button"
+          className="catalog-input-mode__change"
+          ref={changeButton}
+          onClick={() => {
+            focusTarget.current = "choice";
+            setChoosing(true);
+          }}
+        >
+          {fi ? "Vaihda syöttötapaa" : "Change input method"}
+        </button>
+      </div>
+    );
+  }
   return (
     <fieldset className="catalog-input-mode">
-      <legend>
-        {locale === "fi" ? "Miten haluat antaa tuotteen tiedot?" : "How would you like to enter the product?"}
-      </legend>
-      <label>
-        <input type="radio" name={name} checked={value === "catalog"} onChange={() => onChange("catalog")} />
-        {locale === "fi" ? "Tuotekatalogista" : "From catalog"}
-      </label>
-      <label>
-        <input type="radio" name={name} checked={value === "manual"} onChange={() => onChange("manual")} />
-        {locale === "fi" ? "Kirjoitan itse" : "Manual entry"}
-      </label>
+      <legend>{fi ? "Miten haluat antaa tuotteen tiedot?" : "How would you like to enter the product?"}</legend>
+      <button
+        type="button"
+        name={name}
+        value="catalog"
+        className="catalog-input-mode__choice"
+        aria-label={fi ? "Tuotekatalogista" : "From catalog"}
+        aria-pressed={value === "catalog"}
+        ref={firstChoice}
+        onClick={() => select("catalog")}
+      >
+        <strong>{fi ? "Tuotekatalogista" : "From catalog"}</strong>
+        <span>{fi ? "Hae tuote ja täytä tiedot katalogista." : "Find a product and use its catalog details."}</span>
+      </button>
+      <button
+        type="button"
+        name={name}
+        value="manual"
+        className="catalog-input-mode__choice"
+        aria-label={fi ? "Kirjoitan itse" : "Manual entry"}
+        aria-pressed={value === "manual"}
+        onClick={() => select("manual")}
+      >
+        <strong>{fi ? "Kirjoitan itse" : "Manual entry"}</strong>
+        <span>{fi ? "Anna tuotteen nimi ja tiedot itse." : "Enter the product name and details yourself."}</span>
+      </button>
     </fieldset>
   );
 }

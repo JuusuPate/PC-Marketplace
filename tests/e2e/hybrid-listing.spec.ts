@@ -5,7 +5,8 @@ async function start(page: Page, category: string) {
   await page.getByRole("button", { name: "Käytä demotunnusta" }).click();
   await page.locator('[data-listing-field="category"]').selectOption(category);
   await page.getByRole("button", { name: "Jatka", exact: true }).click();
-  if (!["pc", "fans"].includes(category)) await page.getByRole("radio", { name: "Tuotekatalogista" }).check();
+  if (!["pc", "fans"].includes(category))
+    await page.getByRole("button", { name: "Tuotekatalogista", exact: true }).click();
   await page.locator('[data-listing-field="price"]').fill("300");
 }
 const next = (page: Page) => page.getByRole("button", { name: "Jatka", exact: true }).click();
@@ -62,7 +63,8 @@ test("hybrid GPU core survives maker/variant edits and custom titles stay under 
 test("RAM uses capacity and module fields without an exact model number", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await start(page, "memory");
-  await page.getByRole("radio", { name: "Kirjoitan itse" }).check();
+  await page.getByRole("button", { name: "Vaihda syöttötapaa", exact: true }).click();
+  await page.getByRole("button", { name: "Kirjoitan itse", exact: true }).click();
   await page.getByLabel("Merkki", { exact: false }).fill("Kingston");
   await page.getByLabel(/^Malli/).fill("Fury Beast");
   await page.getByLabel("Kapasiteetti", { exact: true }).fill("32 GB");

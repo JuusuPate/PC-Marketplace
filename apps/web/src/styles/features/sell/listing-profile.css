@@ -82,28 +82,85 @@
   margin-bottom: 16px;
 }
 .catalog-input-mode {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px 24px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  min-width: 0;
   border: 0;
   padding: 0;
-  margin: 0 0 20px;
+  margin: 0 0 24px;
 }
 .catalog-input-mode legend {
-  margin-bottom: 12px;
+  margin-bottom: 16px;
   font-weight: 700;
 }
-.create-listing-form .catalog-input-mode label {
+.catalog-input-mode__choice {
   display: flex;
-  flex-direction: row;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
   gap: 8px;
+  min-width: 0;
+  min-height: 112px;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  color: var(--ink);
+  background: var(--white);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease;
 }
-.create-listing-form .catalog-input-mode input {
-  width: 18px;
-  height: 18px;
-  min-height: 18px;
-  accent-color: var(--accent-strong);
+.catalog-input-mode__choice strong {
+  font-size: 18px;
+}
+.catalog-input-mode__choice span {
+  color: var(--ink-soft);
+  font-size: 14px;
+  line-height: 1.5;
+}
+.catalog-input-mode__choice:hover,
+.catalog-input-mode__choice[aria-pressed="true"] {
+  border-color: var(--accent-strong);
+  box-shadow: 0 4px 14px rgba(10, 15, 21, 0.06);
+}
+.catalog-input-mode-selected {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.catalog-input-mode-selected > span {
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+.catalog-input-mode__change {
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--ink);
+  background: var(--white);
+  font-weight: 700;
+  cursor: pointer;
+}
+.catalog-input-mode__choice:focus-visible,
+.catalog-input-mode__change:focus-visible {
+  outline: 3px solid var(--accent-strong);
+  outline-offset: 3px;
+}
+@media (max-width: 620px) {
+  .catalog-input-mode {
+    grid-template-columns: 1fr;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .catalog-input-mode__choice {
+    transition: none;
+  }
 }
 .catalog-product-summary {
   margin-bottom: 24px;

@@ -34,7 +34,7 @@ test("demoilmoitus julkaistaan, kuvat selataan ja säilyvät muokkauksessa", asy
   await expect(page.locator("#category-error")).toContainText("Valitse kategoria");
   await page.locator('[data-listing-field="category"]').selectOption("gpu");
   await next(page);
-  await page.getByRole("radio", { name: "Kirjoitan itse" }).check();
+  await page.getByRole("button", { name: "Kirjoitan itse", exact: true }).click();
 
   await page.locator('[data-listing-field="title"]').fill("Testinäytönohjain RTX 4070");
   await page.locator('[data-listing-field="price"]').fill("499");
