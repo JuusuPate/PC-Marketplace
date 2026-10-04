@@ -827,7 +827,7 @@ export function CreateListingPage({
                 )}
                 {!awaitingInputMode && (
                   <div className="create-listing-fields listing-input-mode-content" key={inputMode ?? "manual"}>
-                    {safeCategory !== "fans" && (
+                    {safeCategory !== "fans" && inputMode !== "catalog" && (
                       <label className="field-wide listing-profile-auto-title">
                         <input
                           type="checkbox"
