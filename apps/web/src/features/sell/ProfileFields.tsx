@@ -5,6 +5,7 @@ import { getGuidedSpecificationFields, specificationCopy } from "./specification
 import { PC_MEMORY_KEYS, PC_PARTS, partStatusKey } from "./listing-profile";
 import { ProductModelPicker } from "./ProductModelPicker";
 import { modelLabel } from "../../lib/product-model-service";
+import { WattageInput } from "./WattageInput";
 import { CatalogInputMode } from "./CatalogProductSummary";
 
 export function ProfileField({
@@ -17,6 +18,9 @@ export function ProfileField({
   onChange: (value: string) => void;
 }) {
   const id = useId();
+  if (field.key === "wattage" && field.suggestions) {
+    return <WattageInput id={id} field={field} value={value} onChange={onChange} />;
+  }
   return (
     <label className="listing-profile-field">
       <span>{field.label}</span>

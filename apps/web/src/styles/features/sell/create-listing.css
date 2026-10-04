@@ -719,3 +719,63 @@
   font-size: 13px;
   font-weight: 850;
 }
+
+.wattage-field > label {
+  margin-bottom: 9px;
+}
+.wattage-field__control {
+  position: relative;
+}
+.specification-editor .wattage-field input {
+  padding-right: 48px;
+}
+.wattage-field__toggle {
+  position: absolute;
+  inset: 1px 1px 1px auto;
+  width: 44px;
+  background: transparent;
+  border: 0;
+  border-radius: 7px;
+  color: var(--ink);
+  cursor: pointer;
+}
+.wattage-field__toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -4px;
+}
+.wattage-field__options {
+  position: absolute;
+  z-index: 5;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  max-height: 240px;
+  overflow-y: auto;
+  padding: 5px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(10, 15, 21, 0.12);
+}
+.wattage-field__options > button {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  border-radius: 5px;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+.wattage-field__options > button:hover,
+.wattage-field__options > button.is-active,
+.wattage-field__options > button[aria-selected="true"] {
+  background: #f0f1f2;
+}
+
+/* Keep the expanded wattage menu visible outside the animated details panel. */
+.listing-details-panel[data-open="true"] > .listing-details-panel__inner:has(.wattage-field__options) {
+  overflow: visible;
+}

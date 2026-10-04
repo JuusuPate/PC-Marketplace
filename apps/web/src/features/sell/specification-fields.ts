@@ -240,6 +240,30 @@ export function getGuidedSpecificationFields(category: Category, locale: Locale)
         )[key];
     const suggestions = (
       {
+        // Rated output of real PSU models; sources: docs/psu-wattage-options.md.
+        wattage: [
+          "300 W",
+          "400 W",
+          "450 W",
+          "500 W",
+          "550 W",
+          "600 W",
+          "650 W",
+          "700 W",
+          "750 W",
+          "850 W",
+          "1000 W",
+          "1050 W",
+          "1200 W",
+          "1250 W",
+          "1300 W",
+          "1350 W",
+          "1500 W",
+          "1550 W",
+          "1600 W",
+          "1650 W",
+          "2000 W",
+        ],
         memoryType: ["DDR3", "DDR4", "DDR5"],
         pcMemoryType: ["DDR3", "DDR4", "DDR5"],
         capacity:

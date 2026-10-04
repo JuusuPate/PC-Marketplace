@@ -143,6 +143,46 @@ test("RAM and storage expose capacities without SKU, PCIe or interface inputs; P
   await page.getByRole("combobox", { name: "Koko", exact: true }).selectOption("SFX");
 });
 
+test("PSU wattage suggestions keep manual values and product details intact", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await start(page, "psu");
+  await chooseMode(page, "Kirjoitan itse");
+  const power = page.getByRole("combobox", { name: "Teho (W)", exact: true });
+  await page.getByRole("button", { name: "Teho (W)", exact: true }).click();
+  const list = page.getByRole("listbox", { name: "Teho (W)", exact: true });
+  await expect(list.getByRole("option", { name: "500 W", exact: true })).toBeVisible();
+  await expect(list.getByRole("option", { name: "550 W", exact: true })).toBeVisible();
+  await expect(list.getByRole("option", { name: "600 W", exact: true })).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
+  await list.getByRole("option", { name: "2000 W", exact: true }).click();
+  await expect(power).toHaveValue("2000 W");
+  await expect(list).toHaveCount(0);
+  await power.fill("550");
+  await expect(list.getByRole("option")).toHaveCount(1);
+  await power.press("ArrowDown");
+  await power.press("Enter");
+  await expect(power).toHaveValue("550 W");
+  await expect(list).toHaveCount(0);
+  await power.click();
+  await power.press("Escape");
+  await expect(list).toHaveCount(0);
+  await power.click();
+  await page.locator('[data-listing-field="price"]').click();
+  await expect(list).toHaveCount(0);
+  await page.locator('[data-listing-field="title"]').fill("Oma virtalähde");
+  await page.locator('[data-listing-field="price"]').fill("50");
+  await power.fill("550 W");
+  await page.getByRole("button", { name: "Seuraava", exact: true }).click();
+  await expect(page.locator(".listing-details-summary")).toContainText("550 W");
+  await page.getByRole("button", { name: "Takaisin tuotetietoihin", exact: true }).click();
+  // Suggestions must not turn this into a fixed select or discard an unlisted rating.
+  await power.fill("1075 W");
+  await page.getByRole("button", { name: "Seuraava", exact: true }).click();
+  await expect(page.locator(".listing-details-summary")).toContainText("1075 W");
+  await page.getByRole("button", { name: "Takaisin tuotetietoihin", exact: true }).click();
+  await expect(power).toHaveValue("1075 W");
+});
+
 test("PC has separate component catalogs and no whole-PC catalog", async ({ page }) => {
   await start(page, "pc");
   await expect(page.getByRole("searchbox", { name: "Hae tuotemallia" })).toHaveCount(0);
