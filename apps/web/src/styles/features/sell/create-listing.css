@@ -262,6 +262,7 @@
 .create-listing-fields select,
 .create-listing-seller input,
 .specification-editor input,
+.specification-editor select,
 .create-listing-description textarea {
   width: 100%;
   min-height: 52px;
@@ -284,6 +285,7 @@
 .create-listing-fields select:focus,
 .create-listing-seller input:focus,
 .specification-editor input:focus,
+.specification-editor select:focus,
 .create-listing-description textarea:focus {
   border-color: #0d4ba2;
   box-shadow: 0 0 0 4px rgba(37, 109, 210, 0.14);
