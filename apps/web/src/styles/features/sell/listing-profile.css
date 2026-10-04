@@ -164,8 +164,7 @@
 }
 .catalog-product-summary {
   margin-bottom: 24px;
-  border: 1px solid var(--accent-border);
-  border-left: 4px solid var(--accent-strong);
+  border: 1px solid var(--line);
   border-radius: 12px;
   padding: 20px;
   background: transparent;
@@ -203,7 +202,7 @@
 .catalog-product-summary__edit {
   background: transparent;
   border: 0;
-  border-top: 1px solid var(--accent-border);
+  border-top: 1px solid var(--line);
   color: var(--ink);
   width: 100%;
   text-align: left;
