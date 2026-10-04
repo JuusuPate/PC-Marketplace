@@ -705,16 +705,16 @@ export function CreateListingPage({
                   <option value="">Valitse kategoria</option>
                   {(
                     [
+                      "pc",
                       "gpu",
                       "cpu",
                       "memory",
                       "motherboard",
-                      "psu",
                       "storage",
+                      "psu",
                       "case",
                       "cooling",
                       "fans",
-                      "pc",
                       "other",
                     ] as Category[]
                   ).map((item) => (
