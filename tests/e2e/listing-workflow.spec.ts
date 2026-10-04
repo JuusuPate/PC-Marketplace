@@ -28,6 +28,7 @@ test("demoilmoitus julkaistaan, kuvat selataan ja säilyvät muokkauksessa", asy
   await page.goto("/myy/uusi");
   await page.getByRole("button", { name: "Käytä demotunnusta" }).click();
   await expect(page.getByRole("heading", { name: "Luo uusi ilmoitus" })).toBeVisible();
+  await expect(page.locator(".create-listing-preview")).toHaveCount(0);
 
   await next(page);
   await expect(page.locator("#category-error")).toContainText("Valitse kategoria");

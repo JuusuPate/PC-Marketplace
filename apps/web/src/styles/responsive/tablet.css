@@ -5,9 +5,6 @@
   .create-listing-page {
     width: min(100% - 48px, 1100px);
   }
-  .create-listing-form {
-    grid-template-columns: minmax(0, 1fr) 320px;
-  }
   .site-header {
     padding-inline: 24px;
     gap: 18px;
@@ -62,9 +59,6 @@
   }
   .listing-wizard ol {
     min-width: 560px;
-  }
-  .create-listing-preview__sticky {
-    position: static;
   }
   .demo-banner p {
     overflow: hidden;

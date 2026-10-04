@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from "react";
 import { Icon } from "../../components/Icon";
-import { getSafeListingImageUrl } from "../../components/ListingVisual";
 import { MARKETS } from "../../config/markets";
 import type { Messages } from "../../i18n/messages/fi";
 import type { PreparedListingImage } from "../../lib/listing-images";
@@ -190,7 +189,6 @@ export function CreateListingPage({
     initialListing || backendMode === "demo" ? "enabled" : "loading",
   );
   const existingImages = initialListing?.images ?? [];
-  const existingPreviewUrl = getSafeListingImageUrl(existingImages[0]);
   const displayedImageCount = images.length > 0 ? images.length : existingImages.length;
   const photosRequired = backendMode !== "demo" && existingImages.length === 0;
   useEffect(() => {
@@ -1326,44 +1324,6 @@ export function CreateListingPage({
             </button>
           </div>
         </div>
-
-        <aside className="create-listing-preview" aria-labelledby="listing-preview-title">
-          <div className="create-listing-preview__sticky">
-            <span className="section-kicker">{copy.listingPreview}</span>
-            <h2 id="listing-preview-title">{title.trim() || copy.previewTitlePlaceholder}</h2>
-            <p>{copy.reviewBeforePublish}</p>
-            <div className={`create-listing-preview__image visual--${visualByCategory[safeCategory]}`}>
-              {images[0] ? (
-                <img src={images[0].previewUrl} alt={images[0].alt || title} />
-              ) : existingPreviewUrl ? (
-                <img src={existingPreviewUrl} alt={existingImages[0]?.alt || title} />
-              ) : (
-                <span>{brand.trim().slice(0, 3).toUpperCase() || "PC"}</span>
-              )}
-            </div>
-            <dl>
-              <div>
-                <dt>{copy.price}</dt>
-                <dd>{formattedPrice}</dd>
-              </div>
-              <div>
-                <dt>{copy.condition}</dt>
-                <dd>{copy[condition === "fair" ? "conditionFair" : condition]}</dd>
-              </div>
-              <div>
-                <dt>{copy.publicLocation}</dt>
-                <dd>{city.trim() || "—"}</dd>
-              </div>
-              <div>
-                <dt>{copy.seller}</dt>
-                <dd>{user.name}</dd>
-              </div>
-            </dl>
-            <button className="button button--ghost button--full" type="button" onClick={onCancel} disabled={busy}>
-              {copy.cancel}
-            </button>
-          </div>
-        </aside>
       </form>
     </section>
   );

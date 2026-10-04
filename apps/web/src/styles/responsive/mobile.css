@@ -129,9 +129,6 @@
   .image-picker__previews {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  .create-listing-preview__sticky {
-    padding: 24px 20px;
-  }
   .category-route-copy p {
     font-size: 16px;
   }

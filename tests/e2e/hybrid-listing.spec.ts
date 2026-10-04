@@ -73,7 +73,7 @@ test("RAM uses capacity and module fields without an exact model number", async 
   await page.getByLabel("CAS-viive (CL)", { exact: true }).fill("16");
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
   const expected = "Kingston Fury Beast 32 GB (2×16 GB) DDR4 3200 MHz CL16";
-  await expect(page.locator("#listing-preview-title")).toHaveText(expected);
+  await expect(page.locator('[data-listing-field="title"]')).toHaveValue(expected);
   await publish(page);
   await expect(page.getByRole("heading", { name: expected, exact: true })).toBeVisible();
   await page.getByRole("button", { name: "Muokkaa ilmoitusta" }).click();
@@ -95,7 +95,7 @@ test("incomplete PC parts and RGB persist, edit correctly and filter in marketpl
   await processor.getByLabel("Prosessori", { exact: true }).fill("Ryzen 5 5600");
   const gpu = page.getByRole("group", { name: "Näytönohjain", exact: true });
   await gpu.getByRole("checkbox", { name: "Puuttuu / ei mukana", exact: true }).check();
-  await expect(page.locator("#listing-preview-title")).toContainText("Keskeneräinen kokoonpano Ryzen 5 5600 RGB");
+  await expect(page.locator('[data-listing-field="title"]')).toHaveValue("Keskeneräinen kokoonpano Ryzen 5 5600 RGB");
   await publish(page);
   await expect(page.getByText("Puuttuu / ei mukana", { exact: true })).toBeVisible();
   await expect(page.locator(".listing-rgb-tag")).toHaveText("RGB");
