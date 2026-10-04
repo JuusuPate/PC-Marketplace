@@ -84,6 +84,33 @@ test("catalog CPU specs are visible and locked, manual mode preserves them and h
   await expect(summary).toContainText("Ryzen 7 5800X");
 });
 
+test("missing catalog models switch to manual entry and preserve the entered listing details", async ({ page }) => {
+  await start(page, "cpu");
+  await chooseMode(page, "Tuotekatalogista");
+  await expect(
+    page.getByText("Jos tuotettasi ei löydy katalogista, voit kirjoittaa sen tiedot myös manuaalisesti.", {
+      exact: true,
+    }),
+  ).toBeVisible();
+  await page.locator('[data-listing-field="title"]').fill("Oma prosessori ilman katalogimallia");
+  await page.locator('[data-listing-field="price"]').fill("95");
+  await page.getByRole("combobox", { name: "Kunto (Pakollinen tieto)", exact: true }).selectOption("excellent");
+  await page.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("RigiTestimalliJotaEiOle987654");
+  const manual = page.getByRole("button", { name: "Malleja ei löytynyt. Täytä tiedot käsin", exact: true });
+  await expect(manual).toBeVisible();
+  await manual.press("Enter");
+  await expect(page.getByRole("searchbox", { name: "Hae tuotemallia" })).toHaveCount(0);
+  await expect(page.locator(".listing-profile-catalog")).toHaveCount(0);
+  await expect(page.locator(".catalog-input-mode-selected")).toContainText("Kirjoitan itse");
+  await expect(page.getByRole("button", { name: "Vaihda syöttötapaa", exact: true })).toBeFocused();
+  await expect(page.locator('[data-listing-field="title"]')).toHaveValue("Oma prosessori ilman katalogimallia");
+  await expect(page.locator('[data-listing-field="price"]')).toHaveValue("95");
+  await expect(page.getByRole("combobox", { name: "Kunto (Pakollinen tieto)", exact: true })).toHaveValue("excellent");
+  await page.getByLabel("Valmistaja", { exact: false }).fill("AMD");
+  await page.getByLabel("Ytimien määrä", { exact: true }).fill("8");
+  await expect(page.getByLabel("Ytimien määrä", { exact: true })).toHaveValue("8");
+});
+
 test("RAM and storage expose capacities without SKU, PCIe or interface inputs; PSU has dropdowns", async ({ page }) => {
   await start(page, "memory");
   await chooseMode(page, "Tuotekatalogista");
@@ -124,6 +151,10 @@ test("PC has separate component catalogs and no whole-PC catalog", async ({ page
   await cpu.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("Ryzen 5 5600");
   await cpu.getByRole("button", { name: "AMD Ryzen 5 5600", exact: true }).click();
   await expect(cpu.locator(".pc-component__selection")).toHaveText("AMD Ryzen 5 5600");
+  await cpu.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("RigiTestimalliJotaEiOle987654");
+  await cpu.getByRole("button", { name: "Malleja ei löytynyt. Täytä tiedot käsin", exact: true }).click();
+  await expect(cpu.getByRole("searchbox", { name: "Hae tuotemallia" })).toHaveCount(0);
+  await expect(cpu.getByRole("textbox", { name: "Prosessori", exact: true })).toHaveValue("AMD Ryzen 5 5600");
   const ram = page.getByRole("group", { name: "Keskusmuisti (RAM)", exact: true });
   await chooseMode(ram, "Tuotekatalogista");
   await ram.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("KF432C16BBK2/32");

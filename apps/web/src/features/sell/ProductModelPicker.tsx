@@ -20,11 +20,13 @@ export function ProductModelPicker({
   locale,
   selectedId,
   onSelect,
+  onManualEntry,
 }: {
   category: Category;
   locale: Locale;
   selectedId?: string | null;
   onSelect: (model: ProductModel | null) => void;
+  onManualEntry?: () => void;
 }) {
   const c = productCopy(locale);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
@@ -121,7 +123,13 @@ export function ProductModelPicker({
       {state.status === "ready" && shouldShowResults && (
         <div className="product-model-picker__results">
           {state.items.length === 0 ? (
-            <p className="product-model-picker__empty">{c.empty}</p>
+            onManualEntry ? (
+              <button type="button" className="product-model-picker__manual" onClick={onManualEntry}>
+                {c.empty}
+              </button>
+            ) : (
+              <p className="product-model-picker__empty">{c.empty}</p>
+            )
           ) : (
             <ul>
               {state.items.map((m) => (
@@ -162,6 +170,7 @@ export function ProductModelPicker({
           )}
         </div>
       )}
+      {onManualEntry && <p className="product-model-picker__hint">{c.manualHint}</p>}
     </div>
   );
 }

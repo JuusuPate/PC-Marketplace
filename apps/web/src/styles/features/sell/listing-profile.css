@@ -1,9 +1,9 @@
 .listing-profile-catalog {
   padding: 16px;
   margin-bottom: 22px;
-  border: 1px solid var(--accent-border);
+  border: 1px solid var(--line);
   border-radius: 10px;
-  background: var(--accent-soft);
+  background: transparent;
 }
 .listing-profile-catalog summary,
 .pc-component__catalog summary {

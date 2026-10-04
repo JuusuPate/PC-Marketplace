@@ -141,6 +141,7 @@ export function PcComponentFields({
                     <ProductModelPicker
                       category={part.category}
                       locale={locale}
+                      onManualEntry={() => setModes((current) => ({ ...current, [part.key]: "manual" }))}
                       onSelect={(model) => {
                         if (!model) return;
                         onChange({

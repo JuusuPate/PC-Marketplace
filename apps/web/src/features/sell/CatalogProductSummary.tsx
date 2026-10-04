@@ -72,9 +72,12 @@ export function CatalogInputMode({
   const firstChoice = useRef<HTMLButtonElement>(null);
   const changeButton = useRef<HTMLButtonElement>(null);
   const focusTarget = useRef<"choice" | "change" | null>(null);
+  const previousValue = useRef(value);
   useEffect(() => {
     if (focusTarget.current === "choice") firstChoice.current?.focus();
-    if (focusTarget.current === "change") changeButton.current?.focus();
+    if (focusTarget.current === "change" || (previousValue.current === "catalog" && value === "manual"))
+      changeButton.current?.focus();
+    previousValue.current = value;
     focusTarget.current = null;
   }, [choosing, value]);
   const select = (mode: "catalog" | "manual") => {

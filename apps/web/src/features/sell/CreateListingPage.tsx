@@ -808,6 +808,7 @@ export function CreateListingPage({
                           locale={locale}
                           selectedId={catalogModelId}
                           onSelect={selectProduct}
+                          onManualEntry={() => changeInputMode("manual")}
                         />
                         <FieldError id="catalog-error" message={fieldErrors.catalog} />
                       </div>
