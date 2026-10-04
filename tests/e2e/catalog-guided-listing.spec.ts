@@ -161,3 +161,35 @@ test("expanded RAM kits and legacy GTX VRAM versions populate the listing correc
   await page.getByRole("button", { name: "NVIDIA GTX 1060 3 GB", exact: true }).click();
   await expect(page.locator('[data-listing-field="title"]')).toHaveValue("GTX 1060 3 GB");
 });
+
+test("new laptop RAM, HDD and Wi-Fi motherboard populate locked specifications", async ({ page }) => {
+  await start(page, "memory");
+  await page.getByRole("radio", { name: "Tuotekatalogista" }).check();
+  await page.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("PVS416G320C8S");
+  await page
+    .getByRole("button", { name: "Patriot Viper Steel 16 GB (1 x 16 GB) DDR4-3200 CL18 SO-DIMM", exact: true })
+    .click();
+  const summary = page.locator(".catalog-product-summary");
+  await expect(summary).toContainText("Muistimoduulin kokoSO-DIMM");
+  await expect(summary).toContainText("Muistimoduulien määrä1");
+  await expect(page.getByLabel("Muistimoduulin koko", { exact: true })).toHaveCount(0);
+  await expect(page.locator('[data-listing-field="title"]')).not.toHaveValue(/PVS416/);
+  await page.getByRole("button", { name: "Takaisin", exact: true }).click();
+  await page.locator('[data-listing-field="category"]').selectOption("storage");
+  await page.getByRole("button", { name: "Jatka", exact: true }).click();
+  await page.getByRole("radio", { name: "Tuotekatalogista" }).check();
+  await page.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("ST2000DM");
+  await expect(page.getByRole("button", { name: "Seagate BarraCuda 2 TB 5400 rpm", exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "Seagate BarraCuda 2 TB 7200 rpm", exact: true }).click();
+  await expect(summary).toContainText("Tallennuslaitteen tyyppiSATA HDD");
+  await expect(summary).toContainText('Tallennuslaitteen koko3.5"');
+  await page.getByRole("button", { name: "Takaisin", exact: true }).click();
+  await page.locator('[data-listing-field="category"]').selectOption("motherboard");
+  await page.getByRole("button", { name: "Jatka", exact: true }).click();
+  await page.getByRole("radio", { name: "Tuotekatalogista" }).check();
+  await page.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("B860 Pro RS WiFi");
+  await page.getByRole("button", { name: "ASRock B860 Pro RS WiFi", exact: true }).click();
+  await expect(summary).toContainText("LGA 1851");
+  await expect(summary).toContainText("Wi-FiKyllä");
+  await expect(summary).toContainText("BluetoothKyllä");
+});

@@ -4,7 +4,12 @@ import { createHash } from "node:crypto";
 // Demo-only identities are deterministic and never used in Supabase mode.
 const migrationDirectory = new URL("../supabase/migrations/", import.meta.url);
 const seeds = (await readdir(migrationDirectory))
-  .filter((file) => file.endsWith("_expanded_component_catalog.sql") || file.endsWith("_ram_gtx_catalog_expansion.sql"))
+  .filter(
+    (file) =>
+      file.endsWith("_expanded_component_catalog.sql") ||
+      file.endsWith("_ram_gtx_catalog_expansion.sql") ||
+      file.endsWith("_multi_brand_component_catalog.sql"),
+  )
   .sort();
 const byIdentity = new Map();
 const identityOf = (model) =>

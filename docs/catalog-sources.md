@@ -1,19 +1,19 @@
 # Tuotekatalogi ja ilmoituksen tuotetiedot
 
-Päivitetty 4.10.2026. Katalogipäivitykset sisältävät 1 348 valmistajan julkaisemaa mallia tai kapasiteettiversiota. Aiemmat tunnisteet, niihin liitetyt ilmoitukset, ylläpidon omat tiedot ja piilotetut tuotteet säilyvät. Tämä on laaja lähteisiin perustuva kokoelma, ei lupaus kaikkien valmistajien kaikkien historiallisten tuotteiden kattamisesta.
+Päivitetty 4.10.2026. Katalogipäivitykset sisältävät 1 706 valmistajan julkaisemaa mallia tai kapasiteettiversiota. Aiemmat tunnisteet, niihin liitetyt ilmoitukset, ylläpidon omat tiedot ja piilotetut tuotteet säilyvät. Tämä on laaja lähteisiin perustuva kokoelma, ei lupaus kaikkien valmistajien kaikkien historiallisten tuotteiden kattamisesta.
 
-| Tuoteryhmä          | Päivityksen rivejä | Kattavuus                                                                       |
-| ------------------- | -----------------: | ------------------------------------------------------------------------------- |
-| Prosessorit         |                676 | AMD 392, Intel 284; vaihdettavat pöytäkone- ja työasemasuorittimet              |
-| Näytönohjaimet      |                204 | AMD 129, NVIDIA 68, Intel 7; eri muistimäärät erillään                          |
-| Emolevyt            |                 11 | MSI:n AM4-, AM5- ja LGA 1700 -malleja                                           |
-| RAM                 |                168 | Kingston 12, Corsair 152, G.Skill 4; DDR3, DDR3L, DDR4 ja DDR5, DIMM ja SO-DIMM |
-| Virtalähteet        |                 16 | Corsair RMx 2021/2024 ja SF 2024 sekä Seasonic FOCUS GX 2019                    |
-| Tallennuslaitteet   |                 95 | Samsungin SATA-/NVMe-levyt ja Kingston NV2 kapasiteeteittain                    |
-| Kotelot             |                 10 | Fractal Design ja NZXT H5 2022/2023                                             |
-| Prosessorijäähdytys |                 44 | Noctuan lähdeluettelon ilma- ja AIO-jäähdyttimet                                |
-| Tuulettimet         |                102 | Noctuan lähdeluettelon mallit, myös erikoisjännitteiset versiot nimettyinä      |
-| Oheislaitteet       |                 22 | Logitech-hiiret                                                                 |
+| Tuoteryhmä          | Päivityksen rivejä | Kattavuus                                                                                                    |
+| ------------------- | -----------------: | ------------------------------------------------------------------------------------------------------------ |
+| Prosessorit         |                676 | AMD 392, Intel 284; vaihdettavat pöytäkone- ja työasemasuorittimet                                           |
+| Näytönohjaimet      |                204 | AMD 129, NVIDIA 68, Intel 7; eri muistimäärät erillään                                                       |
+| Emolevyt            |                 17 | MSI, ASUS, ASRock ja Gigabyte; AM4, AM5, LGA 1700 ja LGA 1851                                                |
+| RAM                 |                485 | Kingston 12, Corsair 152, G.Skill 173, Patriot 110, TeamGroup 38; DDR3, DDR3L, DDR4 ja DDR5, DIMM ja SO-DIMM |
+| Virtalähteet        |                 20 | Corsair, Seasonic ja be quiet! Pure Power 12 M                                                               |
+| Tallennuslaitteet   |                115 | Samsung, Kingston NV2/KC3000, WD_BLACK SN770/SN850X ja Seagate BarraCuda HDD                                 |
+| Kotelot             |                 14 | Fractal Design, NZXT, Corsair 4000D/5000D AIRFLOW ja Lian Li LANCOOL 216                                     |
+| Prosessorijäähdytys |                 49 | Noctua, ARCTIC Freezer 36 / Liquid Freezer III 240 ja Thermalright                                           |
+| Tuulettimet         |                104 | Noctua ja Thermalright TL-C12C / TL-C12B V2; erikoisjännitteiset versiot nimettyinä                          |
+| Oheislaitteet       |                 22 | Logitech-hiiret                                                                                              |
 
 Kokonaismäärä tietokannassa voi olla suurempi: päivitys ei poista aiempia tai ylläpidon lisäämiä malleja. Valmiskoneiden vanhat katalogirivit säilytetään viitteiden vuoksi, mutta uuden pelikoneilmoituksen katalogihaku tapahtuu erikseen jokaiselle komponentille.
 
@@ -45,13 +45,28 @@ Uusi `ram_gtx_catalog_expansion` lisää 197 mallia/versiota: RAM 156, GTX 23, e
 
 RAM-nopeus on valmistajan testaama siirtonopeus MT/s. XMP/EXPO-profiilin nopeus ei ole lupaus oletusnopeudesta tai kaikille koneille taatusta yhteensopivuudesta. Nykyinen ilmoitusotsikko käyttää vielä MHz-merkintää; katalogin arvo ei muutu sen vuoksi.
 
+## Muiden valmistajien täydennys 4.10.2026
+
+Uusi `multi_brand_component_catalog` lisää **358** mallia tai teknistä versiota: RAM 317, tallennus 20, emolevyt 6, jäähdyttimet 5, virtalähteet 4, kotelot 4 ja tuulettimet 2. RAM-katalogissa on nyt 485 vaihtoehtoa. Jo olemassa olleet Ripjaws V -identiteetit rajattiin pois uudesta tuontierästä.
+
+- [G.Skill Ripjaws V](https://www.gskill.com/products/1/165/184/Ripjaws-V): valmistajan julkisen tuotehaun 231 osanumerosta yhdistettiin 171 teknistä kokoonpanoa, joista 169 on uusia. Kapasiteetti, moduulijako, DDR4-nopeus ja CAS-viive tulevat tuotekorteista. DIMM-koko tulee valmistajan Desktop Memory U-DIMM -ryhmästä. Väri ja CAS-viiveen jälkeiset ajoitukset eivät muodosta erillistä versiota; samaa näkyvää teknistä kokonaisuutta edustavat osanumerot ovat hakualiasia.
+- Patriot: [Viper Steel DDR4](https://www.patriotmemory.com/en/products/viper-steel-ddr4-performance-memory-ram-viper-gaming-by-patriot-memory), [Viper Elite II DDR4](https://www.patriotmemory.com/en/products/viper-elite-ii-ddr4-performance-memory-ram-viper-gaming-by-patriot-memory-gamercertified) ja [Viper Venom DDR5](https://www.patriotmemory.com/en/products/viper-venom-ddr5-performance-ram). Julkisen `sku_sheets`-aineiston aktiiviset, todelliset osanumerot. Steel sisältää myös SO-DIMM-muistit; Venom RGB ja RGB:tön sarja ovat erilliset. PVV564G56C38K-rivin verkkotaulukon CL40 oli oletusprofiilin arvo: [valmistajan tietolehti](https://patriot-cms-media.sgp1.cdn.digitaloceanspaces.com/PVV_564_G56_C38_K_sku_sheet_081926_0130b0d915.pdf) ilmoittaa testatulle 5600 MT/s -profiilille CL38, jota katalogi käyttää.
+- [TeamGroup T-FORCE VULCAN Z -tietolehti](https://images.teamgroupinc.com/products/memory/u-dimm/ddr4/vulcan-z/spec-sheet/vulcan-z-en.pdf): tilausnumerotaulukon todelliset yksittäiset moduulit ja kahden moduulin kitit, 38 teknistä kokoonpanoa. Kapasiteetti tarkistetaan taulukon GB/X2-tiedosta; nopeus ja CAS-viive vastaavat taulukon DDR4/CL-sarakkeita ja osanumeroa. Punainen ja harmaa yhdistetään hakualiasiksi, jos näkyvät tekniset tiedot ovat samat.
+- `scripts/read-memory-variants.py INPUT_DIRECTORY OUTPUT_JSON` lukee tallennetut `gskill-ripjaws-*.json`-tuotehakusivut, Patriot-taulukot `patriot-steel.json`, `patriot-elite2.json`, `patriot-venom.json` sekä TeamGroupin PDF:n asettelun säilyttävän tekstiviennin `teamgroup-vulcan.txt`. Se ei tee verkko- tai tietokantakirjoituksia. Tuntematon kapasiteetti tai moduulijako keskeyttää lukemisen.
+- SSD: [WD_BLACK SN770](https://documents.sandisk.com/content/dam/asset-library/en_us/assets/public/western-digital/product/internal-drives/wd-black-ssd/product-brief-wd-black-sn770-nvme-ssd.pdf), [SN850X](https://documents.sandisk.com/content/dam/asset-library/en_us/assets/public/western-digital/product/internal-drives/wd-black-ssd/data-sheet-wd-black-sn850x-nvme-ssd.pdf) ilman valmistajan jäähdytyslevyä ja [Kingston KC3000](https://www.kingston.com/en/ssd/kc3000-nvme-m2-solid-state-drive). KC3000:n 512/1024/2048/4096 GB säilytetään valmistajan ilmoittamassa yksikössä. Liitäntä-/PCIe-kenttiä ei palauteta myyntilomakkeeseen.
+- HDD: [Seagate BarraCuda 3,5 tuumaa](https://www.seagate.com/www-content/datasheets/pdfs/3-5-barracudaDS1900-14-2007US-en_US.pdf), kahdeksan valmistajan osanumeroa. 2 TB 5400 rpm (ST2000DM005) ja 2 TB 7200 rpm (ST2000DM008) ovat eri katalogiversioita. Koko ja SATA HDD -tyyppi täyttyvät ilmoitukseen.
+- Emolevyt: ASRockin [B550M Pro4](https://www.asrock.com/mb/AMD/B550M%20Pro4/index.us.asp), [B650M Pro RS WiFi](https://www.asrock.com/mb/AMD/B650M%20Pro%20RS%20WiFi/index.asp), [B760M Pro RS/D4](https://www.asrock.com/mb/Intel/B760M%20Pro%20RSD4/index.asp) ja [B860 Pro RS WiFi](https://www.asrock.com/mb/Intel/B860%20Pro%20RS%20WiFi/index.asp), [ASUS TUF GAMING B650-PLUS WIFI](https://www.asus.com/motherboards-components/motherboards/tuf-gaming/tuf-gaming-b650-plus-wifi/techspec/) ja [Gigabyte B550 AORUS ELITE V2 rev. 1.0/1.1](https://www.gigabyte.com/Motherboard/B550-AORUS-ELITE-V2-rev-10-11/sp). Wi-Fi/Bluetooth merkitään vain vahvistetuille ominaisuuksille; pelkkä M.2 Key E -paikka ei tarkoita mukana tulevaa langatonta moduulia.
+- Virtalähteet: be quiet! Pure Power 12 M [550 W](https://www.bequiet.com/en/powersupply/4075), [650 W](https://www.bequiet.com/en/powersupply/4074), [750 W](https://www.bequiet.com/en/powersupply/4068), [1000 W](https://www.bequiet.com/en/powersupply/4086). Vain vahvistetut teho, ATX-koko ja 80+ Gold. Sarjan eri laitteistoversioiden ATX 3.0/3.1 -merkintöjä tai virtaliittimiä ei yleistetä tämän katalogirivin ominaisuuksiksi.
+- Jäähdyttimet: [ARCTIC Freezer 36 / Black](https://www.arctic.de/media/6b/50/57/1709195123/Spec_Sheet_Freezer_36_EN.pdf), [Liquid Freezer III 240](https://www.arctic.de/media/1c/af/b3/1708429821/Spec_Sheet_Liquid_Freezer_III_240_Black_EN.pdf), Thermalright [Peerless Assassin 120 SE](https://www.thermalright.com/product/peerless-assassin-120-se/) ja [Phantom Spirit 120 SE](https://www.thermalright.com/product/phantom-spirit-120-se/). Thermalrightin sivuilta myös niiden nimetyt TL-C12C- ja TL-C12B V2 -tuulettimet. Nykyinen kantatuki ei takaa käytetyn tuotteen kiinnikkeiden mukanaoloa.
+- Kotelot: [Corsair 4000D AIRFLOW](https://www.corsair.com/us/en/p/pc-cases/cc-9011200-ww/4000d-airflow-tempered-glass-mid-tower-atx-case-black-cc-9011200-ww), [5000D AIRFLOW](https://www.corsair.com/us/en/p/pc-cases/cc-9011210-ww/5000d-airflow-tempered-glass-mid-tower-atx-pc-case-black-cc-9011210-ww) sekä [Lian Li LANCOOL 216 / RGB](https://lian-li.com/product/lancool-216/). E-ATX-tuen kokorajoitus säilytetään tiedossa. Väriä ei lisätä ilmoituksen tekniseksi kentäksi.
+
 ### Vielä suppeaksi jäävä kattavuus
 
-- RAM: useimmat Crucial-, Patriot-, TeamGroup- ja ADATA-sarjat sekä monet vanhat DDR3-mallit puuttuvat.
+- RAM: Crucial ja ADATA, useat muut G.Skill-/Patriot-/TeamGroup-sarjat sekä monet vanhat DDR3-mallit puuttuvat.
 - GTX: 400/500-sarjat, useat 600-sarjan Ti/muut mallit, harvinaisemmat muistiversiot sekä kannettavien juotettavat ja mobiilimallit puuttuvat. Älä käytä pöytäkoneen mallia kannettavan GPU:n viitteenä.
-- Emolevyt: ASUS, Gigabyte ja ASRock sekä Intelin vanhat kannat ja uudet LGA 1851 -mallit puuttuvat suurelta osin.
+- Emolevyt: ASUS-, Gigabyte- ja ASRock-kattavuus on vielä suppea. Intelin vanhat kannat ja useimmat LGA 1851 -mallit puuttuvat.
 - Virtalähteet/kotelot: useimpien muiden valmistajien sarjat puuttuvat.
-- Tallennus: mekaaniset HDD-levyt sekä useimmat WD-, Seagate-, Crucial- ja muut Kingston-sarjat puuttuvat.
+- Tallennus: HDD-kattavuus on nyt BarraCuda-sarjan varassa. Useimmat WD-/Seagate-sarjat, Crucial sekä muut Kingston-sarjat puuttuvat.
 - Jäähdytys/tuulettimet: Noctuan ulkopuoliset sarjat ovat vielä suppeita. Oheislaitteet kattavat lähinnä Logitech-hiiriä.
 
 Nämä ovat kattavuusaukkoja, eivät ilmoittamisen estoja: puuttuvan tuotteen voi ilmoittaa käsin tai lisätä ylläpidon tuotekatalogiin lähdetietoineen. Prosessorien AMD/Intel-kattavuus on muita ryhmiä laajempi, mutta esimerkiksi OEM- ja harvinaisia historiallisia malleja voi yhä puuttua.
@@ -64,4 +79,4 @@ Ylläpidon **Tuotekatalogi → Lisää malli / Muokkaa** sisältää kategoriako
 
 SQL-päivityksen `expanded_component_catalog` JSON-osuus on tämän tuontierän tarkastettava lähdeaineisto. `scripts/read-manufacturer-tables.py INPUT_DIRECTORY OUTPUT_JSON` lukee AMD/NVIDIA-HTML-viennit ja Intel-XLSX:n ilman verkko- tai tietokantakirjoituksia. Muut rivit on tarkistettu yllä mainituista tietolehdistä. Uudet lisäykset tehdään ylläpidossa tai uutena migraationa, ei muuttamalla asennettua migraatiota.
 
-Demotilan hakua varten `node scripts/build-demo-catalog.mjs` tuottaa molempien katalogitäydennysten migraatioaineistosta erillisen, vasta hakua käytettäessä ladattavan JSON-tiedoston. Demon tunnisteet eivät ole Supabasen tuotetunnisteita, eikä demohaku tee tietokantakirjoituksia. Ylläpito ei käytä demodataa.
+Demotilan hakua varten `node scripts/build-demo-catalog.mjs` tuottaa kaikkien kolmen katalogitäydennyksen migraatioaineistosta erillisen, vasta hakua käytettäessä ladattavan JSON-tiedoston. Demon tunnisteet eivät ole Supabasen tuotetunnisteita, eikä demohaku tee tietokantakirjoituksia. Ylläpito ei käytä demodataa.
