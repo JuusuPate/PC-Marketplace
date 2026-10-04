@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from "react";
 import { Icon } from "../../components/Icon";
 import { getSafeListingImageUrl } from "../../components/ListingVisual";
 import { MARKETS } from "../../config/markets";
@@ -98,6 +98,14 @@ function FieldLabel({ label, requiredText, optionalText, required = false }: Fie
         <small>{optionalText}</small>
       ) : null}
     </span>
+  );
+}
+
+function ListingDetailsPanel({ open, children }: { open: boolean; children: ReactNode }) {
+  return (
+    <div className="listing-details-panel" data-open={open} inert={!open}>
+      <div className="listing-details-panel__inner">{children}</div>
+    </div>
   );
 }
 
@@ -456,7 +464,10 @@ export function CreateListingPage({
     setError("");
     setDetailsPanel("description");
     window.setTimeout(() => {
-      document.getElementById("product-details-title")?.scrollIntoView({ block: "center" });
+      document.getElementById("product-details-title")?.scrollIntoView({
+        block: "center",
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
+      });
       document.querySelector<HTMLElement>('[data-listing-field="description"]')?.focus({ preventScroll: true });
     }, 0);
   };
@@ -464,7 +475,10 @@ export function CreateListingPage({
     setDetailsPanel("product");
     setError("");
     window.setTimeout(() => {
-      document.getElementById("product-details-title")?.scrollIntoView({ block: "center" });
+      document.getElementById("product-details-title")?.scrollIntoView({
+        block: "center",
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
+      });
       document.getElementById("product-details-toggle")?.focus({ preventScroll: true });
     }, 0);
   };
@@ -736,298 +750,330 @@ export function CreateListingPage({
                 </p>
               </div>
             </div>
-            <div id="product-details-content" hidden={detailsPanel !== "product"}>
-              {hasCatalog && (
-                <>
-                  <div data-listing-field="inputMode" tabIndex={-1}>
-                    <CatalogInputMode
-                      locale={locale}
-                      name="product-input-mode"
-                      value={inputMode}
-                      onChange={changeInputMode}
-                    />
-                    <FieldError id="input-mode-error" message={fieldErrors.inputMode} />
-                  </div>
-                  {inputMode === "catalog" && (
-                    <div className="listing-profile-catalog" data-listing-field="catalog" tabIndex={-1}>
-                      <ProductModelPicker
-                        key={safeCategory}
+            {detailsPanel === "description" && (
+              <div className="listing-details-summary">
+                <strong>{title}</strong>
+                <p>
+                  {formattedPrice} / {copy[condition === "fair" ? "conditionFair" : condition]}
+                </p>
+                <dl>
+                  {Object.entries({
+                    ...(brand.trim() ? { [copy.brand]: brand.trim() } : {}),
+                    ...(model.trim() ? { [locale === "fi" ? "Malli" : "Model"]: model.trim() } : {}),
+                    ...Object.fromEntries(
+                      guidedFields
+                        .filter((field) => field.key !== "freeShipping" && guidedSpecifications[field.key]?.trim())
+                        .map((field) => [field.label, guidedSpecifications[field.key]]),
+                    ),
+                  }).map(([label, value]) => (
+                    <div key={label}>
+                      <dt>{label}</dt>
+                      <dd>{value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            )}
+            <ListingDetailsPanel open={detailsPanel === "product"}>
+              <div id="product-details-content">
+                {hasCatalog && (
+                  <>
+                    <div data-listing-field="inputMode" tabIndex={-1}>
+                      <CatalogInputMode
+                        locale={locale}
+                        name="product-input-mode"
+                        value={inputMode}
+                        onChange={changeInputMode}
+                      />
+                      <FieldError id="input-mode-error" message={fieldErrors.inputMode} />
+                    </div>
+                    {inputMode === "catalog" && (
+                      <div className="listing-profile-catalog" data-listing-field="catalog" tabIndex={-1}>
+                        <ProductModelPicker
+                          key={safeCategory}
+                          category={safeCategory}
+                          locale={locale}
+                          selectedId={catalogModelId}
+                          onSelect={selectProduct}
+                        />
+                        <FieldError id="catalog-error" message={fieldErrors.catalog} />
+                      </div>
+                    )}
+                    {catalogLocked && (
+                      <CatalogProductSummary
                         category={safeCategory}
                         locale={locale}
-                        selectedId={catalogModelId}
-                        onSelect={selectProduct}
+                        brand={brand}
+                        model={model}
+                        specs={guidedSpecifications}
+                        onEdit={() => changeInputMode("manual")}
                       />
-                      <FieldError id="catalog-error" message={fieldErrors.catalog} />
-                    </div>
-                  )}
-                  {catalogLocked && (
-                    <CatalogProductSummary
-                      category={safeCategory}
-                      locale={locale}
-                      brand={brand}
-                      model={model}
-                      specs={guidedSpecifications}
-                      onEdit={() => changeInputMode("manual")}
-                    />
-                  )}
-                </>
-              )}
-              {!awaitingInputMode && (
-                <div className="create-listing-fields">
-                  {safeCategory !== "fans" && (
-                    <label className="field-wide listing-profile-auto-title">
-                      <input
-                        type="checkbox"
-                        checked={automaticTitle}
-                        onChange={(e) => {
-                          if (!e.target.checked) setTitle(title);
-                          setAutomaticTitle(e.target.checked);
-                        }}
-                      />
-                      {locale === "fi" ? "Muodosta otsikko automaattisesti" : "Generate title automatically"}
-                    </label>
-                  )}
-                  <label className="field-wide">
-                    <FieldLabel label={copy.productTitle} required requiredText={formCopy.required} />
-                    <input
-                      required
-                      minLength={5}
-                      maxLength={100}
-                      value={title}
-                      onChange={(event) => {
-                        setTitle(event.target.value);
-                        setAutomaticTitle(false);
-                        clearFieldError("title");
-                      }}
-                      placeholder={locale === "fi" ? "Kirjoita tuotetta kuvaava otsikko" : "Describe your item"}
-                      aria-invalid={Boolean(fieldErrors.title)}
-                      aria-describedby={fieldErrors.title ? "title-error" : undefined}
-                      data-listing-field="title"
-                    />
-                    <FieldError id="title-error" message={fieldErrors.title} />
-                  </label>
-                  <label>
-                    <FieldLabel label={copy.condition} required requiredText={formCopy.required} />
-                    <select
-                      required
-                      value={condition}
-                      onChange={(event) => setCondition(event.target.value as Condition)}
-                    >
-                      {(["new", "excellent", "good", "fair"] as Condition[]).map((item) => (
-                        <option key={item} value={item}>
-                          {copy[item === "fair" ? "conditionFair" : item]}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                  <label>
-                    <FieldLabel
-                      label={`${copy.price} (${MARKETS[market].currency})`}
-                      required
-                      requiredText={formCopy.required}
-                    />
-                    <input
-                      required
-                      inputMode="decimal"
-                      value={price}
-                      onChange={(event) => {
-                        setPrice(event.target.value);
-                        clearFieldError("price");
-                      }}
-                      placeholder="450"
-                      aria-invalid={Boolean(fieldErrors.price)}
-                      aria-describedby={fieldErrors.price ? "price-error" : undefined}
-                      data-listing-field="price"
-                    />
-                    <FieldError id="price-error" message={fieldErrors.price} />
-                  </label>
-                  {showIdentity && (
-                    <>
-                      <label>
-                        <FieldLabel
-                          label={
-                            safeCategory === "cpu" ? (locale === "fi" ? "Valmistaja" : "Manufacturer") : copy.brand
-                          }
-                          requiredText={formCopy.required}
-                          optionalText={formCopy.optional}
-                        />
+                    )}
+                  </>
+                )}
+                {!awaitingInputMode && (
+                  <div className="create-listing-fields">
+                    {safeCategory !== "fans" && (
+                      <label className="field-wide listing-profile-auto-title">
                         <input
-                          value={brand}
-                          onChange={(event) => {
-                            setBrand(event.target.value);
-                            if (safeCategory !== "gpu" || !guidedSpecifications.coreModel) setCatalogModelId(null);
+                          type="checkbox"
+                          checked={automaticTitle}
+                          onChange={(e) => {
+                            if (!e.target.checked) setTitle(title);
+                            setAutomaticTitle(e.target.checked);
                           }}
-                          placeholder={
-                            safeCategory === "memory"
-                              ? "Kingston"
-                              : safeCategory === "fans"
-                                ? "ARCTIC"
-                                : "ASUS / MSI / …"
-                          }
-                          maxLength={80}
                         />
+                        {locale === "fi" ? "Muodosta otsikko automaattisesti" : "Generate title automatically"}
                       </label>
-                      {safeCategory !== "fans" && (
+                    )}
+                    <label className="field-wide">
+                      <FieldLabel label={copy.productTitle} required requiredText={formCopy.required} />
+                      <input
+                        required
+                        minLength={5}
+                        maxLength={100}
+                        value={title}
+                        onChange={(event) => {
+                          setTitle(event.target.value);
+                          setAutomaticTitle(false);
+                          clearFieldError("title");
+                        }}
+                        placeholder={locale === "fi" ? "Kirjoita tuotetta kuvaava otsikko" : "Describe your item"}
+                        aria-invalid={Boolean(fieldErrors.title)}
+                        aria-describedby={fieldErrors.title ? "title-error" : undefined}
+                        data-listing-field="title"
+                      />
+                      <FieldError id="title-error" message={fieldErrors.title} />
+                    </label>
+                    <label>
+                      <FieldLabel label={copy.condition} required requiredText={formCopy.required} />
+                      <select
+                        required
+                        value={condition}
+                        onChange={(event) => setCondition(event.target.value as Condition)}
+                      >
+                        {(["new", "excellent", "good", "fair"] as Condition[]).map((item) => (
+                          <option key={item} value={item}>
+                            {copy[item === "fair" ? "conditionFair" : item]}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                    <label>
+                      <FieldLabel
+                        label={`${copy.price} (${MARKETS[market].currency})`}
+                        required
+                        requiredText={formCopy.required}
+                      />
+                      <input
+                        required
+                        inputMode="decimal"
+                        value={price}
+                        onChange={(event) => {
+                          setPrice(event.target.value);
+                          clearFieldError("price");
+                        }}
+                        placeholder="450"
+                        aria-invalid={Boolean(fieldErrors.price)}
+                        aria-describedby={fieldErrors.price ? "price-error" : undefined}
+                        data-listing-field="price"
+                      />
+                      <FieldError id="price-error" message={fieldErrors.price} />
+                    </label>
+                    {showIdentity && (
+                      <>
                         <label>
                           <FieldLabel
-                            label={copy.model}
+                            label={
+                              safeCategory === "cpu" ? (locale === "fi" ? "Valmistaja" : "Manufacturer") : copy.brand
+                            }
                             requiredText={formCopy.required}
                             optionalText={formCopy.optional}
                           />
                           <input
-                            value={model}
+                            value={brand}
                             onChange={(event) => {
-                              setModel(event.target.value);
+                              setBrand(event.target.value);
                               if (safeCategory !== "gpu" || !guidedSpecifications.coreModel) setCatalogModelId(null);
                             }}
                             placeholder={
-                              safeCategory === "gpu"
-                                ? "Gaming X Trio"
-                                : safeCategory === "memory"
-                                  ? "Fury Beast (valinnainen)"
-                                  : "Malli / versio"
+                              safeCategory === "memory"
+                                ? "Kingston"
+                                : safeCategory === "fans"
+                                  ? "ARCTIC"
+                                  : "ASUS / MSI / …"
                             }
-                            maxLength={160}
+                            maxLength={80}
                           />
                         </label>
-                      )}
-                    </>
-                  )}
-                </div>
-              )}
-            </div>
+                        {safeCategory !== "fans" && (
+                          <label>
+                            <FieldLabel
+                              label={copy.model}
+                              requiredText={formCopy.required}
+                              optionalText={formCopy.optional}
+                            />
+                            <input
+                              value={model}
+                              onChange={(event) => {
+                                setModel(event.target.value);
+                                if (safeCategory !== "gpu" || !guidedSpecifications.coreModel) setCatalogModelId(null);
+                              }}
+                              placeholder={
+                                safeCategory === "gpu"
+                                  ? "Gaming X Trio"
+                                  : safeCategory === "memory"
+                                    ? "Fury Beast (valinnainen)"
+                                    : "Malli / versio"
+                              }
+                              maxLength={160}
+                            />
+                          </label>
+                        )}
+                      </>
+                    )}
+                  </div>
+                )}
+              </div>
+            </ListingDetailsPanel>
           </section>
 
-          <section
-            id="technical-details-section"
-            className="create-listing-section"
-            aria-labelledby="technical-details-title"
+          <div
             hidden={
               currentStep !== 2 ||
               awaitingInputMode ||
-              detailsPanel !== "product" ||
               (safeCategory !== "pc" && (catalogLocked || guidedFields.every((field) => field.key === "freeShipping")))
             }
           >
-            <div className="create-listing-section__heading">
-              <span className="create-listing-section__number">02</span>
-              <div>
-                <h2 id="technical-details-title">{technicalSectionTitle}</h2>
-                <p>{technicalSectionHelp}</p>
-              </div>
-            </div>
-            <div tabIndex={-1} data-listing-field="specifications">
-              <FieldError id="specifications-error" message={fieldErrors.specifications} />
-            </div>
-            <div data-listing-field="profile" tabIndex={-1}>
-              <FieldError id="profile-error" message={fieldErrors.profile} />
-            </div>
-            {category === "pc" && (
-              <label className="listing-profile-rgb">
-                <input
-                  type="checkbox"
-                  checked={isRgbListing({ category: safeCategory, specs: guidedSpecifications })}
-                  onChange={(e) =>
-                    setGuidedSpecifications((values) => ({
-                      ...values,
-                      rgb: e.target.checked ? "yes" : "no",
-                    }))
-                  }
-                />
-                {locale === "fi" ? "RGB-valaistus" : "RGB lighting"}
-                <small>
-                  {locale === "fi"
-                    ? "Näkyy RGB-tagina ja hakusuodattimessa. Myös ARGB sisältyy tähän."
-                    : "Shown as an RGB tag and search filter. Includes ARGB."}
-                </small>
-              </label>
-            )}
-            {category === "pc" && (
-              <label className={`unknown-details-toggle${technicalDetailsUnknown ? " is-selected" : ""}`}>
-                <input
-                  type="checkbox"
-                  checked={technicalDetailsUnknown}
-                  onChange={(event) => setTechnicalDetailsUnknown(event.target.checked)}
-                />
-                <span>
-                  <strong>{formCopy.unknown}</strong>
-                  <small>{formCopy.unknownHelp}</small>
-                </span>
-              </label>
-            )}
-
-            {!technicalDetailsUnknown && (
-              <div className="specification-editor">
-                {safeCategory === "pc" && (
-                  <PcComponentFields locale={locale} values={guidedSpecifications} onChange={setGuidedSpecifications} />
-                )}
-                <div className="guided-specifications">
-                  {guidedFields
-                    .filter(
-                      (field) =>
-                        field.key !== "rgb" &&
-                        field.key !== "freeShipping" &&
-                        (!hasCatalog || inputMode === "manual" || safeCategory === "gpu") &&
-                        (safeCategory !== "pc" ||
-                          (!PC_PARTS.some((p) => p.key === field.key) && !PC_MEMORY_KEYS.includes(field.key))),
-                    )
-                    .map((field) => (
-                      <ProfileField
-                        key={field.key}
-                        field={field}
-                        value={guidedSpecifications[field.key] ?? ""}
-                        onChange={(value) => changeGuidedField(field.key, value)}
-                      />
-                    ))}
+            <ListingDetailsPanel open={detailsPanel === "product"}>
+              <section
+                id="technical-details-section"
+                className="create-listing-section"
+                aria-labelledby="technical-details-title"
+              >
+                <div className="create-listing-section__heading">
+                  <span className="create-listing-section__number">02</span>
+                  <div>
+                    <h2 id="technical-details-title">{technicalSectionTitle}</h2>
+                    <p>{technicalSectionHelp}</p>
+                  </div>
                 </div>
-              </div>
-            )}
-          </section>
+                <div tabIndex={-1} data-listing-field="specifications">
+                  <FieldError id="specifications-error" message={fieldErrors.specifications} />
+                </div>
+                <div data-listing-field="profile" tabIndex={-1}>
+                  <FieldError id="profile-error" message={fieldErrors.profile} />
+                </div>
+                {category === "pc" && (
+                  <label className="listing-profile-rgb">
+                    <input
+                      type="checkbox"
+                      checked={isRgbListing({ category: safeCategory, specs: guidedSpecifications })}
+                      onChange={(e) =>
+                        setGuidedSpecifications((values) => ({
+                          ...values,
+                          rgb: e.target.checked ? "yes" : "no",
+                        }))
+                      }
+                    />
+                    {locale === "fi" ? "RGB-valaistus" : "RGB lighting"}
+                    <small>
+                      {locale === "fi"
+                        ? "Näkyy RGB-tagina ja hakusuodattimessa. Myös ARGB sisältyy tähän."
+                        : "Shown as an RGB tag and search filter. Includes ARGB."}
+                    </small>
+                  </label>
+                )}
+                {category === "pc" && (
+                  <label className={`unknown-details-toggle${technicalDetailsUnknown ? " is-selected" : ""}`}>
+                    <input
+                      type="checkbox"
+                      checked={technicalDetailsUnknown}
+                      onChange={(event) => setTechnicalDetailsUnknown(event.target.checked)}
+                    />
+                    <span>
+                      <strong>{formCopy.unknown}</strong>
+                      <small>{formCopy.unknownHelp}</small>
+                    </span>
+                  </label>
+                )}
 
-          <section
-            className="create-listing-section"
-            aria-labelledby="description-title"
-            hidden={currentStep !== 2 || awaitingInputMode || detailsPanel !== "description"}
-          >
-            <button
-              type="button"
-              className="button button--ghost listing-description-back"
-              aria-label={locale === "fi" ? "Takaisin tuotetietoihin" : "Back to product details"}
-              onClick={openProductDetails}
-            >
-              {wizardCopy.previous}
-            </button>
-            <div className="create-listing-section__heading">
-              <span className="create-listing-section__number">02</span>
-              <div>
-                <h2 id="description-title">
-                  <FieldLabel label={copy.description} required requiredText={formCopy.required} />
-                </h2>
-                <p>{copy.descriptionHelp}</p>
-              </div>
-            </div>
-            <div className="create-listing-description">
-              <textarea
-                aria-label={copy.description}
-                required
-                minLength={20}
-                maxLength={4000}
-                rows={9}
-                value={description}
-                onChange={(event) => {
-                  setDescription(event.target.value);
-                  clearFieldError("description");
-                }}
-                placeholder={copy.descriptionHelp}
-                aria-invalid={Boolean(fieldErrors.description)}
-                aria-describedby={fieldErrors.description ? "description-error" : undefined}
-                data-listing-field="description"
-              />
-              <small>{description.length} / 4000</small>
-            </div>
-            <FieldError id="description-error" message={fieldErrors.description} />
-          </section>
-
+                {!technicalDetailsUnknown && (
+                  <div className="specification-editor">
+                    {safeCategory === "pc" && (
+                      <PcComponentFields
+                        locale={locale}
+                        values={guidedSpecifications}
+                        onChange={setGuidedSpecifications}
+                      />
+                    )}
+                    <div className="guided-specifications">
+                      {guidedFields
+                        .filter(
+                          (field) =>
+                            field.key !== "rgb" &&
+                            field.key !== "freeShipping" &&
+                            (!hasCatalog || inputMode === "manual" || safeCategory === "gpu") &&
+                            (safeCategory !== "pc" ||
+                              (!PC_PARTS.some((p) => p.key === field.key) && !PC_MEMORY_KEYS.includes(field.key))),
+                        )
+                        .map((field) => (
+                          <ProfileField
+                            key={field.key}
+                            field={field}
+                            value={guidedSpecifications[field.key] ?? ""}
+                            onChange={(value) => changeGuidedField(field.key, value)}
+                          />
+                        ))}
+                    </div>
+                  </div>
+                )}
+              </section>
+            </ListingDetailsPanel>
+          </div>
+          <div hidden={currentStep !== 2 || awaitingInputMode}>
+            <ListingDetailsPanel open={detailsPanel === "description"}>
+              <section className="create-listing-section" aria-labelledby="description-title">
+                <button
+                  type="button"
+                  className="button button--ghost listing-description-back"
+                  aria-label={locale === "fi" ? "Takaisin tuotetietoihin" : "Back to product details"}
+                  onClick={openProductDetails}
+                >
+                  {wizardCopy.previous}
+                </button>
+                <div className="create-listing-section__heading">
+                  <span className="create-listing-section__number">02</span>
+                  <div>
+                    <h2 id="description-title">
+                      <FieldLabel label={copy.description} required requiredText={formCopy.required} />
+                    </h2>
+                    <p>{copy.descriptionHelp}</p>
+                  </div>
+                </div>
+                <div className="create-listing-description">
+                  <textarea
+                    aria-label={copy.description}
+                    required
+                    minLength={20}
+                    maxLength={4000}
+                    rows={9}
+                    value={description}
+                    onChange={(event) => {
+                      setDescription(event.target.value);
+                      clearFieldError("description");
+                    }}
+                    placeholder={copy.descriptionHelp}
+                    aria-invalid={Boolean(fieldErrors.description)}
+                    aria-describedby={fieldErrors.description ? "description-error" : undefined}
+                    data-listing-field="description"
+                  />
+                  <small>{description.length} / 4000</small>
+                </div>
+                <FieldError id="description-error" message={fieldErrors.description} />
+              </section>
+            </ListingDetailsPanel>
+          </div>
           <section className="create-listing-section" aria-labelledby="photos-title" hidden={currentStep !== 3}>
             <div className="create-listing-section__heading">
               <span className="create-listing-section__number">03</span>

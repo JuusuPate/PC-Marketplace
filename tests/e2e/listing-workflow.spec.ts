@@ -42,6 +42,14 @@ test("demoilmoitus julkaistaan, kuvat selataan ja säilyvät muokkauksessa", asy
   await expect(page.getByLabel("Ilmainen postitus")).not.toBeVisible();
   await next(page);
   await expect(page.locator('[data-listing-field="title"]')).not.toBeVisible();
+  await expect(page.locator(".listing-details-summary")).toContainText("Testinäytönohjain RTX 4070");
+  await expect(page.locator(".listing-details-summary")).toContainText("12 GB");
+  await page.getByRole("button", { name: "Takaisin tuotetietoihin" }).click();
+  await expect(page.locator('[data-listing-field="title"]')).toHaveValue("Testinäytönohjain RTX 4070");
+  await expect(page.locator('[data-listing-field="description"]')).not.toBeVisible();
+  await page.locator("#product-details-toggle").click();
+  await expect(page.locator('[data-listing-field="description"]')).toBeVisible();
+
   await next(page);
   await expect(page.locator("#description-error")).toContainText("vähintään 20 merkkiä");
   await page

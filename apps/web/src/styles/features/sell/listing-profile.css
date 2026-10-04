@@ -208,3 +208,58 @@
     flex-direction: column;
   }
 }
+
+.listing-details-summary {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  margin-top: 16px;
+}
+.listing-details-summary strong {
+  color: var(--ink);
+  font-size: 14px;
+}
+.listing-details-summary p {
+  margin: 4px 0 10px;
+}
+.listing-details-summary dl {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 24px;
+  margin: 0;
+}
+.listing-details-summary dl > div {
+  display: flex;
+  gap: 6px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.listing-details-summary dt::after {
+  content: ":";
+}
+.listing-details-summary dd {
+  margin: 0;
+}
+.listing-details-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    grid-template-rows 300ms ease,
+    opacity 220ms ease;
+}
+.listing-details-panel[data-open="true"] {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  visibility: visible;
+}
+.listing-details-panel__inner {
+  min-height: 0;
+  overflow: hidden;
+}
+@media (prefers-reduced-motion: reduce) {
+  .listing-details-panel {
+    transition: none;
+  }
+}
