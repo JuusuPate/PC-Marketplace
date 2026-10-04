@@ -21,7 +21,7 @@ async function makePng(page: Page, width: number, height: number, name: string) 
 }
 
 async function next(page: Page) {
-  await page.getByRole("button", { name: "Jatka" }).click();
+  await page.getByRole("button", { name: /^(Jatka|Seuraava)$/ }).click();
 }
 
 test("demoilmoitus julkaistaan, kuvat selataan ja säilyvät muokkauksessa", async ({ page }) => {
@@ -39,7 +39,9 @@ test("demoilmoitus julkaistaan, kuvat selataan ja säilyvät muokkauksessa", asy
   await page.locator('[data-listing-field="price"]').fill("499");
   await page.getByLabel("Piirisarja", { exact: true }).fill("NVIDIA");
   await page.getByLabel("Näyttömuisti").fill("12 GB");
-  await page.getByLabel("Ilmainen postitus").selectOption("Kyllä");
+  await expect(page.getByLabel("Ilmainen postitus")).not.toBeVisible();
+  await next(page);
+  await expect(page.locator('[data-listing-field="title"]')).not.toBeVisible();
   await next(page);
   await expect(page.locator("#description-error")).toContainText("vähintään 20 merkkiä");
   await page
@@ -54,6 +56,8 @@ test("demoilmoitus julkaistaan, kuvat selataan ja säilyvät muokkauksessa", asy
 
   await next(page);
   await expect(page.locator("#postal-code-error")).toContainText("viidellä numerolla");
+  await expect(page.getByLabel("Ilmainen postitus")).toBeVisible();
+  await page.getByLabel("Ilmainen postitus").selectOption("Kyllä");
   await page.locator('[data-listing-field="city"]').fill("Helsinki");
   await page.locator('[data-listing-field="postalCode"]').fill("00100");
   await page.locator('[data-listing-field="streetAddress"]').fill("Testikatu 12");
@@ -76,10 +80,15 @@ test("demoilmoitus julkaistaan, kuvat selataan ja säilyvät muokkauksessa", asy
     .click();
   await expect(page.getByLabel("Piirisarja", { exact: true })).toHaveValue("NVIDIA");
   await expect(page.getByLabel("Näyttömuisti")).toHaveValue("12 GB");
+  await page
+    .getByRole("navigation", { name: "Ilmoituksen muokkauksen vaiheet" })
+    .getByRole("button", { name: /Sijainti$/ })
+    .click();
+  await expect(page.getByLabel("Ilmainen postitus")).toBeVisible();
   await expect(page.getByLabel("Ilmainen postitus")).toHaveValue("Kyllä");
   await page
     .getByRole("navigation", { name: "Ilmoituksen muokkauksen vaiheet" })
-    .getByRole("button", { name: "3 Kuvat" })
+    .getByRole("button", { name: /Kuvat$/ })
     .click();
   await expect(page.locator(".image-picker__stored .image-picker__previews li")).toHaveCount(2);
 

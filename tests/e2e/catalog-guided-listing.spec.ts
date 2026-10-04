@@ -15,7 +15,7 @@ test("catalog CPU specs are visible and locked, manual mode preserves them and h
   await expect(page.getByRole("searchbox", { name: "Hae tuotemallia" })).toHaveCount(0);
   await expect(page.locator('[data-listing-field="title"]')).toHaveCount(0);
   await expect(page.locator('[data-listing-field="description"]')).not.toBeVisible();
-  await page.getByRole("button", { name: "Jatka", exact: true }).click();
+  await page.getByRole("button", { name: "Seuraava", exact: true }).click();
   await expect(page.locator("#input-mode-error")).toHaveText("Valitse ensin, miten haluat antaa tuotteen tiedot.");
   await page.getByRole("radio", { name: "Tuotekatalogista" }).check();
   await expect(page.locator("#input-mode-error")).toHaveCount(0);
@@ -39,7 +39,23 @@ test("catalog CPU specs are visible and locked, manual mode preserves them and h
   await page.getByRole("button", { name: "AMD Ryzen 7 5800X", exact: true }).click();
   await expect(summary).toContainText("Ytimien määrä8");
   await page.locator('[data-listing-field="price"]').fill("150");
+  await expect(page.getByLabel("Ilmainen postitus", { exact: true })).not.toBeVisible();
+  await expect(page.locator('[data-listing-field="description"]')).not.toBeVisible();
+  await page.getByRole("button", { name: "Seuraava", exact: true }).click();
+  await expect(summary).not.toBeVisible();
+  await expect(page.locator("#product-details-toggle")).toHaveAttribute("aria-expanded", "false");
+  await page.getByRole("button", { name: "Takaisin tuotetietoihin", exact: true }).click();
+  await expect(summary).toBeVisible();
+  await expect(page.locator('[data-listing-field="price"]')).toHaveValue("150");
+  await page.getByRole("button", { name: "Seuraava", exact: true }).click();
   await page.locator('[data-listing-field="description"]').fill("Toimiva prosessori, tarkat tiedot yllä katalogista.");
+  await page.locator("#product-details-toggle").click();
+  await expect(summary).toBeVisible();
+  await expect(page.locator('[data-listing-field="description"]')).not.toBeVisible();
+  await page.getByRole("button", { name: "Seuraava", exact: true }).click();
+  await expect(page.locator('[data-listing-field="description"]')).toHaveValue(
+    "Toimiva prosessori, tarkat tiedot yllä katalogista.",
+  );
   await page.getByRole("button", { name: "Jatka", exact: true }).click();
   await expect(page.getByRole("heading", { name: /Tuotekuvat/ })).toBeVisible();
   await page.getByRole("button", { name: "Jatka", exact: true }).click();

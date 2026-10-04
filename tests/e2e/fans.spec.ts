@@ -55,6 +55,7 @@ test("fan creation needs only a title and optional brand in addition to common l
   await expect(page.getByLabel(/^Malli/)).toHaveCount(0);
   await expect(page.getByRole("button", { name: "Lisää tekninen tieto" })).toHaveCount(0);
   await expect(page.getByLabel("Prosessorikanta", { exact: true })).toHaveCount(0);
+  await page.getByRole("button", { name: "Seuraava", exact: true }).click();
   await page
     .locator('[data-listing-field="description"]')
     .fill("Kolme toimivaa tuuletinta, kaikki mukana kuvauksessa.");

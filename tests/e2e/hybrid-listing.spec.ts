@@ -10,6 +10,7 @@ async function start(page: Page, category: string) {
 }
 const next = (page: Page) => page.getByRole("button", { name: "Jatka", exact: true }).click();
 async function publish(page: Page) {
+  await page.getByRole("button", { name: "Seuraava", exact: true }).click();
   await page
     .locator('[data-listing-field="description"]')
     .fill("Kaikki kauppaan sisältyvät osat on eritelty ilmoituksen tiedoissa.");
