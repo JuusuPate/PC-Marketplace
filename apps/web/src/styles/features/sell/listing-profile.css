@@ -78,31 +78,8 @@
 .listing-profile-field {
   min-width: 0;
 }
-.listing-details-toggle {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  border: 0;
-  padding: 0;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-}
-.listing-details-toggle span {
-  transition: transform 150ms ease;
-}
-.listing-details-toggle[aria-expanded="true"] span {
-  transform: rotate(180deg);
-}
 .listing-description-back {
   margin-bottom: 16px;
-}
-@media (prefers-reduced-motion: reduce) {
-  .listing-details-toggle span {
-    transition: none;
-  }
 }
 .catalog-input-mode {
   display: flex;

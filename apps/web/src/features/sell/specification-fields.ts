@@ -200,7 +200,7 @@ const fieldKeysByCategory: Record<Category, string[]> = {
     "pcMemorySpeed",
     "rgb",
   ],
-  gpu: ["coreModel", "chipVendor", "vram", "interface", "powerConnector"],
+  gpu: ["coreModel", "chipVendor", "vram", "powerConnector"],
   cpu: ["series", "socket", "cores", "threads", "clock"],
   memory: ["capacity", "memoryType", "modules", "moduleFormat", "moduleCapacity", "speed", "latency"],
   motherboard: ["socket", "chipset", "formFactor", "memoryType", "wifi", "bluetooth"],

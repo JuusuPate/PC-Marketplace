@@ -39,6 +39,7 @@ test("demoilmoitus julkaistaan, kuvat selataan ja säilyvät muokkauksessa", asy
   await page.locator('[data-listing-field="price"]').fill("499");
   await page.getByLabel("Piirisarja", { exact: true }).fill("NVIDIA");
   await page.getByLabel("Näyttömuisti").fill("12 GB");
+  await expect(page.getByLabel("Liitäntä", { exact: true })).toHaveCount(0);
   await expect(page.getByLabel("Ilmainen postitus")).not.toBeVisible();
   await next(page);
   await expect(page.locator('[data-listing-field="title"]')).not.toBeVisible();
@@ -47,7 +48,7 @@ test("demoilmoitus julkaistaan, kuvat selataan ja säilyvät muokkauksessa", asy
   await page.getByRole("button", { name: "Takaisin tuotetietoihin" }).click();
   await expect(page.locator('[data-listing-field="title"]')).toHaveValue("Testinäytönohjain RTX 4070");
   await expect(page.locator('[data-listing-field="description"]')).not.toBeVisible();
-  await page.locator("#product-details-toggle").click();
+  await next(page);
   await expect(page.locator('[data-listing-field="description"]')).toBeVisible();
 
   await next(page);

@@ -43,13 +43,13 @@ test("catalog CPU specs are visible and locked, manual mode preserves them and h
   await expect(page.locator('[data-listing-field="description"]')).not.toBeVisible();
   await page.getByRole("button", { name: "Seuraava", exact: true }).click();
   await expect(summary).not.toBeVisible();
-  await expect(page.locator("#product-details-toggle")).toHaveAttribute("aria-expanded", "false");
+  await expect(page.locator("#product-details-toggle")).toHaveCount(0);
   await page.getByRole("button", { name: "Takaisin tuotetietoihin", exact: true }).click();
   await expect(summary).toBeVisible();
   await expect(page.locator('[data-listing-field="price"]')).toHaveValue("150");
   await page.getByRole("button", { name: "Seuraava", exact: true }).click();
   await page.locator('[data-listing-field="description"]').fill("Toimiva prosessori, tarkat tiedot yllä katalogista.");
-  await page.locator("#product-details-toggle").click();
+  await page.getByRole("button", { name: "Takaisin tuotetietoihin", exact: true }).click();
   await expect(summary).toBeVisible();
   await expect(page.locator('[data-listing-field="description"]')).not.toBeVisible();
   await page.getByRole("button", { name: "Seuraava", exact: true }).click();
@@ -118,4 +118,23 @@ test("PC has separate component catalogs and no whole-PC catalog", async ({ page
   await ram.getByRole("radio", { name: "Kirjoitan itse" }).check();
   await expect(ram.getByLabel("RAM yhteensä (GB)", { exact: true })).toHaveValue("32 GB");
   await expect(ram.getByLabel("RAM-muistin tyyppi", { exact: true })).toHaveValue("DDR4");
+});
+
+test("changing a catalog product clears its title and specifications", async ({ page }) => {
+  await start(page, "cpu");
+  await page.getByRole("radio", { name: "Tuotekatalogista" }).check();
+  await page.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("Ryzen 5 5600");
+  await page.getByRole("button", { name: "AMD Ryzen 5 5600", exact: true }).click();
+  await page.locator('[data-listing-field="title"]').fill("Oma Ryzen-otsikko");
+  await page.getByRole("button", { name: "Vaihda tuotetta", exact: true }).click();
+  await expect(page.locator('[data-listing-field="title"]')).toHaveValue("");
+  await expect(page.locator(".catalog-product-summary")).toHaveCount(0);
+  await page.getByRole("radio", { name: "Kirjoitan itse" }).check();
+  await expect(page.getByLabel("Ytimien määrä", { exact: true })).toHaveValue("");
+  await expect(page.getByLabel("Valmistaja", { exact: false })).toHaveValue("");
+  await page.locator('[data-listing-field="title"]').fill("Vanha otsikko");
+  await page.getByRole("button", { name: "Takaisin", exact: true }).click();
+  await page.locator('[data-listing-field="category"]').selectOption("fans");
+  await page.getByRole("button", { name: "Jatka", exact: true }).click();
+  await expect(page.locator('[data-listing-field="title"]')).toHaveValue("");
 });

@@ -138,6 +138,7 @@ export function CreateListingPage({
       copy.technicalDetails,
       ...specificationAliases("brand"),
       ...specificationAliases("model"),
+      ...specificationAliases("interface"),
       ...initialGuidedFields.flatMap((field) => specificationAliases(field.key)),
       ...PC_PARTS.map((p) => partStatusKey(p.key)),
     ].map((label) => label.toLocaleLowerCase()),
@@ -244,7 +245,20 @@ export function CreateListingPage({
   const selectProduct = (m: ProductModel | null) => {
     setCatalogModelId(m?.id ?? null);
     clearFieldError("catalog");
-    if (!m) return;
+    setTitle("");
+    setLegacySpecifications({});
+    setTechnicalDetailsUnknown(false);
+    if (!m) {
+      setBrand("");
+      setModel("");
+      setGuidedSpecifications((values) => ({ freeShipping: values.freeShipping ?? "" }));
+      return;
+    }
+    setAutomaticTitle(true);
+    if (safeCategory === "gpu") {
+      setBrand("");
+      setModel("");
+    }
     const fields = Object.fromEntries(
       guidedFields.filter((f) => f.key !== "freeShipping").map((f) => [f.key, m.specs?.[f.key] ?? ""]),
     );
@@ -479,7 +493,7 @@ export function CreateListingPage({
         block: "center",
         behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
       });
-      document.getElementById("product-details-toggle")?.focus({ preventScroll: true });
+      document.getElementById("product-details-title")?.focus({ preventScroll: true });
     }, 0);
   };
 
@@ -675,6 +689,7 @@ export function CreateListingPage({
                   onChange={(event) => {
                     const nextCategory = event.target.value as Category;
                     setCategory(nextCategory || "");
+                    setTitle("");
                     setCatalogModelId(null);
                     setBrand("");
                     setModel("");
@@ -682,7 +697,7 @@ export function CreateListingPage({
                     setLegacySpecifications({});
                     setInputMode(null);
                     setDetailsPanel("product");
-                    if (!initialListing) setAutomaticTitle(nextCategory !== "fans");
+                    setAutomaticTitle(nextCategory !== "fans");
                     if (nextCategory && nextCategory !== "pc") setTechnicalDetailsUnknown(false);
                     clearFieldError("category");
                   }}
@@ -724,18 +739,8 @@ export function CreateListingPage({
             <div className="create-listing-section__heading">
               <span className="create-listing-section__number">02</span>
               <div>
-                <h2 id="product-details-title">
-                  <button
-                    type="button"
-                    id="product-details-toggle"
-                    className="listing-details-toggle"
-                    aria-expanded={detailsPanel === "product"}
-                    aria-controls="product-details-content technical-details-section"
-                    onClick={detailsPanel === "product" ? openDescription : openProductDetails}
-                  >
-                    {copy.productDetails}
-                    <span aria-hidden="true">⌄</span>
-                  </button>
+                <h2 id="product-details-title" tabIndex={-1}>
+                  {copy.productDetails}
                 </h2>
                 <p hidden={detailsPanel !== "product"}>
                   {locale === "fi"
