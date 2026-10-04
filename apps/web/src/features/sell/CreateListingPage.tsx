@@ -817,7 +817,7 @@ export function CreateListingPage({
                   </>
                 )}
                 {!awaitingInputMode && (
-                  <div className="create-listing-fields">
+                  <div className="create-listing-fields listing-input-mode-content" key={inputMode ?? "manual"}>
                     {safeCategory !== "fans" && (
                       <label className="field-wide listing-profile-auto-title">
                         <input

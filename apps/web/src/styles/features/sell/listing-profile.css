@@ -240,3 +240,34 @@
     transition: none;
   }
 }
+
+/* Animate newly revealed input-mode content without measuring form height in JavaScript. */
+.create-listing-form .listing-input-mode-content,
+.create-listing-form .listing-profile-catalog,
+.create-listing-form .catalog-product-summary,
+.create-listing-form #technical-details-section {
+  interpolate-size: allow-keywords;
+  animation: listing-input-mode-reveal 280ms ease both;
+}
+@keyframes listing-input-mode-reveal {
+  from {
+    height: 0;
+    opacity: 0;
+    transform: translateY(-6px);
+    overflow: clip;
+  }
+  to {
+    height: auto;
+    opacity: 1;
+    transform: translateY(0);
+    overflow: visible;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .create-listing-form .listing-input-mode-content,
+  .create-listing-form .listing-profile-catalog,
+  .create-listing-form .catalog-product-summary,
+  .create-listing-form #technical-details-section {
+    animation: none;
+  }
+}
