@@ -1617,14 +1617,54 @@ describe("product model catalog", () => {
     expect(pure.some((row: any) => row.name === "Pure Power 12")).toBe(true);
     expect(pure.some((row: any) => row.name === "Pure Power 12 M")).toBe(true);
   });
+  it("finds new manufacturers without mixing case compatibility or PSU certifications", async () => {
+    const find = async (category: string, query: string) =>
+      ((await asRole("anon", null, search(category, query))).rows[0].data as any).items;
+    const c8 = await find("case", "Antec C8");
+    expect(c8).toHaveLength(2);
+    expect(c8.every((row: any) => row.specs.formFactor.includes("280 mm") && row.specs.caseType === "Full Tower")).toBe(
+      true,
+    );
+    const ap = await find("case", "Prime AP201");
+    expect(ap[0].specs.formFactor).toBe("Mini-ITX / Micro-ATX");
+    const nv5 = await find("case", "Phanteks NV5");
+    expect(nv5[0].specs.formFactor).toContain("280 mm ilman näytönohjaimen tukitelinettä");
+    const mesh = await find("case", "MATREXX 55 MESH");
+    expect(mesh).toHaveLength(2);
+    expect(mesh.every((row: any) => !row.specs.formFactor.includes("E-ATX"))).toBe(true);
+    const loki = await find("psu", "ROG Loki");
+    expect(loki).toHaveLength(4);
+    expect(loki.every((row: any) => row.specs.formFactor === "SFX-L")).toBe(true);
+    expect(loki.find((row: any) => row.specs.wattage === "1200").specs.efficiency).toBe("80+ Titanium");
+    expect(
+      loki
+        .filter((row: any) => row.specs.wattage !== "1200")
+        .every((row: any) => row.specs.efficiency === "80+ Platinum"),
+    ).toBe(true);
+    const cm = await find("psu", "V SFX Gold");
+    expect(cm).toHaveLength(4);
+    expect(cm.every((row: any) => row.specs.formFactor === "SFX" && row.specs.efficiency === "80+ Gold")).toBe(true);
+    const px = await find("psu", "PX1000G");
+    expect(px[0]).toMatchObject({
+      variant: "V2",
+      specs: { wattage: "1000", efficiency: "80+ Gold", formFactor: "ATX" },
+    });
+    const fsp = await find("psu", "FSP Hydro G PRO");
+    expect(fsp).toHaveLength(4);
+    expect(fsp.every((row: any) => row.variant.endsWith("ATX 2.52") && row.specs.efficiency === "80+ Gold")).toBe(true);
+    const tt = await find("psu", "Toughpower GF A3");
+    expect(tt.map((row: any) => row.specs.wattage).sort()).toEqual(["1050", "1200", "650", "750", "850"]);
+  });
   it.each([
-    ["case", "Terra", "formFactor", "caseType", "Pieni kotelo"],
-    ["psu", "SFX L Power", "wattage", "formFactor", "SFX-L"],
+    ["case", "Terra", "formFactor", "caseType", "Pieni kotelo", "cases_psu_catalog_expansion"],
+    ["psu", "SFX L Power", "wattage", "formFactor", "SFX-L", "cases_psu_catalog_expansion"],
+    ["case", "C8", "formFactor", "caseType", "Full Tower", "additional_case_psu_brands"],
+    ["psu", "PK550D", "wattage", "formFactor", "ATX", "additional_case_psu_brands"],
   ])(
     "reapplying the case/PSU seed preserves %s admin edits and listing references",
-    async (category, name, correctedKey, restoredKey, restoredValue) => {
+    async (category, name, correctedKey, restoredKey, restoredValue, migration) => {
       const directory = new URL("../supabase/migrations/", import.meta.url);
-      const filename = (await readdir(directory)).find((file) => file.endsWith("_cases_psu_catalog_expansion.sql"))!;
+      const filename = (await readdir(directory)).find((file) => file.endsWith(`_${migration}.sql`))!;
       const seed = await readFile(new URL(filename, directory), "utf8");
       const original = (
         await db.query<any>("select * from public.catalog_product_models where category=$1 and name=$2", [

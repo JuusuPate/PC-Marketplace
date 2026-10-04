@@ -249,3 +249,32 @@ test("new cases and PSUs fill locked compatibility, size and correct efficiency 
     "Corsair RM650e 2025 650 W Cybenetics Gold ATX",
   );
 });
+
+test("new manufacturers expose case width constraints and small PSU efficiency in the listing", async ({ page }) => {
+  await start(page, "case");
+  await page.getByRole("radio", { name: "Tuotekatalogista" }).check();
+  await page.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("Antec C8");
+  await page.getByRole("button", { name: "Antec C8 ARGB", exact: true }).click();
+  const summary = page.locator(".catalog-product-summary");
+  await expect(summary).toContainText("E-ATX (enintään 280 mm)");
+  await expect(summary).toContainText("Full Tower");
+  await expect(page.locator('[data-listing-field="title"]')).toHaveValue(/Antec C8 ARGB/);
+  await page.getByRole("button", { name: "Takaisin", exact: true }).click();
+  await page.locator('[data-listing-field="category"]').selectOption("psu");
+  await page.getByRole("button", { name: "Jatka", exact: true }).click();
+  await page.getByRole("radio", { name: "Tuotekatalogista" }).check();
+  await page.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("ROG Loki");
+  await page.getByRole("button", { name: "ASUS ROG Loki 1200 W ATX 3.1", exact: true }).click();
+  await expect(summary).toContainText("80+ Titanium");
+  await expect(summary).toContainText("SFX-L");
+  await expect(page.locator('[data-listing-field="title"]')).toHaveValue(
+    /ASUS ROG Loki 1200 W ATX 3.1 80\+ Titanium SFX-L/,
+  );
+  await expect(page.getByRole("combobox", { name: "Hyötysuhdeluokitus", exact: true })).toHaveCount(0);
+  await page.getByRole("button", { name: "Vaihda tuotetta", exact: true }).click();
+  await page.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("PK550D");
+  await page.getByRole("button", { name: "DeepCool PK550D", exact: true }).click();
+  await expect(summary).toContainText("80+ Bronze");
+  await expect(summary).toContainText("550");
+  await expect(page.locator('[data-listing-field="title"]')).not.toHaveValue(/Loki|Titanium|SFX/);
+});

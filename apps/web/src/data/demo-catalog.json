@@ -34487,5 +34487,1353 @@
     "id": "9f1e535a-1e5e-5068-b7de-a3a9fb82af4f",
     "is_active": true,
     "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Antec",
+    "name": "AX90",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "ATX / Micro-ATX / Mini-ITX",
+      "caseType": "Mid Tower"
+    },
+    "source_url": "https://www.antec.com/product/case/ax90",
+    "id": "9186a946-560d-57b7-b21e-b1d5966c568e",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Antec",
+    "name": "C2M ARGB",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "Micro-ATX / Mini-ITX",
+      "caseType": "Micro-ATX-kotelo"
+    },
+    "source_url": "https://www.antec.com/product/case/c2m-argb",
+    "id": "94636aed-80e0-5c43-8b55-df70c96778e5",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Antec",
+    "name": "C8",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "E-ATX (enintään 280 mm) / ATX / Micro-ATX / Mini-ITX",
+      "caseType": "Full Tower"
+    },
+    "source_url": "https://www.antec.com/product/case/c8",
+    "id": "a573983a-3bba-55e9-8a91-f6fbe7706162",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Antec",
+    "name": "C8 ARGB",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "E-ATX (enintään 280 mm) / ATX / Micro-ATX / Mini-ITX",
+      "caseType": "Full Tower"
+    },
+    "source_url": "https://www.antec.com/product/case/c8-argb",
+    "id": "c34dc84d-f1a5-510c-aa05-165f94ae5d70",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Antec",
+    "name": "DP503",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "E-ATX / ATX / Micro-ATX / Mini-ITX",
+      "caseType": "Mid Tower"
+    },
+    "source_url": "https://www.antec.com/product/case/dp503",
+    "id": "8715180e-d9a3-5825-8a0b-117f6fd38faf",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Antec",
+    "name": "NX200",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "ATX / Micro-ATX / Mini-ITX",
+      "caseType": "Mid Tower"
+    },
+    "source_url": "https://www.antec.com/product/case/nx200",
+    "id": "2770bdde-908f-5d29-82fe-187fcc62ddf0",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Antec",
+    "name": "NX410",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "ATX / Micro-ATX / Mini-ITX",
+      "caseType": "Mid Tower"
+    },
+    "source_url": "https://www.antec.com/product/case/nx410",
+    "id": "b6b7c1fe-5387-5c3d-b6fd-0b13bb2ab537",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Antec",
+    "name": "P10 FLUX",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "ATX / Micro-ATX / Mini-ITX",
+      "caseType": "Mid Tower"
+    },
+    "source_url": "https://www.antec.com/product/case/p10-flux",
+    "id": "9a89c28f-daa5-5a6a-9125-df37f54ab3f3",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Antec",
+    "name": "P10C",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "ATX / Micro-ATX / Mini-ITX",
+      "caseType": "Mid Tower"
+    },
+    "source_url": "https://www.antec.com/product/case/p10c",
+    "id": "420374fc-9688-54fb-a2be-1c1407a1da37",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Antec",
+    "name": "P20C",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "E-ATX (enintään 330 mm) / ATX / Micro-ATX / Mini-ITX",
+      "caseType": "Mid Tower"
+    },
+    "source_url": "https://www.antec.com/product/case/p20c",
+    "id": "487724d1-329e-5ba2-ae36-351febd2b8bc",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Antec",
+    "name": "P20CE",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "E-ATX (enintään 330 mm) / ATX / Micro-ATX / Mini-ITX",
+      "caseType": "Mid Tower"
+    },
+    "source_url": "https://www.antec.com/product/case/p20ce",
+    "id": "59f9b438-2f8a-57ee-9246-e614dce3f85a",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Antec",
+    "name": "P7 Silent",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "ATX / Micro-ATX / Mini-ITX",
+      "caseType": "Mid Tower"
+    },
+    "source_url": "https://www.antec.com/product/case/p7-silent",
+    "id": "597cc78d-a9d8-589d-a576-d1964b698ec0",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Antec",
+    "name": "Performance 1 FT",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "E-ATX / ATX / Micro-ATX / Mini-ITX",
+      "caseType": "Full Tower"
+    },
+    "source_url": "https://www.antec.com/product/case/performance-1-ft",
+    "id": "05f89dff-049e-5989-9b22-ab534069c93f",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "ASUS",
+    "name": "Prime AP201",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "Mini-ITX / Micro-ATX",
+      "caseType": "Small Tower"
+    },
+    "source_url": "https://www.asus.com/uk/motherboards-components/cases/prime/asus-prime-ap201-microatx-case/techspec/",
+    "id": "d06368d3-a3a5-5344-971c-caddefcb9471",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "ASUS",
+    "name": "ProArt PA602",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "Mini-DTX / DTX / Mini-ITX / Micro-ATX / ATX / E-ATX (enintään 12 x 10,9 tuumaa)",
+      "caseType": "Mid Tower"
+    },
+    "source_url": "https://www.asus.com/ca-en/motherboards-components/cases/proart/proart-pa602/techspec/",
+    "id": "bc24acc8-0c89-5e33-b1ee-26693f45e9d5",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Cooler Master",
+    "name": "HAF 500",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "ATX / Micro-ATX / Mini-ITX / SSI-CEB / E-ATX (enintään 12 x 14,1 tuumaa)",
+      "caseType": "Mid Tower"
+    },
+    "source_url": "https://www.coolermaster.com/en-global/products/haf-500.html",
+    "id": "cd468930-580a-584b-963b-99086a18e4eb",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Cooler Master",
+    "name": "MasterBox MB520",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "ATX / Micro-ATX / Mini-ITX",
+      "caseType": "ATX-kotelo"
+    },
+    "source_url": "https://www.coolermaster.com/en-global/products/masterbox-mb520.html",
+    "id": "5a812fe0-bf4c-5068-9383-db42d59ea3ec",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Cooler Master",
+    "name": "MasterBox NR200P",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "Mini-ITX / Mini-DTX (enintään 244 x 226 mm)",
+      "caseType": "Mini-ITX-kotelo"
+    },
+    "source_url": "https://www.coolermaster.com/en-global/products/masterbox-nr200p.html",
+    "id": "15b2d967-04c9-57bb-9ccc-2f9e885054f8",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Cooler Master",
+    "name": "MasterBox Q300L",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "Mini-ITX / Micro-ATX",
+      "caseType": "Mini Tower"
+    },
+    "source_url": "https://www.coolermaster.com/en-global/products/masterbox-q300l.html",
+    "id": "2c38fd93-6387-5a49-b1b4-532582218ace",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Cooler Master",
+    "name": "MasterBox TD500 Mesh",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "ATX / Micro-ATX / Mini-ITX / SSI-CEB / E-ATX (enintään 12 x 10,7 tuumaa)",
+      "caseType": "Mid Tower"
+    },
+    "source_url": "https://www.coolermaster.com/en-global/products/masterbox-td500-mesh.html",
+    "id": "4d07b37e-ae83-54a9-ad78-fb58cad3dd2a",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Cooler Master",
+    "name": "MasterBox TD500 Mesh V2",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "ATX / Micro-ATX / Mini-ITX / SSI-CEB / E-ATX (enintään 12 x 10,7 tuumaa)",
+      "caseType": "Mid Tower"
+    },
+    "source_url": "https://www.coolermaster.com/en-global/products/masterbox-td500-mesh-v2.html",
+    "id": "3b4866c6-8dbb-5a46-bb63-8e4a77201cb9",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Cooler Master",
+    "name": "Silencio S600",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "ATX / Micro-ATX / Mini-ITX",
+      "caseType": "Mid Tower"
+    },
+    "source_url": "https://www.coolermaster.com/en-global/products/silencio-s600.html",
+    "id": "f3cab891-01ac-523f-91d5-17743158624e",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "DeepCool",
+    "name": "CG540",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "Mini-ITX / Micro-ATX / ATX / E-ATX",
+      "caseType": "Mid Tower"
+    },
+    "source_url": "https://deepcool.com/products/Cases/CG540-Tempered-Glass-Mid-Tower-ATX-Case/2021/13626.shtml",
+    "id": "df0274a9-faef-5028-a7bd-c48de2e51831",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "DeepCool",
+    "name": "CG540 Limited",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "Mini-ITX / Micro-ATX / ATX / E-ATX",
+      "caseType": "Mid Tower"
+    },
+    "source_url": "https://deepcool.com/products/Cases/CG540-Limited-Tempered-Glass-Mid-Tower-ATX-Case/2021/15050.shtml",
+    "id": "9f1b7368-8c3e-524e-81a2-725c6a40f398",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "DeepCool",
+    "name": "CG540 MESH",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "Mini-ITX / Micro-ATX / ATX / E-ATX",
+      "caseType": "ATX-kotelo"
+    },
+    "source_url": "https://deepcool.com/products/Cases/CG540-MESH-Airflow-Case/2026/22745.shtml",
+    "id": "50fe306a-aeae-52a9-a137-7dccb7b25a32",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "DeepCool",
+    "name": "CG560",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "Mini-ITX / Micro-ATX / ATX / E-ATX",
+      "caseType": "Mid Tower"
+    },
+    "source_url": "https://deepcool.com/products/Cases/CG560-Airflow-Mid-Tower-ATX-Case/2021/13520.shtml",
+    "id": "beebc302-4c08-5dcc-a07a-5deed1dbbf9c",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "DeepCool",
+    "name": "CG560 Limited",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "Mini-ITX / Micro-ATX / ATX / E-ATX",
+      "caseType": "Mid Tower"
+    },
+    "source_url": "https://deepcool.com/products/Cases/CG560-Limited-Airflow-Mid-Tower-ATX-Case/2021/15049.shtml",
+    "id": "8fe0bf1d-b578-5c58-b9dc-bb6b10c8d2ca",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "DeepCool",
+    "name": "CH370",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "Mini-ITX / Micro-ATX",
+      "caseType": "Micro-ATX-kotelo"
+    },
+    "source_url": "https://deepcool.com/products/Cases/CH370-Micro-ATX-Case/2022/15949.shtml",
+    "id": "51014d77-633f-5a83-b449-3327ea9957d8",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "DeepCool",
+    "name": "CH510",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "Mini-ITX / Micro-ATX / ATX / E-ATX",
+      "caseType": "Mid Tower"
+    },
+    "source_url": "https://deepcool.com/products/Cases/CH510-Mid-Tower-ATX-Case/2022/15764.shtml",
+    "id": "60c3b1d7-0732-5b16-a574-de2863307843",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "DeepCool",
+    "name": "CH510 MESH DIGITAL",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "Mini-ITX / Micro-ATX / ATX / E-ATX",
+      "caseType": "Mid Tower"
+    },
+    "source_url": "https://deepcool.com/products/Cases/CH510-MESH-DIGITAL-Mid-Tower-ATX-Case/2022/16213.shtml",
+    "id": "7740d168-aa41-5c24-824b-8009725654b1",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "DeepCool",
+    "name": "CH510 ZORIA",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "Mini-ITX / Micro-ATX / ATX / E-ATX",
+      "caseType": "Mid Tower"
+    },
+    "source_url": "https://deepcool.com/products/Cases/CH510-ZORIA-Mid-Tower-ATX-Case/2024/18208.shtml",
+    "id": "ea2e7430-3fee-52e5-9c42-71acaa9b1abf",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "DeepCool",
+    "name": "CH560",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "Mini-ITX / Micro-ATX / ATX / E-ATX",
+      "caseType": "ATX-kotelo"
+    },
+    "source_url": "https://deepcool.com/products/Cases/CH560-New-Generation-of-Airflow-Case/2023/17101.shtml",
+    "id": "eb4d1ca8-84e2-5922-a7bb-972a4764ba11",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "DeepCool",
+    "name": "CH560 DIGITAL",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "Mini-ITX / Micro-ATX / ATX / E-ATX",
+      "caseType": "ATX-kotelo"
+    },
+    "source_url": "https://deepcool.com/products/Cases/CH560-DIGITAL-Airflow-Case-With-Status-Screen/2023/17174.shtml",
+    "id": "263edf36-e560-5e5b-91f4-453110bb5939",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "DeepCool",
+    "name": "CK500",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "Mini-ITX / Micro-ATX / ATX / E-ATX",
+      "caseType": "Mid Tower"
+    },
+    "source_url": "https://deepcool.com/products/Cases/CK500-Mid-Tower-ATX-Case/2021/14310.shtml",
+    "id": "9eebd9c5-5d24-581a-b0d6-9e8f2c178eca",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "DeepCool",
+    "name": "CK560",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "Mini-ITX / Micro-ATX / ATX / E-ATX",
+      "caseType": "Mid Tower"
+    },
+    "source_url": "https://deepcool.com/products/Cases/CK560-Mid-Tower-ATX-Case-Airflow/2021/14924.shtml",
+    "id": "5a4a99df-e91d-5ffe-bae2-2cc9db6cabd4",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "DeepCool",
+    "name": "MATREXX 40",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "Mini-ITX / Micro-ATX",
+      "caseType": "Micro-ATX-kotelo"
+    },
+    "source_url": "https://deepcool.com/products/Cases/Matrexx-40-Airflow-Micro-ATX-Case/2021/11876.shtml",
+    "id": "77031294-16a9-5af1-8cd5-3cc4f695338c",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "DeepCool",
+    "name": "MATREXX 55 MESH",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "Mini-ITX / Micro-ATX / ATX",
+      "caseType": "Mid Tower"
+    },
+    "source_url": "https://deepcool.com/products/Cases/Matrexx-55-Mesh-Mid-Tower-ATX-Case/2021/4655.shtml",
+    "id": "6bfb5d53-5171-5ade-a972-f07aab70f55d",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "DeepCool",
+    "name": "MATREXX 55 MESH ADD-RGB 4F",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "Mini-ITX / Micro-ATX / ATX",
+      "caseType": "Mid Tower"
+    },
+    "source_url": "https://deepcool.com/products/Cases/Matrexx-55-Mesh-4F-Mid-Tower-ATX-Case/2021/4656.shtml",
+    "id": "2848210d-391e-5b60-9ec8-fabe6cbdd63a",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Phanteks",
+    "name": "NV5",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "ATX / Micro-ATX / Mini-ITX / E-ATX (enintään 280 mm ilman näytönohjaimen tukitelinettä)",
+      "caseType": "Mid Tower"
+    },
+    "source_url": "https://phanteks.com/product/nv5-black/",
+    "id": "c7b8b84b-9866-5c94-abe2-5ebd74f2fd89",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Phanteks",
+    "name": "NV7",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "ATX / Micro-ATX / Mini-ITX / E-ATX (enintään 277 mm LED-suojuksen kanssa)",
+      "caseType": "Full Tower"
+    },
+    "source_url": "https://phanteks.com/product/nv7-black/",
+    "id": "b3cf344c-b8ae-53ab-8f2c-234d4841d8f0",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Phanteks",
+    "name": "NV9",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "ATX / Micro-ATX / Mini-ITX / E-ATX (enintään 280 mm)",
+      "caseType": "Full Tower"
+    },
+    "source_url": "https://phanteks.com/product/nv9-black/",
+    "id": "78e14524-4c7b-5206-bf0a-f7b63ab69075",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Phanteks",
+    "name": "XT Pro",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "ATX / Micro-ATX / Mini-ITX / E-ATX (enintään 280 mm)",
+      "caseType": "Mid Tower"
+    },
+    "source_url": "https://phanteks.com/product/xt-pro-black/",
+    "id": "e168ccb7-9881-5ebb-9442-95165a4acfa3",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Phanteks",
+    "name": "XT Pro Ultra",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "ATX / Micro-ATX / Mini-ITX / E-ATX (enintään 280 mm)",
+      "caseType": "Mid Tower"
+    },
+    "source_url": "https://phanteks.com/product/xt-pro-ultra-black/",
+    "id": "19587c04-d8ac-5066-9897-999c630edbbc",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Phanteks",
+    "name": "XT View",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "ATX / Micro-ATX / Mini-ITX / E-ATX (enintään 280 mm)",
+      "caseType": "Mid Tower"
+    },
+    "source_url": "https://phanteks.com/product/xt-view-black/",
+    "id": "b9217f09-1b39-558d-a797-3a79ce1bd3e9",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "ASUS",
+    "name": "ROG Loki",
+    "variant": "1000 W ATX 3.1",
+    "aliases": "",
+    "specs": {
+      "wattage": "1000",
+      "efficiency": "80+ Platinum",
+      "formFactor": "SFX-L"
+    },
+    "source_url": "https://rog.asus.com/power-supply-units/rog-loki/rog-loki-1000p-sfx-l-gaming-model/spec/",
+    "id": "9badd2b8-deca-5ff0-b61c-975f0d694e50",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "ASUS",
+    "name": "ROG Loki",
+    "variant": "1200 W ATX 3.1",
+    "aliases": "",
+    "specs": {
+      "wattage": "1200",
+      "efficiency": "80+ Titanium",
+      "formFactor": "SFX-L"
+    },
+    "source_url": "https://rog.asus.com/power-supply-units/rog-loki/rog-loki-1200t-sfx-l-gaming-model/spec/",
+    "id": "38dc3b39-e479-5b5e-9605-ab4e5e68d4f3",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "ASUS",
+    "name": "ROG Loki",
+    "variant": "750 W ATX 3.0",
+    "aliases": "",
+    "specs": {
+      "wattage": "750",
+      "efficiency": "80+ Platinum",
+      "formFactor": "SFX-L"
+    },
+    "source_url": "https://rog.asus.com/power-supply-units/rog-loki/rog-loki-750p-sfx-l-gaming-model/spec/",
+    "id": "7b58ab89-0a56-5b0f-aa0d-4b239db486f5",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "ASUS",
+    "name": "ROG Loki",
+    "variant": "850 W ATX 3.1",
+    "aliases": "",
+    "specs": {
+      "wattage": "850",
+      "efficiency": "80+ Platinum",
+      "formFactor": "SFX-L"
+    },
+    "source_url": "https://rog.asus.com/power-supply-units/rog-loki/rog-loki-850p-sfx-l-gaming-model/spec/",
+    "id": "59b3f655-4dff-54ab-81e6-ea049bf7ae52",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "ASUS",
+    "name": "TUF Gaming",
+    "variant": "1000 W ATX 3.1",
+    "aliases": "",
+    "specs": {
+      "wattage": "1000",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.asus.com/uk/motherboards-components/power-supply-units/tuf-gaming/tuf-gaming-1000g/techspec/",
+    "id": "597a02d7-fcae-53c5-9dc9-2a346005dfd1",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "ASUS",
+    "name": "TUF Gaming",
+    "variant": "1200 W ATX 3.1",
+    "aliases": "",
+    "specs": {
+      "wattage": "1200",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.asus.com/uk/motherboards-components/power-supply-units/tuf-gaming/tuf-gaming-1200g/techspec/",
+    "id": "8f3dc480-4da7-56dc-af47-7c53890de387",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "ASUS",
+    "name": "TUF Gaming",
+    "variant": "750 W ATX 3.1",
+    "aliases": "",
+    "specs": {
+      "wattage": "750",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.asus.com/uk/motherboards-components/power-supply-units/tuf-gaming/tuf-gaming-750g/techspec/",
+    "id": "621b4b0e-903c-58a9-b652-b563dde15662",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "ASUS",
+    "name": "TUF Gaming",
+    "variant": "850 W ATX 3.1",
+    "aliases": "",
+    "specs": {
+      "wattage": "850",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.asus.com/uk/motherboards-components/power-supply-units/tuf-gaming/tuf-gaming-850g/techspec/",
+    "id": "7ade16ae-b2c2-5f22-85ba-aea9204095bc",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Cooler Master",
+    "name": "MWE Gold V2 Full Modular",
+    "variant": "550 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "550",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.coolermaster.com/en-my/products/mwe-gold-550-v2-full-modular.html",
+    "id": "dd26b5cf-b414-5fac-ab8e-0da0f04ae889",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Cooler Master",
+    "name": "MWE Gold V2 Full Modular",
+    "variant": "650 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "650",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.coolermaster.com/en-my/products/mwe-gold-650-v2-full-modular.html",
+    "id": "292825f7-9035-541e-ae1c-5436194a3d17",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Cooler Master",
+    "name": "MWE Gold V2 Full Modular",
+    "variant": "750 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "750",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.coolermaster.com/en-my/products/mwe-gold-750-v2-full-modular.html",
+    "id": "ea01eb68-03d8-5cca-8816-59496e67b623",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Cooler Master",
+    "name": "MWE Gold V2 Full Modular",
+    "variant": "850 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "850",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.coolermaster.com/en-my/products/mwe-gold-850-v2-full-modular.html",
+    "id": "8e2702f4-82c9-5c14-9b0a-0fbf8fb48f2f",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Cooler Master",
+    "name": "V SFX Gold",
+    "variant": "550 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "550",
+      "efficiency": "80+ Gold",
+      "formFactor": "SFX"
+    },
+    "source_url": "https://legacy.coolermaster.com/en-global/products/v550-sfx-gold/",
+    "id": "144144d6-5819-572e-acc8-a55af160187a",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Cooler Master",
+    "name": "V SFX Gold",
+    "variant": "650 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "650",
+      "efficiency": "80+ Gold",
+      "formFactor": "SFX"
+    },
+    "source_url": "https://legacy.coolermaster.com/en-global/products/v650-sfx-gold/",
+    "id": "52ba9200-633f-587f-9c81-bf1fd32dbc5d",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Cooler Master",
+    "name": "V SFX Gold",
+    "variant": "750 W ATX 3.1",
+    "aliases": "",
+    "specs": {
+      "wattage": "750",
+      "efficiency": "80+ Gold",
+      "formFactor": "SFX"
+    },
+    "source_url": "https://legacy.coolermaster.com/en-global/products/v750-sfx-gold/",
+    "id": "0abda02e-b408-58e0-a3e1-80ecff19d3aa",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Cooler Master",
+    "name": "V SFX Gold",
+    "variant": "850 W ATX 3.1",
+    "aliases": "",
+    "specs": {
+      "wattage": "850",
+      "efficiency": "80+ Gold",
+      "formFactor": "SFX"
+    },
+    "source_url": "https://legacy.coolermaster.com/en-global/products/v850-sfx-gold/",
+    "id": "2e778803-eeb5-5ceb-bac8-6a71095ee3fb",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "DeepCool",
+    "name": "DQ650-M-V2L",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "wattage": "650",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://uk.deepcool.com/products/PowerSupplyUnits/powersupplyunits/DQ650-M-V2L-80-Plus-Gold-Power-Supply/2021/8732.shtml",
+    "id": "610dddf8-2b5f-59ac-828d-217eec1c1fde",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "DeepCool",
+    "name": "DQ750-M-V2L",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "wattage": "750",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://uk.deepcool.com/products/PowerSupplyUnits/powersupplyunits/DQ750-M-V2L-80-Plus-Gold-Power-Supply/2021/8731.shtml",
+    "id": "66ee966e-bce1-5ed7-8d0a-cb4d84f9c4f0",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "DeepCool",
+    "name": "DQ850-M-V2L",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "wattage": "850",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://uk.deepcool.com/products/PowerSupplyUnits/powersupplyunits/DQ850-M-V2L-80-Plus-Gold-Power-Supply/2021/8730.shtml",
+    "id": "09dc292e-b28f-5c40-8db9-869b95b94811",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "DeepCool",
+    "name": "PK550D",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "wattage": "550",
+      "efficiency": "80+ Bronze",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://uk.deepcool.com/products/PowerSupplyUnits/powersupplyunits/PK550D-80-PLUS-Bronze-Power-Supply/2022/15646.shtml",
+    "id": "fa985374-ae61-512b-bc7a-a28762e02ac3",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "DeepCool",
+    "name": "PK650D",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "wattage": "650",
+      "efficiency": "80+ Bronze",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://uk.deepcool.com/products/PowerSupplyUnits/powersupplyunits/PK650D-80-PLUS-Bronze-Power-Supply/2022/15648.shtml",
+    "id": "2a9e50a1-1db5-568c-b220-b771df28891a",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "DeepCool",
+    "name": "PK750D",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "wattage": "750",
+      "efficiency": "80+ Bronze",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://uk.deepcool.com/products/PowerSupplyUnits/powersupplyunits/PK750D-80-PLUS-Bronze-Power-Supply/2022/15650.shtml",
+    "id": "a2383660-3c5e-52ca-a78b-1acdcb008f94",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "DeepCool",
+    "name": "PN650M",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "wattage": "650",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://uk.deepcool.com/products/PowerSupplyUnits/powersupplyunits/PN650M-ATX3.1-Modular-Power-Supply/2023/17912.shtml",
+    "id": "e35403e7-d0a7-579e-b91e-e3c4ab3d5e4b",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "DeepCool",
+    "name": "PN750M",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "wattage": "750",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://uk.deepcool.com/products/PowerSupplyUnits/powersupplyunits/PN750M-ATX3.1-Modular-Power-Supply/2023/17913.shtml",
+    "id": "7712e22f-7420-5fe9-89d2-c39a2451a710",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "DeepCool",
+    "name": "PN850M",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "wattage": "850",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://uk.deepcool.com/products/PowerSupplyUnits/powersupplyunits/PN850M-ATX3.1-Modular-Power-Supply/2023/17914.shtml",
+    "id": "f78d73ea-f47b-5908-9966-166c60921cef",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "DeepCool",
+    "name": "PQ1000M",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "wattage": "1000",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://uk.deepcool.com/products/PowerSupplyUnits/powersupplyunits/PQ1000M-80-PLUS-Gold-Modular-Power-Supply/2021/14041.shtml",
+    "id": "100c26a5-14ef-51e1-bb68-ba8975431b81",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "DeepCool",
+    "name": "PQ650M",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "wattage": "650",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://uk.deepcool.com/products/PowerSupplyUnits/powersupplyunits/PQ650M-80-PLUS-Gold-Modular-Power-Supply/2021/14038.shtml",
+    "id": "fe67b1ad-216e-5290-ab47-7bce3a4a0dd3",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "DeepCool",
+    "name": "PQ750M",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "wattage": "750",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://uk.deepcool.com/products/PowerSupplyUnits/powersupplyunits/PQ750M-80-PLUS-Gold-Modular-Power-Supply/2021/14039.shtml",
+    "id": "f2982776-e576-5d14-ace0-d15012a41506",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "DeepCool",
+    "name": "PQ850M",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "wattage": "850",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://uk.deepcool.com/products/PowerSupplyUnits/powersupplyunits/PQ850M-80-PLUS-Gold-Modular-Power-Supply/2021/14040.shtml",
+    "id": "2505dcc2-1a0a-5768-8759-b42878216df1",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "DeepCool",
+    "name": "PX1000G",
+    "variant": "V2",
+    "aliases": "",
+    "specs": {
+      "wattage": "1000",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://uk.deepcool.com/products/PowerSupplyUnits/powersupplyunits/PX1000G-V2-ATX-3.0-80-Plus-Gold-Power-Supply/2024/18410.shtml",
+    "id": "f325bcbe-3cbb-5b1e-ae97-71a0c301a956",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "DeepCool",
+    "name": "PX1000P",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "wattage": "1000",
+      "efficiency": "80+ Platinum",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://uk.deepcool.com/products/PowerSupplyUnits/powersupplyunits/PX1000P-ATX-3.0-Platinum-Power-Supply/2023/17426.shtml",
+    "id": "152ee822-942f-5046-bcd0-c1f31cbcde3f",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "DeepCool",
+    "name": "PX1200G",
+    "variant": "V2",
+    "aliases": "",
+    "specs": {
+      "wattage": "1200",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://uk.deepcool.com/products/PowerSupplyUnits/powersupplyunits/PX1200G-V2-ATX-3.0-80-Plus-Gold-Power-Supply/2024/18411.shtml",
+    "id": "e6ac26a0-ff2b-5ab2-a7b2-aea104e14ba2",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "DeepCool",
+    "name": "PX1300P",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "wattage": "1300",
+      "efficiency": "80+ Platinum",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://uk.deepcool.com/products/PowerSupplyUnits/powersupplyunits/PX1300P-ATX-3.0-Platinum-Power-Supply/2023/17428.shtml",
+    "id": "7577e9c4-231d-5b78-88be-206cb194d039",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "DeepCool",
+    "name": "PX850G",
+    "variant": "V2",
+    "aliases": "",
+    "specs": {
+      "wattage": "850",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://uk.deepcool.com/products/PowerSupplyUnits/powersupplyunits/PX850G-V2-ATX-3.0-80-Plus-Gold-Power-Supply/2024/18409.shtml",
+    "id": "5aba9ab6-c602-5809-a796-fc1a0c4b3857",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "FSP",
+    "name": "Hydro G PRO",
+    "variant": "1000 W ATX 2.52",
+    "aliases": "",
+    "specs": {
+      "wattage": "1000",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.fsplifestyle.com/es/product/HYDROGPRO1000W.html",
+    "id": "23d8f221-6dd1-5ce9-9737-92f444a6a0e1",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "FSP",
+    "name": "Hydro G PRO",
+    "variant": "650 W ATX 2.52",
+    "aliases": "",
+    "specs": {
+      "wattage": "650",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.fsplifestyle.com/es/product/HYDROGPRO650W.html",
+    "id": "6ed4e0a9-9a20-5a38-9fe1-a1e519bbfa76",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "FSP",
+    "name": "Hydro G PRO",
+    "variant": "750 W ATX 2.52",
+    "aliases": "",
+    "specs": {
+      "wattage": "750",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.fsplifestyle.com/es/product/HYDROGPRO750W.html",
+    "id": "a6f3cae6-b90d-5be3-8320-a70c0ac27c53",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "FSP",
+    "name": "Hydro G PRO",
+    "variant": "850 W ATX 2.52",
+    "aliases": "",
+    "specs": {
+      "wattage": "850",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.fsplifestyle.com/es/product/HYDROGPRO850W.html",
+    "id": "725134c5-883a-50a6-8ca2-31263a377bd7",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Thermaltake",
+    "name": "Toughpower GF A3",
+    "variant": "1050 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "1050",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://thermaltake.com/products/toughpower-gf-a3-gold-750w-tt-premium-edition-th",
+    "id": "e519b0a1-1b95-5deb-aa06-45eae3af9ea4",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Thermaltake",
+    "name": "Toughpower GF A3",
+    "variant": "1200 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "1200",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://thermaltake.com/products/toughpower-gf-a3-gold-750w-tt-premium-edition-th",
+    "id": "adeafaca-38a3-5530-8cfa-1d834b4226fe",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Thermaltake",
+    "name": "Toughpower GF A3",
+    "variant": "650 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "650",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://thermaltake.com/products/toughpower-gf-a3-gold-750w-tt-premium-edition-th",
+    "id": "6a8bae54-a684-530d-b638-9821437567f2",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Thermaltake",
+    "name": "Toughpower GF A3",
+    "variant": "750 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "750",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://thermaltake.com/products/toughpower-gf-a3-gold-750w-tt-premium-edition-th",
+    "id": "4703c519-f324-53e9-bc66-fdbba4652f9b",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Thermaltake",
+    "name": "Toughpower GF A3",
+    "variant": "850 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "850",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://thermaltake.com/products/toughpower-gf-a3-gold-750w-tt-premium-edition-th",
+    "id": "9cd90fae-9d7c-5003-bb4d-529e2c5ea144",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
   }
 ]

@@ -1,6 +1,6 @@
 # Tuotekatalogi ja ilmoituksen tuotetiedot
 
-Päivitetty 4.10.2026. Katalogipäivitykset sisältävät 1 946 valmistajan julkaisemaa mallia tai kapasiteettiversiota. Aiemmat tunnisteet, niihin liitetyt ilmoitukset, ylläpidon omat tiedot ja piilotetut tuotteet säilyvät. Tämä on laaja lähteisiin perustuva kokoelma, ei lupaus kaikkien valmistajien kaikkien historiallisten tuotteiden kattamisesta.
+Päivitetty 4.10.2026. Katalogipäivitykset sisältävät 2 033 valmistajan julkaisemaa mallia tai kapasiteettiversiota. Aiemmat tunnisteet, niihin liitetyt ilmoitukset, ylläpidon omat tiedot ja piilotetut tuotteet säilyvät. Tämä on laaja lähteisiin perustuva kokoelma, ei lupaus kaikkien valmistajien kaikkien historiallisten tuotteiden kattamisesta.
 
 | Tuoteryhmä          | Päivityksen rivejä | Kattavuus                                                                                                                         |
 | ------------------- | -----------------: | --------------------------------------------------------------------------------------------------------------------------------- |
@@ -8,9 +8,9 @@ Päivitetty 4.10.2026. Katalogipäivitykset sisältävät 1 946 valmistajan julk
 | Näytönohjaimet      |                215 | AMD 129, NVIDIA 79, Intel 7; eri muistimäärät erillään                                                                            |
 | Emolevyt            |                 17 | MSI, ASUS, ASRock ja Gigabyte; AM4, AM5, LGA 1700 ja LGA 1851                                                                     |
 | RAM                 |                596 | Kingston 12, Corsair 152, G.Skill 252, Patriot 110, TeamGroup 38, ADATA 26, Crucial 6; DDR3, DDR3L, DDR4 ja DDR5, DIMM ja SO-DIMM |
-| Virtalähteet        |                 90 | Corsair, Seasonic, be quiet! ja MSI; ATX, SFX, SFX-L ja TFX                                                                       |
+| Virtalähteet        |                133 | Corsair, Seasonic, be quiet!, MSI, ASUS, Cooler Master, DeepCool, Thermaltake ja FSP; ATX, SFX, SFX-L ja TFX                      |
 | Tallennuslaitteet   |                115 | Samsung, Kingston NV2/KC3000, WD_BLACK SN770/SN850X ja Seagate BarraCuda HDD                                                      |
-| Kotelot             |                 62 | Fractal Design, NZXT, be quiet!, Corsair ja Lian Li                                                                               |
+| Kotelot             |                106 | Fractal Design, NZXT, be quiet!, Corsair, Lian Li, Antec, Cooler Master, Phanteks, ASUS ja DeepCool                               |
 | Prosessorijäähdytys |                 49 | Noctua, ARCTIC Freezer 36 / Liquid Freezer III 240 ja Thermalright                                                                |
 | Tuulettimet         |                104 | Noctua ja Thermalright TL-C12C / TL-C12B V2; erikoisjännitteiset versiot nimettyinä                                               |
 | Oheislaitteet       |                 22 | Logitech-hiiret                                                                                                                   |
@@ -83,12 +83,27 @@ Uusi `cases_psu_catalog_expansion` lisää **118** mallia tai versiota: **48 kot
 
 Lisäys ei korvaa ylläpidon korjaamia tietoja, palauta piilotettuja malleja näkyville tai vaihda ilmoitusten katalogitunnisteita. Samat tiedot sisältyvät demohakuun. Koteloiden ja virtalähteiden haku, lomakkeen täyttö sekä migraation uudelleensuorituksen turvallisuus tarkistetaan automaattisilla testeillä.
 
+## Uusien kotelo- ja virtalähdevalmistajien täydennys 4.10.2026
+
+`additional_case_psu_brands` lisää **87** uutta mallia tai versiota: **44 koteloa ja 43 virtalähdettä**. Kotelot: Antec 13, Cooler Master 7, Phanteks 6, ASUS 2 ja DeepCool 16. Virtalähteet: DeepCool 18, ASUS 8, Cooler Master 8, FSP 4 ja Thermaltake 5. Aiemmat mallit ja ylläpidon muutokset säilyvät.
+
+- Antec: rivikohtaiset valmistajan tuotesivut, esimerkiksi [C8](https://www.antec.com/product/case/c8), [C8 ARGB](https://www.antec.com/product/case/c8-argb), [P20C](https://www.antec.com/product/case/p20c), [Performance 1 FT](https://www.antec.com/product/case/performance-1-ft) ja [C2M ARGB](https://www.antec.com/product/case/c2m-argb). Lisäksi P20CE, P10C, P10 FLUX, P7 Silent, NX200, NX410, AX90 ja DP503. Mainboard Support ja Form Factor ovat kunkin mallin omasta taulukosta. C8:n E-ATX-raja on 280 mm ja P20C/P20CE:n leveysraja 330 mm. NX200:n taulukon ATX-luokka tarkennetaan saman sivun Mid-Tower Case -otsikon mukaisesti.
+- Cooler Master: [MasterBox NR200P](https://www.coolermaster.com/en-global/products/masterbox-nr200p.html), [Q300L](https://www.coolermaster.com/en-global/products/masterbox-q300l.html), [TD500 Mesh V2](https://www.coolermaster.com/en-global/products/masterbox-td500-mesh-v2.html), TD500 Mesh, MB520, HAF 500 ja Silencio S600. E-ATX:n tuumamitat säilytetään valmistajan yksikössä. NR200P on alkuperäinen malli, eikä siihen kopioida V2:n tietoja. MB520:n kotelotyyppinä käytetään yleistä ATX-kotelo-luokkaa, koska sivun taulukko ei nimeä tornikokoa.
+- Phanteks: [XT Pro](https://phanteks.com/product/xt-pro-black/), XT Pro Ultra, XT View, [NV5](https://phanteks.com/product/nv5-black/), [NV7](https://phanteks.com/product/nv7-black/) ja NV9. NV5:n E-ATX-leveysraja koskee käyttöä ilman GPU-tukitelinettä, NV7:n raja käyttöä LED-suojuksen kanssa. Ehtoja ei hävitetä yleiseksi E-ATX-tueksi.
+- ASUS-kotelot: [Prime AP201](https://www.asus.com/uk/motherboards-components/cases/prime/asus-prime-ap201-microatx-case/techspec/) ja [ProArt PA602](https://www.asus.com/ca-en/motherboards-components/cases/proart/proart-pa602/techspec/). AP201 tukee Mini-ITX-/Micro-ATX-emolevyjä, ei ATX-emolevyä, vaikka se käyttää ATX-virtalähdettä. PA602:n E-ATX-raja säilytetään valmistajan 12 x 10,9 tuuman yksikössä.
+- DeepCool-kotelot: [valmistajan luettelo](https://deepcool.com/products/Cases/index.shtml) ja kunkin mallin Technical Spec -taulukko. CG540/CG560 sekä Limited- ja Mesh-versiot, CH370, CH510/CH510 MESH DIGITAL/CH510 ZORIA, CH560/CH560 DIGITAL, CK500/CK560, MATREXX 40 ja MATREXX 55 MESH/MESH ADD-RGB 4F. ATX-kotelo-/Micro-ATX-kotelo-luokkaa käytetään silloin, kun tuotesivu ei nimeä tornikokoa. MATREXX 55 MESH -versioille ei merkitä muiden saman sarjan versioiden E-ATX-tukea. MACUBE 110 jätettiin tämän erän ulkopuolelle, koska haetun sivun tekstitaulukko ei ilmoita emolevystandardeja.
+- DeepCool-virtalähteet: [valmistajan luettelo](https://uk.deepcool.com/products/PowerSupplyUnits/index.shtml?filter=true&type=Power) ja yksittäiset tekniset taulukot. PK550D/650D/750D (80+ Bronze), PN650M/750M/850M, PQ650M/750M/850M/1000M, DQ650-M-V2L/750-M-V2L/850-M-V2L, PX850G/1000G/1200G V2 (80+ Gold) sekä PX1000P/1300P (80+ Platinum). Gold ja Cybenetics Platinum pysyvät erillisinä sertifiointeina.
+- ASUS-virtalähteet: TUF Gaming [750](https://www.asus.com/uk/motherboards-components/power-supply-units/tuf-gaming/tuf-gaming-750g/techspec/)/850/1000/1200 W nykyisen taulukon ATX 3.1 -versioina, 80+ Gold, fyysinen koko ATX. ROG Loki [750](https://rog.asus.com/power-supply-units/rog-loki/rog-loki-750p-sfx-l-gaming-model/spec/)/850/1000 W ovat 80+ Platinum, [1200 W](https://rog.asus.com/power-supply-units/rog-loki/rog-loki-1200t-sfx-l-gaming-model/spec/) 80+ Titanium. Kaikki Loki-rivit ovat SFX-L; 750 W:n lähdetaulukko ilmoittaa ATX 3.0:n, muut ATX 3.1:n. Sukupolvi sisältyy version nimeen.
+- Cooler Master -virtalähteet: [MWE Gold V2 Full Modular](https://www.coolermaster.com/en-my/products/mwe-gold-750-v2-full-modular.html) 550/650/750/850 W mallikohtaisilta sivuilta, 80+ Gold ja ATX. [V SFX Gold](https://legacy.coolermaster.com/en-global/products/v850-sfx-gold/) 550/650 W sekä nykyisten sivujen ATX 3.1 -nimiset 750/850 W, kaikki 80+ Gold ja fyysisesti SFX. Mukana tuleva ATX-sovitin ei muuta virtalähteen fyysistä kokoa ATX:ksi.
+- FSP: [Hydro G PRO](https://www.fsplifestyle.com/es/product/HYDROGPRO650W.html) 650/750/850/1000 W, jokaisen mallin oma taulukko, 80+ Gold ja ATX. Nämä ovat ATX 2.52 -sarjaa, eivät uudemman Gen5-version tietoja.
+- Thermaltake: [Toughpower GF A3](https://thermaltake.com/products/toughpower-gf-a3-gold-750w-tt-premium-edition-th) valmistajan sarjataulukon 650/750/850/1050/1200 W, 80+ Gold ja ATX. Versioille A/B ei muodosteta erillisiä rivejä, koska katalogiin tallennetut teho-, sertifiointi- ja kokotiedot ovat samat; muiden ominaisuuksien ei väitetä olevan identtisiä.
+
 ### Vielä suppeaksi jäävä kattavuus
 
 - RAM: Crucialin ja ADATAn muut sarjat, useat muut G.Skill-/Patriot-/TeamGroup-sarjat sekä monet vanhat DDR3-mallit puuttuvat.
 - GTX: monet 400/500-sarjan harvinaisemmat korttiversiot ja kahden GPU:n mallit, useat 600-sarjan Ti/muut mallit, harvinaisemmat muistiversiot sekä kannettavien juotettavat ja mobiilimallit puuttuvat. Älä käytä pöytäkoneen mallia kannettavan GPU:n viitteenä.
 - Emolevyt: ASUS-, Gigabyte- ja ASRock-kattavuus on vielä suppea. Intelin vanhat kannat ja useimmat LGA 1851 -mallit puuttuvat.
-- Virtalähteet/kotelot: kokoelma kattaa nyt useita Fractal Designin, NZXT:n, be quiet!:n, Seasonicin, Corsairin, MSI:n ja Lian Lin sarjoja. Cooler Masterin, ASUSin, Thermaltaken ja muiden valmistajien sarjoja sekä monia vanhempia ja OEM-malleja puuttuu edelleen.
+- Virtalähteet/kotelot: kokoelma kattaa nyt useita kymmenen kotelovalmistajan ja yhdeksän virtalähdevalmistajan sarjoja. Esimerkiksi SilverStonen, Montechin, Zalmanin ja Sharkoonin mallit sekä monet historialliset ja OEM-mallit puuttuvat edelleen.
 - Tallennus: HDD-kattavuus on nyt BarraCuda-sarjan varassa. Useimmat WD-/Seagate-sarjat, Crucial sekä muut Kingston-sarjat puuttuvat.
 - Jäähdytys/tuulettimet: Noctuan ulkopuoliset sarjat ovat vielä suppeita. Oheislaitteet kattavat lähinnä Logitech-hiiriä.
 
@@ -102,4 +117,4 @@ Ylläpidon **Tuotekatalogi → Lisää malli / Muokkaa** sisältää kategoriako
 
 SQL-päivityksen `expanded_component_catalog` JSON-osuus on tämän tuontierän tarkastettava lähdeaineisto. `scripts/read-manufacturer-tables.py INPUT_DIRECTORY OUTPUT_JSON` lukee AMD/NVIDIA-HTML-viennit ja Intel-XLSX:n ilman verkko- tai tietokantakirjoituksia. Muut rivit on tarkistettu yllä mainituista tietolehdistä. Uudet lisäykset tehdään ylläpidossa tai uutena migraationa, ei muuttamalla asennettua migraatiota.
 
-Demotilan hakua varten `node scripts/build-demo-catalog.mjs` tuottaa kaikkien viiden katalogitäydennyksen migraatioaineistosta erillisen, vasta hakua käytettäessä ladattavan JSON-tiedoston. Demon tunnisteet eivät ole Supabasen tuotetunnisteita, eikä demohaku tee tietokantakirjoituksia. Ylläpito ei käytä demodataa.
+Demotilan hakua varten `node scripts/build-demo-catalog.mjs` tuottaa kaikkien kuuden katalogitäydennyksen migraatioaineistosta erillisen, vasta hakua käytettäessä ladattavan JSON-tiedoston. Demon tunnisteet eivät ole Supabasen tuotetunnisteita, eikä demohaku tee tietokantakirjoituksia. Ylläpito ei käytä demodataa.
