@@ -757,13 +757,25 @@ export function CreateListingPage({
             </div>
             {detailsPanel === "description" && (
               <div className="listing-details-summary">
-                <strong>{title}</strong>
-                <p>
-                  {formattedPrice} / {copy[condition === "fair" ? "conditionFair" : condition]}
-                </p>
+                <strong className="listing-details-summary__title">{title}</strong>
+                <div className="listing-details-summary__meta">
+                  <div>
+                    <span>{copy.price}</span>
+                    <strong>{formattedPrice}</strong>
+                  </div>
+                  <div>
+                    <span>{copy.condition}</span>
+                    <strong>{copy[condition === "fair" ? "conditionFair" : condition]}</strong>
+                  </div>
+                </div>
                 <dl>
                   {Object.entries({
-                    ...(brand.trim() ? { [copy.brand]: brand.trim() } : {}),
+                    ...(brand.trim()
+                      ? {
+                          [safeCategory === "cpu" ? (locale === "fi" ? "Valmistaja" : "Manufacturer") : copy.brand]:
+                            brand.trim(),
+                        }
+                      : {}),
                     ...(model.trim() ? { [locale === "fi" ? "Malli" : "Model"]: model.trim() } : {}),
                     ...Object.fromEntries(
                       guidedFields
