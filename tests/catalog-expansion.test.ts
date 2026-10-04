@@ -11,7 +11,8 @@ it("keeps the expanded demo catalog aligned with the SQL seeds and valid for the
       file.endsWith("_expanded_component_catalog.sql") ||
       file.endsWith("_ram_gtx_catalog_expansion.sql") ||
       file.endsWith("_multi_brand_component_catalog.sql") ||
-      file.endsWith("_ddr5_legacy_gpu_catalog.sql"),
+      file.endsWith("_ddr5_legacy_gpu_catalog.sql") ||
+      file.endsWith("_cases_psu_catalog_expansion.sql"),
   );
   const seeds = (
     await Promise.all(

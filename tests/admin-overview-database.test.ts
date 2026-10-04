@@ -1583,6 +1583,106 @@ describe("product model catalog", () => {
       }
     },
   );
+  it("searches case compatibility and PSU generations, physical formats and certifications accurately", async () => {
+    const find = async (category: string, query: string) =>
+      ((await asRole("anon", null, search(category, query))).rows[0].data as any).items;
+    const terra = await find("case", "Terra");
+    expect(terra).toHaveLength(1);
+    expect(terra[0].specs).toEqual({ formFactor: "Mini-ITX", caseType: "Pieni kotelo" });
+    const large = await find("case", "Meshify 3 XL");
+    expect(large[0].specs.formFactor).toBe(
+      "E-ATX (enintään 330 mm) / ATX / Micro-ATX / Mini-ITX / EE-ATX / SSI-EEB / SSI-CEB",
+    );
+    const h6 = await find("case", "H6 Flow");
+    expect(h6).toHaveLength(2);
+    expect(h6.every((row: any) => row.variant === "2023" && !row.specs.formFactor.includes("E-ATX"))).toBe(true);
+    const h7 = await find("case", "H7 Flow");
+    expect(h7).toHaveLength(2);
+    expect(h7.every((row: any) => row.variant === "2024" && row.specs.formFactor.includes("277 mm"))).toBe(true);
+    for (const [query, wattage, efficiency, formFactor] of [
+      ["SFX L Power", "600", "80+ Gold", "SFX-L"],
+      ["SFX Power 3", "450", "80+ Bronze", "SFX"],
+      ["TFX Power 3", "300", "80+ Gold", "TFX"],
+      ["RM650e", "650", "Cybenetics Gold", "ATX"],
+    ]) {
+      const rows = await find("psu", query);
+      expect(rows).toHaveLength(1);
+      expect(rows[0].specs).toEqual({ wattage, efficiency, formFactor });
+    }
+    const focus = await find("psu", "FOCUS GX-750");
+    expect(focus.map((row: any) => row.variant).sort()).toEqual(["2019", "ATX 3.1 v4", "ATX 3.1 v5"]);
+    expect(new Set(focus.map((row: any) => row.id)).size).toBe(3);
+    expect(focus.every((row: any) => row.specs.efficiency === "80+ Gold")).toBe(true);
+    const pure = await find("psu", "Pure Power 12");
+    expect(pure.some((row: any) => row.name === "Pure Power 12")).toBe(true);
+    expect(pure.some((row: any) => row.name === "Pure Power 12 M")).toBe(true);
+  });
+  it.each([
+    ["case", "Terra", "formFactor", "caseType", "Pieni kotelo"],
+    ["psu", "SFX L Power", "wattage", "formFactor", "SFX-L"],
+  ])(
+    "reapplying the case/PSU seed preserves %s admin edits and listing references",
+    async (category, name, correctedKey, restoredKey, restoredValue) => {
+      const directory = new URL("../supabase/migrations/", import.meta.url);
+      const filename = (await readdir(directory)).find((file) => file.endsWith("_cases_psu_catalog_expansion.sql"))!;
+      const seed = await readFile(new URL(filename, directory), "utf8");
+      const original = (
+        await db.query<any>("select * from public.catalog_product_models where category=$1 and name=$2", [
+          category,
+          name,
+        ])
+      ).rows[0];
+      const count = (await db.query<any>("select count(*)::int n from public.catalog_product_models")).rows[0].n;
+      const listingId = await listing();
+      await db.query(
+        "update public.listings set category=$1,specs=jsonb_build_object('_catalog_model_id',$2::text) where id=$3",
+        [category, original.id, listingId],
+      );
+      try {
+        await db.query(
+          "update public.catalog_product_models set is_active=false,specs=$2,aliases='Custom import alias',source_url='https://example.test/admin' where id=$1",
+          [original.id, JSON.stringify({ [correctedKey]: "Admin correction" })],
+        );
+        await db.exec(seed);
+        const after = (await db.query<any>("select * from public.catalog_product_models where id=$1", [original.id]))
+          .rows[0];
+        expect(after).toMatchObject({
+          id: original.id,
+          is_active: false,
+          aliases: "Custom import alias",
+          source_url: "https://example.test/admin",
+          specs: { [correctedKey]: "Admin correction", [restoredKey]: restoredValue },
+        });
+        expect(
+          (await db.query<any>("select catalog_model_id from public.listings where id=$1", [listingId])).rows[0]
+            .catalog_model_id,
+        ).toBe(original.id);
+        expect(((await asRole("anon", null, search(category, "Custom import alias"))).rows[0].data as any).total).toBe(
+          0,
+        );
+        await db.exec(seed);
+        expect(
+          (await db.query<any>("select updated_at from public.catalog_product_models where id=$1", [original.id]))
+            .rows[0].updated_at,
+        ).toEqual(after.updated_at);
+        expect((await db.query<any>("select count(*)::int n from public.catalog_product_models")).rows[0].n).toBe(
+          count,
+        );
+      } finally {
+        await db.query(
+          "update public.catalog_product_models set is_active=$2,specs=$3,aliases=$4,source_url=$5,updated_at=$6 where id=$1",
+          [
+            original.id,
+            original.is_active,
+            JSON.stringify(original.specs),
+            original.aliases,
+            original.source_url,
+            original.updated_at,
+          ],
+        );
+      }
+    },
+  );
   it("validates specs on admin writes, preserves old-client data, and normalizes future labels", async () => {
     const payload = {
       category: "memory",

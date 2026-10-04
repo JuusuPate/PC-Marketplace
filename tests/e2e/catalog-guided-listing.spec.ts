@@ -220,3 +220,32 @@ test("ADATA DDR5 kits and fractional GTX memory keep the correct title and speci
   await page.getByRole("button", { name: "NVIDIA GTX 560 Ti 2 GB", exact: true }).click();
   await expect(page.locator('[data-listing-field="title"]')).toHaveValue("GTX 560 Ti 2 GB");
 });
+
+test("new cases and PSUs fill locked compatibility, size and correct efficiency in the title", async ({ page }) => {
+  await start(page, "case");
+  await page.getByRole("radio", { name: "Tuotekatalogista" }).check();
+  await page.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("Terra");
+  await page.getByRole("button", { name: "Fractal Design Terra", exact: true }).click();
+  const summary = page.locator(".catalog-product-summary");
+  await expect(summary).toContainText("Mini-ITX");
+  await expect(summary).toContainText("Pieni kotelo");
+  await expect(page.locator('[data-listing-field="title"]')).toHaveValue("Fractal Design Terra Mini-ITX kotelo");
+  await expect(page.getByLabel("Koko", { exact: true })).toHaveCount(0);
+  await page.getByRole("button", { name: "Takaisin", exact: true }).click();
+  await page.locator('[data-listing-field="category"]').selectOption("psu");
+  await page.getByRole("button", { name: "Jatka", exact: true }).click();
+  await page.getByRole("radio", { name: "Tuotekatalogista" }).check();
+  await page.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("SFX L Power");
+  await page.getByRole("button", { name: "be quiet! SFX L Power 600 W", exact: true }).click();
+  await expect(summary).toContainText("SFX-L");
+  await expect(summary).toContainText("80+ Gold");
+  await expect(page.locator('[data-listing-field="title"]')).toHaveValue("be quiet! SFX L Power 600 W 80+ Gold SFX-L");
+  await expect(page.getByRole("combobox", { name: "Hyötysuhdeluokitus", exact: true })).toHaveCount(0);
+  await page.getByRole("button", { name: "Vaihda tuotetta", exact: true }).click();
+  await page.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("RM650e");
+  await page.getByRole("button", { name: "Corsair RM650e 2025", exact: true }).click();
+  await expect(summary).toContainText("Cybenetics Gold");
+  await expect(page.locator('[data-listing-field="title"]')).toHaveValue(
+    "Corsair RM650e 2025 650 W Cybenetics Gold ATX",
+  );
+});

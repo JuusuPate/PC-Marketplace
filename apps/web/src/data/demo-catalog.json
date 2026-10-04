@@ -32647,5 +32647,1845 @@
     "id": "dc3391e5-ab66-5611-ae7a-db18515ab271",
     "is_active": true,
     "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "be quiet!",
+    "name": "Dark Base Pro 901",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "ATX / Micro-ATX / Mini-ITX / E-ATX / XL-ATX",
+      "caseType": "Full Tower"
+    },
+    "source_url": "https://www.bequiet.com/en/case/4425",
+    "id": "19bf7114-835d-5fde-9c64-47269094e5df",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "be quiet!",
+    "name": "Pure Base 500DX",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "ATX / Micro-ATX / Mini-ITX",
+      "caseType": "Mid Tower"
+    },
+    "source_url": "https://www.bequiet.com/en/case/1855",
+    "id": "6c58e4dd-1657-5a68-a207-8729246070fe",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "be quiet!",
+    "name": "Shadow Base 800",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "ATX / Micro-ATX / Mini-ITX / E-ATX",
+      "caseType": "Mid Tower"
+    },
+    "source_url": "https://www.bequiet.com/en/case/shadow-base-800/4476",
+    "id": "fdc90401-5773-58e7-a3e7-92b1e0c33078",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "be quiet!",
+    "name": "Shadow Base 800 DX",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "ATX / Micro-ATX / Mini-ITX / E-ATX",
+      "caseType": "Mid Tower"
+    },
+    "source_url": "https://www.bequiet.com/en/case/shadow-base-800/4476",
+    "id": "d28af59c-7fc9-5a49-b741-cc49dbd17b4e",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "be quiet!",
+    "name": "Shadow Base 800 FX",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "ATX / Micro-ATX / Mini-ITX / E-ATX",
+      "caseType": "Mid Tower"
+    },
+    "source_url": "https://www.bequiet.com/en/case/shadow-base-800/4476",
+    "id": "e5ba6871-3846-5028-953f-a36f44b62546",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "be quiet!",
+    "name": "Silent Base 802",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "ATX / Micro-ATX / Mini-ITX / E-ATX (305 x 275 mm)",
+      "caseType": "Mid Tower"
+    },
+    "source_url": "https://www.bequiet.com/en/case/2049",
+    "id": "bbf693fd-01e1-55af-9c10-38c8c438ff3a",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Fractal Design",
+    "name": "Core 1000",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "Micro-ATX / Mini-ITX / DTX",
+      "caseType": "Keskikokoinen kotelo"
+    },
+    "source_url": "https://www.fractal-design.com/products/cases/core-series/core-1000/core-1000-usb-3-0/",
+    "id": "25d151fe-6686-563c-87fd-90ad01a41f74",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Fractal Design",
+    "name": "Core 1100",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "Micro-ATX / Mini-ITX",
+      "caseType": "Keskikokoinen kotelo"
+    },
+    "source_url": "https://www.fractal-design.com/products/cases/core-series/core-1100/core-1100/",
+    "id": "7823fe2c-2086-530d-8e74-3ed54519f8a1",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Fractal Design",
+    "name": "Define 7",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "E-ATX (enintään 285 mm) / ATX / Micro-ATX / Mini-ITX",
+      "caseType": "Keskikokoinen kotelo"
+    },
+    "source_url": "https://www.fractal-design.com/products/cases/define-series/define-7/black/",
+    "id": "dea0c67f-637f-50ed-966e-ff692667d45b",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Fractal Design",
+    "name": "Define 7 Compact",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "ATX / Micro-ATX / Mini-ITX",
+      "caseType": "Keskikokoinen kotelo"
+    },
+    "source_url": "https://www.fractal-design.com/products/cases/define-series/define-7-compact/define-7-compact-black-solid/",
+    "id": "cb2e57e8-be6b-588c-b513-7514a98fd825",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Fractal Design",
+    "name": "Define 7 Mini",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "Micro-ATX / Mini-DTX / Mini-ITX",
+      "caseType": "Pieni kotelo"
+    },
+    "source_url": "https://www.fractal-design.com/products/cases/define-series/define-7-mini/define-7-mini-black-solid/",
+    "id": "df2ab78b-c39d-5ea5-ad6c-a9b49b6aa4a4",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Fractal Design",
+    "name": "Define 7 Nano",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "Mini-ITX / Mini-DTX",
+      "caseType": "Pieni kotelo"
+    },
+    "source_url": "https://www.fractal-design.com/products/cases/define-series/define-7-nano/define-7-nano-black-solid/",
+    "id": "f7864d9c-8f74-5de6-8f49-a2aa1f872e59",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Fractal Design",
+    "name": "Define One",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "Mini-ITX / Micro-ATX / ATX / E-ATX (enintään 277 mm)",
+      "caseType": "Keskikokoinen kotelo"
+    },
+    "source_url": "https://www.fractal-design.com/products/cases/define-series/define-one/define-one-light-solid/",
+    "id": "63efb053-24cc-555d-a42a-cacda12e6c0b",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Fractal Design",
+    "name": "Epoch",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "ATX / Micro-ATX / Mini-ITX",
+      "caseType": "Keskikokoinen kotelo"
+    },
+    "source_url": "https://www.fractal-design.com/products/cases/epoch-series/epoch/epoch-white-tg-clear-tint/",
+    "id": "5f028818-3668-5e60-82bb-68a0cd9bd524",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Fractal Design",
+    "name": "Epoch XL",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "Mini-ITX / Micro-ATX / ATX / E-ATX (enintään 275 mm)",
+      "caseType": "Suuri kotelo"
+    },
+    "source_url": "https://www.fractal-design.com/products/cases/epoch-series/epoch-xl/epoch-xl-white-tg-clear-tint/",
+    "id": "7b8f175f-ae19-52b4-b34f-c4ede798f430",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Fractal Design",
+    "name": "Era 2",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "Mini-ITX",
+      "caseType": "Pieni kotelo"
+    },
+    "source_url": "https://www.fractal-design.com/products/cases/era-series/era-2/era-2-charcoal-gray/",
+    "id": "8d7806b0-a0c5-50d3-9858-a1a02b4190bb",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Fractal Design",
+    "name": "Focus 2 RGB",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "ATX / Micro-ATX / Mini-ITX",
+      "caseType": "Keskikokoinen kotelo"
+    },
+    "source_url": "https://www.fractal-design.com/products/cases/focus-series/focus-2/focus-2-rgb-black-tg-clear-tint/",
+    "id": "65fb9797-a1ff-5d10-9acb-7cd0c21ae67d",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Fractal Design",
+    "name": "Meshify 2",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "E-ATX (enintään 285 mm) / ATX / Micro-ATX / Mini-ITX",
+      "caseType": "Keskikokoinen kotelo"
+    },
+    "source_url": "https://www.fractal-design.com/products/cases/meshify-series/meshify-2/meshify-2-black-light-tg/",
+    "id": "c1f7f75d-848c-5cfd-a247-124e48abc461",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Fractal Design",
+    "name": "Meshify 2 Compact",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "ATX / Micro-ATX / Mini-ITX",
+      "caseType": "Keskikokoinen kotelo"
+    },
+    "source_url": "https://www.fractal-design.com/products/cases/meshify-series/meshify-2-compact/meshify-2-compact-black-dark-tg/",
+    "id": "de4cb7fc-f231-537c-ae49-461a566242dc",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Fractal Design",
+    "name": "Meshify 2 Nano",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "Mini-ITX / Mini-DTX",
+      "caseType": "Pieni kotelo"
+    },
+    "source_url": "https://www.fractal-design.com/products/cases/meshify-series/meshify-2-nano/meshify-2-nano-black-tg-dark-tint/",
+    "id": "4a76256f-107d-5ae8-a871-aeaec82b7d7d",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Fractal Design",
+    "name": "Meshify 2 XL",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "E-ATX / ATX / Micro-ATX / Mini-ITX / EE-ATX / SSI-CEB / SSI-EEB",
+      "caseType": "Suuri kotelo"
+    },
+    "source_url": "https://www.fractal-design.com/products/cases/meshify-series/meshify-2-xl/meshify-2-xl-black-light-tg/",
+    "id": "7aee9531-c8c9-558b-ac74-b2cec9266c61",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Fractal Design",
+    "name": "Meshify 3 Ambience Pro RGB",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "E-ATX (enintään 277 mm) / ATX / Micro-ATX / Mini-ITX",
+      "caseType": "Keskikokoinen kotelo"
+    },
+    "source_url": "https://www.fractal-design.com/products/cases/meshify-series/meshify-3/meshify-3-ambience-pro-rgb-black-tg-light-tint/",
+    "id": "cbb34ce8-6ecc-5107-b550-d9de229d609b",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Fractal Design",
+    "name": "Meshify 3 XL Ambience Pro RGB",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "E-ATX (enintään 330 mm) / ATX / Micro-ATX / Mini-ITX / EE-ATX / SSI-EEB / SSI-CEB",
+      "caseType": "Suuri kotelo"
+    },
+    "source_url": "https://www.fractal-design.com/products/cases/meshify-series/meshify-3-xl/meshify-3-xl-ambience-pro-rgb-black-tg-light-tint/",
+    "id": "21f677b4-5e8e-53f2-9c34-3974d488b369",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Fractal Design",
+    "name": "Mood",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "Mini-ITX",
+      "caseType": "Pieni kotelo"
+    },
+    "source_url": "https://www.fractal-design.com/products/cases/mood-series/mood/mood-light-gray/",
+    "id": "eeb89fa4-6833-5460-a89e-a1e782ad44a9",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Fractal Design",
+    "name": "Node 304",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "Mini-ITX / Mini-DTX",
+      "caseType": "Pieni kotelo"
+    },
+    "source_url": "https://www.fractal-design.com/products/cases/node-series/node-304/node-304-black/",
+    "id": "3ca9ddd4-abc4-5677-a403-9df85a98bd2d",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Fractal Design",
+    "name": "Node 804",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "Micro-ATX / Mini-ITX",
+      "caseType": "Pieni kotelo"
+    },
+    "source_url": "https://www.fractal-design.com/products/cases/node-series/node-804/node-804/",
+    "id": "f6d9eff5-dd21-5af5-b56a-65af3be210b3",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Fractal Design",
+    "name": "North Momentum Edition",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "ATX / Micro-ATX / Mini-ITX",
+      "caseType": "Keskikokoinen kotelo"
+    },
+    "source_url": "https://www.fractal-design.com/products/cases/north-series/north-momentum-edition/north-momentum-edition/",
+    "id": "1c2c0ec5-7cea-5e6d-b868-441feb37781d",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Fractal Design",
+    "name": "North XL",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "E-ATX / ATX / Micro-ATX / Mini-ITX",
+      "caseType": "Suuri kotelo"
+    },
+    "source_url": "https://www.fractal-design.com/products/cases/north-series/north-xl/north-xl-chalk-white-mesh/",
+    "id": "a36ddfc8-d2c7-5fb1-a783-bec35ed14808",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Fractal Design",
+    "name": "North XL Momentum Edition",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "E-ATX (enintään 275 mm) / ATX / Micro-ATX / Mini-ITX",
+      "caseType": "Suuri kotelo"
+    },
+    "source_url": "https://www.fractal-design.com/products/cases/north-series/north-xl-momentum-edition/north-xl-momentum-edition/",
+    "id": "a45ee6b2-ae0c-5bf4-9ea3-bde07b16a397",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Fractal Design",
+    "name": "Pop 2 Air RGB",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "ATX / Micro-ATX / Mini-ITX",
+      "caseType": "Keskikokoinen kotelo"
+    },
+    "source_url": "https://www.fractal-design.com/products/cases/pop-series/pop-2-air/pop-2-air-black-tg-rgb/",
+    "id": "dedc4d74-cde5-5f2a-bd31-43116325804a",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Fractal Design",
+    "name": "Pop 2 Vision RGB",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "Mini-ITX / Mini-DTX / Micro-ATX / ATX / E-ATX (enintään 280 mm)",
+      "caseType": "Keskikokoinen kotelo"
+    },
+    "source_url": "https://www.fractal-design.com/products/cases/pop-series/pop-2-vision/pop-2-vision-black-rgb/",
+    "id": "7719d276-bb49-5675-a517-fdf06f875cba",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Fractal Design",
+    "name": "Pop Air RGB",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "ATX / Micro-ATX / Mini-ITX",
+      "caseType": "Keskikokoinen kotelo"
+    },
+    "source_url": "https://www.fractal-design.com/products/cases/pop-series/pop-air/pop-air-rgb-orange-core-tg-clear-tint/",
+    "id": "9402d60a-2db7-5676-b3e4-2357caf68424",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Fractal Design",
+    "name": "Pop Mini Air RGB",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "Micro-ATX / Mini-ITX",
+      "caseType": "Pieni kotelo"
+    },
+    "source_url": "https://www.fractal-design.com/products/cases/pop-series/pop-mini-air/pop-mini-air-rgb-black-tg-clear-tint/",
+    "id": "72139bf3-54ec-5db2-877c-90a221a1f7a0",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Fractal Design",
+    "name": "Pop Mini Silent",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "Micro-ATX / Mini-ITX",
+      "caseType": "Pieni kotelo"
+    },
+    "source_url": "https://www.fractal-design.com/products/cases/pop-series/pop-mini-silent/pop-mini-silent-black-solid/",
+    "id": "7332711c-2ee2-5fb4-adf9-31757fba4a85",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Fractal Design",
+    "name": "Pop Silent",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "ATX / Micro-ATX / Mini-ITX",
+      "caseType": "Keskikokoinen kotelo"
+    },
+    "source_url": "https://www.fractal-design.com/products/cases/pop-series/pop-silent/pop-silent-black-solid/",
+    "id": "7ffa7414-ca84-5f31-9307-b26bc1dc9c9f",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Fractal Design",
+    "name": "Pop XL Air RGB",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "E-ATX (enintään 280 mm) / ATX / Micro-ATX / Mini-ITX",
+      "caseType": "Suuri kotelo"
+    },
+    "source_url": "https://www.fractal-design.com/products/cases/pop-series/pop-xl-air/pop-xl-air-rgb-black-tg-clear-tint/",
+    "id": "8649ed37-d6a2-587c-b84b-6d56210f53e3",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Fractal Design",
+    "name": "Pop XL Silent",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "E-ATX (enintään 280 mm) / ATX / Micro-ATX / Mini-ITX",
+      "caseType": "Suuri kotelo"
+    },
+    "source_url": "https://www.fractal-design.com/products/cases/pop-series/pop-xl-silent/pop-xl-silent-black-solid/",
+    "id": "243ff808-78e3-5641-85c9-10be1023d2d7",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Fractal Design",
+    "name": "Ridge",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "Mini-ITX",
+      "caseType": "Pieni kotelo"
+    },
+    "source_url": "https://www.fractal-design.com/products/cases/ridge-series/ridge/ridge-pcie-4-0-white/",
+    "id": "aec69d0c-e3cf-57b5-9831-39e1989f1764",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Fractal Design",
+    "name": "Summit",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "Mini-ITX / Micro-ATX / ATX / E-ATX (enintään 277 mm)",
+      "caseType": "Keskikokoinen kotelo"
+    },
+    "source_url": "https://www.fractal-design.com/products/cases/summit-series/summit/summit-chalk-white-tg-clear-tint/",
+    "id": "4c66c5ad-cda8-507d-8278-7faca41438ee",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Fractal Design",
+    "name": "Terra",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "Mini-ITX",
+      "caseType": "Pieni kotelo"
+    },
+    "source_url": "https://www.fractal-design.com/products/cases/terra-series/terra/terra-jade/",
+    "id": "c15fc31a-a4f4-5666-93e8-c1f828b74ebc",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Fractal Design",
+    "name": "Torrent RGB",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "E-ATX / ATX / Micro-ATX / Mini-ITX / SSI-EEB / SSI-CEB",
+      "caseType": "Suuri kotelo"
+    },
+    "source_url": "https://www.fractal-design.com/products/cases/torrent-series/torrent/torrent-rgb-black-tg-light-tint/",
+    "id": "6fb69b44-0ad6-5193-afdd-28949b7b6256",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "Lian Li",
+    "name": "O11 Dynamic EVO",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "formFactor": "ATX / Micro-ATX / Mini-ITX / E-ATX (alle 280 mm)",
+      "caseType": "Mid Tower"
+    },
+    "source_url": "https://lian-li.com/product/o11-dynamic-evo/",
+    "id": "dc0b836e-19d5-5529-bdc5-d61628271181",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "NZXT",
+    "name": "H6 Flow",
+    "variant": "2023",
+    "aliases": "",
+    "specs": {
+      "formFactor": "ATX / Micro-ATX / Mini-ITX",
+      "caseType": "Mid Tower"
+    },
+    "source_url": "https://support.nzxt.com/hc/en-us/articles/40183529624347-H6-Flow-2023-Specs",
+    "id": "2ea8fd2e-edea-5a88-88de-093d42a6a556",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "NZXT",
+    "name": "H6 Flow RGB",
+    "variant": "2023",
+    "aliases": "",
+    "specs": {
+      "formFactor": "ATX / Micro-ATX / Mini-ITX",
+      "caseType": "Mid Tower"
+    },
+    "source_url": "https://support.nzxt.com/hc/en-us/articles/40183529624347-H6-Flow-2023-Specs",
+    "id": "95f03012-20ac-56d1-b112-af3cc002e0cb",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "NZXT",
+    "name": "H7 Flow",
+    "variant": "2024",
+    "aliases": "",
+    "specs": {
+      "formFactor": "ATX / Micro-ATX / Mini-ITX / E-ATX (enintään 277 mm)",
+      "caseType": "Mid Tower"
+    },
+    "source_url": "https://support.nzxt.com/hc/en-us/articles/40379376386203-H7-Flow-2024-Specs",
+    "id": "59dcf889-a231-52ae-9a3c-dde3d9a95749",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "NZXT",
+    "name": "H7 Flow RGB",
+    "variant": "2024",
+    "aliases": "",
+    "specs": {
+      "formFactor": "ATX / Micro-ATX / Mini-ITX / E-ATX (enintään 277 mm)",
+      "caseType": "Mid Tower"
+    },
+    "source_url": "https://support.nzxt.com/hc/en-us/articles/40379376386203-H7-Flow-2024-Specs",
+    "id": "09ab9c61-6450-50f3-bef5-df4784fb4c16",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "NZXT",
+    "name": "H9 Elite",
+    "variant": "2023",
+    "aliases": "",
+    "specs": {
+      "formFactor": "ATX / Micro-ATX / Mini-ITX",
+      "caseType": "Mid Tower"
+    },
+    "source_url": "https://support.nzxt.com/hc/en-us/articles/37840024628891-H9-2023-Series-Specs",
+    "id": "ab478aa7-63bb-5443-8504-5af60488f50c",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "NZXT",
+    "name": "H9 Flow",
+    "variant": "2023",
+    "aliases": "",
+    "specs": {
+      "formFactor": "ATX / Micro-ATX / Mini-ITX",
+      "caseType": "Mid Tower"
+    },
+    "source_url": "https://support.nzxt.com/hc/en-us/articles/37840024628891-H9-2023-Series-Specs",
+    "id": "20b4a967-84f3-5955-b8eb-deaa3be9d087",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "be quiet!",
+    "name": "Dark Power 13",
+    "variant": "1000 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "1000",
+      "efficiency": "80+ Titanium",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.bequiet.com/en/lp/darkpower13",
+    "id": "79a55d4a-fc37-5ea9-959a-a0af71262bef",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "be quiet!",
+    "name": "Dark Power 13",
+    "variant": "750 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "750",
+      "efficiency": "80+ Titanium",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.bequiet.com/en/lp/darkpower13",
+    "id": "57457453-fc36-56ff-bf80-2f3098928f38",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "be quiet!",
+    "name": "Dark Power 13",
+    "variant": "850 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "850",
+      "efficiency": "80+ Titanium",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.bequiet.com/en/lp/darkpower13",
+    "id": "6224124e-da05-5958-ab1e-2b7d2ef265e8",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "be quiet!",
+    "name": "Dark Power 14",
+    "variant": "1000 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "1000",
+      "efficiency": "80+ Titanium",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.bequiet.com/en/powersupply/dark-power-14/5760",
+    "id": "75fa2c9f-b168-5cdd-a2a6-31787b9f4eb9",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "be quiet!",
+    "name": "Dark Power 14",
+    "variant": "1200 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "1200",
+      "efficiency": "80+ Titanium",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.bequiet.com/en/powersupply/dark-power-14/5760",
+    "id": "16e5f965-20ce-5728-9f3a-1b65947bbb53",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "be quiet!",
+    "name": "Dark Power 14",
+    "variant": "850 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "850",
+      "efficiency": "80+ Titanium",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.bequiet.com/en/powersupply/dark-power-14/5760",
+    "id": "2b82ff03-4264-5e31-b2ac-663e5c8a7f78",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "be quiet!",
+    "name": "Dark Power Pro 13",
+    "variant": "1300 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "1300",
+      "efficiency": "80+ Titanium",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.bequiet.com/en/powersupply/dark-power-13/4040",
+    "id": "01ae4d06-8693-59ca-9977-a8668ec95c1a",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "be quiet!",
+    "name": "Dark Power Pro 13",
+    "variant": "1600 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "1600",
+      "efficiency": "80+ Titanium",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.bequiet.com/en/powersupply/dark-power-13/4040",
+    "id": "9d587156-e367-504a-8b40-b0640d21a9eb",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "be quiet!",
+    "name": "Dark Power Pro 14 IO",
+    "variant": "1300 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "1300",
+      "efficiency": "80+ Titanium",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.bequiet.com/en/powersupply/dark-power-14/5760",
+    "id": "f9c7171e-5555-5c85-a18e-27101549bd73",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "be quiet!",
+    "name": "Dark Power Pro 14 IO",
+    "variant": "1600 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "1600",
+      "efficiency": "80+ Titanium",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.bequiet.com/en/powersupply/dark-power-14/5760",
+    "id": "6bd6cc23-1414-5069-a6ad-3239551bd89a",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "be quiet!",
+    "name": "Power Zone 2",
+    "variant": "1000 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "1000",
+      "efficiency": "80+ Platinum",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.bequiet.com/en/powersupply/power-zone-2/5580",
+    "id": "7e8de06b-b94e-590a-9e89-6755a5b24bf0",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "be quiet!",
+    "name": "Power Zone 2",
+    "variant": "1200 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "1200",
+      "efficiency": "80+ Platinum",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.bequiet.com/en/powersupply/power-zone-2/5580",
+    "id": "c34fe367-1c97-5947-ba5b-6a6cfeeab5dc",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "be quiet!",
+    "name": "Power Zone 2",
+    "variant": "750 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "750",
+      "efficiency": "80+ Platinum",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.bequiet.com/en/powersupply/power-zone-2/5580",
+    "id": "05892d77-bcb4-5fec-ab41-e834d97f9228",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "be quiet!",
+    "name": "Power Zone 2",
+    "variant": "850 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "850",
+      "efficiency": "80+ Platinum",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.bequiet.com/en/powersupply/power-zone-2/5580",
+    "id": "d8a0930d-20f7-5c71-87ed-4c7bc1ed501a",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "be quiet!",
+    "name": "Pure Power 12",
+    "variant": "1000 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "1000",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.bequiet.com/en/powersupply/pure-power-12/4063",
+    "id": "36f95ae6-90ad-5e17-a024-b2b8d05d09bb",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "be quiet!",
+    "name": "Pure Power 12",
+    "variant": "550 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "550",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.bequiet.com/en/powersupply/pure-power-12/4063",
+    "id": "74b2def8-54dc-52cd-84d3-6f858b40a536",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "be quiet!",
+    "name": "Pure Power 12",
+    "variant": "650 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "650",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.bequiet.com/en/powersupply/pure-power-12/4063",
+    "id": "a56fc6a8-bb88-52b1-95bc-fa24fb053019",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "be quiet!",
+    "name": "Pure Power 12",
+    "variant": "750 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "750",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.bequiet.com/en/powersupply/pure-power-12/4063",
+    "id": "4cf1112a-e0ea-520d-b07b-26657137d347",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "be quiet!",
+    "name": "Pure Power 12",
+    "variant": "850 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "850",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.bequiet.com/en/powersupply/pure-power-12/4063",
+    "id": "1e350a0e-82a3-54c0-819b-22c0c13153f0",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "be quiet!",
+    "name": "Pure Power 13 M",
+    "variant": "1000 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "1000",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.bequiet.com/en/powersupply/pure-power-13/5929",
+    "id": "9d357b61-20e0-5c57-a92c-a24c9a3312f0",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "be quiet!",
+    "name": "Pure Power 13 M",
+    "variant": "1200 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "1200",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.bequiet.com/en/powersupply/pure-power-13/5929",
+    "id": "90f1a4a4-e09f-5c5c-a7e2-9db5c75a41c6",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "be quiet!",
+    "name": "Pure Power 13 M",
+    "variant": "550 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "550",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.bequiet.com/en/powersupply/pure-power-13/5929",
+    "id": "9e77a8e3-db0b-569d-ad2a-079e46444fb5",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "be quiet!",
+    "name": "Pure Power 13 M",
+    "variant": "650 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "650",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.bequiet.com/en/powersupply/pure-power-13/5929",
+    "id": "6ceffc3a-72f6-5270-8627-5d9311372625",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "be quiet!",
+    "name": "Pure Power 13 M",
+    "variant": "750 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "750",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.bequiet.com/en/powersupply/pure-power-13/5929",
+    "id": "081fd92f-762d-5ab8-b2fd-0bae9e0b64bf",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "be quiet!",
+    "name": "Pure Power 13 M",
+    "variant": "850 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "850",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.bequiet.com/en/powersupply/pure-power-13/5929",
+    "id": "afc55988-8d87-57bf-a9af-bdfc792d6f7e",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "be quiet!",
+    "name": "SFX L Power",
+    "variant": "600 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "600",
+      "efficiency": "80+ Gold",
+      "formFactor": "SFX-L"
+    },
+    "source_url": "https://www.bequiet.com/en/powersupply/1553",
+    "id": "b08c1292-470f-5ca8-abd0-138b2d25a0ce",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "be quiet!",
+    "name": "SFX Power 3",
+    "variant": "450 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "450",
+      "efficiency": "80+ Bronze",
+      "formFactor": "SFX"
+    },
+    "source_url": "https://www.bequiet.com/en/powersupply/2309",
+    "id": "516107dc-aa67-5289-8bad-50c95888127e",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "be quiet!",
+    "name": "Straight Power 12",
+    "variant": "1000 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "1000",
+      "efficiency": "80+ Platinum",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.bequiet.com/en/powersupply/straight-power-12/4101",
+    "id": "949cb56d-1b55-5abc-84f3-e90c9d247442",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "be quiet!",
+    "name": "Straight Power 12",
+    "variant": "1200 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "1200",
+      "efficiency": "80+ Platinum",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.bequiet.com/en/powersupply/straight-power-12/4101",
+    "id": "8e245d1e-5f32-5458-9e2a-f22ca1fb364d",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "be quiet!",
+    "name": "Straight Power 12",
+    "variant": "1500 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "1500",
+      "efficiency": "80+ Platinum",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.bequiet.com/en/powersupply/straight-power-12/4101",
+    "id": "36de7e42-8964-5e88-a632-01ac9d6509fc",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "be quiet!",
+    "name": "Straight Power 12",
+    "variant": "750 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "750",
+      "efficiency": "80+ Platinum",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.bequiet.com/en/powersupply/straight-power-12/4101",
+    "id": "8e548012-1afd-5440-ac2a-4c5ed70d2976",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "be quiet!",
+    "name": "Straight Power 12",
+    "variant": "850 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "850",
+      "efficiency": "80+ Platinum",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.bequiet.com/en/powersupply/straight-power-12/4101",
+    "id": "eb037171-2ad0-5a4e-93d9-4fce4f43f7e2",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "be quiet!",
+    "name": "System Power 11",
+    "variant": "450 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "450",
+      "efficiency": "80+ Bronze",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.bequiet.com/en/powersupply/system-power-11/5608",
+    "id": "897a5087-f4be-5e21-b1e1-7b8abd19b3af",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "be quiet!",
+    "name": "System Power 11",
+    "variant": "550 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "550",
+      "efficiency": "80+ Bronze",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.bequiet.com/en/powersupply/system-power-11/5608",
+    "id": "8da49140-c7ea-5acf-9377-6f131e622c59",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "be quiet!",
+    "name": "System Power 11",
+    "variant": "650 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "650",
+      "efficiency": "80+ Bronze",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.bequiet.com/en/powersupply/system-power-11/5608",
+    "id": "1b500869-e404-5fbc-8570-9463431a78ec",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "be quiet!",
+    "name": "System Power 11",
+    "variant": "750 W",
+    "aliases": "",
+    "specs": {
+      "wattage": "750",
+      "efficiency": "80+ Bronze",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.bequiet.com/en/powersupply/system-power-11/5608",
+    "id": "33365493-7921-5966-9600-c6973657416e",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "be quiet!",
+    "name": "TFX Power 3",
+    "variant": "300 W Gold",
+    "aliases": "",
+    "specs": {
+      "wattage": "300",
+      "efficiency": "80+ Gold",
+      "formFactor": "TFX"
+    },
+    "source_url": "https://www.bequiet.com/en/powersupply/2314",
+    "id": "cb529413-e88d-54fa-aff9-c53a78396768",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Corsair",
+    "name": "RM1000e",
+    "variant": "2025",
+    "aliases": "",
+    "specs": {
+      "wattage": "1000",
+      "efficiency": "Cybenetics Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.corsair.com/us/en/explorer/diy-builder/power-supply-units/corsair-rme-series-2025/",
+    "id": "fd0c3883-872b-5e00-8b57-895b0fc68466",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Corsair",
+    "name": "RM650e",
+    "variant": "2025",
+    "aliases": "",
+    "specs": {
+      "wattage": "650",
+      "efficiency": "Cybenetics Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.corsair.com/us/en/explorer/diy-builder/power-supply-units/corsair-rme-series-2025/",
+    "id": "db879158-f967-594c-9be6-eda86e415bcb",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Corsair",
+    "name": "RM750e",
+    "variant": "2025",
+    "aliases": "",
+    "specs": {
+      "wattage": "750",
+      "efficiency": "Cybenetics Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.corsair.com/us/en/explorer/diy-builder/power-supply-units/corsair-rme-series-2025/",
+    "id": "0a121c57-d619-5d70-90ce-5cd07fe62fcd",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Corsair",
+    "name": "RM850e",
+    "variant": "2025",
+    "aliases": "",
+    "specs": {
+      "wattage": "850",
+      "efficiency": "Cybenetics Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.corsair.com/us/en/explorer/diy-builder/power-supply-units/corsair-rme-series-2025/",
+    "id": "b2a3aeb8-4939-533a-b10a-cf6e2971da4d",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "MSI",
+    "name": "MAG A1000GL PCIE5",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "wattage": "1000",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.msi.com/Power-Supply/MAG-A1000GL-PCIE5/Specification",
+    "id": "2f191b8d-e7f2-5877-944b-ae2dcf01f928",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "MSI",
+    "name": "MAG A550BN",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "wattage": "550",
+      "efficiency": "80+ Bronze",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.msi.com/Power-Supply/MAG-A550BN/Specification",
+    "id": "9b0228c9-da89-5e37-98c1-055bc72ab023",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "MSI",
+    "name": "MAG A650BN",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "wattage": "650",
+      "efficiency": "80+ Bronze",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.msi.com/Power-Supply/MAG-A650BN/Specification",
+    "id": "96d2f30b-6016-51e7-8384-1a62dc2cbd03",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "MSI",
+    "name": "MAG A750GL PCIE5",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "wattage": "750",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.msi.com/Power-Supply/MAG-A750GL-PCIE5/Specification",
+    "id": "bcc0db63-c944-542b-a516-a5b6bfa211c7",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "MSI",
+    "name": "MAG A850GL PCIE5",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "wattage": "850",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://www.msi.com/Power-Supply/MAG-A850GL-PCIE5/Specification",
+    "id": "2e96055a-804c-56a3-9e2d-06f7556e961a",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Seasonic",
+    "name": "CORE GX-1000",
+    "variant": "ATX 3.1",
+    "aliases": "",
+    "specs": {
+      "wattage": "1000",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://seasonic.com/core-gx-atx-3-2024/",
+    "id": "bccd89ff-c8fa-58d7-b503-51fe8defbce8",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Seasonic",
+    "name": "CORE GX-500",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "wattage": "500",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://seasonic.com/core-gx/",
+    "id": "bacb6068-a733-59cb-8c27-1622179039e9",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Seasonic",
+    "name": "CORE GX-550",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "wattage": "550",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://seasonic.com/core-gx/",
+    "id": "8a4ec1d1-62bd-502f-95e4-11f9644cd963",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Seasonic",
+    "name": "CORE GX-650",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "wattage": "650",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://seasonic.com/core-gx/",
+    "id": "e48193fe-f904-5d75-85e0-b3fbb51afb37",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Seasonic",
+    "name": "CORE GX-650",
+    "variant": "ATX 3.1",
+    "aliases": "",
+    "specs": {
+      "wattage": "650",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://seasonic.com/core-gx-atx-3-2024/",
+    "id": "67fc7a06-ec70-5063-b56e-32dae05979f1",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Seasonic",
+    "name": "CORE GX-750",
+    "variant": "ATX 3.1",
+    "aliases": "",
+    "specs": {
+      "wattage": "750",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://seasonic.com/core-gx-atx-3-2024/",
+    "id": "78920d58-6ec6-5b93-b52b-1f9416e5083a",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Seasonic",
+    "name": "CORE GX-850",
+    "variant": "ATX 3.1",
+    "aliases": "",
+    "specs": {
+      "wattage": "850",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://seasonic.com/core-gx-atx-3-2024/",
+    "id": "974a85a4-cd4c-5ca8-8b3d-748abe442221",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Seasonic",
+    "name": "FOCUS GX-1000",
+    "variant": "ATX 3.1 v4",
+    "aliases": "",
+    "specs": {
+      "wattage": "1000",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://seasonic.com/focus-gx-atx-3/",
+    "id": "6877acea-3a22-5227-a624-26702dc54e81",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Seasonic",
+    "name": "FOCUS GX-1000",
+    "variant": "ATX 3.1 v5",
+    "aliases": "",
+    "specs": {
+      "wattage": "1000",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://seasonic.com/focus-gx-atx-3-1/",
+    "id": "5fe3d499-49c0-54c7-a966-6743c5ca7a41",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Seasonic",
+    "name": "FOCUS GX-750",
+    "variant": "ATX 3.1 v4",
+    "aliases": "",
+    "specs": {
+      "wattage": "750",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://seasonic.com/focus-gx-atx-3/",
+    "id": "fe679c18-f341-5d80-ae6a-086a0a363598",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Seasonic",
+    "name": "FOCUS GX-750",
+    "variant": "ATX 3.1 v5",
+    "aliases": "",
+    "specs": {
+      "wattage": "750",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://seasonic.com/focus-gx-atx-3-1/",
+    "id": "0bb0bff1-74ce-5d11-8282-ed662aa1392e",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Seasonic",
+    "name": "FOCUS GX-850",
+    "variant": "ATX 3.1 v4",
+    "aliases": "",
+    "specs": {
+      "wattage": "850",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://seasonic.com/focus-gx-atx-3/",
+    "id": "30a59138-6dbd-54ab-98b6-20f601a15cc8",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Seasonic",
+    "name": "FOCUS GX-850",
+    "variant": "ATX 3.1 v5",
+    "aliases": "",
+    "specs": {
+      "wattage": "850",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://seasonic.com/focus-gx-atx-3-1/",
+    "id": "bcf30a2f-9cb8-5724-b00a-4615410cb723",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Seasonic",
+    "name": "FOCUS SGX-550",
+    "variant": "2021",
+    "aliases": "",
+    "specs": {
+      "wattage": "550",
+      "efficiency": "80+ Gold",
+      "formFactor": "SFX"
+    },
+    "source_url": "https://seasonic.com/focus-sgx-2021/",
+    "id": "b7884c44-0ccd-54ba-b5d5-2133cbde8415",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Seasonic",
+    "name": "FOCUS SGX-650",
+    "variant": "2021",
+    "aliases": "",
+    "specs": {
+      "wattage": "650",
+      "efficiency": "80+ Gold",
+      "formFactor": "SFX"
+    },
+    "source_url": "https://seasonic.com/focus-sgx-2021/",
+    "id": "e8000da9-c85d-5537-a43c-3260fb2dc44c",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Seasonic",
+    "name": "FOCUS SGX-750",
+    "variant": "2021",
+    "aliases": "",
+    "specs": {
+      "wattage": "750",
+      "efficiency": "80+ Gold",
+      "formFactor": "SFX"
+    },
+    "source_url": "https://seasonic.com/focus-sgx-2021/",
+    "id": "f82eee14-3bd6-551e-b9c8-e4388c76b407",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Seasonic",
+    "name": "FOCUS SPX-650",
+    "variant": "2021",
+    "aliases": "",
+    "specs": {
+      "wattage": "650",
+      "efficiency": "80+ Platinum",
+      "formFactor": "SFX"
+    },
+    "source_url": "https://seasonic.com/focus-spx-2021/",
+    "id": "5beb6b06-c78f-5a10-be1a-95ca2e26ef48",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Seasonic",
+    "name": "FOCUS SPX-750",
+    "variant": "2021",
+    "aliases": "",
+    "specs": {
+      "wattage": "750",
+      "efficiency": "80+ Platinum",
+      "formFactor": "SFX"
+    },
+    "source_url": "https://seasonic.com/focus-spx-2021/",
+    "id": "af3c3118-12d7-5b63-95b9-6d863af680bd",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Seasonic",
+    "name": "PRIME TX-1000",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "wattage": "1000",
+      "efficiency": "80+ Titanium",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://seasonic.com/prime-tx/",
+    "id": "6c5b5ce9-5f64-5da7-a5b7-3ba8c5132015",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Seasonic",
+    "name": "PRIME TX-1300",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "wattage": "1300",
+      "efficiency": "80+ Titanium",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://seasonic.com/prime-tx/",
+    "id": "cc883382-ce86-5c3d-8bb1-48ded12084c6",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Seasonic",
+    "name": "PRIME TX-1600",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "wattage": "1600",
+      "efficiency": "80+ Titanium",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://seasonic.com/prime-tx/",
+    "id": "5d7b65f5-ddd5-5889-95e1-115c1c2f9a32",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Seasonic",
+    "name": "PRIME TX-650",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "wattage": "650",
+      "efficiency": "80+ Titanium",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://seasonic.com/prime-tx/",
+    "id": "c91851fd-c92f-510c-a37e-464fab0443d5",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Seasonic",
+    "name": "PRIME TX-750",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "wattage": "750",
+      "efficiency": "80+ Titanium",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://seasonic.com/prime-tx/",
+    "id": "fba8123a-8007-58f3-825e-e22412c9ac3b",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Seasonic",
+    "name": "PRIME TX-850",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "wattage": "850",
+      "efficiency": "80+ Titanium",
+      "formFactor": "ATX"
+    },
+    "source_url": "https://seasonic.com/prime-tx/",
+    "id": "9f1e535a-1e5e-5068-b7de-a3a9fb82af4f",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
   }
 ]
