@@ -225,20 +225,9 @@
 .create-listing-section__heading {
   margin-bottom: 27px;
   display: grid;
-  grid-template-columns: 45px minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   align-items: start;
   gap: 14px;
-}
-.create-listing-section__number {
-  width: 45px;
-  height: 36px;
-  display: grid;
-  place-items: center;
-  color: var(--ink);
-  background: var(--accent);
-  border-radius: 7px;
-  font-size: 13px;
-  font-weight: 950;
 }
 .create-listing-section__heading h2 {
   margin: 0 0 6px;

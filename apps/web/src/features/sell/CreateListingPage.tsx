@@ -672,7 +672,6 @@ export function CreateListingPage({
             hidden={currentStep !== 1}
           >
             <div className="create-listing-section__heading">
-              <span className="create-listing-section__number">01</span>
               <div>
                 <h2 id="category-selection-title">{copy.category}</h2>
                 <p>Valitse ilmoituksen kategoria ennen jatkamista.</p>
@@ -735,7 +734,6 @@ export function CreateListingPage({
             hidden={currentStep !== 2}
           >
             <div className="create-listing-section__heading">
-              <span className="create-listing-section__number">02</span>
               <div>
                 <h2 id="product-details-title" tabIndex={-1}>
                   {copy.productDetails}
@@ -967,7 +965,6 @@ export function CreateListingPage({
                 aria-labelledby="technical-details-title"
               >
                 <div className="create-listing-section__heading">
-                  <span className="create-listing-section__number">02</span>
                   <div>
                     <h2 id="technical-details-title">{technicalSectionTitle}</h2>
                     <p>{technicalSectionHelp}</p>
@@ -1058,7 +1055,6 @@ export function CreateListingPage({
                   {wizardCopy.previous}
                 </button>
                 <div className="create-listing-section__heading">
-                  <span className="create-listing-section__number">02</span>
                   <div>
                     <h2 id="description-title">
                       <FieldLabel label={copy.description} required requiredText={formCopy.required} />
@@ -1091,7 +1087,6 @@ export function CreateListingPage({
           </div>
           <section className="create-listing-section" aria-labelledby="photos-title" hidden={currentStep !== 3}>
             <div className="create-listing-section__heading">
-              <span className="create-listing-section__number">03</span>
               <div>
                 <h2 id="photos-title">
                   <FieldLabel
@@ -1129,7 +1124,6 @@ export function CreateListingPage({
 
           <section className="create-listing-section" aria-labelledby="seller-details-title" hidden={currentStep !== 4}>
             <div className="create-listing-section__heading">
-              <span className="create-listing-section__number">04</span>
               <div>
                 <h2 id="seller-details-title">{copy.sellerDetails}</h2>
                 <p>{copy.sellerDetailsHelp}</p>
@@ -1226,7 +1220,6 @@ export function CreateListingPage({
 
           <section className="create-listing-section" aria-labelledby="review-listing-title" hidden={currentStep !== 5}>
             <div className="create-listing-section__heading">
-              <span className="create-listing-section__number">05</span>
               <div>
                 <h2 id="review-listing-title">{wizardCopy.reviewTitle}</h2>
                 <p>{wizardCopy.reviewHelp}</p>
