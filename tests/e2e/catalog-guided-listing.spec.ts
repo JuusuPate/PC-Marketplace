@@ -193,3 +193,30 @@ test("new laptop RAM, HDD and Wi-Fi motherboard populate locked specifications",
   await expect(summary).toContainText("Wi-FiKyllä");
   await expect(summary).toContainText("BluetoothKyllä");
 });
+
+test("ADATA DDR5 kits and fractional GTX memory keep the correct title and specifications", async ({ page }) => {
+  await start(page, "memory");
+  await page.getByRole("radio", { name: "Tuotekatalogista" }).check();
+  await page.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("AX5U6000C3016G-DTLABBK");
+  await page
+    .getByRole("button", { name: "ADATA XPG LANCER BLADE 32 GB (2 x 16 GB) DDR5-6000 CL30 DIMM", exact: true })
+    .click();
+  await expect(page.locator(".catalog-product-summary")).toContainText("Muistimoduulien määrä2");
+  await expect(page.locator('[data-listing-field="title"]')).toHaveValue(
+    "ADATA XPG LANCER BLADE 32 GB (2×16 GB) DDR5 6000 MHz CL30",
+  );
+  await page.getByRole("button", { name: "Takaisin", exact: true }).click();
+  await page.locator('[data-listing-field="category"]').selectOption("gpu");
+  await page.getByRole("button", { name: "Jatka", exact: true }).click();
+  await page.getByRole("radio", { name: "Tuotekatalogista" }).check();
+  await page.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("GTX460");
+  await expect(page.getByRole("button", { name: "NVIDIA GTX 460 1 GB", exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "NVIDIA GTX 460 0.75 GB", exact: true }).click();
+  await expect(page.locator('[data-listing-field="title"]')).toHaveValue("GTX 460 0.75 GB");
+  await expect(page.getByLabel("Näyttömuisti", { exact: true })).toHaveValue("0.75 GB");
+  await page.getByRole("button", { name: "Vaihda tuotetta", exact: true }).click();
+  await page.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("GTX560Ti");
+  await expect(page.getByRole("button", { name: "NVIDIA GTX 560 Ti 1 GB", exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "NVIDIA GTX 560 Ti 2 GB", exact: true }).click();
+  await expect(page.locator('[data-listing-field="title"]')).toHaveValue("GTX 560 Ti 2 GB");
+});

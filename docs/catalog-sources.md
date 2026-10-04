@@ -1,19 +1,19 @@
 # Tuotekatalogi ja ilmoituksen tuotetiedot
 
-Päivitetty 4.10.2026. Katalogipäivitykset sisältävät 1 706 valmistajan julkaisemaa mallia tai kapasiteettiversiota. Aiemmat tunnisteet, niihin liitetyt ilmoitukset, ylläpidon omat tiedot ja piilotetut tuotteet säilyvät. Tämä on laaja lähteisiin perustuva kokoelma, ei lupaus kaikkien valmistajien kaikkien historiallisten tuotteiden kattamisesta.
+Päivitetty 4.10.2026. Katalogipäivitykset sisältävät 1 828 valmistajan julkaisemaa mallia tai kapasiteettiversiota. Aiemmat tunnisteet, niihin liitetyt ilmoitukset, ylläpidon omat tiedot ja piilotetut tuotteet säilyvät. Tämä on laaja lähteisiin perustuva kokoelma, ei lupaus kaikkien valmistajien kaikkien historiallisten tuotteiden kattamisesta.
 
-| Tuoteryhmä          | Päivityksen rivejä | Kattavuus                                                                                                    |
-| ------------------- | -----------------: | ------------------------------------------------------------------------------------------------------------ |
-| Prosessorit         |                676 | AMD 392, Intel 284; vaihdettavat pöytäkone- ja työasemasuorittimet                                           |
-| Näytönohjaimet      |                204 | AMD 129, NVIDIA 68, Intel 7; eri muistimäärät erillään                                                       |
-| Emolevyt            |                 17 | MSI, ASUS, ASRock ja Gigabyte; AM4, AM5, LGA 1700 ja LGA 1851                                                |
-| RAM                 |                485 | Kingston 12, Corsair 152, G.Skill 173, Patriot 110, TeamGroup 38; DDR3, DDR3L, DDR4 ja DDR5, DIMM ja SO-DIMM |
-| Virtalähteet        |                 20 | Corsair, Seasonic ja be quiet! Pure Power 12 M                                                               |
-| Tallennuslaitteet   |                115 | Samsung, Kingston NV2/KC3000, WD_BLACK SN770/SN850X ja Seagate BarraCuda HDD                                 |
-| Kotelot             |                 14 | Fractal Design, NZXT, Corsair 4000D/5000D AIRFLOW ja Lian Li LANCOOL 216                                     |
-| Prosessorijäähdytys |                 49 | Noctua, ARCTIC Freezer 36 / Liquid Freezer III 240 ja Thermalright                                           |
-| Tuulettimet         |                104 | Noctua ja Thermalright TL-C12C / TL-C12B V2; erikoisjännitteiset versiot nimettyinä                          |
-| Oheislaitteet       |                 22 | Logitech-hiiret                                                                                              |
+| Tuoteryhmä          | Päivityksen rivejä | Kattavuus                                                                                                                         |
+| ------------------- | -----------------: | --------------------------------------------------------------------------------------------------------------------------------- |
+| Prosessorit         |                676 | AMD 392, Intel 284; vaihdettavat pöytäkone- ja työasemasuorittimet                                                                |
+| Näytönohjaimet      |                215 | AMD 129, NVIDIA 79, Intel 7; eri muistimäärät erillään                                                                            |
+| Emolevyt            |                 17 | MSI, ASUS, ASRock ja Gigabyte; AM4, AM5, LGA 1700 ja LGA 1851                                                                     |
+| RAM                 |                596 | Kingston 12, Corsair 152, G.Skill 252, Patriot 110, TeamGroup 38, ADATA 26, Crucial 6; DDR3, DDR3L, DDR4 ja DDR5, DIMM ja SO-DIMM |
+| Virtalähteet        |                 20 | Corsair, Seasonic ja be quiet! Pure Power 12 M                                                                                    |
+| Tallennuslaitteet   |                115 | Samsung, Kingston NV2/KC3000, WD_BLACK SN770/SN850X ja Seagate BarraCuda HDD                                                      |
+| Kotelot             |                 14 | Fractal Design, NZXT, Corsair 4000D/5000D AIRFLOW ja Lian Li LANCOOL 216                                                          |
+| Prosessorijäähdytys |                 49 | Noctua, ARCTIC Freezer 36 / Liquid Freezer III 240 ja Thermalright                                                                |
+| Tuulettimet         |                104 | Noctua ja Thermalright TL-C12C / TL-C12B V2; erikoisjännitteiset versiot nimettyinä                                               |
+| Oheislaitteet       |                 22 | Logitech-hiiret                                                                                                                   |
 
 Kokonaismäärä tietokannassa voi olla suurempi: päivitys ei poista aiempia tai ylläpidon lisäämiä malleja. Valmiskoneiden vanhat katalogirivit säilytetään viitteiden vuoksi, mutta uuden pelikoneilmoituksen katalogihaku tapahtuu erikseen jokaiselle komponentille.
 
@@ -60,10 +60,19 @@ Uusi `multi_brand_component_catalog` lisää **358** mallia tai teknistä versio
 - Jäähdyttimet: [ARCTIC Freezer 36 / Black](https://www.arctic.de/media/6b/50/57/1709195123/Spec_Sheet_Freezer_36_EN.pdf), [Liquid Freezer III 240](https://www.arctic.de/media/1c/af/b3/1708429821/Spec_Sheet_Liquid_Freezer_III_240_Black_EN.pdf), Thermalright [Peerless Assassin 120 SE](https://www.thermalright.com/product/peerless-assassin-120-se/) ja [Phantom Spirit 120 SE](https://www.thermalright.com/product/phantom-spirit-120-se/). Thermalrightin sivuilta myös niiden nimetyt TL-C12C- ja TL-C12B V2 -tuulettimet. Nykyinen kantatuki ei takaa käytetyn tuotteen kiinnikkeiden mukanaoloa.
 - Kotelot: [Corsair 4000D AIRFLOW](https://www.corsair.com/us/en/p/pc-cases/cc-9011200-ww/4000d-airflow-tempered-glass-mid-tower-atx-case-black-cc-9011200-ww), [5000D AIRFLOW](https://www.corsair.com/us/en/p/pc-cases/cc-9011210-ww/5000d-airflow-tempered-glass-mid-tower-atx-pc-case-black-cc-9011210-ww) sekä [Lian Li LANCOOL 216 / RGB](https://lian-li.com/product/lancool-216/). E-ATX-tuen kokorajoitus säilytetään tiedossa. Väriä ei lisätä ilmoituksen tekniseksi kentäksi.
 
+## DDR5- ja vanhojen GTX-mallien täydennys 4.10.2026
+
+Uusi `ddr5_legacy_gpu_catalog` lisää **122** teknistä versiota: RAM 111 ja GTX 11. RAM-katalogissa on yhteensä 596 vaihtoehtoa ja näytönohjaimissa 215, joista GTX-versioita 41. Jo olemassa olleet tekniset identiteetit jätetään pois tuontierästä.
+
+- G.Skill: [Flare X5 -sarja](https://www.gskill.com/specification/165/396/1673491242/F5-6000J3038F16GX2-FX5-Specification) ja [Trident Z5 Neo RGB -luettelo](https://www.gskill.com/products/7/165/390/Trident-Z5-Neo-RGB-DDR5-AMD-EXPO). Julkisen tuotehaun 52 Flare X5- ja 62 Neo RGB -osanumerosta yhdistettiin 81 teknistä kokoonpanoa, joista 79 on uusia. Sama tarkistettu kapasiteetin, moduulijaon, nopeuden ja CAS-viiveen lukija käsittelee DDR4:n lisäksi DDR5:n. RGB-sarja pysyy erillään RGB:ttömästä. `read-memory-variants.py` tunnistaa myös `gskill-flare-*.json`- ja `gskill-neo-*.json`-tiedostot; vain hakemistossa olevat valmistaja-aineistot luetaan, mutta tyhjä aineisto tai väärä sarja keskeyttää lukemisen.
+- ADATA: [XPG LANCER BLADE -tilaustaulukko 2025](https://webapi3.adata.com/storage/downloadfile/datasheet_xpg_lancer_blade_ddr5_memory_20251111_v2.pdf) ja [aiempi v3-taulukko](https://webapi3.adata.com/storage/downloadfile/datasheet_xpg_lancer_blade_ddr5_memory_v3.pdf). 26 todellista DDR5-kokoonpanoa, yhden moduulin ja kahden moduulin pakkaukset erillään. Tilaustaulukon kapasiteetti tarkoittaa moduulin kokoa: esimerkiksi Dual Tray 16 GB sisältää kaksi 16 GB moduulia, eli 32 GB yhteensä; valmistajan pakkaustaulukossa Dual Tray on moduulipari (PAR). Värit yhdistetään hakualiasiksi. Nykyisen taulukon 24 GB CL48 -riveissä osanumero/EAN toistuu ristiriitaisesti, joten näitä kokoonpanoja ei tuoda. Aiemman taulukon vahvistetut 32 GB DDR5-6400 CL32 -moduulit säilyvät omana versionaan.
+- Crucial: [Ballistix Elite DDR4 -tietolehti](https://content.crucial.com/content/dam/ballistix/dram-products/elite-series/ddr4/elite-2016/flyer/ballistix-elite-ddr4-productflyer-a4-es-mx.pdf). Kuusi taulukon todellista tilausriviä: 8 GB, 16 GB (2 x 8 GB) ja 32 GB (4 x 8 GB), DDR4-3600 CL16 tai DDR4-4000 CL18. Osanumerot ovat vain hakualiasia.
+- GTX: [NVIDIAn 2011 pöytäkonekorttien taulukko](https://www.nvidia.com/content/partnerforce/nvidia/us/lc-gf-gtx-560-may-11-us-lowres.pdf), [MSI:n testattujen korttien taulukko](https://asset.msi.com/file/test_report/TR1_2681.pdf) ja [GTX 560 Ti 2 GB -tietolehti](https://storage-asset.msi.com/datasheet/vga/global/N560GTXTi_Twin_Frozr_II_2GD5.pdf). GTX 460/465/470/480/550 Ti/560/560 Ti/570/580. 768, 1280 ja 1536 MB säilyvät tarkasti 0.75, 1.25 ja 1.5 GB arvoina (1024 MB = 1 GB), jolloin olemassa oleva GB-suodatin osaa lukea ne. Lähteen alkuperäinen MB-arvo toimii hakusanana. GTX 460:n ja 560 Ti:n eri muistimäärät ovat erilliset tuotteet. Kahden GPU:n GTX 590:n yhteenlaskettua muistia ei tuoda yhden GPU:n käytettävissä olevana muistina.
+
 ### Vielä suppeaksi jäävä kattavuus
 
-- RAM: Crucial ja ADATA, useat muut G.Skill-/Patriot-/TeamGroup-sarjat sekä monet vanhat DDR3-mallit puuttuvat.
-- GTX: 400/500-sarjat, useat 600-sarjan Ti/muut mallit, harvinaisemmat muistiversiot sekä kannettavien juotettavat ja mobiilimallit puuttuvat. Älä käytä pöytäkoneen mallia kannettavan GPU:n viitteenä.
+- RAM: Crucialin ja ADATAn muut sarjat, useat muut G.Skill-/Patriot-/TeamGroup-sarjat sekä monet vanhat DDR3-mallit puuttuvat.
+- GTX: monet 400/500-sarjan harvinaisemmat korttiversiot ja kahden GPU:n mallit, useat 600-sarjan Ti/muut mallit, harvinaisemmat muistiversiot sekä kannettavien juotettavat ja mobiilimallit puuttuvat. Älä käytä pöytäkoneen mallia kannettavan GPU:n viitteenä.
 - Emolevyt: ASUS-, Gigabyte- ja ASRock-kattavuus on vielä suppea. Intelin vanhat kannat ja useimmat LGA 1851 -mallit puuttuvat.
 - Virtalähteet/kotelot: useimpien muiden valmistajien sarjat puuttuvat.
 - Tallennus: HDD-kattavuus on nyt BarraCuda-sarjan varassa. Useimmat WD-/Seagate-sarjat, Crucial sekä muut Kingston-sarjat puuttuvat.
@@ -79,4 +88,4 @@ Ylläpidon **Tuotekatalogi → Lisää malli / Muokkaa** sisältää kategoriako
 
 SQL-päivityksen `expanded_component_catalog` JSON-osuus on tämän tuontierän tarkastettava lähdeaineisto. `scripts/read-manufacturer-tables.py INPUT_DIRECTORY OUTPUT_JSON` lukee AMD/NVIDIA-HTML-viennit ja Intel-XLSX:n ilman verkko- tai tietokantakirjoituksia. Muut rivit on tarkistettu yllä mainituista tietolehdistä. Uudet lisäykset tehdään ylläpidossa tai uutena migraationa, ei muuttamalla asennettua migraatiota.
 
-Demotilan hakua varten `node scripts/build-demo-catalog.mjs` tuottaa kaikkien kolmen katalogitäydennyksen migraatioaineistosta erillisen, vasta hakua käytettäessä ladattavan JSON-tiedoston. Demon tunnisteet eivät ole Supabasen tuotetunnisteita, eikä demohaku tee tietokantakirjoituksia. Ylläpito ei käytä demodataa.
+Demotilan hakua varten `node scripts/build-demo-catalog.mjs` tuottaa kaikkien neljän katalogitäydennyksen migraatioaineistosta erillisen, vasta hakua käytettäessä ladattavan JSON-tiedoston. Demon tunnisteet eivät ole Supabasen tuotetunnisteita, eikä demohaku tee tietokantakirjoituksia. Ylläpito ei käytä demodataa.

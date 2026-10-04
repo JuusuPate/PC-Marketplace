@@ -8,7 +8,8 @@ const seeds = (await readdir(migrationDirectory))
     (file) =>
       file.endsWith("_expanded_component_catalog.sql") ||
       file.endsWith("_ram_gtx_catalog_expansion.sql") ||
-      file.endsWith("_multi_brand_component_catalog.sql"),
+      file.endsWith("_multi_brand_component_catalog.sql") ||
+      file.endsWith("_ddr5_legacy_gpu_catalog.sql"),
   )
   .sort();
 const byIdentity = new Map();

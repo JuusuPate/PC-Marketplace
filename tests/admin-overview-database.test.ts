@@ -1480,9 +1480,49 @@ describe("product model catalog", () => {
     expect(kc.total).toBe(4);
     expect(kc.items.map((m: any) => m.specs.capacity).sort()).toEqual(["1024 GB", "2048 GB", "4096 GB", "512 GB"]);
   });
+  it("searches DDR5 kits, Crucial memory and fractional legacy GTX memory distinctly", async () => {
+    const kit = (await asRole("anon", null, search("memory", "AX5U6000C3016G-DTLABBK"))).rows[0].data as any;
+    expect(kit.total).toBe(1);
+    expect(kit.items[0]).toMatchObject({
+      brand: "ADATA",
+      name: "XPG LANCER BLADE",
+      specs: {
+        capacity: "32 GB",
+        modules: "2",
+        moduleCapacity: "16",
+        memoryType: "DDR5",
+        speed: "6000",
+        latency: "30",
+        moduleFormat: "DIMM",
+      },
+    });
+    const single = (await asRole("anon", null, search("memory", "AX5U6000C3016G-SLABBK"))).rows[0].data as any;
+    expect(single.items[0].specs).toMatchObject({ capacity: "16 GB", modules: "1", moduleCapacity: "16" });
+    expect(single.items[0].id).not.toBe(kit.items[0].id);
+    const elite = (await asRole("anon", null, search("memory", "BLE4K8G4D40BEEAK"))).rows[0].data as any;
+    expect(elite.total).toBe(1);
+    expect(elite.items[0]).toMatchObject({
+      brand: "Crucial",
+      name: "Ballistix Elite",
+      specs: { capacity: "32 GB", modules: "4", moduleCapacity: "8", speed: "4000", latency: "18" },
+    });
+    const flare = (await asRole("anon", null, search("memory", "F5-5200J3636C16GX2-FX5"))).rows[0].data as any;
+    expect(flare.total).toBe(1);
+    expect(flare.items[0]).toMatchObject({
+      name: "Flare X5",
+      specs: { capacity: "32 GB", speed: "5200", latency: "36" },
+    });
+    const gpu = (await asRole("anon", null, search("gpu", "GTX460"))).rows[0].data as any;
+    expect(gpu.total).toBe(2);
+    expect(gpu.items.map((m: any) => m.specs.vram).sort()).toEqual(["0.75 GB", "1 GB"]);
+    const ti = (await asRole("anon", null, search("gpu", "GTX560Ti"))).rows[0].data as any;
+    expect(ti.total).toBe(2);
+    expect(ti.items.map((m: any) => m.specs.vram).sort()).toEqual(["1 GB", "2 GB"]);
+  });
   it.each([
     ["ram_gtx_catalog_expansion", "CMK32GX4M4B3200C16", "4", "8"],
     ["multi_brand_component_catalog", "PVS416G320C8S", "1", "16"],
+    ["ddr5_legacy_gpu_catalog", "AX5U6000C3016G-DTLABBK", "2", "16"],
   ])(
     "reapplying %s preserves references and admin edits without duplicate or timestamp churn",
     async (migration, sku, modules, moduleCapacity) => {

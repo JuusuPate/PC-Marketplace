@@ -23,19 +23,19 @@ def memory(name, brand, capacity, modules, each, kind, speed, latency, form, sku
                 source_url=source)
 
 
-def extract_gskill(data):
+def extract_gskill(data, series="Ripjaws V", memory_type="DDR4"):
     markup = data['html'].replace('\\"', '"').replace('\\/', '/')
     cards = re.findall(r'href="(/product/[^"]+)".*?<p class="sub-title">(.*?)</p>', markup, re.S)
     if not cards:
         raise ValueError('No product cards found')
     for url, subtitle in cards:
         text = html.unescape(re.sub('<[^>]*>', ' ', subtitle))
-        kind, speed = re.search(r'(DDR4)-(\d+)', text).groups()
+        kind, speed = re.search(r'(DDR[45])-(\d+)', text).groups()
         latency = re.search(r'CL(\d+)', text)[1]
         capacity, modules, each = re.search(r'(\d+)GB\s*\((\d+)x(\d+)GB\)', text).groups()
-        if not text.strip().startswith('Ripjaws V'):
+        if not text.strip().startswith(series + ' ') or kind != memory_type:
             raise ValueError('Unexpected series')
-        yield memory('Ripjaws V', 'G.Skill', capacity, modules, each, kind, speed, latency, 'DIMM',
+        yield memory(series, 'G.Skill', capacity, modules, each, kind, speed, latency, 'DIMM',
                      url.rsplit('/',1)[1], 'https://www.gskill.com' + url)
 
 
@@ -87,13 +87,22 @@ def main():
                     models[key]['aliases'] += ' ' + row['aliases']
             else:
                 models[key] = row
-    for path in sorted(directory.glob('gskill-ripjaws-*.json')):
-        collect(extract_gskill(json.loads(path.read_text(encoding='utf-8'))))
+    for pattern, series, kind in [('gskill-ripjaws-*.json', 'Ripjaws V', 'DDR4'),
+                                  ('gskill-flare-*.json', 'Flare X5', 'DDR5'),
+                                  ('gskill-neo-*.json', 'Trident Z5 Neo RGB', 'DDR5')]:
+        for path in sorted(directory.glob(pattern)):
+            collect(extract_gskill(json.loads(path.read_text(encoding='utf-8')), series, kind))
     for filename, series, kind in [('patriot-steel.json','Viper Steel','DDR4'),
                                    ('patriot-elite2.json','Viper Elite II','DDR4'),
                                    ('patriot-venom.json','Viper Venom','DDR5')]:
-        collect(extract_patriot(json.loads((directory/filename).read_text(encoding='utf-8')), series, kind))
-    collect(extract_teamgroup((directory/'teamgroup-vulcan.txt').read_text(encoding='utf-8')))
+        path = directory / filename
+        if path.exists():
+            collect(extract_patriot(json.loads(path.read_text(encoding='utf-8')), series, kind))
+    path = directory / 'teamgroup-vulcan.txt'
+    if path.exists():
+        collect(extract_teamgroup(path.read_text(encoding='utf-8')))
+    if not models:
+        raise ValueError('No supported manufacturer input found')
     if any(len(row['aliases'])>500 for row in models.values()):
         raise ValueError('Alias limit exceeded')
     Path(sys.argv[2]).write_text(json.dumps(list(models.values()),ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
