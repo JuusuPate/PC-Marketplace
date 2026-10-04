@@ -278,7 +278,7 @@
   min-height: 52px;
   padding: 14px 15px;
   color: var(--ink);
-  background: #f4f6f8;
+  background: var(--white);
   border: 1px solid rgba(10, 15, 21, 0.17);
   border-radius: 8px;
   outline: none;
@@ -287,6 +287,9 @@
   transition:
     border-color 0.18s ease,
     box-shadow 0.18s ease;
+}
+.create-listing-form .product-model-picker__input {
+  background: var(--white);
 }
 .create-listing-fields input:focus,
 .create-listing-fields select:focus,
@@ -312,7 +315,7 @@
 }
 .create-listing-seller input[readonly] {
   color: #5b6067;
-  background: #e9ecef;
+  background: var(--white);
 }
 .create-listing-seller label > small {
   color: #777b81;
