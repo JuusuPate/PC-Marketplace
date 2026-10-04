@@ -19462,5 +19462,3788 @@
     "id": "18dc5292-a9a4-5778-8e0b-892827ec57da",
     "is_active": true,
     "updated_at": "2026-10-03T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "NZXT",
+    "name": "H5 Elite",
+    "variant": "2022",
+    "aliases": "CC-H51EB-01 CC-H51EW-01",
+    "specs": {
+      "formFactor": "ATX / Micro-ATX / Mini-ITX",
+      "caseType": "Mid Tower"
+    },
+    "source_url": "https://support.nzxt.com/hc/en-us/articles/37734705208347-H5-2022-Series-Specs",
+    "id": "ae6305ca-43ef-51be-b643-4998fd4e0d2e",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "NZXT",
+    "name": "H5 Flow",
+    "variant": "2022",
+    "aliases": "CC-H51FB-01 CC-H51FW-01",
+    "specs": {
+      "formFactor": "ATX / Micro-ATX / Mini-ITX",
+      "caseType": "Mid Tower"
+    },
+    "source_url": "https://support.nzxt.com/hc/en-us/articles/37734705208347-H5-2022-Series-Specs",
+    "id": "03bd88a3-bfa2-518e-b867-b16c1e03d132",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "case",
+    "brand": "NZXT",
+    "name": "H5 Flow RGB",
+    "variant": "2023",
+    "aliases": "CC-H51FB-R1 CC-H51FW-R1",
+    "specs": {
+      "formFactor": "ATX / Micro-ATX / Mini-ITX",
+      "caseType": "Mid Tower"
+    },
+    "source_url": "https://support.nzxt.com/hc/en-us/articles/37734705208347-H5-2022-Series-Specs",
+    "id": "46f02b29-137f-5bbf-ac5a-492775a6f361",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "gpu",
+    "brand": "NVIDIA",
+    "name": "GTX 1050",
+    "variant": "2 GB",
+    "aliases": "GTX1050",
+    "specs": {
+      "coreModel": "GTX 1050",
+      "chipVendor": "NVIDIA",
+      "vram": "2 GB"
+    },
+    "source_url": "https://storage-asset.msi.com/datasheet/vga/global/GeForce-GTX-1050-2G-OC.pdf",
+    "id": "3336db1b-7120-5dae-bd98-c6d55bd0559b",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "gpu",
+    "brand": "NVIDIA",
+    "name": "GTX 1050",
+    "variant": "3 GB",
+    "aliases": "GTX1050",
+    "specs": {
+      "coreModel": "GTX 1050",
+      "chipVendor": "NVIDIA",
+      "vram": "3 GB"
+    },
+    "source_url": "https://storage-asset.msi.com/datasheet/vga/global/GeForce-GTX-1050-3GT-OC.pdf",
+    "id": "d00da9f8-20d1-510a-927d-8e738690036c",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "gpu",
+    "brand": "NVIDIA",
+    "name": "GTX 1050 Ti",
+    "variant": "4 GB",
+    "aliases": "GTX1050Ti",
+    "specs": {
+      "coreModel": "GTX 1050 Ti",
+      "chipVendor": "NVIDIA",
+      "vram": "4 GB"
+    },
+    "source_url": "https://storage-asset.msi.com/datasheet/vga/global/GeForce-GTX-1050-Ti-4G-OC.pdf",
+    "id": "9ff1885f-2ba5-5b7a-a3d5-c8b3605eefbf",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "gpu",
+    "brand": "NVIDIA",
+    "name": "GTX 1060",
+    "variant": "3 GB",
+    "aliases": "GTX1060",
+    "specs": {
+      "coreModel": "GTX 1060",
+      "chipVendor": "NVIDIA",
+      "vram": "3 GB"
+    },
+    "source_url": "https://storage-asset.msi.com/datasheet/vga/global/GeForce-GTX-1060-3GT-OC.pdf",
+    "id": "438cd429-b3f4-53f1-a5e1-a1797e184153",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "gpu",
+    "brand": "NVIDIA",
+    "name": "GTX 1060",
+    "variant": "6 GB",
+    "aliases": "GTX1060",
+    "specs": {
+      "coreModel": "GTX 1060",
+      "chipVendor": "NVIDIA",
+      "vram": "6 GB"
+    },
+    "source_url": "https://storage-asset.msi.com/datasheet/vga/global/GeForce-GTX-1060-GAMING-X-6G.pdf",
+    "id": "6ef63464-afb1-5d77-ba26-4aeaab56d268",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "gpu",
+    "brand": "NVIDIA",
+    "name": "GTX 1070",
+    "variant": "8 GB",
+    "aliases": "GTX1070",
+    "specs": {
+      "coreModel": "GTX 1070",
+      "chipVendor": "NVIDIA",
+      "vram": "8 GB"
+    },
+    "source_url": "https://storage-asset.msi.com/datasheet/vga/us/GeForce-GTX-1070-ARMOR-8G.pdf",
+    "id": "9ceba628-28d0-5298-b076-90a01fa840ab",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "gpu",
+    "brand": "NVIDIA",
+    "name": "GTX 1070 Ti",
+    "variant": "8 GB",
+    "aliases": "GTX1070Ti",
+    "specs": {
+      "coreModel": "GTX 1070 Ti",
+      "chipVendor": "NVIDIA",
+      "vram": "8 GB"
+    },
+    "source_url": "https://storage-asset.msi.com/datasheet/vga/global/GeForce-GTX-1070-Ti-GAMING-8G.pdf",
+    "id": "a9458926-e486-59a5-8954-ce9d02365360",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "gpu",
+    "brand": "NVIDIA",
+    "name": "GTX 1080",
+    "variant": "8 GB",
+    "aliases": "GTX1080",
+    "specs": {
+      "coreModel": "GTX 1080",
+      "chipVendor": "NVIDIA",
+      "vram": "8 GB"
+    },
+    "source_url": "https://storage-asset.msi.com/datasheet/vga/vn/GeForce-GTX-1080-GAMING-8G.pdf",
+    "id": "5b38bbfb-09e3-5912-a60e-345309040c47",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "gpu",
+    "brand": "NVIDIA",
+    "name": "GTX 1080 Ti",
+    "variant": "11 GB",
+    "aliases": "GTX1080Ti",
+    "specs": {
+      "coreModel": "GTX 1080 Ti",
+      "chipVendor": "NVIDIA",
+      "vram": "11 GB"
+    },
+    "source_url": "https://storage-asset.msi.com/datasheet/vga/global/GeForce-GTX-1080-Ti-GAMING-X-11G.pdf",
+    "id": "40fc4f1f-5d1c-5bd1-ad19-5041f34df6da",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "gpu",
+    "brand": "NVIDIA",
+    "name": "GTX 650",
+    "variant": "1 GB",
+    "aliases": "GTX650",
+    "specs": {
+      "coreModel": "GTX 650",
+      "chipVendor": "NVIDIA",
+      "vram": "1 GB"
+    },
+    "source_url": "https://storage-asset.msi.com/datasheet/vga/global/N650-1GD5OC.pdf",
+    "id": "118c5dc4-bcd0-5460-b7f9-fb3eca21159f",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "gpu",
+    "brand": "NVIDIA",
+    "name": "GTX 660",
+    "variant": "2 GB",
+    "aliases": "GTX660",
+    "specs": {
+      "coreModel": "GTX 660",
+      "chipVendor": "NVIDIA",
+      "vram": "2 GB"
+    },
+    "source_url": "https://uk.pforce.nvidia.com/EN/GeForce_Desktop/Linecard/GeForce_700_Series_Linecard.pdf",
+    "id": "4eaffda2-1869-58cf-99c0-007835795e7e",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "gpu",
+    "brand": "NVIDIA",
+    "name": "GTX 750",
+    "variant": "1 GB",
+    "aliases": "GTX750",
+    "specs": {
+      "coreModel": "GTX 750",
+      "chipVendor": "NVIDIA",
+      "vram": "1 GB"
+    },
+    "source_url": "https://uk.pforce.nvidia.com/EN/GeForce_Desktop/Linecard/GeForce_700_Series_Linecard.pdf",
+    "id": "54ff133b-f18a-5ed4-abe4-a227673f7296",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "gpu",
+    "brand": "NVIDIA",
+    "name": "GTX 750 Ti",
+    "variant": "2 GB",
+    "aliases": "GTX750Ti",
+    "specs": {
+      "coreModel": "GTX 750 Ti",
+      "chipVendor": "NVIDIA",
+      "vram": "2 GB"
+    },
+    "source_url": "https://uk.pforce.nvidia.com/EN/GeForce_Desktop/Linecard/GeForce_700_Series_Linecard.pdf",
+    "id": "f09d132d-c3a0-55d8-b56f-9fc20c986a52",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "gpu",
+    "brand": "NVIDIA",
+    "name": "GTX 760",
+    "variant": "2 GB",
+    "aliases": "GTX760",
+    "specs": {
+      "coreModel": "GTX 760",
+      "chipVendor": "NVIDIA",
+      "vram": "2 GB"
+    },
+    "source_url": "https://uk.pforce.nvidia.com/EN/GeForce_Desktop/Linecard/GeForce_700_Series_Linecard.pdf",
+    "id": "d891db07-49c0-55e3-a319-d445e7e7ff7a",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "gpu",
+    "brand": "NVIDIA",
+    "name": "GTX 770",
+    "variant": "2 GB",
+    "aliases": "GTX770",
+    "specs": {
+      "coreModel": "GTX 770",
+      "chipVendor": "NVIDIA",
+      "vram": "2 GB"
+    },
+    "source_url": "https://uk.pforce.nvidia.com/EN/GeForce_Desktop/Linecard/GeForce_700_Series_Linecard.pdf",
+    "id": "90370eac-7ac6-5e53-b3f3-98f4725743bd",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "gpu",
+    "brand": "NVIDIA",
+    "name": "GTX 780",
+    "variant": "3 GB",
+    "aliases": "GTX780",
+    "specs": {
+      "coreModel": "GTX 780",
+      "chipVendor": "NVIDIA",
+      "vram": "3 GB"
+    },
+    "source_url": "https://uk.pforce.nvidia.com/EN/GeForce_Desktop/Linecard/GeForce_700_Series_Linecard.pdf",
+    "id": "436b3e53-bf1c-59bf-85bf-2a2cbc65dc47",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "gpu",
+    "brand": "NVIDIA",
+    "name": "GTX 780 Ti",
+    "variant": "3 GB",
+    "aliases": "GTX780Ti",
+    "specs": {
+      "coreModel": "GTX 780 Ti",
+      "chipVendor": "NVIDIA",
+      "vram": "3 GB"
+    },
+    "source_url": "https://uk.pforce.nvidia.com/EN/GeForce_Desktop/Linecard/GeForce_700_Series_Linecard.pdf",
+    "id": "62d4ed42-1ca7-550b-946e-0ad16e6097c9",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "gpu",
+    "brand": "NVIDIA",
+    "name": "GTX 950",
+    "variant": "2 GB",
+    "aliases": "GTX950",
+    "specs": {
+      "coreModel": "GTX 950",
+      "chipVendor": "NVIDIA",
+      "vram": "2 GB"
+    },
+    "source_url": "https://storage-asset.msi.com/datasheet/vga/global/GTX-950-GAMING-2G.pdf",
+    "id": "dcc4f08f-fb9d-58a1-a8ca-d824fa8ab313",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "gpu",
+    "brand": "NVIDIA",
+    "name": "GTX 960",
+    "variant": "2 GB",
+    "aliases": "GTX960",
+    "specs": {
+      "coreModel": "GTX 960",
+      "chipVendor": "NVIDIA",
+      "vram": "2 GB"
+    },
+    "source_url": "https://storage-asset.msi.com/datasheet/vga/global/GTX-960-GAMING-2G.pdf",
+    "id": "3d2c8d1a-8f73-5229-a461-f4b8d1b61140",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "gpu",
+    "brand": "NVIDIA",
+    "name": "GTX 960",
+    "variant": "4 GB",
+    "aliases": "GTX960",
+    "specs": {
+      "coreModel": "GTX 960",
+      "chipVendor": "NVIDIA",
+      "vram": "4 GB"
+    },
+    "source_url": "https://storage-asset.msi.com/datasheet/vga/global/GTX-960-GAMING-4G.pdf",
+    "id": "bb63cbbc-b219-55a8-8114-f96687876532",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "gpu",
+    "brand": "NVIDIA",
+    "name": "GTX 970",
+    "variant": "4 GB",
+    "aliases": "GTX970",
+    "specs": {
+      "coreModel": "GTX 970",
+      "chipVendor": "NVIDIA",
+      "vram": "4 GB"
+    },
+    "source_url": "https://storage-asset.msi.com/datasheet/vga/global/GTX-970-GAMING-4G.pdf",
+    "id": "eb4efcd8-713c-581e-b054-c68eb152ca42",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "gpu",
+    "brand": "NVIDIA",
+    "name": "GTX 980",
+    "variant": "4 GB",
+    "aliases": "GTX980",
+    "specs": {
+      "coreModel": "GTX 980",
+      "chipVendor": "NVIDIA",
+      "vram": "4 GB"
+    },
+    "source_url": "https://storage-asset.msi.com/datasheet/vga/global/GTX-980-GAMING-4G.pdf",
+    "id": "74f2cf27-70b7-544c-afae-3bc61d928e2c",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "gpu",
+    "brand": "NVIDIA",
+    "name": "GTX 980 Ti",
+    "variant": "6 GB",
+    "aliases": "GTX980Ti GTX 980Ti",
+    "specs": {
+      "coreModel": "GTX 980 Ti",
+      "chipVendor": "NVIDIA",
+      "vram": "6 GB"
+    },
+    "source_url": "https://uk.msi.com/Graphics-Card/GTX-980Ti-GAMING-6G/Specification",
+    "id": "10dfaab1-453b-5600-83a4-d573bf116268",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "DOMINATOR PLATINUM RGB",
+    "variant": "16 GB (2 x 8 GB) DDR4-3200 CL16 DIMM",
+    "aliases": "CMT16GX4M2E3200C16 CMT16GX4M2C3200C16 CMT16GX4M2Z3200C16",
+    "specs": {
+      "capacity": "16 GB",
+      "memoryType": "DDR4",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "8",
+      "speed": "3200",
+      "latency": "16"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmt16gx4m2e3200c16/dominatora-platinum-rgb-16gb-2-x-8gb-ddr4-dram-3200mhz-c16-memory-kit-cmt16gx4m2e3200c16",
+    "id": "88a08f63-6be1-51ad-b6b7-fcc663274596",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "DOMINATOR PLATINUM RGB",
+    "variant": "16 GB (2 x 8 GB) DDR4-3600 CL18 DIMM",
+    "aliases": "CMT16GX4M2C3600C18 CMT16GX4M2D3600C18",
+    "specs": {
+      "capacity": "16 GB",
+      "memoryType": "DDR4",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "8",
+      "speed": "3600",
+      "latency": "18"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmt16gx4m2c3600c18/dominatora-platinum-rgb-16gb-2-x-8gb-ddr4-dram-3600mhz-c18-memory-kit-cmt16gx4m2c3600c18",
+    "id": "00e7acd2-1365-58fb-b802-925e5cee9b28",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "DOMINATOR PLATINUM RGB",
+    "variant": "16 GB (2 x 8 GB) DDR4-4000 CL18 DIMM",
+    "aliases": "CMT16GX4M2Z4000C18",
+    "specs": {
+      "capacity": "16 GB",
+      "memoryType": "DDR4",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "8",
+      "speed": "4000",
+      "latency": "18"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmt16gx4m2z4000c18/dominatora-platinum-rgb-16gb-2-x-8gb-ddr4-dram-4000mhz-c18-memory-kit-cmt16gx4m2z4000c18",
+    "id": "dab168bf-16d6-5865-863d-d2278fbd37ef",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "DOMINATOR PLATINUM RGB",
+    "variant": "32 GB (2 x 16 GB) DDR4-3200 CL16 DIMM",
+    "aliases": "CMT32GX4M2C3200C16 CMT32GX4M2E3200C16",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR4",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "3200",
+      "latency": "16"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmt32gx4m2c3200c16/dominatora-platinum-rgb-32gb-2-x-16gb-ddr4-dram-3200mhz-c16-memory-kit-cmt32gx4m2c3200c16",
+    "id": "16fe3d2d-8b73-5c1f-9fdd-5ed13eae5bf4",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "DOMINATOR PLATINUM RGB",
+    "variant": "32 GB (2 x 16 GB) DDR4-3466 CL16 DIMM",
+    "aliases": "CMT32GX4M2C3466C16",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR4",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "3466",
+      "latency": "16"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmt32gx4m2c3466c16/dominatora-platinum-rgb-32gb-2-x-16gb-ddr4-dram-3466mhz-c16-memory-kit-cmt32gx4m2c3466c16",
+    "id": "dec94cca-e5ec-57b9-8f5a-65573eb7afac",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "DOMINATOR PLATINUM RGB",
+    "variant": "32 GB (2 x 16 GB) DDR4-3600 CL18 DIMM",
+    "aliases": "CMT32GX4M2Z3600C18 CMT32GX4M2D3600C18",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR4",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "3600",
+      "latency": "18"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmt32gx4m2z3600c18/dominatora-platinum-rgb-32gb-2-x-16gb-ddr4-dram-3600mhz-c18-memory-kit-cmt32gx4m2z3600c18",
+    "id": "144e7ac8-8a8e-508e-9a4f-fe99ff75e491",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "DOMINATOR PLATINUM RGB",
+    "variant": "32 GB (2 x 16 GB) DDR4-4000 CL18 DIMM",
+    "aliases": "CMT32GX4M2G4000C18 CMT32GX4M2Z4000C18",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR4",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "4000",
+      "latency": "18"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmt32gx4m2g4000c18/dominatora-platinum-rgb-32gb-2-x-16gb-ddr4-dram-4000mhz-c18-memory-kit-cmt32gx4m2g4000c18",
+    "id": "8d35a153-08eb-5ee7-97f9-f9e37eed4728",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "DOMINATOR PLATINUM RGB",
+    "variant": "32 GB (2 x 16 GB) DDR4-4000 CL19 DIMM",
+    "aliases": "CMT32GX4M2K4000C19",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR4",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "4000",
+      "latency": "19"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmt32gx4m2k4000c19/dominatora-platinum-rgb-32gb-2-x-16gb-ddr4-dram-4000mhz-c19-memory-kit-cmt32gx4m2k4000c19",
+    "id": "76e7ecad-fcfa-5bf1-b651-b07cee093964",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "DOMINATOR PLATINUM RGB",
+    "variant": "32 GB (4 x 8 GB) DDR4-3200 CL16 DIMM",
+    "aliases": "CMT32GX4M4Z3200C16 CMT32GX4M4C3200C16 CMT32GX4M4E3200C16",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR4",
+      "modules": "4",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "8",
+      "speed": "3200",
+      "latency": "16"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmt32gx4m4z3200c16/dominatora-platinum-rgb-32gb-4-x-8gb-ddr4-dram-3200mhz-c16-amd-ryzen-memory-kit-cmt32gx4m4z3200c16",
+    "id": "3bed6f42-65f7-5d82-a479-ac77b073e44c",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "DOMINATOR PLATINUM RGB",
+    "variant": "32 GB (4 x 8 GB) DDR4-3600 CL18 DIMM",
+    "aliases": "CMT32GX4M4D3600C18 CMT32GX4M4C3600C18",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR4",
+      "modules": "4",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "8",
+      "speed": "3600",
+      "latency": "18"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmt32gx4m4d3600c18/dominatora-platinum-rgb-32gb-4-x-8gb-ddr4-dram-3600mhz-c18-memory-kit-cmt32gx4m4d3600c18",
+    "id": "faa76dda-b27e-5061-a5ce-85939afaa647",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "DOMINATOR PLATINUM RGB",
+    "variant": "64 GB (2 x 32 GB) DDR4-3200 CL16 DIMM",
+    "aliases": "CMT64GX4M2E3200C16 CMT64GX4M2C3200C16",
+    "specs": {
+      "capacity": "64 GB",
+      "memoryType": "DDR4",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "32",
+      "speed": "3200",
+      "latency": "16"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmt64gx4m2e3200c16/dominatora-platinum-rgb-64gb-2-x-32gb-ddr4-dram-3200mhz-c16-memory-kit-cmt64gx4m2e3200c16",
+    "id": "9a8a95a2-6e15-591c-b8b6-31456d4178fa",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "DOMINATOR PLATINUM RGB",
+    "variant": "64 GB (2 x 32 GB) DDR4-3600 CL18 DIMM",
+    "aliases": "CMT64GX4M2C3600C18",
+    "specs": {
+      "capacity": "64 GB",
+      "memoryType": "DDR4",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "32",
+      "speed": "3600",
+      "latency": "18"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmt64gx4m2c3600c18/dominatora-platinum-rgb-64gb-2-x-32gb-ddr4-dram-3600mhz-c18-memory-kit-cmt64gx4m2c3600c18",
+    "id": "04285abd-d887-53a0-92e2-3d58a2bdc3ad",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "DOMINATOR PLATINUM RGB",
+    "variant": "64 GB (4 x 16 GB) DDR4-3200 CL16 DIMM",
+    "aliases": "CMT64GX4M4E3200C16",
+    "specs": {
+      "capacity": "64 GB",
+      "memoryType": "DDR4",
+      "modules": "4",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "3200",
+      "latency": "16"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmt64gx4m4e3200c16/dominatora-platinum-rgb-64gb-4-x-16gb-ddr4-dram-3200mhz-c16-memory-kit-cmt64gx4m4e3200c16",
+    "id": "a685d8ef-14f5-5e0a-94f7-827a81a78576",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "DOMINATOR PLATINUM RGB",
+    "variant": "64 GB (4 x 16 GB) DDR4-3600 CL16 DIMM",
+    "aliases": "CMT64GX4M4Z3600C16 CMT64GX4M4K3600C16",
+    "specs": {
+      "capacity": "64 GB",
+      "memoryType": "DDR4",
+      "modules": "4",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "3600",
+      "latency": "16"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmt64gx4m4z3600c16/dominatora-platinum-rgb-64gb-4-x-16gb-ddr4-dram-3600mhz-c16-amd-ryzen-memory-kit-cmt64gx4m4z3600c16",
+    "id": "4ea06d76-c319-504d-95a7-b71b836b70d6",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "DOMINATOR PLATINUM RGB",
+    "variant": "64 GB (4 x 16 GB) DDR4-3600 CL18 DIMM",
+    "aliases": "CMT64GX4M4Z3600C18 CMT64GX4M4K3600C18",
+    "specs": {
+      "capacity": "64 GB",
+      "memoryType": "DDR4",
+      "modules": "4",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "3600",
+      "latency": "18"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmt64gx4m4z3600c18/dominatora-platinum-rgb-64gb-4-x-16gb-ddr4-dram-3600mhz-c18-amd-ryzen-memory-kit-cmt64gx4m4z3600c18",
+    "id": "66c2ba22-336f-50ab-8b46-543dbbd7a4a1",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VALUE SELECT",
+    "variant": "32 GB (2 x 16 GB) DDR4-2933 CL19 SO-DIMM",
+    "aliases": "CMSX32GX4M2A2933C19",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR4",
+      "modules": "2",
+      "moduleFormat": "SO-DIMM",
+      "moduleCapacity": "16",
+      "speed": "2933",
+      "latency": "19"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmsx32gx4m2a2933c19/vengeancea-series-32gb-2-x-16gb-ddr4-sodimm-2933mhz-cl19-memory-kit-cmsx32gx4m2a2933c19",
+    "id": "0b7f408a-1ef6-5fb8-8d77-4db5281281b9",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VALUE SELECT",
+    "variant": "64 GB (2 x 32 GB) DDR4-2933 CL19 SO-DIMM",
+    "aliases": "CMSX64GX4M2A2933C19",
+    "specs": {
+      "capacity": "64 GB",
+      "memoryType": "DDR4",
+      "modules": "2",
+      "moduleFormat": "SO-DIMM",
+      "moduleCapacity": "32",
+      "speed": "2933",
+      "latency": "19"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmsx64gx4m2a2933c19/vengeancea-series-64gb-2-x-32gb-ddr4-sodimm-2933mhz-cl19-memory-kit-cmsx64gx4m2a2933c19",
+    "id": "34d9f029-141b-59af-86d8-d69e226d40a0",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "128 GB (4 x 32 GB) DDR5-5600 CL40 DIMM",
+    "aliases": "CMK128GX5M4X5600C40",
+    "specs": {
+      "capacity": "128 GB",
+      "memoryType": "DDR5",
+      "modules": "4",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "32",
+      "speed": "5600",
+      "latency": "40"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk128gx5m4x5600c40/vengeance-128gb-4x32gb-ddr5-dram-5600mts-cl40-memory-kit-cmk128gx5m4x5600c40",
+    "id": "88761fda-c1d7-5339-a29f-ccdefd17d0fc",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "16 GB (1 x 16 GB) DDR4-3200 CL22 SO-DIMM",
+    "aliases": "CMSX16GX4M1A3200C22",
+    "specs": {
+      "capacity": "16 GB",
+      "memoryType": "DDR4",
+      "modules": "1",
+      "moduleFormat": "SO-DIMM",
+      "moduleCapacity": "16",
+      "speed": "3200",
+      "latency": "22"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmsx16gx4m1a3200c22/vengeancea-series-16gb-1-x-16gb-ddr4-sodimm-3200mhz-cl20-memory-kit-cmsx16gx4m1a3200c22",
+    "id": "b3b3e926-f711-50d7-a392-4e4bc9f0a268",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "16 GB (1 x 16 GB) DDR5-4800 CL40 SO-DIMM",
+    "aliases": "CMSX16GX5M1A4800C40",
+    "specs": {
+      "capacity": "16 GB",
+      "memoryType": "DDR5",
+      "modules": "1",
+      "moduleFormat": "SO-DIMM",
+      "moduleCapacity": "16",
+      "speed": "4800",
+      "latency": "40"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmsx16gx5m1a4800c40/vengeance-ddr5-sodimm-16gb-1x16gb-ddr5-4800-pc5-38400-c40-1-1v-cmsx16gx5m1a4800c40",
+    "id": "31ce36f6-623c-5d2b-8647-5998c43f0190",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "16 GB (1 x 16 GB) DDR5-5200 CL44 SO-DIMM",
+    "aliases": "CMSX16GX5M1A5200C44",
+    "specs": {
+      "capacity": "16 GB",
+      "memoryType": "DDR5",
+      "modules": "1",
+      "moduleFormat": "SO-DIMM",
+      "moduleCapacity": "16",
+      "speed": "5200",
+      "latency": "44"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmsx16gx5m1a5200c44/vengeance-ddr5-sodimm-16gb-1x16gb-ddr5-5200mts-cl44-cmsx16gx5m1a5200c44",
+    "id": "7f34f287-166b-5caa-9b62-2d064720a7c5",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "16 GB (1 x 16 GB) DDR5-5600 CL48 SO-DIMM",
+    "aliases": "CMSX16GX5M1A5600C48",
+    "specs": {
+      "capacity": "16 GB",
+      "memoryType": "DDR5",
+      "modules": "1",
+      "moduleFormat": "SO-DIMM",
+      "moduleCapacity": "16",
+      "speed": "5600",
+      "latency": "48"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmsx16gx5m1a5600c48/vengeance-ddr5-sodimm-16gb-1x16gb-ddr5-5600mts-cl48-cmsx16gx5m1a5600c48",
+    "id": "9f193c1e-fef8-52c2-862b-2a28ea462f57",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "16 GB (2 x 8 GB) DDR5-4800 CL40 SO-DIMM",
+    "aliases": "CMSX16GX5M2A4800C40",
+    "specs": {
+      "capacity": "16 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "SO-DIMM",
+      "moduleCapacity": "8",
+      "speed": "4800",
+      "latency": "40"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmsx16gx5m2a4800c40/vengeance-ddr5-sodimm-16gb-2x8gb-ddr5-4800-pc5-38400-c40-1-1v-cmsx16gx5m2a4800c40",
+    "id": "65738084-8d1d-58ad-a673-f375bb2e1232",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "192 GB (4 x 48 GB) DDR5-5200 CL38 DIMM",
+    "aliases": "CMK192GX5M4X5200C38",
+    "specs": {
+      "capacity": "192 GB",
+      "memoryType": "DDR5",
+      "modules": "4",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "48",
+      "speed": "5200",
+      "latency": "38"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk192gx5m4x5200c38/vengeance-192gb-4x48gb-ddr5-dram-5200mts-cl38-memory-kit-cmk192gx5m4x5200c38",
+    "id": "a6c4b0f9-cdfc-5cd8-aa51-56e3f2bdc9a3",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "24 GB (1 x 24 GB) DDR5-4800 CL40 SO-DIMM",
+    "aliases": "CMSX24GX5M1A4800C40",
+    "specs": {
+      "capacity": "24 GB",
+      "memoryType": "DDR5",
+      "modules": "1",
+      "moduleFormat": "SO-DIMM",
+      "moduleCapacity": "24",
+      "speed": "4800",
+      "latency": "40"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmsx24gx5m1a4800c40/vengeance-ddr5-sodimm-24gb-1x24gb-ddr5-4800mts-cl40-cmsx24gx5m1a4800c40",
+    "id": "4747ce8c-ff19-535e-8acc-9ce485e2d4bd",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "24 GB (1 x 24 GB) DDR5-5200 CL44 SO-DIMM",
+    "aliases": "CMSX24GX5M1A5200C44",
+    "specs": {
+      "capacity": "24 GB",
+      "memoryType": "DDR5",
+      "modules": "1",
+      "moduleFormat": "SO-DIMM",
+      "moduleCapacity": "24",
+      "speed": "5200",
+      "latency": "44"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmsx24gx5m1a5200c44/vengeance-ddr5-sodimm-24gb-1x24gb-ddr5-5200mts-cl44-cmsx24gx5m1a5200c44",
+    "id": "283ef7c0-0b26-51e1-a3ed-67117b59ee5a",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "32 GB (1 x 32 GB) DDR4-2666 CL18 SO-DIMM",
+    "aliases": "CMSX32GX4M1A2666C18",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR4",
+      "modules": "1",
+      "moduleFormat": "SO-DIMM",
+      "moduleCapacity": "32",
+      "speed": "2666",
+      "latency": "18"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmsx32gx4m1a2666c18/vengeancea-series-32gb-1-x-32gb-ddr4-sodimm-2666mhz-cl18-memory-kit-cmsx32gx4m1a2666c18",
+    "id": "16ac7496-7325-5a52-8db1-9367992dd816",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "32 GB (1 x 32 GB) DDR4-3200 CL22 SO-DIMM",
+    "aliases": "CMSX32GX4M1A3200C22",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR4",
+      "modules": "1",
+      "moduleFormat": "SO-DIMM",
+      "moduleCapacity": "32",
+      "speed": "3200",
+      "latency": "22"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmsx32gx4m1a3200c22/corsair-high-performance-vengeance-memory-kit-cmsx32gx4m1a3200c22",
+    "id": "a6079fe1-e2c2-564a-9303-ba6f8c12847e",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "32 GB (1 x 32 GB) DDR5-4800 CL40 SO-DIMM",
+    "aliases": "CMSX32GX5M1A4800C40",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR5",
+      "modules": "1",
+      "moduleFormat": "SO-DIMM",
+      "moduleCapacity": "32",
+      "speed": "4800",
+      "latency": "40"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmsx32gx5m1a4800c40/vengeance-ddr5-sodimm-32gb-1x32gb-ddr5-4800-pc5-38400-c40-1-1v-cmsx32gx5m1a4800c40",
+    "id": "010bc122-ffc1-5f7f-bc0c-9afdc11d1050",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "32 GB (1 x 32 GB) DDR5-5200 CL44 SO-DIMM",
+    "aliases": "CMSX32GX5M1A5200C44",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR5",
+      "modules": "1",
+      "moduleFormat": "SO-DIMM",
+      "moduleCapacity": "32",
+      "speed": "5200",
+      "latency": "44"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmsx32gx5m1a5200c44/vengeance-ddr5-sodimm-32gb-1x32gb-ddr5-5200mts-cl44-cmsx32gx5m1a5200c44",
+    "id": "dd93ca8a-4ec9-598a-a8cd-779a4b3f7ba9",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "32 GB (1 x 32 GB) DDR5-5600 CL48 SO-DIMM",
+    "aliases": "CMSX32GX5M1A5600C48",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR5",
+      "modules": "1",
+      "moduleFormat": "SO-DIMM",
+      "moduleCapacity": "32",
+      "speed": "5600",
+      "latency": "48"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmsx32gx5m1a5600c48/vengeance-ddr5-sodimm-32gb-1x32gb-ddr5-5600mts-cl48-cmsx32gx5m1a5600c48",
+    "id": "838bc6d3-75a1-521e-87b3-0a1c58618b7e",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "32 GB (2 x 16 GB) DDR4-2400 CL16 SO-DIMM",
+    "aliases": "CMSX32GX4M2A2400C16",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR4",
+      "modules": "2",
+      "moduleFormat": "SO-DIMM",
+      "moduleCapacity": "16",
+      "speed": "2400",
+      "latency": "16"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmsx32gx4m2a2400c16/vengeancea-series-32gb-2x16gb-ddr4-sodimm-2400mhz-cl16-memory-kit-cmsx32gx4m2a2400c16",
+    "id": "0aa7bc4b-e4d2-5214-bb01-f7592283b68c",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "32 GB (2 x 16 GB) DDR4-2666 CL18 SO-DIMM",
+    "aliases": "CMSX32GX4M2A2666C18",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR4",
+      "modules": "2",
+      "moduleFormat": "SO-DIMM",
+      "moduleCapacity": "16",
+      "speed": "2666",
+      "latency": "18"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmsx32gx4m2a2666c18/vengeancea-series-32gb-2x16gb-ddr4-sodimm-2666mhz-cl18-memory-kit-cmsx32gx4m2a2666c18",
+    "id": "eb08b89a-203f-5163-8cff-269d829583b6",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "32 GB (2 x 16 GB) DDR4-3000 CL18 SO-DIMM",
+    "aliases": "CMSX32GX4M2A3000C18",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR4",
+      "modules": "2",
+      "moduleFormat": "SO-DIMM",
+      "moduleCapacity": "16",
+      "speed": "3000",
+      "latency": "18"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmsx32gx4m2a3000c18/vengeancea-series-32gb-2-x-16gb-ddr4-sodimm-3000mhz-cl18-memory-kit-cmsx32gx4m2a3000c18",
+    "id": "0b279f7f-87f4-53fe-afe3-a608119d871c",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "32 GB (2 x 16 GB) DDR4-3200 CL22 SO-DIMM",
+    "aliases": "CMSX32GX4M2A3200C22",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR4",
+      "modules": "2",
+      "moduleFormat": "SO-DIMM",
+      "moduleCapacity": "16",
+      "speed": "3200",
+      "latency": "22"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmsx32gx4m2a3200c22/vengeancea-series-32gb-2x16gb-ddr4-sodimm-3200mhz-cl22-memory-kit-cmsx32gx4m2a3200c22",
+    "id": "eba1b501-83cc-5030-9739-9c14004eb694",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "32 GB (2 x 16 GB) DDR5-4800 CL40 SO-DIMM",
+    "aliases": "CMSX32GX5M2A4800C40",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "SO-DIMM",
+      "moduleCapacity": "16",
+      "speed": "4800",
+      "latency": "40"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmsx32gx5m2a4800c40/vengeance-ddr5-sodimm-32gb-2x16gb-ddr5-4800-pc5-38400-c40-1-1v-cmsx32gx5m2a4800c40",
+    "id": "748e9d36-e3fc-51d3-ba3a-4bef0c251516",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "32 GB (2 x 16 GB) DDR5-5200 CL40 DIMM",
+    "aliases": "CMK32GX5M2L5200C40",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "5200",
+      "latency": "40"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk32gx5m2l5200c40/vengeance-32gb-2x16gb-ddr5-dram-5200mts-cl40-memory-kit-cmk32gx5m2l5200c40",
+    "id": "8c11f337-6644-5475-9f60-1b7bfff83b67",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "32 GB (2 x 16 GB) DDR5-5200 CL44 SO-DIMM",
+    "aliases": "CMSX32GX5M2A5200C44",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "SO-DIMM",
+      "moduleCapacity": "16",
+      "speed": "5200",
+      "latency": "44"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmsx32gx5m2a5200c44/vengeance-ddr5-sodimm-32gb-2x16gb-ddr5-5200mts-cl44-cmsx32gx5m2a5200c44",
+    "id": "d5a3acdc-9903-58f9-b5c2-cc5c94ba5a9a",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "32 GB (2 x 16 GB) DDR5-5600 CL32 DIMM",
+    "aliases": "CMK32GX5M2B5600C32",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "5600",
+      "latency": "32"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk32gx5m2b5600c32/vengeance-32gb-2x16gb-ddr5-dram-5600mts-cl32-memory-kit-cmk32gx5m2b5600c32",
+    "id": "e627fa6f-8b9b-53df-a796-79685b8c3558",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "32 GB (2 x 16 GB) DDR5-5600 CL36 DIMM",
+    "aliases": "CMK32GX5M2B5600C36 CMK32GX5M2B5600C36W",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "5600",
+      "latency": "36"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk32gx5m2b5600c36/vengeancea-32gb-2x16gb-ddr5-dram-5600mhz-c36-memory-kit-a-black-cmk32gx5m2b5600c36",
+    "id": "9fa53e43-dfdb-562c-9dab-879d895b706f",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "32 GB (2 x 16 GB) DDR5-5600 CL40 DIMM",
+    "aliases": "CMK32GX5M2L5600C40",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "5600",
+      "latency": "40"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk32gx5m2l5600c40/vengeance-32gb-2x16gb-ddr5-dram-5600mts-cl40-memory-kit-cmk32gx5m2l5600c40",
+    "id": "22b1ba18-8a13-5985-8ce9-d649472c5789",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "32 GB (2 x 16 GB) DDR5-5600 CL48 SO-DIMM",
+    "aliases": "CMSX32GX5M2A5600C48",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "SO-DIMM",
+      "moduleCapacity": "16",
+      "speed": "5600",
+      "latency": "48"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmsx32gx5m2a5600c48/vengeance-ddr5-sodimm-32gb-2x16gb-ddr5-5600mts-pc5-44800-cl48-1-1v-cmsx32gx5m2a5600c48",
+    "id": "57f4c44c-bc4e-5402-b2d2-40b925830182",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "32 GB (2 x 16 GB) DDR5-6000 CL30 DIMM",
+    "aliases": "CMK32GX5M2X6000C30 CMK32GX5M2B6000C30W",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "6000",
+      "latency": "30"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk32gx5m2x6000c30/vengeance-32gb-2x16gb-ddr5-dram-6000mts-cl30-memory-kit-cmk32gx5m2x6000c30",
+    "id": "e007b4d2-0523-5173-8b2f-2b7ee051c58d",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "32 GB (2 x 16 GB) DDR5-6000 CL36 DIMM",
+    "aliases": "CMK32GX5M2D6000C36 CMK32GX5M2D6000C36W",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "6000",
+      "latency": "36"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk32gx5m2d6000c36/vengeance-32gb-2x16gb-ddr5-dram-6000mhz-c36-memory-kit-black-cmk32gx5m2d6000c36",
+    "id": "690f7ed7-2a99-5457-9c05-97aa70e30026",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "32 GB (2 x 16 GB) DDR5-6000 CL38 DIMM",
+    "aliases": "CMK32GX5M2B6000C38W",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "6000",
+      "latency": "38"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk32gx5m2b6000c38w/vengeance-32gb-2x16gb-ddr5-dram-6000mts-cl38-memory-kit-white-cmk32gx5m2b6000c38w",
+    "id": "106b43b4-c20e-5861-9ac8-bd52e45ed6af",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "32 GB (2 x 16 GB) DDR5-6600 CL30 DIMM",
+    "aliases": "CMK32GX5M2X6600C30",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "6600",
+      "latency": "30"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk32gx5m2x6600c30/vengeance-32gb-2x16gb-ddr5-dram-6600mts-cl30-memory-kit-cmk32gx5m2x6600c30",
+    "id": "57764ce9-837d-582c-b1eb-ccd3f90065b8",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "32 GB (2 x 16 GB) DDR5-7200 CL34 DIMM",
+    "aliases": "CMK32GX5M2X7200C34W",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "7200",
+      "latency": "34"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk32gx5m2x7200c34w/vengeance-32gb-2x16gb-ddr5-dram-7200mts-cl34-memory-kit-white-cmk32gx5m2x7200c34w",
+    "id": "863c8ace-1c34-5548-aa88-d4e9aa34956f",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "4 GB (1 x 4 GB) DDR4-2400 CL16 SO-DIMM",
+    "aliases": "CMSX4GX4M1A2400C16",
+    "specs": {
+      "capacity": "4 GB",
+      "memoryType": "DDR4",
+      "modules": "1",
+      "moduleFormat": "SO-DIMM",
+      "moduleCapacity": "4",
+      "speed": "2400",
+      "latency": "16"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmsx4gx4m1a2400c16/vengeancea-series-4gb-1-x-4gb-ddr4-sodimm-2400mhz-cl16-memory-kit-cmsx4gx4m1a2400c16",
+    "id": "502fc027-1501-593b-bb6d-d5f44968ca5e",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "48 GB (1 x 48 GB) DDR5-4800 CL40 SO-DIMM",
+    "aliases": "CMSX48GX5M1A4800C40",
+    "specs": {
+      "capacity": "48 GB",
+      "memoryType": "DDR5",
+      "modules": "1",
+      "moduleFormat": "SO-DIMM",
+      "moduleCapacity": "48",
+      "speed": "4800",
+      "latency": "40"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmsx48gx5m1a4800c40/vengeance-ddr5-sodimm-48gb-1x48gb-ddr5-4800mts-cl40-cmsx48gx5m1a4800c40",
+    "id": "51eacf3a-46cc-5129-b7a1-ac1da0f31482",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "48 GB (1 x 48 GB) DDR5-5200 CL44 SO-DIMM",
+    "aliases": "CMSX48GX5M1A5200C44",
+    "specs": {
+      "capacity": "48 GB",
+      "memoryType": "DDR5",
+      "modules": "1",
+      "moduleFormat": "SO-DIMM",
+      "moduleCapacity": "48",
+      "speed": "5200",
+      "latency": "44"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmsx48gx5m1a5200c44/vengeance-ddr5-sodimm-48gb-1x48gb-ddr5-5200mts-cl44-cmsx48gx5m1a5200c44",
+    "id": "60cd9d52-508e-59b9-9dec-dcca534c5373",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "48 GB (2 x 24 GB) DDR5-4800 CL40 SO-DIMM",
+    "aliases": "CMSX48GX5M2A4800C40",
+    "specs": {
+      "capacity": "48 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "SO-DIMM",
+      "moduleCapacity": "24",
+      "speed": "4800",
+      "latency": "40"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmsx48gx5m2a4800c40/vengeance-ddr5-sodimm-48gb-2x24gb-ddr5-4800mt-s-cl40-cmsx48gx5m2a4800c40",
+    "id": "7bca1618-d210-5b9d-9ad0-3049e244afda",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "48 GB (2 x 24 GB) DDR5-5200 CL44 SO-DIMM",
+    "aliases": "CMSX48GX5M2A5200C44",
+    "specs": {
+      "capacity": "48 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "SO-DIMM",
+      "moduleCapacity": "24",
+      "speed": "5200",
+      "latency": "44"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmsx48gx5m2a5200c44/vengeance-ddr5-sodimm-48gb-2x24gb-ddr5-5200mts-cl44-cmsx48gx5m2a5200c44",
+    "id": "14d903f2-e406-5903-813d-8030bdc62367",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "48 GB (2 x 24 GB) DDR5-6400 CL36 DIMM",
+    "aliases": "CMK48GX5M2B6400C36W",
+    "specs": {
+      "capacity": "48 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "24",
+      "speed": "6400",
+      "latency": "36"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk48gx5m2b6400c36w/vengeance-48gb-2x24gb-ddr5-dram-6400mts-cl36-memory-kit-white-cmk48gx5m2b6400c36w",
+    "id": "e00497c0-7fb2-501d-b880-a4188a2c21ba",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "48 GB (2 x 24 GB) DDR5-6800 CL34 DIMM",
+    "aliases": "CMK48GX5M2B6800C34",
+    "specs": {
+      "capacity": "48 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "24",
+      "speed": "6800",
+      "latency": "34"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk48gx5m2b6800c34/vengeance-48gb-2x24gb-ddr5-dram-6800mts-cl34-memory-kit-cmk48gx5m2b6800c34",
+    "id": "e4207461-355b-5849-87f8-2505fa17a7ba",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "48 GB (2 x 24 GB) DDR5-7200 CL36 DIMM",
+    "aliases": "CMK48GX5M2B7200C36",
+    "specs": {
+      "capacity": "48 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "24",
+      "speed": "7200",
+      "latency": "36"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk48gx5m2b7200c36/vengeance-48gb-2x24gb-ddr5-dram-7200mts-cl36-memory-kit-cmk48gx5m2b7200c36",
+    "id": "c0097e82-1757-55fd-aa9a-fa4683cbe6f3",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "48 GB (2 x 24 GB) DDR5-8000 CL38 DIMM",
+    "aliases": "CMK48GX5M2X8000C38",
+    "specs": {
+      "capacity": "48 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "24",
+      "speed": "8000",
+      "latency": "38"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk48gx5m2x8000c38/vengeance-48gb-2x24gb-ddr5-dram-8000mts-cl38-memory-kit-cmk48gx5m2x8000c38",
+    "id": "674a83b5-7b3c-54a9-8625-fc531b275613",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "64 GB (2 x 32 GB) DDR4-2666 CL18 SO-DIMM",
+    "aliases": "CMSX64GX4M2A2666C18",
+    "specs": {
+      "capacity": "64 GB",
+      "memoryType": "DDR4",
+      "modules": "2",
+      "moduleFormat": "SO-DIMM",
+      "moduleCapacity": "32",
+      "speed": "2666",
+      "latency": "18"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmsx64gx4m2a2666c18/vengeancea-series-64gb-2-x-32gb-ddr4-sodimm-2666mhz-cl18-memory-kit-cmsx64gx4m2a2666c18",
+    "id": "46a05885-a85f-52c2-aba4-989f6d7560c0",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "64 GB (2 x 32 GB) DDR4-3200 CL22 SO-DIMM",
+    "aliases": "CMSX64GX4M2A3200C22",
+    "specs": {
+      "capacity": "64 GB",
+      "memoryType": "DDR4",
+      "modules": "2",
+      "moduleFormat": "SO-DIMM",
+      "moduleCapacity": "32",
+      "speed": "3200",
+      "latency": "22"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmsx64gx4m2a3200c22/vengeancea-series-64gb-2-x-32gb-ddr4-sodimm-3200mhz-cl22-memory-kit-cmsx64gx4m2a3200c22",
+    "id": "9e034d81-58a0-5818-9a32-dd4498105235",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "64 GB (2 x 32 GB) DDR5-4000 CL32 DIMM",
+    "aliases": "CMK64GX5M2A4000C32",
+    "specs": {
+      "capacity": "64 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "32",
+      "speed": "4000",
+      "latency": "32"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk64gx5m2a4000c32/vengeance-64gb-2x32gb-ddr5-dram-4000mts-cl32-memory-kit-cmk64gx5m2a4000c32",
+    "id": "a6faff34-f52c-5a69-bcc9-3ac268d29da9",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "64 GB (2 x 32 GB) DDR5-4800 CL34 DIMM",
+    "aliases": "CMK64GX5M2A4800C34",
+    "specs": {
+      "capacity": "64 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "32",
+      "speed": "4800",
+      "latency": "34"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk64gx5m2a4800c34/vengeance-64gb-2x32gb-ddr5-dram-4800mts-cl34-memory-kit-cmk64gx5m2a4800c34",
+    "id": "3b244e60-442d-50ab-a97f-8b5a4cd0f36f",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "64 GB (2 x 32 GB) DDR5-4800 CL40 SO-DIMM",
+    "aliases": "CMSX64GX5M2A4800C40",
+    "specs": {
+      "capacity": "64 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "SO-DIMM",
+      "moduleCapacity": "32",
+      "speed": "4800",
+      "latency": "40"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmsx64gx5m2a4800c40/vengeance-ddr5-sodimm-64gb-2x32gb-ddr5-4800-pc5-38400-c40-1-1v-cmsx64gx5m2a4800c40",
+    "id": "fa224f59-d4a4-5d41-934b-dd81548f4c6f",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "64 GB (2 x 32 GB) DDR5-5200 CL44 SO-DIMM",
+    "aliases": "CMSX64GX5M2A5200C44",
+    "specs": {
+      "capacity": "64 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "SO-DIMM",
+      "moduleCapacity": "32",
+      "speed": "5200",
+      "latency": "44"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmsx64gx5m2a5200c44/vengeance-ddr5-sodimm-64gb-2x32gb-ddr5-5200mts-cl44-cmsx64gx5m2a5200c44",
+    "id": "061b48ab-77b1-5c0b-a783-dbbd107415a6",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "64 GB (2 x 32 GB) DDR5-5600 CL36 DIMM",
+    "aliases": "CMK64GX5M2L5600C36",
+    "specs": {
+      "capacity": "64 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "32",
+      "speed": "5600",
+      "latency": "36"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk64gx5m2l5600c36/vengeancea-64gb-2x32gb-ddr5-dram-5600mhz-c36-memory-kit-a-black-cmk64gx5m2l5600c36",
+    "id": "42343289-290e-5351-80b4-726e4560a0b4",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "64 GB (2 x 32 GB) DDR5-5600 CL40 DIMM",
+    "aliases": "CMK64GX5M2L5600C40",
+    "specs": {
+      "capacity": "64 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "32",
+      "speed": "5600",
+      "latency": "40"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk64gx5m2l5600c40/vengeancea-64gb-2x32gb-ddr5-dram-5600mhz-c40-memory-kit-a-black-cmk64gx5m2l5600c40",
+    "id": "ed6b7898-3d45-503b-bcba-360ce5e33653",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "64 GB (2 x 32 GB) DDR5-5600 CL48 SO-DIMM",
+    "aliases": "CMSX64GX5M2A5600C48",
+    "specs": {
+      "capacity": "64 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "SO-DIMM",
+      "moduleCapacity": "32",
+      "speed": "5600",
+      "latency": "48"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmsx64gx5m2a5600c48/vengeance-ddr5-sodimm-64gb-2x32gb-ddr5-5600mts-cl48-cmsx64gx5m2a5600c48",
+    "id": "b703375c-6123-5906-9e57-7af81c09f445",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "64 GB (2 x 32 GB) DDR5-6000 CL28 DIMM",
+    "aliases": "CMK64GX5M2B6000C28",
+    "specs": {
+      "capacity": "64 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "32",
+      "speed": "6000",
+      "latency": "28"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk64gx5m2b6000c28/vengeance-64gb-2x32gb-ddr5-dram-6000mts-cl28-memory-kit-cmk64gx5m2b6000c28",
+    "id": "e9858409-82d3-510c-abbf-3de040ad1bd0",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "64 GB (2 x 32 GB) DDR5-6000 CL30 DIMM",
+    "aliases": "CMK64GX5M2B6000C30W",
+    "specs": {
+      "capacity": "64 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "32",
+      "speed": "6000",
+      "latency": "30"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk64gx5m2b6000c30w/vengeance-64gb-2x32gb-ddr5-dram-6000mts-cl30-memory-kitt-white-cmk64gx5m2b6000c30w",
+    "id": "0ac88300-fc88-5dea-9a2b-94a64285d9c2",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "64 GB (2 x 32 GB) DDR5-6000 CL38 DIMM",
+    "aliases": "CMK64GX5M2B6000C38W",
+    "specs": {
+      "capacity": "64 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "32",
+      "speed": "6000",
+      "latency": "38"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk64gx5m2b6000c38w/vengeance-64gb-2x32gb-ddr5-dram-6000mts-cl38-memory-kitt-white-cmk64gx5m2b6000c38w",
+    "id": "16ed1130-167c-59b9-97c5-4e46a24a32b3",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "64 GB (2 x 32 GB) DDR5-6000 CL40 DIMM",
+    "aliases": "CMK64GX5M2B6000C40 CMK64GX5M2B6000C40W",
+    "specs": {
+      "capacity": "64 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "32",
+      "speed": "6000",
+      "latency": "40"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk64gx5m2b6000c40/vengeance-64gb-2x32gb-ddr5-dram-6000mhz-c40-memory-kit-black-cmk64gx5m2b6000c40",
+    "id": "044e957a-68c8-58cf-bf0b-1ff422dbfaa3",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "64 GB (2 x 32 GB) DDR5-6400 CL32 DIMM",
+    "aliases": "CMK64GX5M2B6400C32W",
+    "specs": {
+      "capacity": "64 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "32",
+      "speed": "6400",
+      "latency": "32"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk64gx5m2b6400c32w/vengeance-64gb-2x32gb-ddr5-dram-6400mts-cl32-memory-kit-white-cmk64gx5m2b6400c32w",
+    "id": "1ea3fe90-6042-5b93-af19-2f334cbe2602",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "64 GB (2 x 32 GB) DDR5-6800 CL32 DIMM",
+    "aliases": "CMK64GX5M2X6800C32W",
+    "specs": {
+      "capacity": "64 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "32",
+      "speed": "6800",
+      "latency": "32"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk64gx5m2x6800c32w/vengeance-64gb-2x32gb-ddr5-dram-6800mts-cl32-memory-kitt-white-cmk64gx5m2x6800c32w",
+    "id": "d6178d85-41c9-5a34-941d-84cf510a00f0",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "64 GB (4 x 16 GB) DDR5-5600 CL36 DIMM",
+    "aliases": "CMK64GX5M4B5600C36",
+    "specs": {
+      "capacity": "64 GB",
+      "memoryType": "DDR5",
+      "modules": "4",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "5600",
+      "latency": "36"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk64gx5m4b5600c36/vengeance-64gb-4x16gb-ddr5-dram-5600mhz-c36-memory-kit-black-cmk64gx5m4b5600c36",
+    "id": "b1f5233b-f438-54bc-86c0-f49dbd41f95d",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "64 GB (4 x 16 GB) DDR5-6400 CL32 DIMM",
+    "aliases": "CMK64GX5M4B6400C32W",
+    "specs": {
+      "capacity": "64 GB",
+      "memoryType": "DDR5",
+      "modules": "4",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "6400",
+      "latency": "32"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk64gx5m4b6400c32w/vengeance-64gb-4x16gb-ddr5-dram-6400mts-cl32-memory-kitt-white-cmk64gx5m4b6400c32w",
+    "id": "517792b8-5ecf-56b9-9469-bbd3eaa5d08f",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "64 GB (4 x 16 GB) DDR5-6600 CL32 DIMM",
+    "aliases": "CMK64GX5M4X6600C32",
+    "specs": {
+      "capacity": "64 GB",
+      "memoryType": "DDR5",
+      "modules": "4",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "6600",
+      "latency": "32"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk64gx5m4x6600c32/vengeance-64gb-4x16gb-ddr5-dram-6600mts-cl32-memory-kit-cmk64gx5m4x6600c32",
+    "id": "8a0ecd29-dd57-505c-a63e-9175d84821b1",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "8 GB (1 x 8 GB) DDR4-2400 CL16 SO-DIMM",
+    "aliases": "CMSX8GX4M1A2400C16",
+    "specs": {
+      "capacity": "8 GB",
+      "memoryType": "DDR4",
+      "modules": "1",
+      "moduleFormat": "SO-DIMM",
+      "moduleCapacity": "8",
+      "speed": "2400",
+      "latency": "16"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmsx8gx4m1a2400c16/vengeancea-series-8gb-1-x-8gb-ddr4-sodimm-2400mhz-cl16-memory-kit-cmsx8gx4m1a2400c16",
+    "id": "d69237d0-08b5-5f5f-b70c-2c4e0c00319b",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "8 GB (1 x 8 GB) DDR5-4800 CL40 SO-DIMM",
+    "aliases": "CMSX8GX5M1A4800C40",
+    "specs": {
+      "capacity": "8 GB",
+      "memoryType": "DDR5",
+      "modules": "1",
+      "moduleFormat": "SO-DIMM",
+      "moduleCapacity": "8",
+      "speed": "4800",
+      "latency": "40"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmsx8gx5m1a4800c40/vengeance-ddr5-sodimm-8gb-1x8gb-ddr5-4800-pc5-38400-c40-1-1v-cmsx8gx5m1a4800c40",
+    "id": "d524d570-a410-5b8c-b49b-7f9594653860",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "8 GB (2 x 4 GB) DDR4-2400 CL16 SO-DIMM",
+    "aliases": "CMSX8GX4M2A2400C16",
+    "specs": {
+      "capacity": "8 GB",
+      "memoryType": "DDR4",
+      "modules": "2",
+      "moduleFormat": "SO-DIMM",
+      "moduleCapacity": "4",
+      "speed": "2400",
+      "latency": "16"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmsx8gx4m2a2400c16/vengeancea-series-8gb-2x4gb-ddr4-sodimm-2400mhz-cl16-memory-kit-cmsx8gx4m2a2400c16",
+    "id": "6a20f517-518b-5677-b5d8-77ad40264b32",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "8 GB (2 x 4 GB) DDR4-2666 CL18 SO-DIMM",
+    "aliases": "CMSX8GX4M2A2666C18",
+    "specs": {
+      "capacity": "8 GB",
+      "memoryType": "DDR4",
+      "modules": "2",
+      "moduleFormat": "SO-DIMM",
+      "moduleCapacity": "4",
+      "speed": "2666",
+      "latency": "18"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmsx8gx4m2a2666c18/vengeancea-series-8gb-2x4gb-ddr4-sodimm-2666mhz-cl18-memory-kit-cmsx8gx4m2a2666c18",
+    "id": "e1889b34-11d9-537d-963d-532b058dae6e",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "96 GB (2 x 48 GB) DDR5-4800 CL40 SO-DIMM",
+    "aliases": "CMSX96GX5M2A4800C40",
+    "specs": {
+      "capacity": "96 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "SO-DIMM",
+      "moduleCapacity": "48",
+      "speed": "4800",
+      "latency": "40"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmsx96gx5m2a4800c40/vengeance-ddr5-sodimm-96gb-2x48gb-ddr5-4800mts-cl40-cmsx96gx5m2a4800c40",
+    "id": "d11cc0bb-19fb-5867-9912-70f72884e477",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "96 GB (2 x 48 GB) DDR5-5200 CL44 SO-DIMM",
+    "aliases": "CMSX96GX5M2A5200C44",
+    "specs": {
+      "capacity": "96 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "SO-DIMM",
+      "moduleCapacity": "48",
+      "speed": "5200",
+      "latency": "44"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmsx96gx5m2a5200c44/vengeance-ddr5-sodimm-96gb-2x48gb-ddr5-5200mts-cl44-cmsx96gx5m2a5200c44",
+    "id": "e9c2648c-fb7d-5d98-bfa6-c0682d9a4682",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "96 GB (2 x 48 GB) DDR5-6000 CL30 DIMM",
+    "aliases": "CMK96GX5M2B6000C30W",
+    "specs": {
+      "capacity": "96 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "48",
+      "speed": "6000",
+      "latency": "30"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk96gx5m2b6000c30w/vengeance-96gb-2x48gb-ddr5-dram-6000mts-cl30-memory-kitt-white-cmk96gx5m2b6000c30w",
+    "id": "698c635b-bc8c-5ce7-8261-145bb42024c5",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "96 GB (2 x 48 GB) DDR5-6400 CL32 DIMM",
+    "aliases": "CMK96GX5M2B6400C32W",
+    "specs": {
+      "capacity": "96 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "48",
+      "speed": "6400",
+      "latency": "32"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk96gx5m2b6400c32w/vengeance-96gb-2x48gb-ddr5-dram-6400mts-cl32-memory-kitt-white-cmk96gx5m2b6400c32w",
+    "id": "eb02dd2d-50bd-5cf9-a02c-8aa411e851a6",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "96 GB (2 x 48 GB) DDR5-6800 CL40 DIMM",
+    "aliases": "CMK96GX5M2B6800C40W",
+    "specs": {
+      "capacity": "96 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "48",
+      "speed": "6800",
+      "latency": "40"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk96gx5m2b6800c40w/vengeance-96gb-2x48gb-ddr5-dram-6800mts-cl40-memory-kitt-white-cmk96gx5m2b6800c40w",
+    "id": "994bba8b-b482-5742-8427-0293ed0be9d4",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE",
+    "variant": "96 GB (2 x 48 GB) DDR5-7200 CL40 DIMM",
+    "aliases": "CMK96GX5M2B7200C40",
+    "specs": {
+      "capacity": "96 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "48",
+      "speed": "7200",
+      "latency": "40"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk96gx5m2b7200c40/vengeance-96gb-2x48gb-ddr5-dram-7200mts-cl40-memory-kit-cmk96gx5m2b7200c40",
+    "id": "03c3195c-a5a6-58b1-9b8c-33e3ff4b22c7",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE LPX",
+    "variant": "16 GB (1 x 16 GB) DDR4-2400 CL14 DIMM",
+    "aliases": "CMK16GX4M1A2400C14",
+    "specs": {
+      "capacity": "16 GB",
+      "memoryType": "DDR4",
+      "modules": "1",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "2400",
+      "latency": "14"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk16gx4m1a2400c14/vengeancea-lpx-16gb-1-x-16gb-ddr4-dram-2400mhz-c14-memory-kit-black-cmk16gx4m1a2400c14",
+    "id": "0ffb847f-2494-5cee-93d8-fbd13ec9ac98",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE LPX",
+    "variant": "16 GB (1 x 16 GB) DDR4-2400 CL16 DIMM",
+    "aliases": "CMK16GX4M1A2400C16",
+    "specs": {
+      "capacity": "16 GB",
+      "memoryType": "DDR4",
+      "modules": "1",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "2400",
+      "latency": "16"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk16gx4m1a2400c16/vengeancea-lpx-16gb-1-x-16gb-ddr4-dram-2400mhz-c16-memory-kit-black-cmk16gx4m1a2400c16",
+    "id": "4204e75d-03e3-5f6c-9b3d-a42a64ef6936",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE LPX",
+    "variant": "16 GB (1 x 16 GB) DDR4-2666 CL16 DIMM",
+    "aliases": "CMK16GX4M1A2666C16",
+    "specs": {
+      "capacity": "16 GB",
+      "memoryType": "DDR4",
+      "modules": "1",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "2666",
+      "latency": "16"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk16gx4m1a2666c16/vengeancea-lpx-16gb-1-x-16gb-ddr4-dram-2666mhz-c16-memory-kit-black-cmk16gx4m1a2666c16",
+    "id": "f73a07c5-d055-54bd-9cde-0628a841ba40",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE LPX",
+    "variant": "16 GB (1 x 16 GB) DDR4-3000 CL16 DIMM",
+    "aliases": "CMK16GX4M1D3000C16",
+    "specs": {
+      "capacity": "16 GB",
+      "memoryType": "DDR4",
+      "modules": "1",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "3000",
+      "latency": "16"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk16gx4m1d3000c16/vengeancea-lpx-16gb-1-x-16gb-ddr4-dram-3000mhz-c16-memory-kit-black-cmk16gx4m1d3000c16",
+    "id": "db37504b-9579-5b28-887e-2988317a5f62",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE LPX",
+    "variant": "16 GB (1 x 16 GB) DDR4-3200 CL16 DIMM",
+    "aliases": "CMK16GX4M1E3200C16",
+    "specs": {
+      "capacity": "16 GB",
+      "memoryType": "DDR4",
+      "modules": "1",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "3200",
+      "latency": "16"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk16gx4m1e3200c16/vengeancea-lpx-16gb-1-x-16gb-ddr4-dram-3200mhz-c16-memory-kit-black-cmk16gx4m1e3200c16",
+    "id": "a4657710-b837-5ecf-b5e7-0fd8b7c335c7",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE LPX",
+    "variant": "16 GB (2 x 8 GB) DDR4-2133 CL13 DIMM",
+    "aliases": "CMK16GX4M2A2133C13",
+    "specs": {
+      "capacity": "16 GB",
+      "memoryType": "DDR4",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "8",
+      "speed": "2133",
+      "latency": "13"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk16gx4m2a2133c13/vengeancea-lpx-16gb-2-x-8gb-ddr4-dram-2133mhz-c13-memory-kit-black-cmk16gx4m2a2133c13",
+    "id": "4c7abed2-6967-5ec8-8bd5-a8876931ef6d",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE LPX",
+    "variant": "16 GB (2 x 8 GB) DDR4-2400 CL14 DIMM",
+    "aliases": "CMK16GX4M2A2400C14",
+    "specs": {
+      "capacity": "16 GB",
+      "memoryType": "DDR4",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "8",
+      "speed": "2400",
+      "latency": "14"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk16gx4m2a2400c14/vengeancea-lpx-16gb-2-x-8gb-ddr4-dram-2400mhz-c14-memory-kit-black-cmk16gx4m2a2400c14",
+    "id": "980f3ee2-ea3e-5883-8f47-b2b12dae9b3e",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE LPX",
+    "variant": "16 GB (2 x 8 GB) DDR4-2400 CL16 DIMM",
+    "aliases": "CMK16GX4M2A2400C16",
+    "specs": {
+      "capacity": "16 GB",
+      "memoryType": "DDR4",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "8",
+      "speed": "2400",
+      "latency": "16"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk16gx4m2a2400c16/vengeancea-lpx-16gb-2-x-8gb-ddr4-dram-2400mhz-c16-memory-kit-black-cmk16gx4m2a2400c16",
+    "id": "dc8704f3-842a-5c9c-b2db-eb13fd62f3b6",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE LPX",
+    "variant": "16 GB (2 x 8 GB) DDR4-2666 CL16 DIMM",
+    "aliases": "CMK16GX4M2A2666C16W CMK16GX4M2A2666C16",
+    "specs": {
+      "capacity": "16 GB",
+      "memoryType": "DDR4",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "8",
+      "speed": "2666",
+      "latency": "16"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk16gx4m2a2666c16w/vengeancea-lpx-16gb-2-x-8gb-ddr4-dram-2666mhz-c16-memory-kit-a-white-cmk16gx4m2a2666c16w",
+    "id": "a73c7e57-4591-586f-8fe7-ac4a94fa513c",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE LPX",
+    "variant": "16 GB (2 x 8 GB) DDR4-3000 CL16 DIMM",
+    "aliases": "CMK16GX4M2D3000C16 CMK16GX4M2D3000C16W",
+    "specs": {
+      "capacity": "16 GB",
+      "memoryType": "DDR4",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "8",
+      "speed": "3000",
+      "latency": "16"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk16gx4m2d3000c16/vengeancea-lpx-16gb-2-x-8gb-ddr4-dram-3000mhz-c16-memory-kit-black-cmk16gx4m2d3000c16",
+    "id": "c8697ff7-06d0-5b8a-b6ab-858da96d25b6",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE LPX",
+    "variant": "16 GB (2 x 8 GB) DDR4-3200 CL16 DIMM",
+    "aliases": "CMK16GX4M2E3200C16W CMK16GX4M2E3200C16",
+    "specs": {
+      "capacity": "16 GB",
+      "memoryType": "DDR4",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "8",
+      "speed": "3200",
+      "latency": "16"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk16gx4m2e3200c16w/vengeancea-lpx-16gb-2-x-8gb-ddr4-dram-3200mhz-c16-memory-kit-white-cmk16gx4m2e3200c16w",
+    "id": "fbed534f-061e-5569-a3cd-af23e262b1eb",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE LPX",
+    "variant": "16 GB (4 x 4 GB) DDR4-2666 CL16 DIMM",
+    "aliases": "CMK16GX4M4A2666C16",
+    "specs": {
+      "capacity": "16 GB",
+      "memoryType": "DDR4",
+      "modules": "4",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "4",
+      "speed": "2666",
+      "latency": "16"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk16gx4m4a2666c16/vengeancea-lpx-16gb-4-x-4gb-ddr4-dram-2666mhz-c16-memory-kit-black-cmk16gx4m4a2666c16",
+    "id": "8491e715-bc03-57af-804c-c4acb80c294c",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE LPX",
+    "variant": "32 GB (2 x 16 GB) DDR4-2133 CL13 DIMM",
+    "aliases": "CMK32GX4M2A2133C13",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR4",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "2133",
+      "latency": "13"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk32gx4m2a2133c13/vengeancea-lpx-32gb-2-x-16gb-ddr4-dram-2133mhz-c13-memory-kit-black-cmk32gx4m2a2133c13",
+    "id": "3bbb2d90-1eb1-5a31-b9a7-45fcb631a0fd",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE LPX",
+    "variant": "32 GB (2 x 16 GB) DDR4-2400 CL14 DIMM",
+    "aliases": "CMK32GX4M2A2400C14",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR4",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "2400",
+      "latency": "14"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk32gx4m2a2400c14/vengeancea-lpx-32gb-2-x-16gb-ddr4-dram-2400mhz-c14-memory-kit-black-cmk32gx4m2a2400c14",
+    "id": "86a1b074-4d74-53af-9af2-9dbd185fe658",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE LPX",
+    "variant": "32 GB (2 x 16 GB) DDR4-2400 CL16 DIMM",
+    "aliases": "CMK32GX4M2A2400C16",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR4",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "2400",
+      "latency": "16"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk32gx4m2a2400c16/vengeancea-lpx-32gb-2-x-16gb-ddr4-dram-2400mhz-c16-memory-kit-black-cmk32gx4m2a2400c16",
+    "id": "ec4f4b4e-d02c-5879-b6ab-616110c98215",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE LPX",
+    "variant": "32 GB (2 x 16 GB) DDR4-2666 CL16 DIMM",
+    "aliases": "CMK32GX4M2A2666C16",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR4",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "2666",
+      "latency": "16"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk32gx4m2a2666c16/vengeancea-lpx-32gb-2-x-16gb-ddr4-dram-2666mhz-c16-memory-kit-black-cmk32gx4m2a2666c16",
+    "id": "457d8305-3cd2-5259-a1ba-61f0c071bae6",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE LPX",
+    "variant": "32 GB (2 x 16 GB) DDR4-3000 CL16 DIMM",
+    "aliases": "CMK32GX4M2D3000C16",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR4",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "3000",
+      "latency": "16"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk32gx4m2d3000c16/vengeancea-lpx-32gb-2-x-16gb-ddr4-dram-3000mhz-c16-memory-kit-black-cmk32gx4m2d3000c16",
+    "id": "71657ed1-d414-5081-a14c-01233f478a74",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE LPX",
+    "variant": "32 GB (2 x 16 GB) DDR4-3200 CL16 DIMM",
+    "aliases": "CMK32GX4M2E3200C16 CMK32GX4M2E3200C16W",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR4",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "3200",
+      "latency": "16"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk32gx4m2e3200c16/vengeance-lpx-32gb-2-x-16gb-ddr4-dram-3200mhz-c16-memory-kit-black-cmk32gx4m2e3200c16",
+    "id": "d52aa297-41f3-5049-ac36-36d3652bd52f",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE LPX",
+    "variant": "32 GB (4 x 8 GB) DDR4-2666 CL16 DIMM",
+    "aliases": "CMK32GX4M4A2666C16",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR4",
+      "modules": "4",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "8",
+      "speed": "2666",
+      "latency": "16"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk32gx4m4a2666c16/vengeancea-lpx-32gb-4-x-8gb-ddr4-dram-2666mhz-c16-memory-kit-black-cmk32gx4m4a2666c16",
+    "id": "0b0d5af6-78d2-54d1-b98b-8698b8e8faa5",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE LPX",
+    "variant": "32 GB (4 x 8 GB) DDR4-3200 CL16 DIMM",
+    "aliases": "CMK32GX4M4B3200C16",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR4",
+      "modules": "4",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "8",
+      "speed": "3200",
+      "latency": "16"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk32gx4m4b3200c16/vengeancea-lpx-32gb-4-x-8gb-ddr4-dram-3200mhz-c16-memory-kit-black-cmk32gx4m4b3200c16",
+    "id": "e9574472-ddb2-5592-8015-0c697c9eab1c",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE LPX",
+    "variant": "64 GB (4 x 16 GB) DDR4-2400 CL14 DIMM",
+    "aliases": "CMK64GX4M4A2400C14",
+    "specs": {
+      "capacity": "64 GB",
+      "memoryType": "DDR4",
+      "modules": "4",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "2400",
+      "latency": "14"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk64gx4m4a2400c14/vengeancea-lpx-64gb-4-x-16gb-ddr4-dram-2400mhz-c14-memory-kit-black-cmk64gx4m4a2400c14",
+    "id": "95e6c51f-ab06-55df-8e64-96c51c992d43",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE LPX",
+    "variant": "64 GB (4 x 16 GB) DDR4-2666 CL16 DIMM",
+    "aliases": "CMK64GX4M4A2666C16",
+    "specs": {
+      "capacity": "64 GB",
+      "memoryType": "DDR4",
+      "modules": "4",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "2666",
+      "latency": "16"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk64gx4m4a2666c16/vengeancea-lpx-64gb-4-x-16gb-ddr4-dram-2666mhz-c16-memory-kit-black-cmk64gx4m4a2666c16",
+    "id": "33c05ff4-71db-5ba9-80f5-e47d046b8b1d",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE LPX",
+    "variant": "64 GB (4 x 16 GB) DDR4-3000 CL16 DIMM",
+    "aliases": "CMK64GX4M4D3000C16",
+    "specs": {
+      "capacity": "64 GB",
+      "memoryType": "DDR4",
+      "modules": "4",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "3000",
+      "latency": "16"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk64gx4m4d3000c16/vengeancea-lpx-64gb-4-x-16gb-ddr4-dram-3000mhz-c16-memory-kit-black-cmk64gx4m4d3000c16",
+    "id": "4e9da2aa-8e0e-5c2d-a712-a49f2be75dc6",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE LPX",
+    "variant": "64 GB (4 x 16 GB) DDR4-3200 CL16 DIMM",
+    "aliases": "CMK64GX4M4E3200C16",
+    "specs": {
+      "capacity": "64 GB",
+      "memoryType": "DDR4",
+      "modules": "4",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "3200",
+      "latency": "16"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk64gx4m4e3200c16/vengeancea-lpx-64gb-4-x-16gb-ddr4-dram-3200mhz-c16-memory-kit-black-cmk64gx4m4e3200c16",
+    "id": "83e9dc75-59fd-5f2d-b65d-11ea25a39296",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE LPX",
+    "variant": "8 GB (1 x 8 GB) DDR4-2400 CL14 DIMM",
+    "aliases": "CMK8GX4M1A2400C14",
+    "specs": {
+      "capacity": "8 GB",
+      "memoryType": "DDR4",
+      "modules": "1",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "8",
+      "speed": "2400",
+      "latency": "14"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk8gx4m1a2400c14/vengeancea-lpx-8gb-1-x-8gb-ddr4-dram-2400mhz-c14-memory-kit-black-cmk8gx4m1a2400c14",
+    "id": "de08b9a7-90a0-5e58-8d8b-3f17d0bcb784",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE LPX",
+    "variant": "8 GB (1 x 8 GB) DDR4-2400 CL16 DIMM",
+    "aliases": "CMK8GX4M1A2400C16",
+    "specs": {
+      "capacity": "8 GB",
+      "memoryType": "DDR4",
+      "modules": "1",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "8",
+      "speed": "2400",
+      "latency": "16"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk8gx4m1a2400c16/vengeancea-lpx-8gb-1-x-8gb-ddr4-dram-2400mhz-c16-memory-kit-black-cmk8gx4m1a2400c16",
+    "id": "59fb14bd-be9f-584f-9fa6-c55dbec98788",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE LPX",
+    "variant": "8 GB (1 x 8 GB) DDR4-2666 CL16 DIMM",
+    "aliases": "CMK8GX4M1A2666C16",
+    "specs": {
+      "capacity": "8 GB",
+      "memoryType": "DDR4",
+      "modules": "1",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "8",
+      "speed": "2666",
+      "latency": "16"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk8gx4m1a2666c16/vengeancea-lpx-8gb-1-x-8gb-ddr4-dram-2666mhz-c16-memory-kit-black-cmk8gx4m1a2666c16",
+    "id": "b8e8dfc5-b3b7-5489-a497-cae7519e830a",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE LPX",
+    "variant": "8 GB (1 x 8 GB) DDR4-3000 CL16 DIMM",
+    "aliases": "CMK8GX4M1D3000C16",
+    "specs": {
+      "capacity": "8 GB",
+      "memoryType": "DDR4",
+      "modules": "1",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "8",
+      "speed": "3000",
+      "latency": "16"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk8gx4m1d3000c16/vengeancea-lpx-8gb-1-x-8gb-ddr4-dram-3000mhz-c16-memory-kit-black-cmk8gx4m1d3000c16",
+    "id": "78bf384f-7a1a-5353-ad39-34aa5557c082",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE LPX",
+    "variant": "8 GB (1 x 8 GB) DDR4-3200 CL16 DIMM",
+    "aliases": "CMK8GX4M1E3200C16",
+    "specs": {
+      "capacity": "8 GB",
+      "memoryType": "DDR4",
+      "modules": "1",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "8",
+      "speed": "3200",
+      "latency": "16"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk8gx4m1e3200c16/vengeancea-lpx-8gb-1-x-8gb-ddr4-dram-3200mhz-c16-memory-kit-black-cmk8gx4m1e3200c16",
+    "id": "3eb46864-b305-5ff0-9489-a8e671f32745",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE LPX",
+    "variant": "8 GB (2 x 4 GB) DDR4-2400 CL16 DIMM",
+    "aliases": "CMK8GX4M2A2400C16",
+    "specs": {
+      "capacity": "8 GB",
+      "memoryType": "DDR4",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "4",
+      "speed": "2400",
+      "latency": "16"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmk8gx4m2a2400c16/vengeancea-lpx-8gb-2-x-4gb-ddr4-dram-2400mhz-c16-memory-kit-black-cmk8gx4m2a2400c16",
+    "id": "4855482b-8f55-59f9-b1c8-286b1488e746",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE RGB",
+    "variant": "16 GB (1 x 16 GB) DDR5-5200 CL40 DIMM",
+    "aliases": "CMH16GX5M1B5200Z40",
+    "specs": {
+      "capacity": "16 GB",
+      "memoryType": "DDR5",
+      "modules": "1",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "5200",
+      "latency": "40"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmh16gx5m1b5200z40/vengeance-rgb-16gb-1x16gb-ddr5-dram-5200mts-cl40-amd-expo-intel-xmp-memory-kit-cmh16gx5m1b5200z40",
+    "id": "7560c33d-f08a-5944-98a7-a5323cc93a2a",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE RGB",
+    "variant": "16 GB (1 x 16 GB) DDR5-5600 CL40 DIMM",
+    "aliases": "CMH16GX5M1B5600Z40",
+    "specs": {
+      "capacity": "16 GB",
+      "memoryType": "DDR5",
+      "modules": "1",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "5600",
+      "latency": "40"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmh16gx5m1b5600z40/vengeance-rgb-16gb-1x16gb-ddr5-dram-5600mts-cl40-amd-expo-intel-xmp-memory-kit-cmh16gx5m1b5600z40",
+    "id": "6feadcaa-e71e-5a18-962a-e2cdd9df3373",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE RGB",
+    "variant": "16 GB (1 x 16 GB) DDR5-6000 CL36 DIMM",
+    "aliases": "CMH16GX5M1E6000Z36",
+    "specs": {
+      "capacity": "16 GB",
+      "memoryType": "DDR5",
+      "modules": "1",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "6000",
+      "latency": "36"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmh16gx5m1e6000z36/vengeance-rgb-16gb-1x16gb-ddr5-dram-6000mts-cl36-amd-expo-intel-xmp-memory-kit-cmh16gx5m1e6000z36",
+    "id": "821ca902-0110-5925-b6f0-6bb42d9dbc0a",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE RGB",
+    "variant": "16 GB (1 x 16 GB) DDR5-6000 CL38 DIMM",
+    "aliases": "CMH16GX5M1D6000Z38 CMH16GX5M1D6000Z38W",
+    "specs": {
+      "capacity": "16 GB",
+      "memoryType": "DDR5",
+      "modules": "1",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "6000",
+      "latency": "38"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmh16gx5m1d6000z38/vengeance-rgb-16gb-1-x-16gb-ddr5-dram-up-to-6000mt-s-cl38-amd-expo-intel-xmp-memory-kit-gray-cmh16gx5m1d6000z38",
+    "id": "0df79b4d-d6fe-5556-a279-ad495ee1379b",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE RGB",
+    "variant": "16 GB (2 x 8 GB) DDR5-5200 CL40 DIMM",
+    "aliases": "CMH16GX5M2B5200Z40",
+    "specs": {
+      "capacity": "16 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "8",
+      "speed": "5200",
+      "latency": "40"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmh16gx5m2b5200z40/vengeance-rgb-16gb-2x8gb-ddr5-dram-5200mt-s-c40-amd-expo-memory-kit-cmh16gx5m2b5200z40",
+    "id": "b6f04091-df8a-5f01-96df-fc55bdbda082",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE RGB",
+    "variant": "16 GB (2 x 8 GB) DDR5-6000 CL36 DIMM",
+    "aliases": "CMH16GX5M2E6000Z36",
+    "specs": {
+      "capacity": "16 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "8",
+      "speed": "6000",
+      "latency": "36"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmh16gx5m2e6000z36/vengeance-rgb-16gb-2x8gb-ddr5-dram-6000mts-cl36-amd-expo-intel-xmp-memory-kit-cmh16gx5m2e6000z36",
+    "id": "1b401f03-78c5-5d2a-89dd-50340cfbe6b7",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE RGB",
+    "variant": "32 GB (1 x 32 GB) DDR5-5200 CL40 DIMM",
+    "aliases": "CMH32GX5M1B5200Z40",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR5",
+      "modules": "1",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "32",
+      "speed": "5200",
+      "latency": "40"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmh32gx5m1b5200z40/vengeance-rgb-32gb-1x32gb-ddr5-dram-5200mts-cl40-amd-expo-intel-xmp-memory-kit-cmh32gx5m1b5200z40",
+    "id": "42204453-663b-5ffb-b62c-6c7550e22338",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE RGB",
+    "variant": "32 GB (1 x 32 GB) DDR5-5600 CL40 DIMM",
+    "aliases": "CMH32GX5M1B5600Z40",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR5",
+      "modules": "1",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "32",
+      "speed": "5600",
+      "latency": "40"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmh32gx5m1b5600z40/vengeance-rgb-32gb-1x32gb-ddr5-dram-5600mts-cl40-amd-expo-intel-xmp-memory-kit-cmh32gx5m1b5600z40",
+    "id": "39c3f1b6-aaf8-5300-82d5-e68131790e04",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE RGB",
+    "variant": "32 GB (1 x 32 GB) DDR5-6000 CL38 DIMM",
+    "aliases": "CMH32GX5M1E6000Z38",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR5",
+      "modules": "1",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "32",
+      "speed": "6000",
+      "latency": "38"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmh32gx5m1e6000z38/vengeance-rgb-32gb-1x32gb-ddr5-dram-6000mts-cl38-amd-expo-intel-xmp-memory-kit-cmh32gx5m1e6000z38",
+    "id": "80de5ae2-8e07-5811-b62e-6ca0d84719fe",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE RGB",
+    "variant": "32 GB (2 x 16 GB) DDR5-5200 CL40 DIMM",
+    "aliases": "CMH32GX5M2B5200Z40K",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "5200",
+      "latency": "40"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmh32gx5m2b5200z40k/vengeance-rgb-32gb-2x16gb-ddr5-dram-5200mt-s-c40-amd-expo-memory-kit-cmh32gx5m2b5200z40k",
+    "id": "4b08e9fa-76b7-5643-9a9b-ebc949838a94",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE RGB",
+    "variant": "32 GB (2 x 16 GB) DDR5-5600 CL36 DIMM",
+    "aliases": "CMH32GX5M2B5600Z36K",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "5600",
+      "latency": "36"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmh32gx5m2b5600z36k/vengeance-rgb-32gb-2x16gb-ddr5-dram-5600mt-s-c36-amd-expo-memory-kit-cmh32gx5m2b5600z36k",
+    "id": "e05fffa1-e404-5b56-9c19-9a36b9ccc45f",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE RGB",
+    "variant": "32 GB (2 x 16 GB) DDR5-5600 CL40 DIMM",
+    "aliases": "CMH32GX5M2B5600Z40",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "5600",
+      "latency": "40"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmh32gx5m2b5600z40/vengeance-rgb-32gb-2x16gb-ddr5-dram-5600mts-cl40-amd-expo-intel-xmp-memory-kit-cmh32gx5m2b5600z40",
+    "id": "ef04f3f9-520d-5457-b2c6-bc3ba2821815",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE RGB",
+    "variant": "32 GB (2 x 16 GB) DDR5-6000 CL28 DIMM",
+    "aliases": "CMH32GX5M2B6000Z28",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "6000",
+      "latency": "28"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmh32gx5m2b6000z28/vengeance-rgb-32gb-2x16gb-ddr5-dram-6000mts-cl28-amd-expo-intel-xmp-memory-kit-cmh32gx5m2b6000z28",
+    "id": "12873860-ea50-5c42-af2a-d984cc069491",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE RGB",
+    "variant": "32 GB (2 x 16 GB) DDR5-6000 CL30 DIMM",
+    "aliases": "CMH32GX5M2B6000Z30K CMH32GX5M2B6000Z30W",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "6000",
+      "latency": "30"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmh32gx5m2b6000z30k/vengeance-rgb-32gb-2x16gb-ddr5-dram-6000mt-s-cl30-amd-expo-intel-xmp-memory-kit-cmh32gx5m2b6000z30k",
+    "id": "5411c08c-b514-5578-8b04-f908cbea0f00",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE RGB",
+    "variant": "32 GB (2 x 16 GB) DDR5-6000 CL36 DIMM",
+    "aliases": "CMH32GX5M2E6000Z36 CMH32GX5M2E6000Z36W",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "6000",
+      "latency": "36"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmh32gx5m2e6000z36/vengeance-rgb-32gb-2x16gb-ddr5-dram-6000mts-cl36-amd-expo-memory-kit-cmh32gx5m2e6000z36",
+    "id": "66c5bde9-70c9-5e61-b52d-1718717bbc9c",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE RGB",
+    "variant": "32 GB (2 x 16 GB) DDR5-6000 CL38 DIMM",
+    "aliases": "CMH32GX5M2D6000Z38 CMH32GX5M2D6000Z38W CMH32GX5M2D6000Z38GCB CMH32GX5M2D6000Z38WCB",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "6000",
+      "latency": "38"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmh32gx5m2d6000z38/vengeance-rgb-32gb-2-x-16gb-ddr5-dram-up-to-6000mt-s-cl38-amd-expo-intel-xmp-memory-kit-gray-cmh32gx5m2d6000z38",
+    "id": "7830c3f6-70a5-5d4e-9528-af34cb4cbb80",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE RGB",
+    "variant": "32 GB (2 x 16 GB) DDR5-6400 CL30 DIMM",
+    "aliases": "CMH32GX5M2B6400Z30",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "6400",
+      "latency": "30"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmh32gx5m2b6400z30/vengeance-rgb-32gb-2x16gb-ddr5-dram-6400mts-cl30-amd-expo-intel-xmp-memory-kit-cmh32gx5m2b6400z30",
+    "id": "9dd47bb4-8fd5-5d4d-98e6-68b1114ac89b",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE RGB",
+    "variant": "32 GB (2 x 16 GB) DDR5-6400 CL32 DIMM",
+    "aliases": "CMH32GX5M2B6400Z32 CMH32GX5M2B6400Z32W",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "6400",
+      "latency": "32"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmh32gx5m2b6400z32/vengeance-rgb-32gb-2x16gb-ddr5-dram-6400mts-cl32-amd-expo-intel-xmp-memory-kit-cmh32gx5m2b6400z32",
+    "id": "cf3c7e1c-db52-59b4-a883-e2df48c3ea50",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE RGB",
+    "variant": "32 GB (2 x 16 GB) DDR5-6400 CL36 DIMM",
+    "aliases": "CMH32GX5M2B6400Z36",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "6400",
+      "latency": "36"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmh32gx5m2b6400z36/vengeance-rgb-32gb-2x16gb-ddr5-dram-6400mt-s-cl36-memory-kit-cmh32gx5m2b6400z36",
+    "id": "9019798a-298f-5595-aa8e-523cd068db2f",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE RGB",
+    "variant": "48 GB (2 x 24 GB) DDR5-6000 CL30 DIMM",
+    "aliases": "CMH48GX5M2B6000Z30",
+    "specs": {
+      "capacity": "48 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "24",
+      "speed": "6000",
+      "latency": "30"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmh48gx5m2b6000z30/vengeance-rgb-48gb-2x24gb-ddr5-dram-6000mts-cl30-amd-expo-intel-xmp-memory-kit-cmh48gx5m2b6000z30",
+    "id": "8b320e82-38d6-55c8-9054-5bb6b3a81253",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE RGB",
+    "variant": "64 GB (2 x 32 GB) DDR5-5200 CL40 DIMM",
+    "aliases": "CMH64GX5M2B5200Z40K",
+    "specs": {
+      "capacity": "64 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "32",
+      "speed": "5200",
+      "latency": "40"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmh64gx5m2b5200z40k/vengeance-rgb-64gb-2x32gb-ddr5-dram-5200mts-cl40-amd-expo-intel-xmp-memory-kit-cmh64gx5m2b5200z40k",
+    "id": "d1bc44ca-6ba2-556a-93c4-b3300dd73ac7",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE RGB",
+    "variant": "64 GB (2 x 32 GB) DDR5-5600 CL36 DIMM",
+    "aliases": "CMH64GX5M2B5600Z36K",
+    "specs": {
+      "capacity": "64 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "32",
+      "speed": "5600",
+      "latency": "36"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmh64gx5m2b5600z36k/vengeance-rgb-64gb-2x32gb-ddr5-dram-5600mt-s-c36-memory-kitoptimized-for-amd-cmh64gx5m2b5600z36k",
+    "id": "b5bdad61-cb09-51e4-ad9c-8a4d347b3b40",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE RGB",
+    "variant": "64 GB (2 x 32 GB) DDR5-5600 CL40 DIMM",
+    "aliases": "CMH64GX5M2B5600Z40K",
+    "specs": {
+      "capacity": "64 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "32",
+      "speed": "5600",
+      "latency": "40"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmh64gx5m2b5600z40k/vengeance-rgb-64gb-2x32gb-ddr5-dram-5600mts-cl40-amd-expo-intel-xmp-memory-kit-cmh64gx5m2b5600z40k",
+    "id": "f9b34b22-9c1b-58b5-8661-e4e2855690eb",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE RGB",
+    "variant": "64 GB (2 x 32 GB) DDR5-6000 CL28 DIMM",
+    "aliases": "CMH64GX5M2B6000Z28",
+    "specs": {
+      "capacity": "64 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "32",
+      "speed": "6000",
+      "latency": "28"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmh64gx5m2b6000z28/vengeance-rgb-64gb-2x32gb-ddr5-dram-6000mts-cl28-amd-expo-intel-xmp-memory-kit-cmh64gx5m2b6000z28",
+    "id": "996aa6b2-99e6-5563-88af-29f5dd73c38d",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE RGB",
+    "variant": "64 GB (2 x 32 GB) DDR5-6000 CL30 DIMM",
+    "aliases": "CMH64GX5M2B6000Z30 CMH64GX5M2B6000Z30W",
+    "specs": {
+      "capacity": "64 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "32",
+      "speed": "6000",
+      "latency": "30"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmh64gx5m2b6000z30/vengeance-rgb-64gb-2x32gb-ddr5-dram-6000mt-s-cl30-amd-expo-memory-kit-cmh64gx5m2b6000z30",
+    "id": "8b404620-c27c-537d-bc33-71a02458a444",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE RGB",
+    "variant": "64 GB (2 x 32 GB) DDR5-6000 CL38 DIMM",
+    "aliases": "CMH64GX5M2B6000Z38",
+    "specs": {
+      "capacity": "64 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "32",
+      "speed": "6000",
+      "latency": "38"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmh64gx5m2b6000z38/vengeance-rgb-64gb-2x32gb-ddr5-dram-6000mts-cl38-amd-expo-intel-xmp-memory-kit-cmh64gx5m2b6000z38",
+    "id": "0f0c0e48-c8f8-504c-9cce-7dc16d6c2fbb",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE RGB",
+    "variant": "64 GB (2 x 32 GB) DDR5-6000 CL40 DIMM",
+    "aliases": "CMH64GX5M2D6000Z40",
+    "specs": {
+      "capacity": "64 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "32",
+      "speed": "6000",
+      "latency": "40"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmh64gx5m2d6000z40/vengeance-rgb-64gb-2x32gb-ddr5-dram-6000mts-cl40-amd-expo-intel-xmp-memory-kit-cmh64gx5m2d6000z40",
+    "id": "ae485dea-87d2-5068-b14f-3af29090b168",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE RGB",
+    "variant": "64 GB (4 x 16 GB) DDR5-5600 CL36 DIMM",
+    "aliases": "CMH64GX5M4B5600Z36",
+    "specs": {
+      "capacity": "64 GB",
+      "memoryType": "DDR5",
+      "modules": "4",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "5600",
+      "latency": "36"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmh64gx5m4b5600z36/vengeance-rgb-64gb-4x16gb-ddr5-dram-5600mt-s-c36-amd-expo-memory-kit-cmh64gx5m4b5600z36",
+    "id": "f702e4aa-dd74-54ce-923f-d4380c28888e",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE RGB",
+    "variant": "96 GB (2 x 48 GB) DDR5-6000 CL30 DIMM",
+    "aliases": "CMH96GX5M2B6000Z30",
+    "specs": {
+      "capacity": "96 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "48",
+      "speed": "6000",
+      "latency": "30"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmh96gx5m2b6000z30/vengeance-rgb-96gb-2x48gb-ddr5-dram-6000mts-cl30-amd-expo-intel-xmp-memory-kit-cmh96gx5m2b6000z30",
+    "id": "cd72bde3-a121-55b1-be3a-202775ca0869",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE RGB",
+    "variant": "96 GB (2 x 48 GB) DDR5-6000 CL36 DIMM",
+    "aliases": "CMH96GX5M2E6000Z36",
+    "specs": {
+      "capacity": "96 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "48",
+      "speed": "6000",
+      "latency": "36"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmh96gx5m2e6000z36/vengeance-rgb-96gb-2x48gb-ddr5-dram-6000mt-s-cl36-amd-expo-intel-xmp-memory-kit-cmh96gx5m2e6000z36",
+    "id": "0ccd8007-d33b-5569-ad68-a4216812343e",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE RGB PRO",
+    "variant": "16 GB (2 x 8 GB) DDR4-2666 CL16 DIMM",
+    "aliases": "CMW16GX4M2A2666C16W CMW16GX4M2A2666C16",
+    "specs": {
+      "capacity": "16 GB",
+      "memoryType": "DDR4",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "8",
+      "speed": "2666",
+      "latency": "16"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmw16gx4m2a2666c16w/vengeancea-rgb-pro-16gb-2-x-8gb-ddr4-dram-2666mhz-c16-memory-kit-a-white-cmw16gx4m2a2666c16w",
+    "id": "09b5516c-af33-5b91-820a-4a2074ffa555",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE RGB PRO",
+    "variant": "16 GB (2 x 8 GB) DDR4-3000 CL15 DIMM",
+    "aliases": "CMW16GX4M2C3000C15W CMW16GX4M2C3000C15",
+    "specs": {
+      "capacity": "16 GB",
+      "memoryType": "DDR4",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "8",
+      "speed": "3000",
+      "latency": "15"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmw16gx4m2c3000c15w/vengeancea-rgb-pro-16gb-2-x-8gb-ddr4-dram-3000mhz-c15-memory-kit-a-white-cmw16gx4m2c3000c15w",
+    "id": "793f6d74-342e-5b1b-8a42-3a342793bce4",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE RGB PRO",
+    "variant": "16 GB (2 x 8 GB) DDR4-3200 CL16 DIMM",
+    "aliases": "CMW16GX4M2C3200C16W CMW16GX4M2E3200C16-TUF CMW16GX4M2C3200C16 CMW16GX4M2C3200C16-TUF",
+    "specs": {
+      "capacity": "16 GB",
+      "memoryType": "DDR4",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "8",
+      "speed": "3200",
+      "latency": "16"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmw16gx4m2c3200c16w/vengeancea-rgb-pro-16gb-2-x-8gb-ddr4-dram-3200mhz-c16-memory-kit-a-white-cmw16gx4m2c3200c16w",
+    "id": "45d926f4-89bf-507b-b7ae-c6c8710f8fe5",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE RGB PRO",
+    "variant": "32 GB (2 x 16 GB) DDR4-2666 CL16 DIMM",
+    "aliases": "CMW32GX4M2A2666C16W CMW32GX4M2A2666C16",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR4",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "2666",
+      "latency": "16"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmw32gx4m2a2666c16w/vengeancea-rgb-pro-32gb-2-x-16gb-ddr4-dram-2666mhz-c16-memory-kit-a-white-cmw32gx4m2a2666c16w",
+    "id": "428451a7-9b6c-507a-97d4-687805a3d3df",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE RGB PRO",
+    "variant": "32 GB (2 x 16 GB) DDR4-3200 CL16 DIMM",
+    "aliases": "CMW32GX4M2E3200C16 CMW32GX4M2E3200C16-TUF",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR4",
+      "modules": "2",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "3200",
+      "latency": "16"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmw32gx4m2e3200c16/vengeance-rgb-pro-32gb-2-x-16gb-ddr4-dram-3200mhz-c16-memory-kit-black-cmw32gx4m2e3200c16",
+    "id": "d251b1fa-d88e-596c-9701-bd5b34e9e36d",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE RGB PRO",
+    "variant": "32 GB (4 x 8 GB) DDR4-3200 CL16 DIMM",
+    "aliases": "CMW32GX4M4C3200C16W CMW32GX4M4C3200C16",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR4",
+      "modules": "4",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "8",
+      "speed": "3200",
+      "latency": "16"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmw32gx4m4c3200c16w/vengeancea-rgb-pro-32gb-4-x-8gb-ddr4-dram-3200mhz-c16-memory-kit-a-white-cmw32gx4m4c3200c16w",
+    "id": "a345c6c4-6685-5cfb-8667-364b039b1853",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE RGB PRO",
+    "variant": "64 GB (4 x 16 GB) DDR4-3200 CL16 DIMM",
+    "aliases": "CMW64GX4M4E3200C16",
+    "specs": {
+      "capacity": "64 GB",
+      "memoryType": "DDR4",
+      "modules": "4",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "16",
+      "speed": "3200",
+      "latency": "16"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmw64gx4m4e3200c16/vengeancea-rgb-pro-64gb-4-x-16gb-ddr4-dram-3200mhz-c16-memory-kit-a-black-cmw64gx4m4e3200c16",
+    "id": "f0dbd675-d015-5eb5-b776-9ac70667c152",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "Corsair",
+    "name": "VENGEANCE RGB PRO",
+    "variant": "8 GB (1 x 8 GB) DDR4-3200 CL16 DIMM",
+    "aliases": "CMW8GX4M1E3200C16",
+    "specs": {
+      "capacity": "8 GB",
+      "memoryType": "DDR4",
+      "modules": "1",
+      "moduleFormat": "DIMM",
+      "moduleCapacity": "8",
+      "speed": "3200",
+      "latency": "16"
+    },
+    "source_url": "https://www.corsair.com/us/en/p/memory/cmw8gx4m1e3200c16/vengeancea-rgb-pro-8gb-1-x-8gb-ddr4-dram-3200mhz-c16-memory-kit-a-black-cmw8gx4m1e3200c16",
+    "id": "400a181a-72fa-5324-a673-bf61acaeaa1b",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "G.Skill",
+    "name": "Flare X5",
+    "variant": "32 GB (2 x 16 GB) DDR5-6000 CL30 DIMM",
+    "aliases": "F5-6000J3038F16GX2-FX5",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleCapacity": "16",
+      "moduleFormat": "DIMM",
+      "speed": "6000",
+      "latency": "30"
+    },
+    "source_url": "https://www.gskill.com/specification/165/396/1673491242/F5-6000J3038F16GX2-FX5-Specification",
+    "id": "733acca9-70ad-5123-9f2b-f1c04ee9f0a5",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "G.Skill",
+    "name": "Ripjaws V",
+    "variant": "16 GB (2 x 8 GB) DDR4-3200 CL16 DIMM",
+    "aliases": "F4-3200C16D-16GVKB",
+    "specs": {
+      "capacity": "16 GB",
+      "memoryType": "DDR4",
+      "modules": "2",
+      "moduleCapacity": "8",
+      "moduleFormat": "DIMM",
+      "speed": "3200",
+      "latency": "16"
+    },
+    "source_url": "https://www.gskill.com/specification/165/184/1536110676/F4-3200C16D-16GVKB-Specification",
+    "id": "a91af463-1f80-558b-bff5-96c449755e31",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "G.Skill",
+    "name": "Ripjaws V",
+    "variant": "32 GB (2 x 16 GB) DDR4-3200 CL16 DIMM",
+    "aliases": "F4-3200C16D-32GVK",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR4",
+      "modules": "2",
+      "moduleCapacity": "16",
+      "moduleFormat": "DIMM",
+      "speed": "3200",
+      "latency": "16"
+    },
+    "source_url": "https://www.gskill.com/specification/165/184/1536110922/F4-3200C16D-32GVK-Specification",
+    "id": "3a01b483-53d7-5a6e-926e-5693311db13a",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "memory",
+    "brand": "G.Skill",
+    "name": "Trident Z5 Neo RGB",
+    "variant": "32 GB (2 x 16 GB) DDR5-6000 CL30 DIMM",
+    "aliases": "F5-6000J3038F16GX2-TZ5NR",
+    "specs": {
+      "capacity": "32 GB",
+      "memoryType": "DDR5",
+      "modules": "2",
+      "moduleCapacity": "16",
+      "moduleFormat": "DIMM",
+      "speed": "6000",
+      "latency": "30"
+    },
+    "source_url": "https://www.gskill.com/specification/165/390/1661410135/F5-6000J3038F16GX2-TZ5NR-Specification",
+    "id": "fd6c2d3b-6d68-59e9-8664-7b22722ade39",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "motherboard",
+    "brand": "MSI",
+    "name": "B450 TOMAHAWK MAX II",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "socket": "AM4",
+      "chipset": "B450",
+      "formFactor": "ATX",
+      "memoryType": "DDR4"
+    },
+    "source_url": "https://www.msi.com/Motherboard/B450-TOMAHAWK-MAX-II/Specification",
+    "id": "04cbf84c-84e3-54d9-81c7-5489d825451e",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "motherboard",
+    "brand": "MSI",
+    "name": "B450M MORTAR MAX",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "socket": "AM4",
+      "chipset": "B450",
+      "formFactor": "Micro-ATX",
+      "memoryType": "DDR4"
+    },
+    "source_url": "https://www.msi.com/Motherboard/B450M-MORTAR-MAX/Specification",
+    "id": "e2dff21a-8153-5190-8253-dfb6e87050b7",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "motherboard",
+    "brand": "MSI",
+    "name": "MAG B550 TOMAHAWK",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "socket": "AM4",
+      "chipset": "B550",
+      "formFactor": "ATX",
+      "memoryType": "DDR4"
+    },
+    "source_url": "https://www.msi.com/Motherboard/MAG-B550-TOMAHAWK/Specification",
+    "id": "f8e5a6e4-f81b-5ca9-bcd6-b4da03c4e789",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "motherboard",
+    "brand": "MSI",
+    "name": "PRO B660M-A DDR4",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "socket": "LGA 1700",
+      "chipset": "B660",
+      "formFactor": "Micro-ATX",
+      "memoryType": "DDR4"
+    },
+    "source_url": "https://www.msi.com/Motherboard/PRO-B660M-A-DDR4/Specification",
+    "id": "51f7ef5a-735b-565e-b81a-c66fc8b019b7",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "motherboard",
+    "brand": "MSI",
+    "name": "PRO Z690-A DDR4",
+    "variant": "",
+    "aliases": "",
+    "specs": {
+      "socket": "LGA 1700",
+      "chipset": "Z690",
+      "formFactor": "ATX",
+      "memoryType": "DDR4"
+    },
+    "source_url": "https://www.msi.com/Motherboard/PRO-Z690-A-DDR4/Specification",
+    "id": "99236df2-0739-5146-97c4-3b88f0f64c66",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Seasonic",
+    "name": "FOCUS GX-1000",
+    "variant": "2019",
+    "aliases": "",
+    "specs": {
+      "wattage": "1000",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX",
+      "modularity": "Fully modular"
+    },
+    "source_url": "https://seasonic.com/focus-gx/",
+    "id": "e18b25c7-28aa-54a9-9689-b5b2299f5d41",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Seasonic",
+    "name": "FOCUS GX-550",
+    "variant": "2019",
+    "aliases": "",
+    "specs": {
+      "wattage": "550",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX",
+      "modularity": "Fully modular"
+    },
+    "source_url": "https://seasonic.com/focus-gx/",
+    "id": "e2014701-c80b-535a-ab76-9fdf31a03177",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Seasonic",
+    "name": "FOCUS GX-650",
+    "variant": "2019",
+    "aliases": "",
+    "specs": {
+      "wattage": "650",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX",
+      "modularity": "Fully modular"
+    },
+    "source_url": "https://seasonic.com/focus-gx/",
+    "id": "b3262888-48aa-5763-a830-4f7390c20444",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Seasonic",
+    "name": "FOCUS GX-750",
+    "variant": "2019",
+    "aliases": "",
+    "specs": {
+      "wattage": "750",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX",
+      "modularity": "Fully modular"
+    },
+    "source_url": "https://seasonic.com/focus-gx/",
+    "id": "8d435f7a-df92-5f74-9459-2ae29e258c86",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "psu",
+    "brand": "Seasonic",
+    "name": "FOCUS GX-850",
+    "variant": "2019",
+    "aliases": "",
+    "specs": {
+      "wattage": "850",
+      "efficiency": "80+ Gold",
+      "formFactor": "ATX",
+      "modularity": "Fully modular"
+    },
+    "source_url": "https://seasonic.com/focus-gx/",
+    "id": "21d6d8a8-4165-5651-86f7-0bc3fe3fac00",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "storage",
+    "brand": "Kingston",
+    "name": "NV2",
+    "variant": "1 TB",
+    "aliases": "",
+    "specs": {
+      "capacity": "1 TB",
+      "storageType": "NVMe SSD",
+      "driveFormat": "M.2"
+    },
+    "source_url": "https://www.kingston.com/datasheets/snv2s_us.pdf",
+    "id": "a35db7ef-47bc-5dc5-a7ef-b432d84a33da",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "storage",
+    "brand": "Kingston",
+    "name": "NV2",
+    "variant": "2 TB",
+    "aliases": "",
+    "specs": {
+      "capacity": "2 TB",
+      "storageType": "NVMe SSD",
+      "driveFormat": "M.2"
+    },
+    "source_url": "https://www.kingston.com/datasheets/snv2s_us.pdf",
+    "id": "7c9a3449-5c93-5b46-b8f1-7bf5c7838c8c",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "storage",
+    "brand": "Kingston",
+    "name": "NV2",
+    "variant": "250 GB",
+    "aliases": "",
+    "specs": {
+      "capacity": "250 GB",
+      "storageType": "NVMe SSD",
+      "driveFormat": "M.2"
+    },
+    "source_url": "https://www.kingston.com/datasheets/snv2s_us.pdf",
+    "id": "4fc594c6-10ff-57dd-9bdd-1180cf2f0274",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "storage",
+    "brand": "Kingston",
+    "name": "NV2",
+    "variant": "4 TB",
+    "aliases": "",
+    "specs": {
+      "capacity": "4 TB",
+      "storageType": "NVMe SSD",
+      "driveFormat": "M.2"
+    },
+    "source_url": "https://www.kingston.com/datasheets/snv2s_us.pdf",
+    "id": "db1b4b6a-6b15-5c59-bd14-8876879e077f",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
+  },
+  {
+    "category": "storage",
+    "brand": "Kingston",
+    "name": "NV2",
+    "variant": "500 GB",
+    "aliases": "",
+    "specs": {
+      "capacity": "500 GB",
+      "storageType": "NVMe SSD",
+      "driveFormat": "M.2"
+    },
+    "source_url": "https://www.kingston.com/datasheets/snv2s_us.pdf",
+    "id": "2ef053c9-bad5-59ba-99bb-7f0af36c2124",
+    "is_active": true,
+    "updated_at": "2026-10-04T00:00:00Z"
   }
 ]

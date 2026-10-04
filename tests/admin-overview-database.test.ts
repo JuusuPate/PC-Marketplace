@@ -1386,6 +1386,103 @@ describe("product model catalog", () => {
       (await db.query<any>("select count(*)::int n from public.catalog_product_models where source_url<>''")).rows[0].n,
     ).toBeGreaterThan(1100);
   });
+  it("expands RAM and historical GTX searches with distinct technical configurations", async () => {
+    const ram = (await asRole("anon", null, search("memory", "CMK32GX4M4B3200C16"))).rows[0].data as any;
+    expect(ram.total).toBe(1);
+    expect(ram.items[0]).toMatchObject({
+      brand: "Corsair",
+      name: "VENGEANCE LPX",
+      specs: {
+        capacity: "32 GB",
+        modules: "4",
+        moduleCapacity: "8",
+        memoryType: "DDR4",
+        speed: "3200",
+        latency: "16",
+        moduleFormat: "DIMM",
+      },
+    });
+    const laptop = (await asRole("anon", null, search("memory", "CMSX32GX5M2A4800C40"))).rows[0].data as any;
+    expect(laptop.items[0].specs).toMatchObject({
+      capacity: "32 GB",
+      modules: "2",
+      moduleCapacity: "16",
+      moduleFormat: "SO-DIMM",
+      memoryType: "DDR5",
+    });
+    const gpu = (await asRole("anon", null, search("gpu", "GTX1060"))).rows[0].data as any;
+    expect(gpu.items.map((row: any) => row.variant).sort()).toEqual(["3 GB", "6 GB"]);
+    expect(gpu.items.every((row: any) => row.name === "GTX 1060" && row.specs.vram === row.variant)).toBe(true);
+    for (const [category, query] of [
+      ["motherboard", "B450M MORTAR MAX"],
+      ["psu", "FOCUS GX-650"],
+      ["storage", "NV2"],
+      ["case", "H5 Flow"],
+    ]) {
+      expect(((await asRole("anon", null, search(category, query))).rows[0].data as any).total).toBeGreaterThan(0);
+    }
+    const first = (await asRole("anon", null, search("memory", "Corsair", 0))).rows[0].data as any;
+    const second = (await asRole("anon", null, search("memory", "Corsair", 1))).rows[0].data as any;
+    expect(first.total).toBe(152);
+    expect(first.items).toHaveLength(20);
+    expect(second.items).toHaveLength(20);
+    expect(second.items.some((row: any) => first.items.some((previous: any) => previous.id === row.id))).toBe(false);
+  });
+  it("reapplying the RAM expansion preserves references and admin edits without duplicate or timestamp churn", async () => {
+    const directory = new URL("../supabase/migrations/", import.meta.url);
+    const filename = (await readdir(directory)).find((file) => file.endsWith("_ram_gtx_catalog_expansion.sql"))!;
+    const seed = await readFile(new URL(filename, directory), "utf8");
+    const original = (
+      await db.query<any>(
+        "select * from public.catalog_product_models where category='memory' and aliases like '%CMK32GX4M4B3200C16%'",
+      )
+    ).rows[0];
+    const count = (await db.query<any>("select count(*)::int n from public.catalog_product_models")).rows[0].n;
+    const listingId = await listing();
+    await db.query(
+      "update public.listings set category='memory', specs=jsonb_build_object('_catalog_model_id',$1::text) where id=$2",
+      [original.id, listingId],
+    );
+    try {
+      await db.query(
+        "update public.catalog_product_models set is_active=false, specs='{\"capacity\":\"Admin correction\"}',aliases='Custom RAM alias',source_url='https://example.test/admin' where id=$1",
+        [original.id],
+      );
+      await db.exec(seed);
+      const after = (await db.query<any>("select * from public.catalog_product_models where id=$1", [original.id]))
+        .rows[0];
+      expect(after).toMatchObject({
+        id: original.id,
+        is_active: false,
+        aliases: "Custom RAM alias",
+        source_url: "https://example.test/admin",
+        specs: { capacity: "Admin correction", modules: "4", moduleCapacity: "8" },
+      });
+      expect(
+        (await db.query<any>("select catalog_model_id from public.listings where id=$1", [listingId])).rows[0]
+          .catalog_model_id,
+      ).toBe(original.id);
+      expect(((await asRole("anon", null, search("memory", "Custom RAM alias"))).rows[0].data as any).total).toBe(0);
+      await db.exec(seed);
+      expect(
+        (await db.query<any>("select updated_at from public.catalog_product_models where id=$1", [original.id])).rows[0]
+          .updated_at,
+      ).toEqual(after.updated_at);
+      expect((await db.query<any>("select count(*)::int n from public.catalog_product_models")).rows[0].n).toBe(count);
+    } finally {
+      await db.query(
+        "update public.catalog_product_models set is_active=$2,specs=$3,aliases=$4,source_url=$5,updated_at=$6 where id=$1",
+        [
+          original.id,
+          original.is_active,
+          JSON.stringify(original.specs),
+          original.aliases,
+          original.source_url,
+          original.updated_at,
+        ],
+      );
+    }
+  });
   it("validates specs on admin writes, preserves old-client data, and normalizes future labels", async () => {
     const payload = {
       category: "memory",

@@ -138,3 +138,26 @@ test("changing a catalog product clears its title and specifications", async ({ 
   await page.getByRole("button", { name: "Jatka", exact: true }).click();
   await expect(page.locator('[data-listing-field="title"]')).toHaveValue("");
 });
+
+test("expanded RAM kits and legacy GTX VRAM versions populate the listing correctly", async ({ page }) => {
+  await start(page, "memory");
+  await page.getByRole("radio", { name: "Tuotekatalogista" }).check();
+  await page.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("CMK32GX4M4B3200C16");
+  await page
+    .getByRole("button", { name: "Corsair VENGEANCE LPX 32 GB (4 x 8 GB) DDR4-3200 CL16 DIMM", exact: true })
+    .click();
+  await expect(page.locator(".catalog-product-summary")).toContainText("Muistimoduulien määrä4");
+  await expect(page.locator('[data-listing-field="title"]')).toHaveValue(
+    "Corsair VENGEANCE LPX 32 GB (4×8 GB) DDR4 3200 MHz CL16",
+  );
+  await expect(page.locator('[data-listing-field="title"]')).not.toHaveValue(/CMK/);
+  await page.getByRole("button", { name: "Takaisin", exact: true }).click();
+  await page.locator('[data-listing-field="category"]').selectOption("gpu");
+  await page.getByRole("button", { name: "Jatka", exact: true }).click();
+  await page.getByRole("radio", { name: "Tuotekatalogista" }).check();
+  await page.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("GTX1060");
+  await expect(page.getByRole("button", { name: "NVIDIA GTX 1060 3 GB", exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "NVIDIA GTX 1060 6 GB", exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "NVIDIA GTX 1060 3 GB", exact: true }).click();
+  await expect(page.locator('[data-listing-field="title"]')).toHaveValue("GTX 1060 3 GB");
+});
