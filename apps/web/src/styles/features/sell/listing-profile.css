@@ -111,7 +111,7 @@
   border-left: 4px solid var(--accent-strong);
   border-radius: 12px;
   padding: 20px;
-  background: var(--accent-soft);
+  background: transparent;
 }
 .catalog-product-summary__heading {
   display: grid;
