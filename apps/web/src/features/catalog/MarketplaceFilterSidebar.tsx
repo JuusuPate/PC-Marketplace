@@ -20,6 +20,10 @@ interface Props {
   value: MarketplaceFilters;
   onChange: (filters: MarketplaceFilters) => void;
 }
+/**
+ * Hallitsee yleisiä ja kategoriakohtaisia hakusuodattimia sekä mobiilin avattavaa suodatinnäkymää.
+ * Kategoriavalinnan vaihto säilyttää yleiset valinnat mutta poistaa siihen sopimattomat tekniset suodattimet.
+ */
 export function MarketplaceFilterSidebar({
   category,
   categoryOptions,

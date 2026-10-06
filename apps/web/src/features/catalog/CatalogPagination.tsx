@@ -1,5 +1,9 @@
 import type { Locale } from "../../types";
 
+/**
+ * Piirtää sivunvalinnan kokonaismäärästä ja sivukoosta.
+ * Pitkässä listassa näytetään ensimmäinen, viimeinen ja nykyisen sivun naapurit; App rajaa itse ilmoitusjoukon.
+ */
 export function CatalogPagination({
   page,
   pageSize,

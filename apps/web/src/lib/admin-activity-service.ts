@@ -5,6 +5,9 @@ export function adminRecord(value: unknown): Record<string, unknown> {
   if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error("Invalid admin response");
   return value as Record<string, unknown>;
 }
+/**
+ * Hyväksyy vain ei-negatiivisen turvallisen kokonaisluvun. Sama tarkistus kattaa laskurit ja senttimäärät.
+ */
 export function adminCount(value: unknown): number {
   if (typeof value !== "number" || !Number.isSafeInteger(value) || value < 0) throw new Error("Invalid admin metric");
   return value;
@@ -18,6 +21,10 @@ export function adminUuid(value: unknown): string {
     throw new Error("Invalid admin ID");
   return value;
 }
+/**
+ * Yhteinen suojattu ylläpitokutsu: vaatii Supabasen ja muuntaa oikeusvirheen AdminAccessErroriksi.
+ * Palauttaa unknown-arvon, jonka kyseisen palvelun parseri tarkistaa ennen käyttöä.
+ */
 export async function adminRpc(name: string, args: Record<string, unknown>): Promise<unknown> {
   if (!supabase) throw new Error("Admin service requires Supabase");
   const { data, error } = await supabase.rpc(name, args);
@@ -59,6 +66,9 @@ function period(value: unknown): AdminPeriod {
     throw new Error("Invalid admin period");
   return result;
 }
+/**
+ * Tarkistaa Suomen euromittarit ja kaksi yhtä pitkää, peräkkäistä vertailujaksoa.
+ */
 export function parseAdminActivity(value: unknown): AdminActivity {
   const row = adminRecord(value);
   if (row.market !== "FI" || row.currency !== "EUR") throw new Error("Invalid activity market");
@@ -71,6 +81,9 @@ export function parseAdminActivity(value: unknown): AdminActivity {
     throw new Error("Invalid comparison period");
   return { generatedAt: adminTimestamp(row.generated_at), current, previous };
 }
+/**
+ * Hakee aikavälin aktiivisuusmittarit ja varmistaa, että vastaus koskee juuri pyydettyä aikaväliä.
+ */
 export async function getAdminActivity(start: string, end: string): Promise<AdminActivity> {
   const from = Date.parse(start),
     to = Date.parse(end);

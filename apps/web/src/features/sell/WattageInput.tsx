@@ -1,6 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import type { GuidedSpecificationField } from "./specification-fields";
 
+/**
+ * Yhdistää vapaasti kirjoitettavan tehon ja tarkistettujen PSU-wattimäärien ehdotusvalikon.
+ * Kirjoitus rajaa ehdotuksia; valikkoa voi käyttää myös nuolinäppäimillä ja Enterillä.
+ */
 export function WattageInput({
   id,
   field,

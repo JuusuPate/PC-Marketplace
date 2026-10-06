@@ -23,6 +23,10 @@ interface AccountModalProps {
   onAdmin: () => void;
 }
 
+/**
+ * Näyttää kutsujan toimittamat omat ilmoitukset, käyttäjätiedot ja paikalliset demotilaukset.
+ * Muokkaus, uloskirjautuminen ja ylläpitoon siirtyminen delegoidaan Appille; komponentti ei hae eikä tallenna niitä.
+ */
 export function AccountModal({
   copy,
   locale,

@@ -8,6 +8,10 @@ import { modelLabel } from "../../lib/product-model-service";
 import { WattageInput } from "./WattageInput";
 import { CatalogInputMode } from "./CatalogProductSummary";
 
+/**
+ * Renderöi ohjatun kentän määrittelyn mukaan.
+ * Tallennetun ilmoituksen tuntematon valikkoarvo säilytetään vaihtoehtona, jotta muokkaus ei hävitä sitä.
+ */
 export function ProfileField({
   field,
   value,
@@ -57,6 +61,10 @@ export function ProfileField({
   );
 }
 
+/**
+ * Kokoaa pelikoneen osat: jokaisella osalla on oma tila ja katalogi-/käsinsyöttövalinta.
+ * Puuttuva tai tuntematon osa piilottaa sen kentät; RAM-katalogi täyttää kitin perustiedot.
+ */
 export function PcComponentFields({
   locale,
   values,

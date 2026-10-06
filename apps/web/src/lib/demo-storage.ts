@@ -27,6 +27,10 @@ export class DemoStorageQuotaError extends Error {
   }
 }
 
+/**
+ * Lukee selaimen demotiedon ja palauttaa varaarvon puuttuvan tai rikkinäisen JSONin tilalle.
+ * Tyyppiparametri ei tee tallennetun sisällön ajonaikaista validointia.
+ */
 function read<T>(key: string, fallback: T): T {
   try {
     const value = window.localStorage.getItem(key);
@@ -36,6 +40,10 @@ function read<T>(key: string, fallback: T): T {
   }
 }
 
+/**
+ * Serialisoi demotiedot ja välittää tallennusvirheen kutsujalle.
+ * Ilmoituksilla on kokoraja, jotta kuvat eivät täytä selainmuistia huomaamatta.
+ */
 function write<T>(key: string, value: T) {
   const serialized = JSON.stringify(value);
   if (key === LISTINGS_KEY && serialized.length > DEMO_LISTINGS_MAX_SERIALIZED_CHARACTERS) {
@@ -55,6 +63,10 @@ function write<T>(key: string, value: T) {
   }
 }
 
+/**
+ * Paikallisen demon tallennus. Tässä tehtävät rooli- ja omistajatarkistukset ovat vain demokäyttäytymistä.
+ * Tuotannon tietosuoja ja oikeudet toteutetaan Supabasessa, ei localStoragessa.
+ */
 export const demoStorage = {
   getSession: () => {
     const user = read<DemoUser | null>(SESSION_KEY, null);

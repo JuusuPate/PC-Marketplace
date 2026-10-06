@@ -1,6 +1,9 @@
 import { listingTimestamp, sortListingsByPublication } from "./listing-time";
 import type { Category, Listing } from "../types";
 
+/**
+ * Rajaa etusivun valinnat aktiivisiin Suomen euroilmoituksiin ja poistaa tunnisteiden duplikaatit.
+ */
 export function activeHomeListings(listings: readonly Listing[]) {
   return [
     ...new Map(
@@ -22,13 +25,20 @@ export function publicationTime(listing: Listing) {
 export function newestHomeListings(listings: readonly Listing[]) {
   return sortListingsByPublication(activeHomeListings(listings), "newest");
 }
+/**
+ * Tuottaa ilmoitustunnisteesta ja siemenestä vakaan vaihtelun: sama sivun lataus säilyttää saman pisteytyksen.
+ */
 function noise(id: string, seed: number) {
   let hash = seed >>> 0;
   for (const character of id) hash = Math.imul(hash ^ character.charCodeAt(0), 16777619) >>> 0;
   hash ^= hash >>> 16;
   return (hash >>> 0) / 4294967296;
 }
-/** Local, explainable ranking; no tracking service or role inference. */
+/**
+ * Pisteyttää myynnissä olevat tuotteet suosikkien, katselujen, tuoreuden ja vakaan satunnaisuuden avulla.
+ * Myyjän omat tuotteet jätetään pois ja toistuvien kategorioiden sekä myyjien painoa vähennetään.
+ * Palauttaa enintään 48 suositusta; kutsuja pitää siemenen ja vertailuajan samoina sivun latauksen ajan.
+ */
 export function recommendHomeListings(
   listings: readonly Listing[],
   favourites: readonly Listing[],

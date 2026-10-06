@@ -90,6 +90,10 @@ const uiCopy: Record<Locale, LegalUiCopy> = {
   en: englishUi,
 };
 
+/**
+ * Muuntaa tallennetun tekstin kappaleiksi ja ##-otsikoiksi React-elementeillä.
+ * Sisältöä ei aseteta selaimeen raakana HTML:nä.
+ */
 function renderBody(body: string) {
   return body
     .trim()

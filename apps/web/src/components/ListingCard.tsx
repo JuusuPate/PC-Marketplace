@@ -17,6 +17,10 @@ interface ListingCardProps {
   onOpen: () => void;
 }
 
+/**
+ * Yhteinen ilmoituskortti: kuva, hinta, julkaisuikä, myyjä ja suosikkiohjaus.
+ * Tavallinen linkkipainallus käyttää sovelluksen reititystä, mutta Ctrl-/Cmd-painallus säilyttää selaimen toiminnan.
+ */
 export function ListingCard({ listing, locale, copy, favourite, href, onFavourite, onOpen }: ListingCardProps) {
   const conditionLabel = listing.condition === "fair" ? copy.conditionFair : copy[listing.condition];
   const handleOpen = (event: MouseEvent<HTMLAnchorElement>) => {

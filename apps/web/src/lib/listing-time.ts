@@ -1,5 +1,9 @@
 import type { Listing, Locale } from "../types";
 
+/**
+ * Palauttaa julkaisuhetken millisekunteina ja käyttää luontiaikaa vain varatietona.
+ * Puuttuva tai kelvoton päivämäärä palauttaa null-arvon, ei tämänhetkistä aikaa.
+ */
 export function listingTimestamp(listing: Pick<Listing, "publishedAt" | "createdAt">): number | null {
   for (const value of [listing.publishedAt, listing.createdAt]) {
     const timestamp = value ? Date.parse(value) : NaN;
@@ -7,6 +11,10 @@ export function listingTimestamp(listing: Pick<Listing, "publishedAt" | "created
   }
   return null;
 }
+/**
+ * Näyttää iän minuutteina alle tunnin, tunteina alle vuorokauden ja päivinä seitsemänteen päivään asti.
+ * Vanhemmat ilmoitukset esitetään Helsingin päivämääränä; tulevaisuuteen sijoittuva aika rajataan nollaan.
+ */
 export function formatListingAge(
   listing: Pick<Listing, "publishedAt" | "createdAt">,
   locale: Locale,
@@ -34,7 +42,10 @@ export function formatListingAge(
     timeZone: "Europe/Helsinki",
   }).format(timestamp);
 }
-/** Missing dates always come last. Text labels never participate in sorting. */
+/**
+ * Lajittelee julkaisuhetken mukaan muuttamatta alkuperäistä listaa.
+ * Puuttuvat ajat tulevat aina viimeisiksi ja tasatilanteet ratkaistaan tunnisteella. Ikätekstejä ei lajitella.
+ */
 export function sortListingsByPublication(listings: readonly Listing[], order: "newest" | "oldest") {
   const direction = order === "newest" ? -1 : 1;
   return [...listings].sort((a, b) => {

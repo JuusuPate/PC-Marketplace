@@ -17,6 +17,10 @@ export interface AdminAudit {
   total: number;
   events: AdminAuditEvent[];
 }
+/**
+ * Tarkistaa audit-tapahtuman lähteen, toiminnon, kohteen ja ennen/jälkeen-tilat.
+ * Tuntemattomia tapahtumarakenteita ei näytetä onnistuneena audit-aineistona.
+ */
 export function parseAdminAudit(value: unknown): AdminAudit {
   const data = adminRecord(value);
   const page = adminCount(data.page),
@@ -80,6 +84,9 @@ export function parseAdminAudit(value: unknown): AdminAudit {
   });
   return { page, total, events };
 }
+/**
+ * Hakee yhden sivun suodatettua audit-lokia suojatulla RPC-kutsulla ja tarkistaa sivutiedot.
+ */
 export async function getAdminAudit(search = "", page = 0): Promise<AdminAudit> {
   if (search.length > 100 || !Number.isInteger(page) || page < 0 || page > 1000000)
     throw new Error("Invalid audit search");

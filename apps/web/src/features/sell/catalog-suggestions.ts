@@ -1,6 +1,9 @@
 import type { ProductModel } from "../../lib/product-model-service";
 
-/** Reorder only the matching models; leave the service page and model data intact. */
+/**
+ * Sekoittaa vain haun jo löytämät mallit Fisher–Yates-menetelmällä.
+ * Ei muuta alkuperäistä listaa, mallien tietoja tai palvelun sivurajausta; random voidaan korvata testeissä.
+ */
 export function shuffleCatalogSuggestions<T extends ProductModel>(items: readonly T[], random = Math.random): T[] {
   const result = [...items];
   for (let index = result.length - 1; index > 0; index--) {

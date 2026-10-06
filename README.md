@@ -95,6 +95,8 @@ Demoversio käyttää erillistä esimerkkisignaalien karttaa. Tuotannossa luvut 
 
 ## Rakenne
 
+Tiimin perehdytykseen: [koodikartta ja toimintopolut](docs/code-guide.md).
+
 ```text
 PC-Marketplace/
 ├── apps/

@@ -15,6 +15,9 @@ const shortCategory: Record<Category, string> = {
   other: "HW",
 };
 
+/**
+ * Hyväksyy vain tuetut kuva-URL-muodot ja hylkää sopimattomat protokollat ennen img-elementin käyttöä.
+ */
 export function getSafeListingImageUrl(image?: ListingImage) {
   const candidate = image?.url.trim();
 
@@ -40,6 +43,10 @@ interface ListingVisualProps {
   image?: ListingImage;
 }
 
+/**
+ * Näyttää ilmoituskuvan tai kategorian varakuvan.
+ * Rikkinäinen URL muistetaan, jotta samaa epäonnistunutta kuvaa ei yritetä näyttää toistuvasti.
+ */
 export function ListingVisual({ listing, large = false, image }: ListingVisualProps) {
   const selectedImage = image ?? listing.images?.[0];
   const imageUrl = getSafeListingImageUrl(selectedImage);

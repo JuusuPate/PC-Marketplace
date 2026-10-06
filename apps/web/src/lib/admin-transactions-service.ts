@@ -46,6 +46,9 @@ function integer(value: unknown): number {
     throw new Error("Invalid transaction number");
   return value;
 }
+/**
+ * Tarkistaa kauppalistan osapuolet, tilat ja kokonaislukusenteissä annetut hintatiedot.
+ */
 export function parseAdminTransactions(value: unknown): AdminTransactions {
   const data = record(value);
   const page = integer(data.page);
@@ -135,6 +138,9 @@ export async function getAdminTransactions(
   return result;
 }
 
+/**
+ * Hakee riitautetut tilaukset ja tarkistaa erikseen, ettei vastaukseen tullut muiden tilojen tilauksia.
+ */
 export async function getAdminDisputes(search = "", page = 0): Promise<AdminTransactions> {
   const result = await getAdminTransactions(search, "disputed", page);
   if (result.transactions.some((order) => order.status !== "disputed")) throw new Error("Unexpected dispute status");

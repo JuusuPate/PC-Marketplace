@@ -27,6 +27,10 @@ export interface ListingDetailPageProps {
   onReport: (reason: ReportReason, details: string) => Promise<void>;
 }
 
+/**
+ * Näyttää ilmoituksen, turvalliset kuvaviitteet ja tekniset tiedot sekä kokoaa raporttilomakkeen.
+ * Osto-, muokkaus- ja raportointikutsut delegoidaan sovellukselle ja sen palveluille.
+ */
 export function ListingDetailPage({
   listing,
   copy,

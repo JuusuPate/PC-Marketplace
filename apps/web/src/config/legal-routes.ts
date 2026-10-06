@@ -8,6 +8,10 @@ export interface LegalRoute {
   labelKey: LegalLabelKey;
 }
 
+/**
+ * Yhdistää sisältösivujen pysyvät tunnisteet julkisiin osoitteisiin ja käännösavaimiin.
+ * Sama määritys palvelee navigaatiota ja sisältöpalvelun sivunvalintaa.
+ */
 export const LEGAL_ROUTES: LegalRoute[] = [
   { slug: "terms", path: "/kayttoehdot", labelKey: "terms" },
   { slug: "privacy", path: "/tietosuoja", labelKey: "privacy" },

@@ -31,9 +31,16 @@ function totals(value: unknown): RevenueTotals {
 export function validRevenueYear(year: number) {
   return Number.isInteger(year) && year >= 2000 && year <= 2100;
 }
+/**
+ * Valitsee oletusvuoden Helsingin aikavyöhykkeen mukaan, jotta vuodenvaihde vastaa raportin markkinaa.
+ */
 export function currentRevenueYear() {
   return Number(new Intl.DateTimeFormat("en", { year: "numeric", timeZone: "Europe/Helsinki" }).format(new Date()));
 }
+/**
+ * Tarkistaa vuoden 12 järjestettyä kuukautta ja niiden summien vastaavuuden vuositilastoon.
+ * Raportti perustuu tilauksen luontipäivään, ei maksupalvelun tilityspäivään.
+ */
 export function parseAdminRevenue(value: unknown): AdminRevenue {
   const data = record(value);
   if (

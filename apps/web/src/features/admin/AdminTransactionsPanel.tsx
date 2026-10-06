@@ -89,6 +89,10 @@ export function AdminTransactionsTable({
   );
 }
 
+/**
+ * Yhteinen sivutettu kauppa- ja riitalista. Riitatilassa palveluhaku rajaa tilaukset disputed-tilaan.
+ * Tilauksen maksutiedot näytetään erikseen avattavassa paneelissa, eikä täällä tehdä maksutapahtumia.
+ */
 export function AdminTransactionsPanel({ locale, disputes = false }: { locale: Locale; disputes?: boolean }) {
   const copy = disputes ? getAdminDisputesCopy(locale) : getAdminTransactionsCopy(locale);
   const common = getAdminCopy(locale);

@@ -1,6 +1,10 @@
 import { demoStorage } from "./demo-storage";
 import { supabase } from "./supabase";
 
+/**
+ * Tallentaa käyttäjän suosikki-ilmoitusten tunnisteet.
+ * Supabasessa käyttäjäkohtainen RLS suojaa taulua; demossa lista kuuluu paikalliseen selainmuistiin.
+ */
 export const favouriteService = {
   async listMine(userId: string): Promise<string[]> {
     if (!supabase) return demoStorage.getFavourites();
@@ -14,6 +18,9 @@ export const favouriteService = {
     return (data ?? []).map((row) => String(row.listing_id));
   },
 
+  /**
+   * Lisää suosikin idempotentisti: jo olemassa oleva suosikki hyväksytään onnistuneeksi lisäykseksi.
+   */
   async add(userId: string, listingId: string): Promise<void> {
     if (!supabase) {
       demoStorage.setFavourites([...new Set([...demoStorage.getFavourites(), listingId])]);

@@ -16,6 +16,10 @@ const examples: Record<Category, string> = {
   pc: "Trident 3, Codex 3…",
   other: "G502 HERO…",
 };
+/**
+ * Hakee katalogimalleja kategorian ja kirjoitetun tekstin perusteella pienellä viiveellä.
+ * Vanhentuneet hakuvastaukset ohitetaan; saman haun sivut välimuistitetaan, jotta ehdotusten järjestys säilyy.
+ */
 export function ProductModelPicker({
   category,
   locale,

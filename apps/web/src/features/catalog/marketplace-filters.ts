@@ -266,6 +266,10 @@ function capacity(text: string) {
       ? text
       : "";
 }
+/**
+ * Normalisoi ilmoituksen tekniset tiedot suodatinten yhteisiin arvoihin.
+ * Vanhoja nimiä ja yksiköitä tuetaan, jotta käsin syötetyt ja katalogituotteet löytyvät samoilla valinnoilla.
+ */
 export function listingFilterValues(listing: Listing, key: string): string[] {
   const raw = readListingSpec(listing, key);
   const value = norm(raw);
@@ -361,6 +365,9 @@ export function listingFilterValues(listing: Listing, key: string): string[] {
   }
   return result ? [result] : [];
 }
+/**
+ * Valitsee kategorian suodatinryhmät ja yhdistää perusvaihtoehtoihin ilmoituksista löytyvät arvot.
+ */
 export function getFilterDefinitions(category: Category | "all", listings: Listing[]): FilterDefinition[] {
   return FILTER_DEFINITIONS.filter((d) => !d.categories || (category !== "all" && d.categories.includes(category))).map(
     (d) => {
@@ -412,6 +419,10 @@ export function invalidFilterPrice(filters: MarketplaceFilters) {
     max = priceNumber(filters.maxPrice);
   return Number.isNaN(min) || Number.isNaN(max) || (min !== null && max !== null && min > max);
 }
+/**
+ * Soveltaa hintarajat ja kaikki valitut suodatinryhmät ilmoitukseen.
+ * Ryhmien välillä käytetään JA-ehtoa, saman ryhmän vaihtoehtojen välillä TAI-ehtoa.
+ */
 export function matchesMarketplaceFilters(listing: Listing, filters: MarketplaceFilters): boolean {
   if (invalidFilterPrice(filters)) return false;
   const min = priceNumber(filters.minPrice),

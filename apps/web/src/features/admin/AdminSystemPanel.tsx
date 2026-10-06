@@ -9,6 +9,9 @@ import "./styles/admin-system.css";
 type State =
   { status: "loading" } | { status: "ready"; snapshot: AdminSystemSnapshot } | { status: "error" | "denied" };
 
+/**
+ * Näyttää ylläpidon lukurajapintojen saatavuuden ja vasteajat sekä mahdollistaa uuden tilannekuvan haun.
+ */
 export function AdminSystemPanel({ locale }: { locale: Locale }) {
   const copy = systemCopy(locale);
   const common = getAdminCopy(locale);

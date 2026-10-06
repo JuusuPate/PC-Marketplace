@@ -8,6 +8,10 @@ const intlLocales: Record<Locale, string> = {
   en: "en-GB",
 };
 
+/**
+ * Muotoilee kokonaislukusenteissä annetun rahamäärän käyttöliittymään.
+ * Jakaminen sadalla tehdään vasta esityksessä; tallennetut hinnat säilyvät sentteinä.
+ */
 export function formatMoney(amountMinor: number, currency: Currency, locale: Locale, fractionDigits = 0) {
   return new Intl.NumberFormat(intlLocales[locale], {
     style: "currency",

@@ -3,6 +3,10 @@ import { listingService } from "./listing-service";
 import { supabase } from "./supabase";
 import { activeHomeListings, newestHomeListings } from "./home-recommendations";
 
+/**
+ * Hakee Rigin tarjonnan aktiiviset ilmoitukset: Supabasessa admin-myyjien tunnisteet tulevat palvelimelta.
+ * Demossa käytetään erillistä Rigi-esimerkkimyyjää. hasMore kertoo tunnistehaun seuraavasta erästä.
+ */
 export async function loadOfficialListings(offset = 0) {
   // Only bundled, explicitly simulated fixtures; never trust browser session roles.
   if (!supabase) {

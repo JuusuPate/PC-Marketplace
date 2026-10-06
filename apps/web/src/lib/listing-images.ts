@@ -165,6 +165,10 @@ async function prepareOne(
   }
 }
 
+/**
+ * Tarkistaa kuvien määrän, tiedostotyypin, koon ja pikselirajan sekä pakkaa kuvat WebP-muotoon.
+ * Jos yhden kuvan valmistelu epäonnistuu, jo luodut esikatseluosoitteet vapautetaan.
+ */
 export async function prepareListingImages(
   files: File[] | FileList,
   options: PrepareListingImagesOptions = {},
@@ -189,6 +193,9 @@ export async function prepareListingImages(
   }
 }
 
+/**
+ * Vapauttaa selaimen tilapäiset esikatseluosoitteet. Ei poista palvelimelle tallennettuja kuvia.
+ */
 export function releasePreparedListingImages(images: Iterable<PreparedListingImage>) {
   for (const image of images) URL.revokeObjectURL(image.previewUrl);
 }

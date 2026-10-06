@@ -3,6 +3,10 @@ import { supabase } from "./supabase";
 
 export type ReportReason = "misleading" | "prohibited" | "scam" | "other";
 
+/**
+ * Hakee omat raportoidut ilmoitukset ja lähettää uuden raportin.
+ * Supabase-RPC tunnistaa raportoijan istunnosta; demossa tallennetaan vain paikallinen raportointimerkintä.
+ */
 export const reportService = {
   async listMine(userId: string): Promise<string[]> {
     if (!supabase) return demoStorage.getReportedListingIds(userId);

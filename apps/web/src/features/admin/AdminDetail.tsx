@@ -91,6 +91,10 @@ type State =
   | { status: "idle" | "loading" | "error" | "denied" }
   | { status: "user"; data: AdminUserDetail }
   | { status: "order"; data: AdminOrderDetail };
+/**
+ * Hakee käyttäjän tai tilauksen tarkemmat tiedot vasta paneelin avaamisen jälkeen.
+ * Sulkeminen tai kohteen vaihtuminen mitätöi keskeneräisen haun.
+ */
 export function AdminDetail({ id, kind, locale }: { id: string; kind: "user" | "order"; locale: Locale }) {
   const copy = locale === "fi" ? fi : locale === "sv" ? sv : en;
   const common = getAdminCopy(locale),

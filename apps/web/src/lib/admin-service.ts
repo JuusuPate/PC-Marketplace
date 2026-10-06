@@ -28,6 +28,9 @@ function count(value: unknown): number {
   return value;
 }
 
+/**
+ * Tarkistaa dashboardin markkinan, valuutan ja laskurit ennen yhteenvedon näyttämistä.
+ */
 export function parseAdminOverview(value: unknown): AdminOverview {
   const data = record(value);
   const users = record(data.users);
@@ -76,6 +79,10 @@ export interface AdminUsers {
   users: AdminUser[];
 }
 
+/**
+ * Tarkistaa käyttäjähaun sivutuksen ja julkiset ylläpitotiedot.
+ * Sähköpostiosoite ei kuulu tähän listavastaukseen, vaan erikseen avattaviin käyttäjätietoihin.
+ */
 export function parseAdminUsers(value: unknown): AdminUsers {
   const data = record(value);
   if (data.market !== "FI" || data.page_size !== 25 || !Array.isArray(data.users))
@@ -102,6 +109,10 @@ export function parseAdminUsers(value: unknown): AdminUsers {
   return { page, pageSize: 25, total, users };
 }
 
+/**
+ * Hakee palvelimella suojatut ylläpidon yhteenveto- ja käyttäjälistat.
+ * Käyttöliittymän admin-rooli ei yksin myönnä tietokannan lukuoikeutta.
+ */
 export const adminService = {
   async getUsers(search = "", page = 0): Promise<AdminUsers> {
     if (search.length > 100 || !Number.isInteger(page) || page < 0 || page > 1000000)

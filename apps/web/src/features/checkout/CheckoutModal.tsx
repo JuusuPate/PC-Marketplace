@@ -14,6 +14,10 @@ interface CheckoutModalProps {
   onComplete: (order: DemoOrder) => void;
 }
 
+/**
+ * Havainnollistaa ostoa ja hinnan osia paikallisessa demossa.
+ * Vahvistus luo DemoOrder-olion kutsujalle; tässä ei ole oikeaa maksupalvelua tai palvelimelle tallennettavaa tilausta.
+ */
 export function CheckoutModal({ listing, copy, locale, onClose, onComplete }: CheckoutModalProps) {
   const fee = Math.round(listing.priceMinor * 0.015);
   const shipping = shippingByCurrency[listing.currency];

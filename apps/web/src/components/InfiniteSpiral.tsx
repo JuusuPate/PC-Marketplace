@@ -44,6 +44,10 @@ const smoothstep = (min: number, max: number, value: number) => {
   return x * x * (3 - 2 * x);
 };
 
+/**
+ * Animoitu korttispiraali: liikettä päivitetään DOM-viitteisiin animaatiokehyksittäin, ei React-tilaan.
+ * Näkyvyys, välilehden tila ja vähennetyn liikkeen asetus ohjaavat animaatiota; efektin siivous purkaa seurannat.
+ */
 const InfiniteSpiral = ({
   items = [],
   paused = false,

@@ -4,6 +4,10 @@ import type { Locale } from "../../types";
 
 type PublicAnnouncement = Awaited<ReturnType<typeof getPublicMarketingAnnouncement>>;
 
+/**
+ * Lataa julkaistun tiedotteen nykyiselle kielelle.
+ * Puuttuva tiedote tai hakuhäiriö piilottaa osion, ja vanhan kielihaun vastaus ohitetaan.
+ */
 export function HomeMarketingAnnouncement({ locale }: { locale: Locale }) {
   const [state, setState] = useState<{ locale: Locale; announcement: PublicAnnouncement } | null>(null);
   useEffect(() => {

@@ -31,6 +31,10 @@ function integer(value: unknown): number {
   if (typeof value !== "number" || !Number.isSafeInteger(value) || value < 0) throw new Error("Invalid listing number");
   return value;
 }
+/**
+ * Tarkistaa ilmoituslistan ja moderoinnin version.
+ * Jos vanhasta vastauksesta puuttuu moderointitiedot, sitä ei tulkita moderointiin valmiiksi ilmoitukseksi.
+ */
 export function parseAdminListings(value: unknown): AdminListings {
   const data = record(value);
   const page = integer(data.page);
@@ -91,6 +95,10 @@ export function parseAdminListings(value: unknown): AdminListings {
 export class ListingModerationConflictError extends Error {}
 export class ListingModerationOrderError extends Error {}
 
+/**
+ * Piilottaa tai palauttaa ilmoituksen odotetun moderointiversion perusteella.
+ * Piilotus tarvitsee perustelun, palautus ei; versioristiriita ja keskeneräinen kauppa erotetaan omiksi virheiksi.
+ */
 export async function moderateAdminListing(
   listing: Pick<AdminListing, "id" | "moderationVersion">,
   action: "hide" | "restore",

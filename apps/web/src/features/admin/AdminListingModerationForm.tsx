@@ -9,6 +9,10 @@ import {
 import type { Locale } from "../../types";
 import { getAdminListingsCopy } from "./admin-listings-copy";
 
+/**
+ * Piilotus-/palautuslomake yhdelle ilmoituksen moderointiversiolle.
+ * Vain piilotus vaatii perustelun. Rinnakkainen pyyntö estetään ja puretun lomakkeen vastaus ohitetaan.
+ */
 export function AdminListingModerationForm({
   listing,
   locale,

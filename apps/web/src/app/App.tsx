@@ -70,6 +70,10 @@ type SortOption = "newest" | "oldest" | "priceLow" | "priceHigh" | "bestDeals";
 const CREATE_LISTING_PATH = "/myy/uusi";
 const MAX_NAVIGATION_PRICE_MINOR = 100_000_000;
 const CATALOG_PAGE_SIZE = 24;
+/**
+ * Muuntaa palvelimen hyväksytyt navigaatiovalinnat selaimen suodattimiksi.
+ * Tuntematon valinta palauttaa null-arvon, jotta sitä ei sovelleta hakutuloksiin.
+ */
 function toNavigationFilter(filter: CatalogRuntimeFilter): CatalogNavigationFilter | null {
   if (filter.kind === "price_max_minor") return { maxPriceMinor: filter.maxPriceMinor };
   if (filter.kind === "featured") return { featuredOnly: true };
@@ -85,6 +89,10 @@ function toNavigationFilter(filter: CatalogRuntimeFilter): CatalogNavigationFilt
 
 const PRIMARY_NAVIGATION_PAGE_IDS = new Set<CatalogPage["id"]>(["all", "components", "pc", "gpu", "other"]);
 
+/**
+ * Yhdistää katalogin alavalikot staattisiin pääkategorioihin slug-tunnisteen perusteella.
+ * Staattinen valikko säilyy varavaihtoehtona, jos etäkatalogista puuttuu sisältöä.
+ */
 function mergeCatalogNavigation(categories: readonly CatalogNavigationCategory[]): CatalogPage[] {
   const categoriesBySlug = new Map(categories.map((category) => [category.slug, category]));
 
@@ -101,6 +109,10 @@ function mergeCatalogNavigation(categories: readonly CatalogNavigationCategory[]
   });
 }
 
+/**
+ * Järjestää URL-parametrit, jotta sama suodatinlinkki tunnistetaan aktiiviseksi
+ * riippumatta parametrien alkuperäisestä järjestyksestä.
+ */
 function canonicalCatalogHref(pathname: string, search: string) {
   const params = new URLSearchParams(search);
   params.sort();
@@ -108,6 +120,10 @@ function canonicalCatalogHref(pathname: string, search: string) {
   return `${pathname}${normalizedSearch ? `?${normalizedSearch}` : ""}`;
 }
 
+/**
+ * Tunnistaa vain tuetut yhden parametrin navigaatiosuodattimet.
+ * URL:n hintaraja muunnetaan euroista kokonaislukusenteiksi.
+ */
 function getCatalogNavigationFilter(pathname: string, search: string): CatalogNavigationFilter | null {
   const page = getCatalogPage(pathname);
   const entries = [...new URLSearchParams(search).entries()];
@@ -164,6 +180,10 @@ const categories: Array<{ key: "all" | Category; glyph: string }> = [
   { key: "other", glyph: "⌨" },
 ];
 
+/**
+ * Koordinoi reitityksen, istunnon, ilmoitukset ja yhteiset modaalit.
+ * Palvelukutsut kuuluvat lib-kerrokseen; tämä komponentti päivittää niiden tuloksista käyttöliittymän.
+ */
 export function App() {
   const [locale, setLocale] = useState<Locale>("fi");
   const market = LAUNCH_MARKET;
@@ -206,6 +226,7 @@ export function App() {
   const [supabaseOwnListings, setSupabaseOwnListings] = useState<Listing[]>([]);
   const [ownListingsLoading, setOwnListingsLoading] = useState(false);
   const favouriteRequests = useRef(new Set<string>());
+  // Asynkroninen suosikkivastaus saa päivittää tilan vain, jos sama käyttäjä on yhä kirjautuneena.
   const currentUserId = useRef(user?.id);
   currentUserId.current = user?.id;
   const [query, setQuery] = useState("");
@@ -582,6 +603,7 @@ export function App() {
     return matches;
   }, [category, market, navigationFilteredListings, query]);
 
+  // Suodata ja lajittele koko tulosjoukko ennen sivutusta, jotta uusin/vanhin-järjestys toimii sivujen yli.
   const visibleListings = useMemo(() => {
     const matches = searchListings.filter((listing) => matchesMarketplaceFilters(listing, marketplaceFilters));
     if (sort === "newest" || sort === "oldest") return sortListingsByPublication(matches, sort);
@@ -607,6 +629,9 @@ export function App() {
     (cataloguePageNumber - 1) * CATALOG_PAGE_SIZE,
     cataloguePageNumber * CATALOG_PAGE_SIZE,
   );
+  /**
+   * Vaihtaa sallitulle tulossivulle ja siirtää kohdistuksen sekä näkymän ilmoituslistan alkuun.
+   */
   const changeCataloguePage = (page: number) => {
     setCatalogPagination({ scope: paginationScope, page: Math.max(1, Math.min(page, cataloguePageCount)) });
     window.requestAnimationFrame(() => {
@@ -616,6 +641,10 @@ export function App() {
     });
   };
 
+  /**
+   * Päivittää selaimen historian ja Reactin reittitilan yhdessä.
+   * Reitin vaihdon jälkeen vieritys kohdistuu ankkuriin tai sivun otsikkoon.
+   */
   const navigateTo = (path: string, hash = "") => {
     const destination = new URL(path, window.location.origin);
     if (hash) destination.hash = hash;
@@ -662,6 +691,9 @@ export function App() {
     window.setTimeout(() => setToast(null), 3200);
   };
 
+  /**
+   * Sulkee kirjautumisen ja jatkaa sitä odottanutta myynti- tai demo-ostotoimintoa.
+   */
   const completeAuth = (nextUser: DemoUser) => {
     setUser(nextUser);
     setAuthLoading(false);
@@ -699,6 +731,10 @@ export function App() {
     }
   };
 
+  /**
+   * Julkaisee palvelun kautta ja lisää onnistuneen tuloksen käyttöliittymän ilmoituksiin.
+   * Demossa myös ilmoituslista tallennetaan täällä; palvelu hoitaa erillisen nouto-osoitteen.
+   */
   const publishListing = async (
     listing: Listing,
     images: PreparedListingImage[],
@@ -721,6 +757,10 @@ export function App() {
     navigateTo(getListingPath(savedListing.id));
   };
 
+  /**
+   * Tallentaa omistajan muokkauksen ja päivittää sekä julkisen että omien ilmoitusten listan.
+   * Selaimen omistajatarkistus täydentää palvelimen käyttöoikeuksia, eikä korvaa niitä.
+   */
   const updateListing = async (
     listing: Listing,
     images: PreparedListingImage[],
@@ -749,6 +789,10 @@ export function App() {
     navigateTo(getListingEditPath(listing.id));
   };
 
+  /**
+   * Tallentaa paikallisen demotilauksen selaimeen.
+   * Tämä polku ei veloita maksua eikä luo tilausta Supabaseen.
+   */
   const completeOrder = (order: DemoOrder) => {
     const next = [order, ...orders];
     setOrders(next);
@@ -757,6 +801,10 @@ export function App() {
     showToast(`${copy.orderCreated} — ${copy.orderCreatedBody}`);
   };
 
+  /**
+   * Lisää tai poistaa suosikin ja päivittää näkymän vasta tallennuksen onnistuttua.
+   * Saman ilmoituksen rinnakkaiset pyynnöt ja vanhan käyttäjän myöhäiset vastaukset ohitetaan.
+   */
   const toggleFavourite = async (listingId: string) => {
     if (backendMode === "supabase" && !user) {
       setAuthOpen(true);
@@ -784,6 +832,9 @@ export function App() {
     }
   };
 
+  /**
+   * Lähettää ilmoitusraportin ja merkitsee sen lähetetyksi nykyiselle käyttäjälle onnistumisen jälkeen.
+   */
   const submitReport = async (listing: Listing, reason: ReportReason, details: string) => {
     if (!user || listing.seller.id === user.id)
       throw new Error(locale === "fi" ? "Kirjaudu sisään toisella tilillä." : "Sign in with another account.");
@@ -793,6 +844,9 @@ export function App() {
     showToast(locale === "fi" ? "Ilmoitus lähetettiin ylläpidolle." : "Report sent to the team.");
   };
 
+  /**
+   * Kirjaa palvelusta ulos ennen käyttäjäkohtaisen tilan tyhjennystä ja poistumista suojatulta reitiltä.
+   */
   const logout = async () => {
     await authService.signOut();
     setUser(null);

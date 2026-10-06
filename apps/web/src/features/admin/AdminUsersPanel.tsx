@@ -46,6 +46,10 @@ export function AdminUsersTable({ data, locale }: { data: AdminUsers; locale: Lo
   );
 }
 
+/**
+ * Hakee ja näyttää sivutetun käyttäjälistan sekä käyttäjäkohtaisten tietojen avauspainikkeet.
+ * Hakukentän luonnos erotetaan lähetetystä hausta, ja vanhentuneet listavastaukset ohitetaan.
+ */
 export function AdminUsersPanel({ locale }: { locale: Locale }) {
   const copy = getAdminUsersCopy(locale);
   const common = getAdminCopy(locale);

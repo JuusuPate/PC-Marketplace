@@ -211,6 +211,10 @@ function parseFilter(row: CatalogNavigationItemRow): CatalogRuntimeFilter | null
   return null;
 }
 
+/**
+ * Rakentaa navigaatiolinkin tunnetusta kategoriasta ja hyväksytystä suodattimesta.
+ * Tietokannan sisältöä ei käytetä vapaana URL-osoitteena.
+ */
 function buildHref(categorySlug: string, filter: CatalogRuntimeFilter): string | null {
   const route = CATEGORY_ROUTES[categorySlug];
   if (!route) return null;
@@ -231,6 +235,9 @@ function errorMessage(error: unknown): string {
   return asTrimmedString(record?.message) ?? "Tuntematon katalogivirhe.";
 }
 
+/**
+ * Kokoaa Suomen aktiivisten kategorioiden lokalisoidut alavalikot ja tarkistaa niiden suodatinvalinnat.
+ */
 async function loadSupabaseNavigation(locale: Locale): Promise<CatalogNavigationCategory[]> {
   if (!supabase) throw new Error("Supabase-yhteyttä ei ole määritetty.");
 
@@ -313,6 +320,10 @@ async function loadSupabaseNavigation(locale: Locale): Promise<CatalogNavigation
 }
 
 export const catalogService = {
+  /**
+   * Palauttaa etäkatalogin navigaation tai staattisen varavalikon.
+   * Katalogin latausvirhe ei estä muun markkinapaikan käyttöä.
+   */
   async getNavigation(locale: Locale): Promise<CatalogNavigationResult> {
     if (backendMode === "demo" || !supabase) return fallbackResult(locale);
 

@@ -18,6 +18,11 @@ const probes: { key: AdminSystemCheckKey; run: () => Promise<unknown> }[] = [
   { key: "audit", run: () => getAdminAudit("", 0) },
 ];
 
+/**
+ * Kokeilee ylläpidon lukurajapintoja ja mittaa vastausaikoja.
+ * Yksittäinen palveluvirhe näkyy osatuloksena; käyttöoikeusvirhe keskeyttää koko tilannekuvan.
+ * Nämä lukukokeet eivät tarkista kaikkia kirjoitus- tai maksutoimintoja.
+ */
 export async function getAdminSystemSnapshot(): Promise<AdminSystemSnapshot> {
   const results = await Promise.all(
     probes.map(async ({ key, run }) => {

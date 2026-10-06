@@ -7,6 +7,10 @@ import { getAdminUsersCopy } from "./admin-users-copy";
 import { activityCopy } from "./admin-activity-copy";
 
 type State = { status: "loading" } | { status: "ready"; data: AdminAudit } | { status: "error" | "denied" };
+/**
+ * Hakee sivutetun audit-lokin ja näyttää tapahtumien ennen/jälkeen-tiedot.
+ * Päivitä tekee uuden haun myös silloin, kun hakuteksti ja sivunumero eivät muutu.
+ */
 export function AdminAuditPanel({ locale }: { locale: Locale }) {
   const copy = activityCopy(locale),
     common = getAdminCopy(locale),

@@ -33,6 +33,10 @@ function sample(value: unknown): PriceSample {
   return { salesCount, valueMinor, averageMinor };
 }
 
+/**
+ * Tarkistaa mallin toteutuneiden kauppahintojen päiväaineiston ja yhtä pitkän vertailujakson.
+ * Keskiarvojen euro- ja prosenttimuutos lasketaan varmennetuista näytteistä; ilman vertailupohjaa muutos on null.
+ */
 export function parseModelPriceTrends(value: unknown): ModelPriceTrends {
   const row = adminRecord(value);
   if (
@@ -93,6 +97,9 @@ export function parseModelPriceTrends(value: unknown): ModelPriceTrends {
   };
 }
 
+/**
+ * Hakee valitun katalogimallin hintakehityksen ja varmistaa vastauksen mallin sekä aikajakson.
+ */
 export async function getModelPriceTrends(modelId: string, days: DashboardPeriod): Promise<ModelPriceTrends> {
   adminUuid(modelId);
   if (!dashboardPeriods.includes(days)) throw new Error("Invalid model price query");

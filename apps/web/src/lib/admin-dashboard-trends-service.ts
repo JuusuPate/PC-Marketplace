@@ -33,6 +33,9 @@ export interface AdminDashboardTrends {
   categories: DashboardCategory[];
 }
 
+/**
+ * Hyväksyy vain olemassa olevan YYYY-MM-DD-kalenteripäivän, ei JavaScriptin automaattisesti korjaamaa päivämäärää.
+ */
 export function dashboardDate(value: unknown): string {
   if (
     typeof value !== "string" ||
@@ -51,6 +54,10 @@ function average(value: unknown, sample: number): number | null {
   return adminCount(value);
 }
 
+/**
+ * Tarkistaa päiväkäyrän jakson, katkeamattoman päiväjärjestyksen ja lukujen sisäisen johdonmukaisuuden.
+ * Käyttäjien kokonaismäärä on kertymä; päivittäiset uudet käyttäjät ovat erillinen mittari.
+ */
 export function parseAdminDashboardTrends(value: unknown): AdminDashboardTrends {
   const row = adminRecord(value);
   if (
@@ -132,6 +139,9 @@ export function parseAdminDashboardTrends(value: unknown): AdminDashboardTrends 
   return { generatedAt: adminTimestamp(row.generated_at), days, startDate, endDate, buckets, categories };
 }
 
+/**
+ * Hakee tuetun 7–365 päivän dashboard-jakson ja tarkistaa, että vastaus vastaa jakson pituutta.
+ */
 export async function getAdminDashboardTrends(days: DashboardPeriod): Promise<AdminDashboardTrends> {
   if (!dashboardPeriods.includes(days)) throw new Error("Invalid dashboard period");
   const result = parseAdminDashboardTrends(await adminRpc("get_admin_dashboard_trends", { p_days: days }));

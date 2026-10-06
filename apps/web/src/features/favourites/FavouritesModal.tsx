@@ -24,6 +24,10 @@ interface FavouritesModalProps {
   onBrowseProducts: () => void;
 }
 
+/**
+ * Näyttää kutsujan kokoaman suosikkilistan ja välittää avaus-/poistotoiminnot takaisin sovellukselle.
+ * Suosikin pysyvä tallennus kuuluu palvelukerrokseen, ei tähän dialogiin.
+ */
 export function FavouritesModal({
   copy,
   locale,

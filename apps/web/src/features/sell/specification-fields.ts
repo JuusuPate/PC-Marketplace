@@ -212,6 +212,10 @@ const fieldKeysByCategory: Record<Category, string[]> = {
   fans: [],
 };
 
+/**
+ * Yhteinen kenttämääritys lomakkeelle ja tuoteyhteenvedolle: pysyvä avain, käännetty nimi ja valintavaihtoehdot.
+ * options rajoittaa pudotusvalikon vaihtoehdot; suggestions tarjoaa ehdotuksia vapaasti kirjoitettavaan kenttään.
+ */
 export function getGuidedSpecificationFields(category: Category, locale: Locale): GuidedSpecificationField[] {
   const copy = specificationCopy[locale];
   return [...fieldKeysByCategory[category], "freeShipping"].map((key) => {

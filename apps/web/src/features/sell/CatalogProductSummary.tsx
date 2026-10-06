@@ -2,7 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import type { Category, Locale } from "../../types";
 import { getGuidedSpecificationFields } from "./specification-fields";
 
-/** The catalog snapshot is visible to the seller before it becomes listing data. */
+/**
+ * Näyttää valitun katalogimallin tiedot luettavana yhteenvetona ennen niiden tallentamista ilmoitukseen.
+ * Muokkaa-painike delegoi muokkaustilan avaamisen lomakkeelle; postitus näytetään erikseen sijainnissa.
+ */
 export function CatalogProductSummary({
   category,
   locale,
@@ -56,6 +59,10 @@ export function CatalogProductSummary({
   );
 }
 
+/**
+ * Näyttää katalogi-/käsinsyöttövalinnan ja tiivistää sen valinnan jälkeen.
+ * Kohdistus siirtyy näkyvään ohjaimeen myös silloin, kun tyhjä katalogihaku vaihtaa tilan käsinsyöttöön.
+ */
 export function CatalogInputMode({
   locale,
   value,

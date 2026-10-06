@@ -15,6 +15,10 @@ interface AuthModalProps {
   onComplete: (user: DemoUser) => void;
 }
 
+/**
+ * Kirjautumisen, rekisteröinnin ja palautuslinkin lomake.
+ * Auth-palvelu hoitaa varsinaisen istunnon; sähköpostivahvistusta odottavaa käyttäjää ei kirjata sisään valmiina.
+ */
 export function AuthModal({ copy, locale, market, onClose, onComplete }: AuthModalProps) {
   const [mode, setMode] = useState<"login" | "register" | "forgot">("login");
   const [name, setName] = useState("");

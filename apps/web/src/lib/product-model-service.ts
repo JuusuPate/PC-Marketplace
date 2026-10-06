@@ -37,6 +37,9 @@ export interface ModelPage<T = ProductModel> {
   items: T[];
   unlinked_listings: number;
 }
+/**
+ * Siistii katalogin näyttötekstiä poistamalla GeForce-sanan, keskitetyn pisteen ja ylimääräiset välit.
+ */
 export const sanitizeModelText = (value: string) =>
   value
     .trim()
@@ -53,6 +56,10 @@ function integer(v: unknown) {
   if (typeof v !== "number" || !Number.isSafeInteger(v) || v < 0) throw Error("Invalid model metric");
   return v;
 }
+/**
+ * Tarkistaa katalogivastauksen mallien tunnisteet, kategorian, tekniset tiedot ja hintatilastot.
+ * Palvelimen JSON hyväksytään käyttöliittymään vasta tämän muunnoksen jälkeen.
+ */
 export function parseModelPage(data: unknown, admin = false): ModelPage<ModelMarketRow> {
   if (!data || typeof data !== "object") throw Error("Invalid catalog");
   const d = data as Record<string, unknown>;
@@ -113,6 +120,10 @@ export function parseModelPage(data: unknown, admin = false): ModelPage<ModelMar
   });
   return { total, items, unlinked_listings: admin ? integer(d.unlinked_listings) : 0 };
 }
+/**
+ * Hakee yhden hakutulosjoukon sivun kategoriasta ja hakutekstistä.
+ * Demossa käytetään erikseen ladattavaa JSON-katalogia; ylläpidon Supabase-haku sisältää myös hintatilastot.
+ */
 export async function loadProductModels(
   category: Category,
   query = "",
@@ -163,6 +174,9 @@ export async function loadProductModels(
     throw Error("Unexpected model scope");
   return result;
 }
+/**
+ * Tallentaa katalogimallin admin-oikeuden tarkistavalla RPC-kutsulla ja tarkistaa palautetun tunnisteen.
+ */
 export async function saveProductModel(
   model: Omit<ProductModel, "id" | "updated_at"> & { id?: string; updated_at?: string },
 ) {

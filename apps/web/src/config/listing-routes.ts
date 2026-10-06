@@ -1,6 +1,9 @@
 const LISTING_ROUTE_PREFIX = "/ilmoitukset/";
 const LISTING_EDIT_SUFFIX = "/muokkaa";
 
+/**
+ * Rakentaa ilmoituslinkin URL-koodatusta tunnisteesta, jotta tunnisteen merkit eivät muodosta uusia polkuosia.
+ */
 export function getListingPath(id: string) {
   if (!id) throw new Error("Ilmoituksen tunniste puuttuu.");
   return `${LISTING_ROUTE_PREFIX}${encodeURIComponent(id)}`;
@@ -10,6 +13,10 @@ export function getListingEditPath(id: string) {
   return `${getListingPath(id)}${LISTING_EDIT_SUFFIX}`;
 }
 
+/**
+ * Tunnistaa yksittäisen ilmoituksen muokkausreitin.
+ * Palauttaa null-arvon ylimääräisestä polkuosasta tai virheellisestä URL-koodauksesta; ei tarkista omistajuutta.
+ */
 export function getListingEditId(pathname: string): string | null {
   const normalizedPath = pathname.replace(/\/+$/, "") || "/";
   if (!normalizedPath.startsWith(LISTING_ROUTE_PREFIX) || !normalizedPath.endsWith(LISTING_EDIT_SUFFIX)) {
@@ -27,6 +34,9 @@ export function getListingEditId(pathname: string): string | null {
   }
 }
 
+/**
+ * Purkaa tunnisteen ilmoituksen katselureitistä. Muokkausreittiä tai muita lisäpolkuja ei hyväksytä katselureitiksi.
+ */
 export function getListingId(pathname: string): string | null {
   const normalizedPath = pathname.replace(/\/+$/, "") || "/";
   if (!normalizedPath.startsWith(LISTING_ROUTE_PREFIX)) return null;

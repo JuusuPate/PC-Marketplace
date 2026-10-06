@@ -101,6 +101,10 @@ function FieldLabel({ label, requiredText, optionalText, required = false }: Fie
   );
 }
 
+/**
+ * Pitää paneelin kentät kiinnitettyinä sulkeutumisanimaation aikana.
+ * Suljettu sisältö on inert, joten piilokenttiin ei voi siirtyä näppäimistöllä.
+ */
 function ListingDetailsPanel({ open, children }: { open: boolean; children: ReactNode }) {
   return (
     <div className="listing-details-panel" data-open={open} inert={!open}>
@@ -118,6 +122,10 @@ function FieldError({ id, message }: { id: string; message?: string }) {
   );
 }
 
+/**
+ * Viisivaiheinen ilmoituslomake uusille ja muokattaville ilmoituksille.
+ * Tuotetiedot säilyvät paikallisessa React-tilassa; lopullinen tallennus delegoidaan onPublish-kutsulle.
+ */
 export function CreateListingPage({
   copy,
   locale,
@@ -222,6 +230,10 @@ export function CreateListingPage({
         locale,
       )
     : manualTitle;
+  /**
+   * Päivittää yhden ohjatun teknisen tiedon. Muokattu tekninen tieto irrottaa katalogimallin tunnisteen,
+   * jotta ilmoituksen omia tietoja ei sekoiteta muuttumattomaan katalogimalliin.
+   */
   const changeGuidedField = (key: string, value: string) => {
     setGuidedSpecifications((values) => ({
       ...values,
@@ -249,6 +261,10 @@ export function CreateListingPage({
   );
   const showIdentity =
     safeCategory !== "pc" && (safeCategory === "fans" || safeCategory === "gpu" || inputMode === "manual");
+  /**
+   * Vaihtaa katalogin ja käsin syötön välillä säilyttäen lomakearvot.
+   * Manuaalinen tila irrottaa katalogiviitteen ja avaa tiedot uudelleen muokattaviksi.
+   */
   const changeInputMode = (mode: "catalog" | "manual") => {
     setInputMode(mode);
     setProductDetailsSaved(false);
@@ -256,6 +272,11 @@ export function CreateListingPage({
     clearFieldError("catalog");
     clearFieldError("inputMode");
   };
+  /**
+   * Korvaa edellisen tuotteen otsikon ja tekniset tiedot valitulla katalogimallilla.
+   * Valinnan tyhjennys poistaa myös vanhat tuotetiedot, mutta säilyttää ilmaisen postituksen valinnan.
+   * GPU:ssa katalogin piirimalli erotetaan kortin valmistajasta ja mallista.
+   */
   const selectProduct = (m: ProductModel | null) => {
     setProductDetailsSaved(false);
     setCatalogModelId(m?.id ?? null);
@@ -397,6 +418,10 @@ export function CreateListingPage({
     setError("");
   };
 
+  /**
+   * Kokoaa pyydettyjen vaiheiden kenttävirheet. Sama tarkistus palvelee vaiheesta siirtymistä ja julkaisua.
+   * Tuotetietojen oma Tallenna-ohjaus suodattaa tästä kuvauksen virheen pois.
+   */
   const getValidationIssues = (steps: ListingStep[]): ValidationIssue[] => {
     const issues: ValidationIssue[] = [];
     const includes = (step: ListingStep) => steps.includes(step);
@@ -461,6 +486,9 @@ export function CreateListingPage({
     return issues;
   };
 
+  /**
+   * Näyttää kenttävirheet, avaa ensimmäisen virheen vaiheen ja kohdistaa sen kenttään renderöinnin jälkeen.
+   */
   const showValidationIssues = (issues: ValidationIssue[]) => {
     const nextErrors = Object.fromEntries(issues.map((issue) => [issue.field, issue.message]));
     setFieldErrors(nextErrors);
@@ -483,6 +511,10 @@ export function CreateListingPage({
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  /**
+   * Vahvistaa tämän lomakkeen tuotetiedot ja vaihtaa ne yhteenvetoon.
+   * Ei tallenna luonnosta palvelimelle eikä selaimen pysyvään muistiin; julkaisu tehdään viimeisessä vaiheessa.
+   */
   const saveProductDetails = () => {
     const issues = getValidationIssues([2]).filter((issue) => issue.field !== "description");
     if (issues.length) {
@@ -496,6 +528,10 @@ export function CreateListingPage({
       document.getElementById("edit-saved-product-details")?.focus();
     }, 0);
   };
+  /**
+   * Tarkistaa tuotetiedot ennen kuvaukseen siirtymistä ja kohdistaa kuvauskenttään.
+   * Vieritys kunnioittaa käyttäjän vähennetyn liikkeen asetusta.
+   */
   const openDescription = () => {
     const issues = getValidationIssues([2]).filter((issue) => issue.field !== "description");
     if (issues.length) {
@@ -525,6 +561,10 @@ export function CreateListingPage({
     }, 0);
   };
 
+  /**
+   * Etenee lomakkeessa vaihe kerrallaan. Viimeisessä vaiheessa tarkistaa kaikki tiedot
+   * ja muodostaa tallennettavan ilmoituksen sekä yksityisen nouto-osoitteen palvelukutsua varten.
+   */
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (currentStep === 2 && detailsPanel === "product") {

@@ -19,6 +19,10 @@ import "./styles/admin-model-charts.css";
 
 type LoadState<T> = { status: "loading" } | { status: "error" } | { status: "ready"; data: T };
 
+/**
+ * Hakee valitun katalogimallin toteutuneet hinnat ja vertailumuutokset valitulle jaksolle.
+ * Puuttuva hintanäyte säilyy puuttuvana myös käyrässä ja tilastokorteissa.
+ */
 function PriceDetail({
   model,
   period,
@@ -95,6 +99,10 @@ function PriceDetail({
   );
 }
 
+/**
+ * Hakee kategorian katalogimallit vasempaan tuotelistaan viivästetyllä tekstisuodatuksella.
+ * Pyyntöhistoria ei saa korvata uudemman kategoriavalinnan tuloksia.
+ */
 function ProductList({
   category,
   query,

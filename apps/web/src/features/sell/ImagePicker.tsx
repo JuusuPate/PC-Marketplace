@@ -51,6 +51,10 @@ function withSortOrder(images: PreparedListingImage[]) {
   return images.map((image, sortOrder) => ({ ...image, sortOrder }));
 }
 
+/**
+ * Valitsee, valmistelee ja järjestää ilmoituksen kuvat.
+ * Muokkauksessa palvelimen nykyiset kuvat pysyvät näkyvissä, kunnes käyttäjä valitsee korvaavat kuvat.
+ */
 export function ImagePicker({
   copy,
   images,
@@ -111,6 +115,9 @@ export function ImagePicker({
     void addFiles(event.dataTransfer.files);
   };
 
+  /**
+   * Vapauttaa poistetun paikallisen kuvan esikatseluosoitteen ja numeroi jäljelle jääneet kuvat uudelleen.
+   */
   const removeImage = (index: number) => {
     const image = images[index];
     if (!image) return;
@@ -119,6 +126,9 @@ export function ImagePicker({
     setError("");
   };
 
+  /**
+   * Siirtää kansikuvan ensimmäiseksi; järjestys välitetään samalla myös tallennettaviin kuvatietoihin.
+   */
   const makeCover = (index: number) => {
     const image = images[index];
     if (!image || index === 0) return;

@@ -54,6 +54,10 @@ export interface PrivatePickupAddress {
   countryCode: CountryCode;
 }
 
+/**
+ * Julkinen ilmoitusmalli kortteja, hakuja ja tuotesivua varten.
+ * Hintayksikkö on sentti ja specs-avaimet ovat pysyviä tunnisteita. Yksityinen osoite pidetään eri mallissa.
+ */
 export interface Listing {
   catalogModelId?: string | null;
   id: string;
@@ -86,6 +90,10 @@ export interface Listing {
   images?: ListingImage[];
 }
 
+/**
+ * Käyttöliittymän yhteinen käyttäjämalli sekä demolle että Authista muunnetulle käyttäjälle.
+ * role ohjaa UI:n näkyvyyttä; palvelin varmistaa oikeudet omasta suojatusta roolitaulustaan.
+ */
 export interface DemoUser {
   id: string;
   name: string;
@@ -106,6 +114,9 @@ export interface LegalPageContent {
   updatedAt: string | null;
 }
 
+/**
+ * Selaimeen tallennettava esimerkkitilaus. paid on demon tila, ei oikean maksupalvelun vahvistus.
+ */
 export interface DemoOrder {
   id: string;
   listingId: string;

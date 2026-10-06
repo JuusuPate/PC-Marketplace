@@ -81,6 +81,9 @@ function throwIfError(error: { code?: string } | null) {
   throw error;
 }
 
+/**
+ * Hakee julkaistun etusivutiedotteen kielelle. Demossa tiedotetta ei ole.
+ */
 export async function getPublicMarketingAnnouncement(locale: Locale) {
   if (!isLocale(locale)) throw new Error("Invalid locale");
   if (!supabase) return null;
@@ -96,6 +99,10 @@ export async function getAdminMarketingAnnouncements(): Promise<MarketingAnnounc
   return parseAdminMarketingAnnouncements(data);
 }
 
+/**
+ * Tallentaa tiedotteen sen odotetulla versiolla.
+ * Rinnakkainen muutos nostaa konfliktivirheen sen sijaan, että toisen ylläpitäjän työ ylikirjoitettaisiin.
+ */
 export async function saveAdminMarketingAnnouncement(input: AnnouncementInput): Promise<void> {
   const title = input.title.trim();
   const body = input.body.trim();

@@ -16,6 +16,10 @@ import { productCopy } from "../sell/product-model-copy";
 import { getAdminCopy } from "./admin-copy";
 import { ProfileField } from "../sell/ProfileFields";
 import { getGuidedSpecificationFields } from "../sell/specification-fields";
+/**
+ * Muokkaa katalogimallia ja tallentaa sen admin-palvelun kautta.
+ * Lomakkeen tyhjät tekniset arvot poistetaan tallennuspyynnöstä; oikeusvirhe välitetään koko paneelille.
+ */
 function ModelEditor({
   model,
   category,
@@ -122,6 +126,9 @@ function ModelEditor({
     </form>
   );
 }
+/**
+ * Sivutettu ylläpitokatalogi kategorian ja hakutekstin mukaan sekä uuden ja olemassa olevan mallin editori.
+ */
 export function AdminCatalogPanel({ locale }: { locale: Locale }) {
   const c = productCopy(locale),
     common = getAdminCopy(locale);

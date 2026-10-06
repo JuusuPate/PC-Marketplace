@@ -16,6 +16,10 @@ import "./styles/admin-charts.css";
 type TrendState =
   { status: "loading" } | { status: "ready"; data: AdminDashboardTrends } | { status: "error" } | { status: "denied" };
 
+/**
+ * Ylläpidon yhteinen aikasarjahaku valitulle jaksolle.
+ * Jakson tai päivityksen vaihtuminen mitätöi vanhan vastauksen; eri jakson dataa ei näytetä uuden otsikon alla.
+ */
 export function useAdminTrends() {
   const [period, setPeriod] = useState<DashboardPeriod>(30);
   const [refresh, setRefresh] = useState(0);
@@ -43,6 +47,9 @@ export function useAdminTrends() {
   };
 }
 
+/**
+ * Yhteinen jaksonvalinta 7, 30, 90, 180 ja 365 päivän käyrille.
+ */
 export function AdminPeriodPicker({
   locale,
   period,
@@ -114,6 +121,10 @@ function formatMetric(value: number, money: boolean, locale: Locale) {
   return money ? formatMoney(value, "EUR", locale, 2) : value.toLocaleString(locale);
 }
 
+/**
+ * Muuntaa valitun mittarin päivittäiseksi käyräksi.
+ * Käyttäjien kokonaismäärän yhteenveto on viimeinen kertymäarvo; tapahtumamittareilla käytetään jakson summaa.
+ */
 export function AdminTrendChart({
   data,
   field,
@@ -143,6 +154,10 @@ export function AdminTrendChart({
   );
 }
 
+/**
+ * Piirtää päiväarvot SVG-käyräksi ja tarjoaa osoitin-/näppäimistöluvun sekä vaihtoehtoisen taulukon.
+ * null tarkoittaa puuttuvaa näytettä ja katkaisee viivan, eikä sitä piirretä nollahintana.
+ */
 export function AdminDailyChart({
   days,
   buckets,
@@ -333,6 +348,9 @@ function smoothLine(points: { x: number; y: number }[]) {
     .join(" ");
 }
 
+/**
+ * Yhdistää vasemman mittarilistan pienet käyrät ja valitun mittarin yksityiskohtaisen päiväkäyrän.
+ */
 export function AdminTrendExplorer({
   data,
   metrics,

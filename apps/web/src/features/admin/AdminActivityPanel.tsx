@@ -11,6 +11,10 @@ function range(days: number) {
   const end = new Date().toISOString();
   return { start: new Date(Date.parse(end) - days * 86400000).toISOString(), end };
 }
+/**
+ * Hakee valitun aktiivisuusjakson ja edellisen vastaavan jakson vertailua varten.
+ * Tämän paneelin omat päivämääräsyötteet käsitellään UTC-aikoina.
+ */
 export function AdminActivityPanel({ locale }: { locale: Locale }) {
   const copy = activityCopy(locale),
     common = getAdminCopy(locale);

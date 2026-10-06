@@ -195,6 +195,10 @@ export const CATALOG_PAGES: CatalogPage[] = [
   },
 ];
 
+/**
+ * Tunnistaa kategoriasivun polusta ja sallii perässä olevan vinoviivan.
+ * Hakuteksti ja URL:n suodatinparametrit käsitellään erikseen sovelluksen tilassa.
+ */
 export function getCatalogPage(pathname: string): CatalogPage | null {
   const normalizedPath = pathname.replace(/\/+$/, "") || "/";
   return CATALOG_PAGES.find((page) => page.path === normalizedPath) ?? null;

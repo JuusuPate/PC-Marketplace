@@ -9,6 +9,9 @@ interface PasswordRecoveryModalProps {
   onSuccess: () => void;
 }
 
+/**
+ * Tarkistaa uuden salasanan ja vahvistuksen, sitten päivittää palautusistunnon salasanan Auth-palvelussa.
+ */
 export function PasswordRecoveryModal({ locale, onCancel, onSuccess }: PasswordRecoveryModalProps) {
   const [password, setPassword] = useState("");
   const [confirmation, setConfirmation] = useState("");

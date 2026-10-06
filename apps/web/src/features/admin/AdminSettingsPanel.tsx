@@ -13,6 +13,10 @@ import "./styles/admin-settings.css";
 
 type State = { status: "loading" } | { status: "ready"; data: ListingCreationSetting } | { status: "error" | "denied" };
 
+/**
+ * Muokkaa ilmoitusten luontitaukoa palvelimelta saadun version perusteella.
+ * Rinnakkainen muutos vaatii uuden latauksen; inFlight-viite estää kaksoislähetyksen ennen Reactin päivitystä.
+ */
 export function AdminSettingsPanel({ locale }: { locale: Locale }) {
   const copy = settingsCopy(locale);
   const common = getAdminCopy(locale);

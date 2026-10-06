@@ -42,6 +42,9 @@ function throwIfError(error: { code?: string } | null) {
   throw error;
 }
 
+/**
+ * Lukee julkisen ilmoitusten luontiasetuksen. Virhettä ei tulkita luontiluvaksi; demossa luonti on sallittu.
+ */
 export async function getPublicListingCreationEnabled(): Promise<boolean> {
   if (backendMode === "demo") return true;
   if (!supabase) throw new Error("Supabase required");
@@ -58,6 +61,9 @@ export async function getAdminListingCreationSetting(): Promise<ListingCreationS
   return parseListingCreationSetting(data);
 }
 
+/**
+ * Tallentaa luontitauon odotetulla versionumerolla ja erottaa rinnakkaisen muutoksen tavallisesta virheestä.
+ */
 export async function saveAdminListingCreationSetting(enabled: boolean, expectedVersion: number) {
   if (
     typeof enabled !== "boolean" ||
@@ -78,6 +84,9 @@ export async function saveAdminListingCreationSetting(enabled: boolean, expected
   return result;
 }
 
+/**
+ * Tunnistaa palvelimen täsmällisen luontitaukovirheen ja muuntaa sen lomakkeelle sopivaksi virheeksi.
+ */
 export function throwIfListingCreationPaused(error: unknown): void {
   if (
     error &&

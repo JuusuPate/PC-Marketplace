@@ -114,6 +114,10 @@ export function AdminReportsList({
   );
 }
 
+/**
+ * Yhdistää raporttien sivutetun haun, tilasuodatuksen ja päätöslomakkeet.
+ * Tallennuksen jälkeen listasta haetaan uudet käsittelytilat ja versiot.
+ */
 export function AdminReportsPanel({ locale }: { locale: Locale }) {
   const copy = getAdminReportsCopy(locale);
   const common = getAdminCopy(locale);

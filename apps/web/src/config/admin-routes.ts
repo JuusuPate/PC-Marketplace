@@ -4,6 +4,10 @@ export function isAdminAuditPath(pathname: string) {
   return pathname.replace(/\/+$/, "") === `${ADMIN_PATH}/audit`;
 }
 
+/**
+ * Tunnistaa ylläpidon reittiperheen myös tuntemattomalle alisivulle.
+ * Tämä on reititysapuri: ylläpito-oikeus tarkistetaan erikseen UI:ssa ja palvelimella.
+ */
 export function isAdminPath(pathname: string) {
   const path = pathname.replace(/\/+$/, "") || "/";
   return path === ADMIN_PATH || path.startsWith(`${ADMIN_PATH}/`);

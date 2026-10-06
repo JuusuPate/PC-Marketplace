@@ -11,7 +11,10 @@ for (const region of FINNISH_REGIONS) {
     }
   }
 }
-/** Exact official names/aliases only: do not guess a municipality from neighbourhoods or free text. */
+/**
+ * Yhdistää kunnan suomen- ja ruotsinkieliset nimet samaan hakutunnisteeseen.
+ * Tuntematon nimi vain normalisoidaan; sitä ei arvata toiseksi kunnaksi.
+ */
 export function canonicalMunicipality(value: string): string {
   const normalized = normalizeLocation(value);
   return municipalityNames.get(normalized) ?? normalized;
@@ -19,11 +22,18 @@ export function canonicalMunicipality(value: string): string {
 export const KNOWN_MUNICIPALITIES = new Set(
   FINNISH_REGIONS.flatMap((region) => region.municipalities.map(([, fi]) => canonicalMunicipality(fi))),
 );
+/**
+ * Laskee maakunnan valinnan tilan kuntien perusteella: kokonaan valittu, osittainen tai tyhjä.
+ */
 export function regionSelection(selected: string[], cities: string[]) {
   const set = new Set(selected.map(canonicalMunicipality));
   const count = cities.filter((city) => set.has(city)).length;
   return { checked: count === cities.length, mixed: count > 0 && count < cities.length };
 }
+/**
+ * Valitsee maakunnan kaikki kunnat tai poistaa ne, jos kaikki olivat jo valittuina.
+ * Muiden maakuntien valinnat säilyvät.
+ */
 export function toggleRegion(selected: string[], cities: string[]): string[] {
   const state = regionSelection(selected, cities);
   const citySet = new Set(cities);

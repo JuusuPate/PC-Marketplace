@@ -85,6 +85,10 @@ export function AdminListingsTable({
   );
 }
 
+/**
+ * Ylläpidon ilmoitushaku ja tilasuodatus.
+ * Moderoinnin onnistuminen päivittää listan; version vaihtuminen luo päätöslomakkeen uudelleen tuoreilla tiedoilla.
+ */
 export function AdminListingsPanel({ locale }: { locale: Locale }) {
   const copy = getAdminListingsCopy(locale);
   const common = getAdminCopy(locale);

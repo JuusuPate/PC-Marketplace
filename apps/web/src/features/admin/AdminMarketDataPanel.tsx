@@ -55,6 +55,10 @@ export function AdminMarketDataSummary({ data, locale }: { data: AdminMarketData
     </>
   );
 }
+/**
+ * Yhdistää kategoriatilastot ja katalogimallien hintakäyrät.
+ * Alipaneelin käyttöoikeusvirhe sulkee myös yhteenvetonäkymän, eikä myöhempi hakuvastaus saa avata sitä uudelleen.
+ */
 export function AdminMarketDataPanel({ locale }: { locale: Locale }) {
   const copy = getAdminMarketDataCopy(locale),
     common = getAdminCopy(locale);

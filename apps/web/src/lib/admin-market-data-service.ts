@@ -28,6 +28,10 @@ function average(value: unknown, sample: number): number | null {
   }
   return count(value);
 }
+/**
+ * Tarkistaa kaikkien aikojen kategoriatilastot.
+ * Pyyntihinnan ja toteutuneen kauppahinnan keskiarvot pidetään erillisinä; ilman näytteitä arvo on null.
+ */
 export function parseAdminMarketData(value: unknown): AdminMarketData {
   const data = record(value);
   if (

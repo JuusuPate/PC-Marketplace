@@ -10,6 +10,10 @@ function isLocale(value: unknown): value is Locale {
   return locales.includes(value as Locale);
 }
 
+/**
+ * Muuntaa Auth-käyttäjän käyttöliittymän käyttäjäksi.
+ * Admin-rooli varmistetaan suojatulla palvelinkutsulla; muokattavaa käyttäjämetadataa ei käytetä oikeuksiin.
+ */
 async function mapUser(user: User): Promise<DemoUser> {
   const metadata = user.user_metadata;
   const countryCode = LAUNCH_MARKET;
@@ -44,6 +48,10 @@ export interface AuthResult {
   confirmationRequired: boolean;
 }
 
+/**
+ * Yhteinen kirjautumisrajapinta demolle ja Supabase Authille.
+ * Demotunnukset ovat selaimen esimerkkitietoja, eivät tuotannon käyttäjätilejä.
+ */
 export const authService = {
   mode: backendMode,
 
@@ -68,6 +76,9 @@ export const authService = {
     return { user: await mapUser(data.user), confirmationRequired: false };
   },
 
+  /**
+   * Luo käyttäjätilin ja kertoo, tarvitaanko sähköpostivahvistus ennen istunnon saamista.
+   */
   async signUp(
     name: string,
     email: string,
@@ -103,6 +114,10 @@ export const authService = {
     };
   },
 
+  /**
+   * Välittää istunnon muutokset ja salasanan palautustapahtuman sovellukselle.
+   * Pyyntötunniste ohittaa vanhentuneet käyttäjähaut; palautettu funktio lopettaa tilauksen.
+   */
   subscribe(
     listener: (user: DemoUser | null) => void,
     onPasswordRecovery?: () => void,
@@ -152,6 +167,10 @@ export const authService = {
     if (error) throw error;
   },
 
+  /**
+   * Pyytää Supabasea lähettämään palautuslinkin, joka palaa tämän sivuston juureen.
+   * Palvelukutsun onnistuminen ei vielä varmista sähköpostin toimitusta.
+   */
   async requestPasswordReset(email: string) {
     if (!supabase) throw new Error("Salasanan palautus vaatii Supabase-yhteyden.");
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
@@ -160,6 +179,9 @@ export const authService = {
     if (error) throw error;
   },
 
+  /**
+   * Vaihtaa kirjautuneen Auth-istunnon salasanan. Demotilassa palautusta ei tueta.
+   */
   async updatePassword(password: string) {
     if (!supabase) throw new Error("Salasanan palautus vaatii Supabase-yhteyden.");
     const { error } = await supabase.auth.updateUser({ password });

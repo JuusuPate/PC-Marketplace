@@ -17,6 +17,10 @@ interface ModalShellProps {
   size?: "normal" | "wide";
 }
 
+/**
+ * Yhteinen saavutettava dialogi: sulkee Escillä, rajaa Tab-kohdistuksen ja tekee taustasta inertin.
+ * Suljettaessa palauttaa sivun aiemman vierityslukon ja kohdistuksen.
+ */
 export function ModalShell({ title, onClose, children, size = "normal" }: ModalShellProps) {
   const panelRef = useRef<HTMLElement>(null);
   const onCloseRef = useRef(onClose);

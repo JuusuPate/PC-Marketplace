@@ -4,6 +4,10 @@ import { ReportConflictError, reviewAdminReport, type AdminReport } from "../../
 import type { Locale } from "../../types";
 import { getAdminReportsCopy } from "./admin-reports-copy";
 
+/**
+ * Ratkaisee tai avaa raportin uudelleen nykyisen käsittelytilan perusteella.
+ * Versiokonflikti estää uuden lähetyksen vanhoilla tiedoilla; onnistuminen pyytää kutsujaa lataamaan listan uudelleen.
+ */
 export function AdminReportDecisionForm({
   report,
   locale,

@@ -57,6 +57,10 @@ interface DbListing {
 
 interface ReservedListingImage extends DbListingImage {}
 
+/**
+ * Lataa kuvat palvelimen varaamiin Storage-polkuihin sortOrder-arvon perusteella.
+ * Onnistuneet polut kerätään erikseen, jotta keskeytynyt lataus voidaan siivota.
+ */
 async function uploadReservedImages(
   reservations: ReservedListingImage[],
   preparedImages: PreparedListingImage[],
@@ -115,6 +119,10 @@ function blobToDataUrl(blob: Blob): Promise<string> {
   });
 }
 
+/**
+ * Muuntaa valmistellut kuvat data-URL-muotoon paikallista demotallennusta varten.
+ * Tuotannon kuvat tallennetaan tämän sijaan Storageen.
+ */
 async function mapDemoImages(listing: Listing, preparedImages: PreparedListingImage[]) {
   return Promise.all(
     preparedImages.map(async (image): Promise<ListingImage> => ({
@@ -128,6 +136,10 @@ async function mapDemoImages(listing: Listing, preparedImages: PreparedListingIm
   );
 }
 
+/**
+ * Muuntaa tietokannan rivin, myyjän arviot ja kuvaviitteet Listing-malliksi.
+ * Julkiseen malliin kuuluu paikkakunta, mutta ei yksityistä nouto-osoitetta.
+ */
 function mapListing(row: DbListing): Listing {
   const seller = Array.isArray(row.seller) ? row.seller[0] : row.seller;
   const specs = row.specs ?? {};
@@ -172,9 +184,17 @@ function mapListing(row: DbListing): Listing {
   };
 }
 
+/**
+ * Ilmoitusten luku- ja tallennusrajapinta.
+ * Supabase-polku käyttää suojattuja RPC-toimintoja kirjoituksiin; App tallentaa demon ilmoituslistan.
+ */
 export const listingService = {
   mode: backendMode,
 
+  /**
+   * Hakee aktiiviset ilmoitukset erissä ja poistaa mahdolliset tunnisteiden duplikaatit.
+   * Koko tulosjoukko tarvitaan selaimessa tehtävään suodatukseen ja sivutukseen.
+   */
   async listActive(): Promise<Listing[]> {
     if (!supabase) return demoStorage.getListings();
 
@@ -212,6 +232,10 @@ export const listingService = {
     return ((data ?? []) as unknown as DbListing[]).map(mapListing);
   },
 
+  /**
+   * Hakee vain pyydetyt aktiiviset ilmoitukset, esimerkiksi suosikkilistan puuttuvat kortit.
+   * Supabase-haut jaetaan pienempiin tunniste-eriin.
+   */
   async getActiveByIds(ids: string[]): Promise<Listing[]> {
     if (ids.length === 0) return [];
     const client = supabase;
@@ -248,6 +272,10 @@ export const listingService = {
     return data ? mapListing(data as unknown as DbListing) : null;
   },
 
+  /**
+   * Hakee julkisista ilmoitustiedoista erillään pidetyn nouto-osoitteen.
+   * Supabase-taulun RLS ratkaisee lukuoikeuden; demossa tarkistetaan paikallinen omistaja.
+   */
   async getPrivatePickupAddress(listingId: string): Promise<PrivatePickupAddress | null> {
     if (!supabase) return demoStorage.getPrivatePickupAddress(listingId);
 
@@ -267,6 +295,11 @@ export const listingService = {
     };
   },
 
+  /**
+   * Muokkaa ilmoitusta säilyttäen sen tunnisteen ja myyjän.
+   * Kuvien vaihdossa vanhat viitteet säilyvät uusien lataukseen ja viimeistelyyn asti;
+   * virhe ennen viimeistelyä käynnistää uusien latausten ja varauksen siivouksen.
+   */
   async update(
     listing: Listing,
     marketCountryCode: CountryCode,
@@ -387,6 +420,10 @@ export const listingService = {
     }
   },
 
+  /**
+   * Luo yksityisen luonnoksen, varaa ja lataa kuvat sekä julkaisee vasta tämän jälkeen.
+   * Virhetilanteessa yritetään siivota keskeneräinen tallennus; luontitauko tarkistetaan myös palvelimella.
+   */
   async create(
     listing: Listing,
     marketCountryCode: CountryCode,

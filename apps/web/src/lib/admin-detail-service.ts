@@ -22,6 +22,9 @@ export interface AdminUserDetail {
   total: number;
   orders: { id: string; status: TransactionStatus; createdAt: string; value: number; direction: "sale" | "purchase" }[];
 }
+/**
+ * Tarkistaa yksittäisen käyttäjän tarkemmat tiedot, tilausyhteenvedon ja palautetun käyttäjätunnisteen.
+ */
 export function parseAdminUserDetail(value: unknown, id: string): AdminUserDetail {
   const row = detail(value, id),
     total = adminCount(row.orders_total);
@@ -47,6 +50,9 @@ export function parseAdminUserDetail(value: unknown, id: string): AdminUserDetai
     }),
   };
 }
+/**
+ * Hakee käyttäjän tarkemmat tiedot, mukaan lukien mahdollisen sähköpostiosoitteen, erillisellä admin-kutsulla.
+ */
 export const getAdminUserDetail = async (id: string) =>
   parseAdminUserDetail(await adminRpc("get_admin_user_detail", { p_user_id: adminUuid(id) }), id);
 export interface AdminOrderDetail {
@@ -57,6 +63,10 @@ export interface AdminOrderDetail {
   shipment: { carrier: string; tracking: string; shipped: string | null; delivered: string | null } | null;
 }
 const optionalDate = (value: unknown) => (value === null ? null : adminTimestamp(value));
+/**
+ * Tarkistaa tilauksen tunnisteen ja tallennetut maksu-, tarkastus- sekä toimitustiedot.
+ * Tallennettu maksupalveluviite ei itsessään ole maksupalvelulta tehty maksuvahvistus.
+ */
 export function parseAdminOrderDetail(value: unknown, id: string): AdminOrderDetail {
   const row = detail(value, id),
     shipment = row.shipment === null ? null : adminRecord(row.shipment);

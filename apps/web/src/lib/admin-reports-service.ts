@@ -45,6 +45,9 @@ const count = (value: unknown): number => {
 };
 const timestamp = (value: unknown): value is string => typeof value === "string" && Number.isFinite(Date.parse(value));
 
+/**
+ * Tarkistaa raporttilistan, käsittelytilan ja viimeisen päätöksen version sekä muistiinpanon.
+ */
 export function parseAdminReports(value: unknown): AdminReports {
   const data = record(value);
   const page = count(data.page);
@@ -125,6 +128,10 @@ export function parseAdminReports(value: unknown): AdminReports {
   return { page, pageSize: 25, total, reports };
 }
 
+/**
+ * Ratkaisee tai avaa raportin uudelleen perustellulla päätöksellä.
+ * Odotettu versio estää toisen ylläpitäjän tuoreemman päätöksen ylikirjoittamisen.
+ */
 export async function reviewAdminReport(
   report: Pick<AdminReport, "id" | "reviewVersion">,
   action: ReportAction,

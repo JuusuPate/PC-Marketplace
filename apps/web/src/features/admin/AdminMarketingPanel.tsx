@@ -15,6 +15,10 @@ import "./styles/admin-marketing.css";
 type State =
   { status: "loading" } | { status: "error" | "denied" } | { status: "ready"; data: MarketingAnnouncement[] };
 
+/**
+ * Lataa ja muokkaa etusivun tiedotteita versiotarkistuksella.
+ * Oikeuden menetys tyhjentää ylläpitotiedot, ja konfliktissa käyttäjää ohjataan lataamaan tuore sisältö.
+ */
 export function AdminMarketingPanel({ locale }: { locale: Locale }) {
   const copy = marketingCopy(locale);
   const common = getAdminCopy(locale);

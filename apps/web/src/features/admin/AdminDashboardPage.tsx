@@ -172,6 +172,10 @@ function AdminOverviewTrends({ locale }: { locale: Locale }) {
   );
 }
 
+/**
+ * Ylläpidon reittien yhteinen kehys ja yleiskuvan lataus.
+ * UI tarkistaa istunnon ja roolin, mutta tietokannan käyttöoikeus varmistetaan erikseen jokaisessa admin-palvelussa.
+ */
 export function AdminDashboardPage({
   locale,
   user,

@@ -1,5 +1,9 @@
 import type { CountryCode, Locale, Market } from "../types";
 
+/**
+ * Markkinakohtaiset esitysasetukset ja demo-oston laskentatiedot.
+ * MARKETS sisältää myös tulevia markkinoita; julkiset valinnat rajataan PUBLIC_MARKETS-määrityksellä.
+ */
 export const MARKETS: Record<CountryCode, Market> = {
   FI: {
     countryCode: "FI",

@@ -17,6 +17,10 @@ interface Props {
   filters: MarketplaceFilters;
   onChange: (filters: MarketplaceFilters) => void;
 }
+/**
+ * Esittää maakunta- ja kuntavalinnat samassa sijaintisuodattimessa.
+ * Kuntien tulosmäärät lasketaan ilman nykyistä sijaintirajausta, jotta vaihtoehdot eivät katoa valinnan vuoksi.
+ */
 export function LocationFilter({ locale, listings, matchingListings, filters, onChange }: Props) {
   const [expanded, setExpanded] = useState<string[]>([]);
   const [query, setQuery] = useState("");

@@ -69,6 +69,10 @@ export function AdminRevenueSummary({ data, locale }: { data: AdminRevenue; loca
     </>
   );
 }
+/**
+ * Näyttää vuosikohtaisen kuukausiraportin ja erikseen valittavan päivittäisen aikasarjan.
+ * Tilastojen hinnat muotoillaan euroiksi vasta näyttöä varten.
+ */
 export function AdminRevenuePanel({ locale }: { locale: Locale }) {
   const copy = getAdminRevenueCopy(locale),
     common = getAdminCopy(locale);

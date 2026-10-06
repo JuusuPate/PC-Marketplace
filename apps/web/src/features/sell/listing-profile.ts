@@ -1,6 +1,10 @@
 import type { Category, Listing, Locale } from "../../types";
 import { getGuidedSpecificationFields, specificationCopy } from "./specification-fields";
 
+/**
+ * Pelikoneen osakohtaiset kentät ja niiden komponenttikatalogit.
+ * Kokonaiselle pelikoneelle ei tarvita omaa katalogimallia; käyttöjärjestelmä annetaan käsin.
+ */
 export const PC_PARTS = [
   { key: "processor", category: "cpu" },
   { key: "graphicsCard", category: "gpu" },
@@ -23,6 +27,10 @@ const identityAliases: Record<string, string[]> = {
   brand: ["Valmistaja", "Merkki", "Brand", "Manufacturer", "Märke", "Mærke", "Merke"],
   model: ["Malli", "Model", "Modell"],
 };
+/**
+ * Palauttaa teknisen tiedon pysyvän avaimen ja vanhat kielikohtaiset nimet.
+ * Näin aiemmat ilmoitukset ovat luettavissa myös kenttien nimeämisen muututtua.
+ */
 export function specificationAliases(key: string): string[] {
   return [
     key,
@@ -30,7 +38,9 @@ export function specificationAliases(key: string): string[] {
     ...Object.values(specificationCopy).flatMap((c) => c.fields[key]?.[0] ?? []),
   ];
 }
-/** Stable keys are authoritative; old localized listings remain readable/editable. */
+/**
+ * Lukee ensin pysyvän kenttäavaimen ja vasta sen puuttuessa vanhan aliasnimen.
+ */
 export function readSpecification(specs: Record<string, string>, key: string): string {
   if (typeof specs[key] === "string") return specs[key].trim();
   const aliases = specificationAliases(key).map(norm);
@@ -46,6 +56,10 @@ export function isRgbListing(listing: Pick<Listing, "category" | "specs">): bool
   if (explicit) return /^(yes|kyllä|ja|true|1)$/i.test(explicit);
   return listing.category === "fans" && /^(a?rgb)$/i.test(readSpecification(listing.specs, "fanLighting"));
 }
+/**
+ * Alustaa kategorian ohjatut kentät olemassa olevasta ilmoituksesta.
+ * Pelikoneen osien tila palautetaan tallennetusta tilasta tai päätellään aiemmasta osatiedosta.
+ */
 export function initialProfileValues(listing: Listing | undefined, category: Category, locale: Locale) {
   const specs = listing?.specs ?? {};
   const values = Object.fromEntries(
@@ -62,6 +76,10 @@ export function initialProfileValues(listing: Listing | undefined, category: Cat
     }
   return values;
 }
+/**
+ * Muuntaa lomakearvot pysyvillä avaimilla tallennettaviksi teknisiksi tiedoiksi.
+ * Puuttuvien ja tuntemattomien pelikoneosien vanhat arvot sekä RAM-lisätiedot jätetään pois.
+ */
 export function serializeProfile(
   category: Category,
   values: Record<string, string>,
@@ -87,6 +105,10 @@ export function serializeProfile(
   if (category === "fans" && result.fanLighting) result.rgb = /^(a?rgb)$/i.test(result.fanLighting) ? "yes" : "no";
   return result;
 }
+/**
+ * Tarkistaa kategorian teknisten tietojen ristiriidat: pelikoneosien tilat ja RAM-kitin kapasiteettilaskennan.
+ * Tuntemattomiksi merkityiltä tiedoilta ei vaadita arvoja.
+ */
 export function profileErrors(
   category: Category,
   values: Record<string, string>,
@@ -141,6 +163,11 @@ function uniqueParts(parts: (string | undefined)[]) {
   }
   return result.join(" ");
 }
+/**
+ * Muodostaa kategoriakohtaisen otsikon olennaisista tuotetiedoista, ilman päällekkäisiä nimiä.
+ * GPU:n piirivalmistajaa ei lisätä otsikkoon; puuttuvat pelikoneosat merkitsevät kokoonpanon keskeneräiseksi.
+ * Otsikko rajataan 100 merkkiin.
+ */
 export function generateListingTitle(
   category: Category,
   brand: string,
@@ -218,6 +245,10 @@ export function generateListingTitle(
     .slice(0, 100)
     .trim();
 }
+/**
+ * Muuntaa tallennetut avaimet lokalisoiduksi tietolistaksi ja yhdistää vanhat aliasavaimet.
+ * Pelikoneen sisäiset tilakentät näytetään käyttäjälle ymmärrettävinä puuttuu/tuntematon-tietoina.
+ */
 export function displaySpecifications(specs: Record<string, string>, locale: Locale): [string, string][] {
   const labels = specificationCopy[locale].fields;
   const entries: [string, string][] = [];

@@ -36,6 +36,10 @@ function validate(page: LegalPageContent) {
 }
 
 export const legalPageService = {
+  /**
+   * Hakee julkaistun sisältösivun pyydetyllä kielellä.
+   * Puuttuva käännös korvataan suomenkielisellä palvelinsisällöllä ja lopuksi mukana tulevalla oletussivulla.
+   */
   async get(slug: LegalPageSlug, locale: Locale): Promise<LegalPageContent> {
     const fallback = getDefaultLegalPage(slug, locale);
 
@@ -64,6 +68,10 @@ export const legalPageService = {
     return fallback;
   },
 
+  /**
+   * Tarkistaa sisältörajoitukset ja tallentaa sivun ylläpitopalvelun kautta.
+   * Selaimen roolitarkistuksen lisäksi Supabase tarkistaa tallentajan oikeuden.
+   */
   async save(page: LegalPageContent, user: DemoUser): Promise<LegalPageContent> {
     if (user.role !== "admin") throw new Error("Vain admin-käyttäjä voi muokata sisältösivuja.");
     const validated = validate(page);

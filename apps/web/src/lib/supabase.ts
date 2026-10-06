@@ -6,6 +6,10 @@ const supabaseKey = (import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ?? import.met
 // Remember this before createClient so a late auth subscriber can still recognize the redirect.
 export const passwordRecoveryRedirect = new URLSearchParams(window.location.hash.slice(1)).get("type") === "recovery";
 
+/**
+ * Valitsee Supabasen vain, jos sekä URL että julkinen selainavain on määritelty.
+ * Muussa tapauksessa palvelut käyttävät paikallista demoa. Salaisia palvelinavaimia ei kuulu VITE-asetuksiin.
+ */
 export const backendMode = supabaseUrl && supabaseKey ? "supabase" : "demo";
 
 export const supabase =

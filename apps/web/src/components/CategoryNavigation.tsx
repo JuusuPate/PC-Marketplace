@@ -15,6 +15,10 @@ function shouldHandleNavigation(event: MouseEvent<HTMLAnchorElement>) {
   return event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey;
 }
 
+/**
+ * Kategoria- ja alavalikkonavigaatio hiirelle, kosketukselle ja näppäimistölle.
+ * Alavalikon sijainti mitataan navigaation todellisesta alareunasta myös vierityksen ja koon muutoksen jälkeen.
+ */
 export function CategoryNavigation({
   copy,
   activePageId,
