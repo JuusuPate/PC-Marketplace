@@ -28,6 +28,7 @@ import {
   generateListingTitle,
   profileErrors,
   serializeProfile,
+  displaySpecifications,
   isRgbListing,
   PC_PARTS,
   PC_MEMORY_KEYS,
@@ -183,6 +184,7 @@ export function CreateListingPage({
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [currentStep, setCurrentStep] = useState<ListingStep>(1);
   const [detailsPanel, setDetailsPanel] = useState<"product" | "description">("product");
+  const [productDetailsSaved, setProductDetailsSaved] = useState(false);
   const [busy, setBusy] = useState(false);
   const [creationRefresh, setCreationRefresh] = useState(0);
   const [creationState, setCreationState] = useState<"loading" | "enabled" | "paused" | "error">(
@@ -232,15 +234,30 @@ export function CreateListingPage({
   const hasCatalog = !["pc", "fans"].includes(safeCategory);
   const awaitingInputMode = hasCatalog && inputMode === null;
   const catalogLocked = hasCatalog && safeCategory !== "gpu" && inputMode === "catalog" && !!catalogModelId;
+  const hasTechnicalInputs =
+    safeCategory === "pc" ||
+    (!catalogLocked && guidedFields.some((field) => !["freeShipping", "rgb"].includes(field.key)));
+  const summarySpecs = serializeProfile(safeCategory, guidedSpecifications, locale, technicalDetailsUnknown);
+  delete summarySpecs.freeShipping;
+  const productSummaryRows = displaySpecifications(
+    {
+      ...(brand.trim() ? { brand: brand.trim() } : {}),
+      ...(model.trim() ? { model: model.trim() } : {}),
+      ...summarySpecs,
+    },
+    locale,
+  );
   const showIdentity =
     safeCategory !== "pc" && (safeCategory === "fans" || safeCategory === "gpu" || inputMode === "manual");
   const changeInputMode = (mode: "catalog" | "manual") => {
     setInputMode(mode);
+    setProductDetailsSaved(false);
     if (mode === "manual") setCatalogModelId(null);
     clearFieldError("catalog");
     clearFieldError("inputMode");
   };
   const selectProduct = (m: ProductModel | null) => {
+    setProductDetailsSaved(false);
     setCatalogModelId(m?.id ?? null);
     clearFieldError("catalog");
     setTitle("");
@@ -466,6 +483,19 @@ export function CreateListingPage({
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const saveProductDetails = () => {
+    const issues = getValidationIssues([2]).filter((issue) => issue.field !== "description");
+    if (issues.length) {
+      showValidationIssues(issues);
+      return;
+    }
+    setFieldErrors({});
+    setError("");
+    setProductDetailsSaved(true);
+    window.setTimeout(() => {
+      document.getElementById("edit-saved-product-details")?.focus();
+    }, 0);
+  };
   const openDescription = () => {
     const issues = getValidationIssues([2]).filter((issue) => issue.field !== "description");
     if (issues.length) {
@@ -693,6 +723,7 @@ export function CreateListingPage({
                     setGuidedSpecifications({});
                     setLegacySpecifications({});
                     setInputMode(null);
+                    setProductDetailsSaved(false);
                     setDetailsPanel("product");
                     setAutomaticTitle(nextCategory !== "fans");
                     if (nextCategory && nextCategory !== "pc") setTechnicalDetailsUnknown(false);
@@ -751,7 +782,7 @@ export function CreateListingPage({
                 </p>
               </div>
             </div>
-            {detailsPanel === "description" && (
+            {(detailsPanel === "description" || productDetailsSaved) && (
               <div className="listing-details-summary">
                 <strong className="listing-details-summary__title">{title}</strong>
                 <div className="listing-details-summary__meta">
@@ -765,29 +796,37 @@ export function CreateListingPage({
                   </div>
                 </div>
                 <dl>
-                  {Object.entries({
-                    ...(brand.trim()
-                      ? {
-                          [safeCategory === "cpu" ? (locale === "fi" ? "Valmistaja" : "Manufacturer") : copy.brand]:
-                            brand.trim(),
-                        }
-                      : {}),
-                    ...(model.trim() ? { [locale === "fi" ? "Malli" : "Model"]: model.trim() } : {}),
-                    ...Object.fromEntries(
-                      guidedFields
-                        .filter((field) => field.key !== "freeShipping" && guidedSpecifications[field.key]?.trim())
-                        .map((field) => [field.label, guidedSpecifications[field.key]]),
-                    ),
-                  }).map(([label, value]) => (
+                  {productSummaryRows.map(([label, value]) => (
                     <div key={label}>
                       <dt>{label}</dt>
                       <dd>{value}</dd>
                     </div>
                   ))}
                 </dl>
+                {technicalDetailsUnknown && <p>{formCopy.unknown}</p>}
+                {productDetailsSaved && detailsPanel === "product" && (
+                  <div className="listing-details-save">
+                    <p role="status">
+                      {locale === "fi"
+                        ? "Tiedot tallennettu tähän ilmoitukseen."
+                        : "Details saved in this listing form."}
+                    </p>
+                    <button
+                      type="button"
+                      id="edit-saved-product-details"
+                      className="button button--outline"
+                      onClick={() => {
+                        setProductDetailsSaved(false);
+                        openProductDetails();
+                      }}
+                    >
+                      {wizardCopy.edit}
+                    </button>
+                  </div>
+                )}
               </div>
             )}
-            <ListingDetailsPanel open={detailsPanel === "product"}>
+            <ListingDetailsPanel open={detailsPanel === "product" && !productDetailsSaved}>
               <div id="product-details-content">
                 {hasCatalog && (
                   <>
@@ -948,6 +987,13 @@ export function CreateListingPage({
                     )}
                   </div>
                 )}
+                {!awaitingInputMode && !hasTechnicalInputs && (
+                  <div className="listing-details-save">
+                    <button type="button" className="button button--outline" onClick={saveProductDetails}>
+                      {copy.save}
+                    </button>
+                  </div>
+                )}
               </div>
             </ListingDetailsPanel>
           </section>
@@ -959,7 +1005,7 @@ export function CreateListingPage({
               (safeCategory !== "pc" && (catalogLocked || guidedFields.every((field) => field.key === "freeShipping")))
             }
           >
-            <ListingDetailsPanel open={detailsPanel === "product"}>
+            <ListingDetailsPanel open={detailsPanel === "product" && !productDetailsSaved}>
               <section
                 id="technical-details-section"
                 className="create-listing-section"
@@ -1041,6 +1087,11 @@ export function CreateListingPage({
                     </div>
                   </div>
                 )}
+                <div className="listing-details-save">
+                  <button type="button" className="button button--outline" onClick={saveProductDetails}>
+                    {copy.save}
+                  </button>
+                </div>
               </section>
             </ListingDetailsPanel>
           </div>

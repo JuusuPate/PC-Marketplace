@@ -44,7 +44,7 @@ test("catalog CPU specs are visible and locked, manual mode preserves them and h
   await expect(page.locator('[data-listing-field="title"]')).toHaveValue("Oma Ryzen 5 -otsikko");
   await expect(page.getByLabel("Ytimien määrä", { exact: true })).toHaveCount(0);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
-  await page.getByRole("button", { name: "Muokkaa manuaalisesti" }).click();
+  await page.getByRole("button", { name: "Muokkaa", exact: true }).click();
   await expect(page.locator(".catalog-input-mode-selected")).toContainText("Kirjoitan itse");
   await expect(page.getByRole("checkbox", { name: "Muodosta otsikko automaattisesti", exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "Tuotekatalogista", exact: true })).toHaveCount(0);
@@ -136,7 +136,7 @@ test("RAM and storage expose capacities without SKU, PCIe or interface inputs; P
   await page.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("990 PRO 2 TB");
   await page.getByRole("button", { name: "Samsung 990 PRO 2 TB", exact: true }).click();
   await expect(page.locator(".catalog-product-summary")).toContainText("Tallennuslaitteen kokoM.2");
-  await page.getByRole("button", { name: "Muokkaa manuaalisesti" }).click();
+  await page.getByRole("button", { name: "Muokkaa", exact: true }).click();
   await expect(page.getByLabel("Kapasiteetti", { exact: true })).toHaveValue("2 TB");
   await expect(page.getByLabel("Liitäntä", { exact: true })).toHaveCount(0);
   await expect(page.getByLabel("PCIe-sukupolvi", { exact: true })).toHaveCount(0);

@@ -76,6 +76,8 @@ test("RAM uses capacity and module fields without an exact model number", async 
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
   const expected = "Kingston Fury Beast 32 GB (2×16 GB) DDR4 3200 MHz CL16";
   await expect(page.locator('[data-listing-field="title"]')).toHaveValue(expected);
+  await page.getByRole("button", { name: "Tallenna", exact: true }).click();
+  await expect(page.locator(".listing-details-summary")).toContainText(expected);
   await publish(page);
   await expect(page.getByRole("heading", { name: expected, exact: true })).toBeVisible();
   await page.getByRole("button", { name: "Muokkaa ilmoitusta" }).click();

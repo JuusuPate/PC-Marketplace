@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import type { Category, Locale } from "../../types";
 import { loadProductModels, modelLabel, type ProductModel } from "../../lib/product-model-service";
 import { productCopy } from "./product-model-copy";
+import { shuffleCatalogSuggestions } from "./catalog-suggestions";
 const examples: Record<Category, string> = {
   gpu: "RTX 3080, Radeon RX 6800 XT…",
   cpu: "Ryzen 5 5600, Core i5…",
@@ -30,6 +31,11 @@ export function ProductModelPicker({
 }) {
   const c = productCopy(locale);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const resultPages = useRef<{
+    category: Category;
+    query: string;
+    pages: Map<number, { items: ProductModel[]; total: number }>;
+  } | null>(null);
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(0);
   const [state, setState] = useState<{ status: "loading" | "error" | "ready"; items: ProductModel[]; total: number }>({
@@ -59,17 +65,30 @@ export function ProductModelPicker({
 
   useEffect(() => {
     const normalized = query.trim();
+    if (resultPages.current?.category !== category || resultPages.current.query !== normalized) {
+      resultPages.current = { category, query: normalized, pages: new Map() };
+    }
+    const search = resultPages.current;
     if (normalized.length < 1) {
       setState({ status: "ready", items: [], total: 0 });
       return;
     }
 
+    const cached = search.pages.get(page);
+    if (cached) {
+      setState({ status: "ready", ...cached });
+      return;
+    }
     let current = true;
     setState({ status: "loading", items: [], total: 0 });
     const timer = setTimeout(() => {
       loadProductModels(category, normalized, page).then(
         (data) => {
-          if (current) setState({ status: "ready", ...data });
+          if (current) {
+            const result = { items: shuffleCatalogSuggestions(data.items), total: data.total };
+            search.pages.set(page, result);
+            setState({ status: "ready", ...result });
+          }
         },
         () => {
           if (current) setState({ status: "error", items: [], total: 0 });

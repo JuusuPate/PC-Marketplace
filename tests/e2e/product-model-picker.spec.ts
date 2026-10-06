@@ -19,18 +19,16 @@ test("model search shows exact variants and can reach later result pages", async
         error: null,
         data: {
           total: 21,
-          items: [
-            {
-              id: later ? "00000000-0000-4000-8000-000000000002" : "00000000-0000-4000-8000-000000000001",
-              category: "gpu",
-              brand: "AMD",
-              name: later ? "Radeon RX 6900 XT" : "Radeon RX 6800 XT",
-              variant: "16 GB",
-              aliases: "",
-              is_active: true,
-              updated_at: "2026-09-25T12:00:00Z",
-            },
-          ],
+          items: Array.from({ length: later ? 1 : 20 }, (_, index) => ({
+            id: `00000000-0000-4000-8000-${String(later ? 21 : index + 1).padStart(12, "0")}`,
+            category: "gpu",
+            brand: "AMD",
+            name: later ? "Radeon RX 6900 XT" : index === 0 ? "Radeon RX 6800 XT" : `Radeon test model ${index}`,
+            variant: "16 GB",
+            aliases: "",
+            is_active: true,
+            updated_at: "2026-09-25T12:00:00Z",
+          })),
           unlinked_listings: 0,
         },
       },
@@ -61,8 +59,15 @@ test("model search shows exact variants and can reach later result pages", async
   expect(calls).toHaveLength(0);
   await page.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("Radeon");
   await expect(page.getByRole("button", { name: /Radeon RX 6800 XT.*16 GB/ })).toBeVisible();
+  const firstPage = await page.locator(".product-model-picker__option").allTextContents();
+  expect(firstPage).toHaveLength(20);
+  expect(firstPage.every((label) => label.includes("Radeon"))).toBe(true);
   await page.getByRole("button", { name: "Seuraava" }).click();
   await expect(page.getByRole("button", { name: /Radeon RX 6900 XT.*16 GB/ })).toBeVisible();
+  expect(calls).toEqual([0, 1]);
+  await page.getByRole("button", { name: "Edellinen" }).click();
+  await expect(page.getByRole("button", { name: /Radeon RX 6800 XT.*16 GB/ })).toBeVisible();
+  expect(await page.locator(".product-model-picker__option").allTextContents()).toEqual(firstPage);
   expect(calls).toEqual([0, 1]);
   await page.getByRole("searchbox", { name: "Hae tuotemallia" }).clear();
   await expect(page.getByRole("button", { name: "Seuraava" })).toHaveCount(0);
@@ -70,6 +75,7 @@ test("model search shows exact variants and can reach later result pages", async
   await page.getByRole("searchbox", { name: "Hae tuotemallia" }).fill("Radeon");
   const option = page.getByRole("button", { name: /Radeon RX 6800 XT.*16 GB/ });
   await expect(option).toBeVisible();
+  expect(calls).toEqual([0, 1, 0]);
   await option.click();
   await expect(page.getByText("Katalogimalli valittu")).toBeVisible();
   await expect(page.getByRole("button", { name: /Radeon RX 6800 XT.*16 GB/ })).toHaveCount(0);

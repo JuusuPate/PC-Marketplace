@@ -49,7 +49,7 @@ export function CatalogProductSummary({
       )}
       {onEdit && (
         <button type="button" className="catalog-product-summary__edit" onClick={onEdit}>
-          {fi ? "Muokkaa manuaalisesti" : "Edit manually"}
+          {fi ? "Muokkaa" : "Edit"}
         </button>
       )}
     </div>
