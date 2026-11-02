@@ -94,7 +94,6 @@ export function HomePage(props: Props) {
       >
         <div className="storefront-hero__inner section-shell">
           <div>
-            <span className="storefront-hero__eyebrow">RIGI / PC MARKETPLACE</span>
             <h1 id="storefront-title">{text.title}</h1>
             <p>{text.body}</p>
           </div>
