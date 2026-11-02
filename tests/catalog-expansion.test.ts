@@ -26,8 +26,9 @@ it("keeps the expanded demo catalog aligned with the SQL seeds and valid for the
   expect(new Set(models.map(identity)).size).toBe(models.length);
   expect(new Set(models.map((model: any) => model.id)).size).toBe(models.length);
   expect(models.map(identity).sort()).toEqual([...new Set(seeds.map(identity))].sort());
+  const byIdentity = new Map(models.map((model: any) => [identity(model), model] as const));
   for (const seed of seeds) {
-    const model = models.find((model: any) => identity(model) === identity(seed));
+    const model = byIdentity.get(identity(seed))!;
     expect(model.specs).toEqual(seed.specs);
     expect(model.source_url).toBe(seed.source_url);
     expect(model.name + model.variant).not.toMatch(/GeForce|·|\b(?:CM[KHWTS]|KF)[A-Z0-9/-]+/i);

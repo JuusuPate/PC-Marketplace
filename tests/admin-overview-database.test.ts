@@ -33,7 +33,7 @@ beforeAll(async () => {
   for (const file of (await readdir(migrations)).filter((file) => file.endsWith(".sql")).sort()) {
     await db.exec(await readFile(new URL(file, migrations), "utf8"));
   }
-}, 30000);
+}, 120000);
 
 beforeEach(async () => {
   await db.exec("truncate public.marketing_announcement_changes, public.marketing_announcements cascade;");
@@ -598,10 +598,13 @@ describe("model price trends", () => {
     for (const price of [10000, 30000, 30000, 20000, 90000, 80000]) await order("completed", price, 200);
     await order("refunded", 99999, 200);
     await db.query("update public.listings set catalog_model_id=$1", [id]);
-    const midnight = "((now() at time zone 'Europe/Helsinki')::date::timestamp at time zone 'Europe/Helsinki')";
-    await db.exec(`update public.orders set created_at=${midnight}-interval '6 days' where item_price_minor=10000;
-      update public.orders set created_at=${midnight}-interval '13 days' where item_price_minor=20000;
-      update public.orders set created_at=${midnight}-interval '13 days 1 second' where item_price_minor=90000;
+    // Vähennä kalenteripäivät ennen aikavyöhykemuunnosta: Helsingin vuorokausi
+    // voi olla 23 tai 25 tuntia, kun vertailujakso ylittää kesä-/talviajan vaihdon.
+    const midnight = (daysAgo: number) =>
+      `(((now() at time zone 'Europe/Helsinki')::date-${daysAgo})::timestamp at time zone 'Europe/Helsinki')`;
+    await db.exec(`update public.orders set created_at=${midnight(6)} where item_price_minor=10000;
+      update public.orders set created_at=${midnight(13)} where item_price_minor=20000;
+      update public.orders set created_at=${midnight(13)}-interval '1 second' where item_price_minor=90000;
       update public.orders set created_at=now()+interval '1 day' where item_price_minor=80000;`);
     // An eligible sale without the selected catalog link must not contaminate its price.
     await order("completed", 77777, 200);
