@@ -953,6 +953,7 @@ export function App() {
               onEditListing={beginEditListing}
               onLocale={setLocale}
               onCookieSettings={() => setCookieSettingsOpen(true)}
+              onFavourites={() => setFavouritesOpen(true)}
             />
           ) : (
             <section className="account-page section-shell" role="status">

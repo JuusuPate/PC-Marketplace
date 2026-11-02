@@ -24,6 +24,7 @@ export function AccountPage({
   onEditListing,
   onLocale,
   onCookieSettings,
+  onFavourites,
 }: {
   copy: Messages;
   locale: Locale;
@@ -36,6 +37,7 @@ export function AccountPage({
   onEditListing: (listing: Listing) => void;
   onLocale: (locale: Locale) => void;
   onCookieSettings: () => void;
+  onFavourites: () => void;
 }) {
   const text = getAccountCopy(locale);
   const [busy, setBusy] = useState(false),
@@ -85,7 +87,7 @@ export function AccountPage({
       ? { draft: "Luonnos", active: "Julkaistu", reserved: "Varattu", sold: "Myyty", removed: "Poistettu" }
       : { draft: "Draft", active: "Published", reserved: "Reserved", sold: "Sold", removed: "Removed" };
   return (
-    <section className="account-page section-shell" aria-labelledby="account-page-title">
+    <section className="account-page account-page--with-nav section-shell" aria-labelledby="account-page-title">
       <header className="account-page__heading">
         <h1 id="account-page-title" tabIndex={-1}>
           {text[tab]}
@@ -103,6 +105,9 @@ export function AccountPage({
             {text[item]}
           </a>
         ))}
+        <button type="button" onClick={onFavourites} aria-haspopup="dialog">
+          {text.favourites}
+        </button>
       </nav>
       <div className="account-page__panel">
         {tab === "profile" && (

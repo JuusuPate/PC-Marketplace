@@ -21,6 +21,14 @@ test("profile opens a dropdown, not the removed account dialog; pages survive re
   await expect(page.locator(".account-wrap")).toHaveCount(0);
   await page.reload();
   await expect(page.getByRole("heading", { name: "Profiili", exact: true })).toBeVisible();
+  const favourites = page
+    .getByRole("navigation", { name: "Tilin sivut", exact: true })
+    .getByRole("button", { name: "Suosikit", exact: true });
+  await favourites.click();
+  await expect(page.getByRole("dialog", { name: "Suosikit", exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "Sulje", exact: true }).click();
+  await expect(favourites).toBeFocused();
+  await expect(page).toHaveURL(/\/oma-tili$/);
 });
 test("keyboard, outside click and mobile settings work without overflowing", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });

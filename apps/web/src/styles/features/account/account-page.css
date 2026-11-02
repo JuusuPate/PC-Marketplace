@@ -2,6 +2,17 @@
   padding-top: 42px;
   padding-bottom: 80px;
 }
+.account-page--with-nav {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  column-gap: 32px;
+  row-gap: 22px;
+  align-items: start;
+}
+.account-page__heading,
+.account-page__panel {
+  grid-column: 2;
+}
 .account-page__heading h1 {
   margin: 0 0 12px;
   font-size: clamp(28px, 4vw, 42px);
@@ -15,12 +26,15 @@
   font-size: 15px;
 }
 .account-page__nav {
+  grid-column: 1;
+  grid-row: 1 / span 2;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 8px;
-  margin: 28px 0 22px;
+  margin: 0;
 }
-.account-page__nav a {
+.account-page__nav a,
+.account-page__nav button {
   padding: 10px 15px;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -28,6 +42,14 @@
   font-size: 13px;
   font-weight: 650;
   text-decoration: none;
+  background: #fff;
+  text-align: left;
+  cursor: pointer;
+}
+.account-page__nav a:hover,
+.account-page__nav button:hover {
+  background: #f5f7fa;
+  color: var(--ink);
 }
 .account-page__nav a[aria-current="page"] {
   color: var(--ink);
@@ -130,6 +152,17 @@
 .account-page select:focus-visible {
   outline: 2px solid var(--accent-strong);
   outline-offset: 3px;
+}
+@media (max-width: 760px) {
+  .account-page--with-nav {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .account-page__heading,
+  .account-page__nav,
+  .account-page__panel {
+    grid-column: 1;
+    grid-row: auto;
+  }
 }
 @media (max-width: 600px) {
   .account-page {

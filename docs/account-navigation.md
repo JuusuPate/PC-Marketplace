@@ -22,3 +22,5 @@ oikea ostohistoria tarvitsee myöhemmän maksupalveluintegraation.
 Valikko sulkeutuu ulkopuolisesta painalluksesta, reitin vaihdosta tai Escapesta.
 Nuolinäppäimet sekä Home/End siirtävät kohdistusta. Escape palauttaa kohdistuksen
 profiilipainikkeeseen. Kieli- ja profiilivalikot eivät ole auki yhtä aikaa.
+
+Oman tilin sivuilla valinnat ovat työpöydällä vasemmassa sivuvalikossa allekkain. Puhelimella sama pystysuuntainen valikko siirtyy sisällön yläpuolelle. Sivupalkin Suosikit-painike avaa saman suosikkinäkymän kuin ylätunnisteen sydän ja profiilivalikko. Sulkeminen palauttaa kohdistuksen avaavaan painikkeeseen; nykyinen tilisivu säilyy.
