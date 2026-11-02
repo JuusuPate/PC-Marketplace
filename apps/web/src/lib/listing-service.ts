@@ -222,15 +222,24 @@ export const listingService = {
   async listMine(userId: string): Promise<Listing[]> {
     if (!supabase) return demoStorage.getListings().filter((listing) => listing.seller.id === userId);
 
-    const { data, error } = await supabase
-      .from("listings")
-      .select(LISTING_SELECT)
-      .eq("seller_id", userId)
-      .order("created_at", { ascending: false })
-      .limit(200);
-
-    if (error) throw error;
-    return ((data ?? []) as unknown as DbListing[]).map(mapListing);
+    // Hae kaikki omat tilat rajatuissa erissä: ensimmäiset 200 eivät riitä
+    // suodattimien kokonaismääriin. Myyjärajaus ja RLS säilyvät jokaisessa haussa.
+    const rows: DbListing[] = [];
+    const pageSize = 200;
+    for (let offset = 0; ; offset += pageSize) {
+      const { data, error } = await supabase
+        .from("listings")
+        .select(LISTING_SELECT)
+        .eq("seller_id", userId)
+        .order("created_at", { ascending: false })
+        .order("id", { ascending: true })
+        .range(offset, offset + pageSize - 1);
+      if (error) throw error;
+      const page = (data ?? []) as unknown as DbListing[];
+      rows.push(...page);
+      if (page.length < pageSize) break;
+    }
+    return [...new Map(rows.map((row) => [row.id, mapListing(row)])).values()];
   },
 
   /**

@@ -24,3 +24,5 @@ Nuolinäppäimet sekä Home/End siirtävät kohdistusta. Escape palauttaa kohdis
 profiilipainikkeeseen. Kieli- ja profiilivalikot eivät ole auki yhtä aikaa.
 
 Oman tilin sivuilla valinnat ovat työpöydällä vasemmassa sivuvalikossa allekkain. Puhelimella sama pystysuuntainen valikko siirtyy sisällön yläpuolelle. Sivupalkin Suosikit-painike avaa saman suosikkinäkymän kuin ylätunnisteen sydän ja profiilivalikko. Sulkeminen palauttaa kohdistuksen avaavaan painikkeeseen; nykyinen tilisivu säilyy.
+
+Omien ilmoitusten yläreunassa ovat Kaikki-, Aktiiviset-, Myydyt- ja Luonnokset-suodattimet kokonaismäärineen. Aktiiviset tarkoittaa julkaistua `active`-tilaa; varatut ja poistetut ovat mukana vain Kaikki-valinnassa. Vanha demotallenne ilman tilaa tulkitaan aktiiviseksi. Supabase-haku käy kaikki omat ilmoitukset läpi 200 rivin erissä, joten määrät eivät katkea ensimmäiseen erään. Latauksen tai virheen aikana määrät näytetään viivana ja suodatus on pois käytöstä; virhettä ei esitetä tyhjänä historiana. Suodatus ei muuta ilmoitusten tilaa eikä avaa luonnoksille vielä julkaisutoimintoa.

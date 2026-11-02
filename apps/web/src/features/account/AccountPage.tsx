@@ -10,6 +10,12 @@ import { backendMode } from "../../lib/supabase";
 import { formatMoney } from "../../lib/money";
 import type { DemoOrder, DemoUser, Listing, Locale } from "../../types";
 import { getAccountCopy } from "./account-copy";
+import {
+  countOwnListings,
+  matchesOwnListingFilter,
+  OWN_LISTING_FILTERS,
+  type OwnListingFilter,
+} from "./own-listing-filters";
 
 /** Omat reittisivut käyttävät Appin jo käyttäjäkohtaisesti hakemia ilmoituksia. */
 export function AccountPage({
@@ -19,6 +25,7 @@ export function AccountPage({
   tab,
   ownListings,
   ownListingsLoading,
+  ownListingsError,
   orders,
   onNavigate,
   onEditListing,
@@ -32,6 +39,7 @@ export function AccountPage({
   tab: AccountTab;
   ownListings: Listing[];
   ownListingsLoading: boolean;
+  ownListingsError: boolean;
   orders: DemoOrder[];
   onNavigate: (path: string) => void;
   onEditListing: (listing: Listing) => void;
@@ -40,6 +48,9 @@ export function AccountPage({
   onFavourites: () => void;
 }) {
   const text = getAccountCopy(locale);
+  const [listingFilter, setListingFilter] = useState<OwnListingFilter>("all");
+  const listingCounts = countOwnListings(ownListings);
+  const filteredListings = ownListings.filter((listing) => matchesOwnListingFilter(listing, listingFilter));
   const [busy, setBusy] = useState(false),
     [notice, setNotice] = useState(""),
     [error, setError] = useState("");
@@ -183,6 +194,23 @@ export function AccountPage({
         )}
         {tab === "listings" && (
           <>
+            <div className="account-page__listing-filters" role="group" aria-label={text.listingFilterLabel}>
+              {OWN_LISTING_FILTERS.map((filter) => (
+                <button
+                  key={filter}
+                  type="button"
+                  aria-pressed={listingFilter === filter}
+                  aria-controls="own-listings-results"
+                  disabled={ownListingsLoading || ownListingsError}
+                  onClick={() => setListingFilter(filter)}
+                >
+                  <span>{text.listingFilters[filter]}</span>
+                  <span className="account-page__filter-count">
+                    {ownListingsLoading || ownListingsError ? "—" : listingCounts[filter]}
+                  </span>
+                </button>
+              ))}
+            </div>
             <a
               className="button button--primary account-page__sell"
               href="/myy/uusi"
@@ -191,46 +219,52 @@ export function AccountPage({
               <Icon name="plus" />
               {copy.sell}
             </a>
-            {ownListingsLoading ? (
-              <p role="status">{text.loadingListings}</p>
-            ) : ownListings.length === 0 ? (
-              <p className="empty-copy">{copy.noOwnListings}</p>
-            ) : (
-              <div className="account-list">
-                {ownListings.map((listing) => {
-                  const status = listing.status ?? "active";
-                  return (
-                    <article key={listing.id} className="account-listing">
-                      <span className={`order-icon visual--${listing.visual}`}>
-                        <Icon name="package" />
-                      </span>
-                      <button
-                        className="account-listing__open"
-                        type="button"
-                        disabled={status !== "active"}
-                        onClick={() => onNavigate(getListingPath(listing.id))}
-                      >
-                        <strong>{listing.title}</strong>
-                        <small>
-                          {listing.city} · {statuses[status]}
-                        </small>
-                      </button>
-                      <div className="order-value">
-                        <strong>{formatMoney(listing.priceMinor, listing.currency, locale)}</strong>
+            <div id="own-listings-results" aria-busy={ownListingsLoading}>
+              {ownListingsLoading ? (
+                <p role="status">{text.loadingListings}</p>
+              ) : ownListingsError ? (
+                <p className="form-error" role="alert">
+                  {text.listingsLoadError}
+                </p>
+              ) : filteredListings.length === 0 ? (
+                <p className="empty-copy">{ownListings.length === 0 ? copy.noOwnListings : text.noFilteredListings}</p>
+              ) : (
+                <div className="account-list">
+                  {filteredListings.map((listing) => {
+                    const status = listing.status ?? "active";
+                    return (
+                      <article key={listing.id} className="account-listing">
+                        <span className={`order-icon visual--${listing.visual}`}>
+                          <Icon name="package" />
+                        </span>
                         <button
-                          className="account-listing__edit"
+                          className="account-listing__open"
                           type="button"
                           disabled={status !== "active"}
-                          onClick={() => onEditListing(listing)}
+                          onClick={() => onNavigate(getListingPath(listing.id))}
                         >
-                          {text.edit}
+                          <strong>{listing.title}</strong>
+                          <small>
+                            {listing.city} · {statuses[status]}
+                          </small>
                         </button>
-                      </div>
-                    </article>
-                  );
-                })}
-              </div>
-            )}
+                        <div className="order-value">
+                          <strong>{formatMoney(listing.priceMinor, listing.currency, locale)}</strong>
+                          <button
+                            className="account-listing__edit"
+                            type="button"
+                            disabled={status !== "active"}
+                            onClick={() => onEditListing(listing)}
+                          >
+                            {text.edit}
+                          </button>
+                        </div>
+                      </article>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
           </>
         )}
         {tab === "orders" &&

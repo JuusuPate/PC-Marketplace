@@ -248,6 +248,7 @@ export function App() {
   );
   const [supabaseOwnListings, setSupabaseOwnListings] = useState<Listing[]>([]);
   const [ownListingsLoading, setOwnListingsLoading] = useState(false);
+  const [ownListingsError, setOwnListingsError] = useState(false);
   const favouriteRequests = useRef(new Set<string>());
   // Asynkroninen suosikkivastaus saa päivittää tilan vain, jos sama käyttäjä on yhä kirjautuneena.
   const currentUserId = useRef(user?.id);
@@ -375,6 +376,7 @@ export function App() {
     setSupabaseOwnListings([]);
     setFavouritesReady(false);
     setOwnListingsLoading(Boolean(user));
+    setOwnListingsError(false);
     if (!user)
       return () => {
         isCurrent = false;
@@ -408,8 +410,10 @@ export function App() {
         if (isCurrent) setSupabaseOwnListings(results);
       })
       .catch(() => {
-        if (isCurrent)
+        if (isCurrent) {
+          setOwnListingsError(true);
           showToast(locale === "fi" ? "Omia ilmoituksia ei voitu ladata." : "Could not load your listings.");
+        }
       })
       .finally(() => {
         if (isCurrent) setOwnListingsLoading(false);
@@ -948,6 +952,7 @@ export function App() {
               tab={accountTab}
               ownListings={ownListings}
               ownListingsLoading={ownListingsLoading}
+              ownListingsError={ownListingsError}
               orders={orders}
               onNavigate={navigateTo}
               onEditListing={beginEditListing}
