@@ -1,3 +1,4 @@
+import { getCookieCopy } from "../privacy/cookie-copy";
 import { useEffect, useRef, useState, type MouseEvent } from "react";
 import { Icon } from "../../components/Icon";
 import { getAccountPath, type AccountTab } from "../../config/account-routes";
@@ -22,6 +23,7 @@ export function AccountPage({
   onNavigate,
   onEditListing,
   onLocale,
+  onCookieSettings,
 }: {
   copy: Messages;
   locale: Locale;
@@ -33,6 +35,7 @@ export function AccountPage({
   onNavigate: (path: string) => void;
   onEditListing: (listing: Listing) => void;
   onLocale: (locale: Locale) => void;
+  onCookieSettings: () => void;
 }) {
   const text = getAccountCopy(locale);
   const [busy, setBusy] = useState(false),
@@ -140,6 +143,9 @@ export function AccountPage({
               </select>
             </div>
             <p>{text.languageHelp}</p>
+            <button className="button button--outline" type="button" onClick={onCookieSettings}>
+              {getCookieCopy(locale).reopen}
+            </button>
             <section>
               <h2>{text.security}</h2>
               {backendMode === "supabase" ? (

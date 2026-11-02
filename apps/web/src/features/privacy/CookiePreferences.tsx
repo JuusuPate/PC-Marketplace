@@ -8,37 +8,53 @@ export function CookiePreferences({
   locale,
   consent,
   onChange,
+  settingsOpen,
+  onCloseSettings,
 }: {
   locale: Locale;
   consent: CookieConsent | null;
   onChange: (consent: CookieConsent) => void;
+  settingsOpen: boolean;
+  onCloseSettings: () => void;
 }) {
   const text = getCookieCopy(locale);
-  const [editing, setEditing] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const [preferences, setPreferences] = useState(consent?.preferences ?? false);
   const [storageError, setStorageError] = useState(false);
-  const launcherRef = useRef<HTMLButtonElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
-  const shown = editing || !consent;
+  const shown = settingsOpen || !consent;
+  const showSettings = expanded || settingsOpen;
   useEffect(() => {
     setPreferences(consent?.preferences ?? false);
   }, [consent]);
   useEffect(() => {
-    if (editing) headingRef.current?.focus({ preventScroll: true });
-  }, [editing]);
+    if (settingsOpen) {
+      previousFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+      headingRef.current?.focus({ preventScroll: true });
+    }
+  }, [settingsOpen]);
+  // Palautetaan kohdistus varsinaiselle sivun painikkeelle ilman kelluvaa avaajaa.
+  const restoreFocus = () => {
+    const target = previousFocusRef.current;
+    previousFocusRef.current = null;
+    requestAnimationFrame(() => {
+      if (target?.isConnected) target.focus({ preventScroll: true });
+    });
+  };
   const close = () => {
-    setEditing(false);
+    onCloseSettings();
     setPreferences(consent?.preferences ?? false);
-    requestAnimationFrame(() => launcherRef.current?.focus({ preventScroll: true }));
+    setExpanded(false);
+    restoreFocus();
   };
   const save = (allowed: boolean) => {
     const result = saveCookieConsent(allowed);
     onChange(result.consent);
     setStorageError(!result.saved);
-    setEditing(false);
+    onCloseSettings();
     setExpanded(false);
-    requestAnimationFrame(() => launcherRef.current?.focus({ preventScroll: true }));
+    restoreFocus();
   };
   return (
     <>
@@ -66,7 +82,7 @@ export function CookiePreferences({
               {text.privacy}
             </a>
           </p>
-          {expanded && (
+          {showSettings && (
             <div id="cookie-settings" className="cookie-banner__settings">
               <div className="cookie-banner__category">
                 <strong>{text.necessary}</strong>
@@ -95,7 +111,7 @@ export function CookiePreferences({
             <button type="button" className="button button--outline" onClick={() => save(true)}>
               {text.accept}
             </button>
-            {expanded ? (
+            {showSettings ? (
               <button type="button" className="button button--primary" onClick={() => save(preferences)}>
                 {text.save}
               </button>
@@ -103,7 +119,7 @@ export function CookiePreferences({
               <button
                 type="button"
                 className="button button--ghost"
-                aria-expanded={expanded}
+                aria-expanded={showSettings}
                 aria-controls="cookie-settings"
                 onClick={() => setExpanded(true)}
               >
@@ -112,19 +128,7 @@ export function CookiePreferences({
             )}
           </div>
         </section>
-      ) : (
-        <button
-          ref={launcherRef}
-          type="button"
-          className="cookie-launcher"
-          onClick={() => {
-            setEditing(true);
-            setExpanded(true);
-          }}
-        >
-          {text.reopen}
-        </button>
-      )}
+      ) : null}
       {storageError && !shown && (
         <p role="status" className="cookie-storage-notice">
           {text.storageError}

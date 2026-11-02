@@ -1,6 +1,13 @@
 import { expect, test } from "@playwright/test";
 test.use({ storageState: { cookies: [], origins: [] } });
 const key = "pc-marketplace.cookie-consent";
+async function openSettings(page: import("@playwright/test").Page, english = false) {
+  await page
+    .locator(".site-footer")
+    .getByRole("link", { name: english ? "Privacy" : "Tietosuoja", exact: true })
+    .click();
+  await page.getByRole("button", { name: english ? "Cookie settings" : "Evästeasetukset", exact: true }).click();
+}
 
 test("first visit offers essential-only equally and remembers the decision across routes and reload", async ({
   page,
@@ -17,7 +24,10 @@ test("first visit offers essential-only equally and remembers the decision acros
   await expect(page.getByRole("heading", { name: "Luo tunnus", exact: true })).toBeVisible();
   await page.goto("/kategoriat/kaikki");
   await expect(banner).toHaveCount(0);
-  await expect(page.getByRole("button", { name: "Evästeasetukset", exact: true })).toBeVisible();
+  await expect(page.locator(".cookie-launcher")).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Evästeasetukset", exact: true })).toHaveCount(0);
+  await openSettings(page);
+  await expect(banner).toBeVisible();
 });
 
 test("optional language storage stays off until accepted, can be customised and withdrawn", async ({ page }) => {
@@ -29,7 +39,7 @@ test("optional language storage stays off until accepted, can be customised and 
   await page.getByRole("button", { name: "Suomi", exact: true }).click();
   await page.getByRole("menuitemradio", { name: "English", exact: true }).click();
   expect(await page.evaluate(() => localStorage.getItem("pc-marketplace.language"))).toBeNull();
-  await page.getByRole("button", { name: "Cookie settings", exact: true }).click();
+  await openSettings(page, true);
   await page.getByRole("checkbox", { name: "Remember language", exact: true }).check();
   await page.getByRole("button", { name: "Save choices", exact: true }).click();
   await page.reload();
@@ -46,7 +56,7 @@ test("accept-all enables the implemented preference; opening and closing setting
 }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "Hyväksy kaikki", exact: true }).click();
-  await page.getByRole("button", { name: "Evästeasetukset", exact: true }).click();
+  await openSettings(page);
   await expect(page.getByRole("checkbox", { name: "Kielivalinnan muistaminen", exact: true })).toBeChecked();
   await page.getByRole("checkbox", { name: "Kielivalinnan muistaminen", exact: true }).uncheck();
   await page.keyboard.press("Escape");
@@ -91,9 +101,9 @@ test("withdrawing a preference also updates another open tab", async ({ page, co
   const second = await context.newPage();
   await second.goto("/rekisteroidy");
   await expect(second.getByRole("region", { name: "Evästeet ja selaintallennus" })).toHaveCount(0);
-  await page.getByRole("button", { name: "Evästeasetukset", exact: true }).click();
+  await openSettings(page);
   await page.getByRole("button", { name: "Vain välttämättömät", exact: true }).click();
-  await second.getByRole("button", { name: "Evästeasetukset", exact: true }).click();
+  await openSettings(second);
   await expect(second.getByRole("checkbox", { name: "Kielivalinnan muistaminen", exact: true })).not.toBeChecked();
   await second.close();
 });
@@ -112,3 +122,18 @@ for (const width of [390, 1920]) {
     }
   });
 }
+
+test("signed-in users can reopen cookie choices from user settings without a floating launcher", async ({ page }) => {
+  await page.goto("/kirjaudu");
+  await page.getByRole("button", { name: "Vain välttämättömät", exact: true }).click();
+  await page.getByRole("button", { name: "Käytä demotunnusta", exact: true }).click();
+  await page.goto("/oma-tili/asetukset");
+  await expect(page.locator(".cookie-launcher")).toHaveCount(0);
+  const button = page.getByRole("button", { name: "Evästeasetukset", exact: true });
+  await expect(button).toBeVisible();
+  expect(await button.evaluate((el) => getComputedStyle(el).position)).not.toBe("fixed");
+  await button.click();
+  await expect(page.getByRole("region", { name: "Evästeet ja selaintallennus" })).toBeVisible();
+  await page.getByRole("button", { name: "Sulje asetukset", exact: true }).click();
+  await expect(button).toBeFocused();
+});

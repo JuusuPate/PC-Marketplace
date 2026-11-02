@@ -97,24 +97,9 @@
   background: #fff;
   border-color: #c9d1dc;
 }
-.cookie-launcher {
-  position: fixed;
-  z-index: 40;
-  left: 16px;
-  bottom: 14px;
-  padding: 8px 11px;
-  border: 1px solid #d4dbe6;
-  border-radius: 8px;
-  background: #fff;
-  color: #40526b;
-  box-shadow: 0 3px 12px #1023420d;
-  font-size: 11px;
-  cursor: pointer;
-}
 .cookie-banner button:focus-visible,
 .cookie-banner a:focus-visible,
-.cookie-banner input:focus-visible,
-.cookie-launcher:focus-visible {
+.cookie-banner input:focus-visible {
   outline: 2px solid var(--accent-strong);
   outline-offset: 3px;
 }
@@ -144,4 +129,8 @@
   .cookie-banner__actions {
     flex-direction: column;
   }
+}
+
+.legal-page .cookie-settings-entry {
+  margin-bottom: 24px;
 }

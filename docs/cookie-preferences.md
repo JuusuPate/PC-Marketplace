@@ -6,7 +6,7 @@ tekemättä valintaa; valinnainen tallennus on oletuksena pois käytöstä.
 - Vain välttämättömät: kirjautuminen ja palvelun perustoiminnot säilyvät.
 - Hyväksy kaikki: sallii lisäksi nykyisen valinnaisen ominaisuuden, kielivalinnan muistamisen.
 - Muokkaa asetuksia: kielivalinnan muistamisen voi valita erikseen.
-- Evästeasetukset-painike alakulmassa avaa valinnat uudelleen. Sulkeminen ei tallenna muutoksia.
+- Evästeasetukset avataan tietosuojasivun tai käyttäjäasetusten painikkeesta. Kelluvaa painiketta ei näytetä valinnan jälkeen. Sulkeminen ei tallenna muutoksia.
 
 Tässä versiossa ei ladata analytiikkaa tai markkinointiseurantaa. Valikko ei lisää
 kolmannen osapuolen seurantaa. Selaimen muistissa tämän käynnin ajan oleva

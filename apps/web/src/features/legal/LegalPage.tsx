@@ -1,3 +1,4 @@
+import { getCookieCopy } from "../privacy/cookie-copy";
 import { useEffect, useState, type FormEvent, type MouseEvent } from "react";
 import { Icon } from "../../components/Icon";
 import type { LegalRoute } from "../../config/legal-routes";
@@ -12,6 +13,7 @@ interface LegalPageProps {
   copy: Messages;
   user: DemoUser | null;
   onHome: () => void;
+  onCookieSettings: () => void;
 }
 
 interface LegalUiCopy {
@@ -150,7 +152,7 @@ function renderSafetySections(copy: Messages) {
   );
 }
 
-export function LegalPage({ route, locale, copy, user, onHome }: LegalPageProps) {
+export function LegalPage({ route, locale, copy, user, onHome, onCookieSettings }: LegalPageProps) {
   const [page, setPage] = useState<LegalPageContent>(() => getDefaultLegalPage(route.slug, locale));
   const [draft, setDraft] = useState(page);
   const [editing, setEditing] = useState(false);
@@ -280,6 +282,12 @@ export function LegalPage({ route, locale, copy, user, onHome }: LegalPageProps)
               </div>
             )}
           </header>
+        )}
+
+        {route.slug === "privacy" && (
+          <button className="button button--outline cookie-settings-entry" type="button" onClick={onCookieSettings}>
+            {getCookieCopy(locale).reopen}
+          </button>
         )}
 
         {notice && (

@@ -197,6 +197,7 @@ const categories: Array<{ key: "all" | Category; glyph: string }> = [
  */
 export function App() {
   const [cookieConsent, setCookieConsent] = useState(readCookieConsent);
+  const [cookieSettingsOpen, setCookieSettingsOpen] = useState(false);
   const [locale, setLocale] = useState<Locale>(readPreferredLocale);
   useEffect(() => {
     persistPreferredLocale(locale, cookieConsent?.preferences === true);
@@ -951,6 +952,7 @@ export function App() {
               onNavigate={navigateTo}
               onEditListing={beginEditListing}
               onLocale={setLocale}
+              onCookieSettings={() => setCookieSettingsOpen(true)}
             />
           ) : (
             <section className="account-page section-shell" role="status">
@@ -982,7 +984,14 @@ export function App() {
           />
         )}
         {legalRoute && (
-          <LegalPage route={legalRoute} locale={locale} copy={copy} user={user} onHome={() => navigateTo("/")} />
+          <LegalPage
+            route={legalRoute}
+            locale={locale}
+            copy={copy}
+            user={user}
+            onHome={() => navigateTo("/")}
+            onCookieSettings={() => setCookieSettingsOpen(true)}
+          />
         )}
 
         {createListingPage && user && (
@@ -1302,7 +1311,13 @@ export function App() {
           }}
         />
       )}
-      <CookiePreferences locale={locale} consent={cookieConsent} onChange={setCookieConsent} />
+      <CookiePreferences
+        locale={locale}
+        consent={cookieConsent}
+        onChange={setCookieConsent}
+        settingsOpen={cookieSettingsOpen}
+        onCloseSettings={() => setCookieSettingsOpen(false)}
+      />
       {toast && (
         <div className="toast" role="status">
           <Icon name="check" />
