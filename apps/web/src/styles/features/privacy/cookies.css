@@ -2,7 +2,8 @@
   position: fixed;
   z-index: 90;
   bottom: 22px;
-  left: 22px;
+  left: 50%;
+  translate: -50% 0;
   width: min(660px, calc(100vw - 44px));
   max-height: calc(100dvh - 44px);
   overflow-y: auto;
@@ -132,7 +133,6 @@
 }
 @media (max-width: 600px) {
   .cookie-banner {
-    left: 12px;
     bottom: 12px;
     width: calc(100vw - 24px);
     max-height: calc(100dvh - 24px);

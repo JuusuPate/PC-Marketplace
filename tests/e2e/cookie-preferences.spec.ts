@@ -97,3 +97,18 @@ test("withdrawing a preference also updates another open tab", async ({ page, co
   await expect(second.getByRole("checkbox", { name: "Kielivalinnan muistaminen", exact: true })).not.toBeChecked();
   await second.close();
 });
+
+for (const width of [390, 1920]) {
+  test(`cookie banner is centred at ${width}px, also when settings are expanded`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 940 });
+    await page.goto("/");
+    const banner = page.getByRole("region", { name: "Evästeet ja selaintallennus" });
+    for (const expanded of [false, true]) {
+      if (expanded) await banner.getByRole("button", { name: "Muokkaa asetuksia", exact: true }).click();
+      const box = await banner.boundingBox();
+      expect(Math.abs(box!.x + box!.width / 2 - width / 2)).toBeLessThanOrEqual(1);
+      expect(box!.x).toBeGreaterThanOrEqual(0);
+      expect(box!.x + box!.width).toBeLessThanOrEqual(width);
+    }
+  });
+}

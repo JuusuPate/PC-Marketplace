@@ -22,6 +22,7 @@ import { HomePage } from "../features/home/HomePage";
 import {
   CATALOG_PAGES,
   getCatalogPage,
+  mergeCatalogSubmenu,
   type CatalogNavigationFilter,
   type CatalogPage,
   type CatalogSubmenuItem,
@@ -115,7 +116,7 @@ function mergeCatalogNavigation(categories: readonly CatalogNavigationCategory[]
       return filters ? [{ id: item.id, label: item.label, href: item.href, filters }] : [];
     });
 
-    return { ...page, submenu: submenu.length > 0 ? submenu : page.submenu };
+    return { ...page, submenu: mergeCatalogSubmenu(page.submenu ?? [], submenu) };
   });
 }
 

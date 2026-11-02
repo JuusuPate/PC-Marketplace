@@ -51,15 +51,15 @@ export const CATALOG_PAGES: CatalogPage[] = [
     labelKey: "components",
     glyph: "▦",
     image: componentsImage,
-    categories: ["gpu", "cpu", "memory", "motherboard", "psu", "storage", "case", "cooling", "fans"],
+    categories: ["gpu", "cpu", "motherboard", "memory", "storage", "psu", "case", "cooling", "fans"],
     submenu: [
       { id: "components-all", label: "Kaikki komponentit", href: "/kategoriat/komponentit", filters: {} },
       { id: "components-gpu", label: "Näytönohjaimet", href: "/kategoriat/naytonohjaimet", filters: {} },
       { id: "components-cpu", label: "Prosessorit", href: "/kategoriat/prosessorit", filters: {} },
-      { id: "components-memory", label: "Muistit", href: "/kategoriat/muistit", filters: {} },
       { id: "components-motherboard", label: "Emolevyt", href: "/kategoriat/emolevyt", filters: {} },
-      { id: "components-psu", label: "Virtalähteet", href: "/kategoriat/virtalahteet", filters: {} },
+      { id: "components-memory", label: "Muistit", href: "/kategoriat/muistit", filters: {} },
       { id: "components-storage", label: "Tallennuslaitteet", href: "/kategoriat/tallennuslaitteet", filters: {} },
+      { id: "components-psu", label: "Virtalähteet", href: "/kategoriat/virtalahteet", filters: {} },
       { id: "components-case", label: "Kotelot", href: "/kategoriat/kotelot", filters: {} },
       { id: "components-cooling", label: "Jäähdytys", href: "/kategoriat/jaahdytys", filters: {} },
       { id: "components-fans", label: "Tuulettimet", href: "/kategoriat/tuulettimet", filters: {} },
@@ -73,23 +73,24 @@ export const CATALOG_PAGES: CatalogPage[] = [
     image: gamingPcImage,
     categories: ["pc"],
     submenu: [
+      { id: "pc-all", label: "Kaikki pelitietokoneet", href: "/kategoriat/pelitietokoneet", filters: {} },
       {
-        id: "pc-all",
-        label: "Kaikki pelikoneet",
-        href: "/kategoriat/pelitietokoneet",
-        filters: {},
-      },
-      {
-        id: "pc-featured",
-        label: "Nostetut",
-        href: "/kategoriat/pelitietokoneet?featured=true",
-        filters: { featuredOnly: true },
+        id: "pc-under-500",
+        label: "Alle 500 €",
+        href: "/kategoriat/pelitietokoneet?maxPrice=500",
+        filters: { maxPriceMinor: 50_000 },
       },
       {
         id: "pc-under-1000",
         label: "Alle 1 000 €",
         href: "/kategoriat/pelitietokoneet?maxPrice=1000",
         filters: { maxPriceMinor: 100_000 },
+      },
+      {
+        id: "pc-featured",
+        label: "Nostetut",
+        href: "/kategoriat/pelitietokoneet?featured=true",
+        filters: { featuredOnly: true },
       },
     ],
   },
@@ -202,4 +203,17 @@ export const CATALOG_PAGES: CatalogPage[] = [
 export function getCatalogPage(pathname: string): CatalogPage | null {
   const normalizedPath = pathname.replace(/\/+$/, "") || "/";
   return CATALOG_PAGES.find((page) => page.path === normalizedPath) ?? null;
+}
+
+/** Säilyttää oletuslinkit ja niiden järjestyksen myös palvelimen palauttaessa vain pikahakuja.
+ * Sama URL saa palvelimen nimen ja suodattimen; muut palvelimen haut lisätään loppuun. */
+export function mergeCatalogSubmenu(
+  base: readonly CatalogSubmenuItem[],
+  runtime: readonly CatalogSubmenuItem[],
+): CatalogSubmenuItem[] {
+  const baseHrefs = new Set(base.map((item) => item.href));
+  return [
+    ...base.map((item) => runtime.find((remote) => remote.href === item.href) ?? item),
+    ...runtime.filter((item) => !baseHrefs.has(item.href)),
+  ];
 }
