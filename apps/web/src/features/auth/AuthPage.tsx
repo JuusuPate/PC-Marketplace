@@ -38,6 +38,8 @@ export function AuthPage({
   const [error, setError] = useState(""),
     [notice, setNotice] = useState("");
   const [busy, setBusy] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const consentRef = useRef<HTMLInputElement>(null);
   const inFlight = useRef(false),
     alive = useRef(true);
   useEffect(() => {
@@ -50,6 +52,7 @@ export function AuthPage({
     setPassword("");
     setConfirmation("");
     setVisible(false);
+    setTermsAccepted(false);
     setNotice("");
     const query = new URLSearchParams(window.location.search),
       hash = new URLSearchParams(window.location.hash.slice(1));
@@ -60,9 +63,16 @@ export function AuthPage({
     event.preventDefault();
     if (!busy) onNavigate(path);
   };
+  // Sama hyväksyntä tarkistetaan sekä sähköposti- että Google-rekisteröinnissä.
+  const requireConsent = () => {
+    if (mode !== "register" || termsAccepted) return true;
+    setError(text.consentRequired);
+    consentRef.current?.focus();
+    return false;
+  };
   const submit = async (event: FormEvent) => {
     event.preventDefault();
-    if (inFlight.current || loading) return;
+    if (inFlight.current || loading || !requireConsent()) return;
     if (mode === "register" && password !== confirmation) {
       setError(text.mismatch);
       return;
@@ -96,7 +106,7 @@ export function AuthPage({
     }
   };
   const google = async () => {
-    if (inFlight.current || loading) return;
+    if (inFlight.current || loading || !requireConsent()) return;
     inFlight.current = true;
     setBusy(true);
     setError("");
@@ -271,10 +281,33 @@ export function AuthPage({
                   </label>
                 </>
               )}
-              <button
-                className={`button ${mode === "register" ? "button--outline" : "button--primary"} button--full`}
-                type="submit"
-              >
+              {mode === "register" && (
+                <label className="auth-page__consent">
+                  <input
+                    ref={consentRef}
+                    type="checkbox"
+                    checked={termsAccepted}
+                    required
+                    aria-labelledby="auth-consent-text"
+                    onChange={(event) => {
+                      setTermsAccepted(event.target.checked);
+                      if (error === text.consentRequired) setError("");
+                    }}
+                  />
+                  <span id="auth-consent-text">
+                    {text.consentStart}{" "}
+                    <a href="/kayttoehdot" target="_blank" rel="noopener noreferrer">
+                      {text.consentTerms}
+                    </a>{" "}
+                    {text.consentAnd}{" "}
+                    <a href="/tietosuoja" target="_blank" rel="noopener noreferrer">
+                      {text.consentPolicy}
+                    </a>
+                    .
+                  </span>
+                </label>
+              )}
+              <button className="button button--primary button--full" type="submit">
                 {busy
                   ? runtime.working
                   : mode === "forgot"
@@ -295,7 +328,7 @@ export function AuthPage({
               {mode === "forgot" ? text.toLogin : text.forgot}
             </a>
           )}
-          {authService.mode === "demo" && (
+          {authService.mode === "demo" && mode !== "register" && (
             <div className="auth-page__demo">
               <span>DEMO</span>
               <button className="button button--outline" disabled={busy} onClick={() => demo(false)}>
@@ -306,17 +339,19 @@ export function AuthPage({
               </button>
             </div>
           )}
-          <p className="auth-page__privacy">
-            {text.privacy}
-            <br />
-            <a href="/kayttoehdot" onClick={follow("/kayttoehdot")}>
-              {text.terms}
-            </a>
-            <span aria-hidden="true"> · </span>
-            <a href="/tietosuoja" onClick={follow("/tietosuoja")}>
-              {text.policy}
-            </a>
-          </p>
+          {mode !== "register" && (
+            <p className="auth-page__privacy">
+              {text.privacy}
+              <br />
+              <a href="/kayttoehdot" onClick={follow("/kayttoehdot")}>
+                {text.terms}
+              </a>
+              <span aria-hidden="true"> · </span>
+              <a href="/tietosuoja" onClick={follow("/tietosuoja")}>
+                {text.policy}
+              </a>
+            </p>
+          )}
         </div>
       </div>
     </section>

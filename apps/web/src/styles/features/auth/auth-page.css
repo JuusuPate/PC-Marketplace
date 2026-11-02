@@ -318,8 +318,27 @@
   border-radius: 8px;
   margin-top: 3px;
 }
-.auth-page__form .button--outline {
-  background: #fff;
+.auth-page__form .auth-page__consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.7;
+  color: var(--ink-soft);
+}
+.auth-page__consent input[type="checkbox"] {
+  flex-shrink: 0;
+  width: 17px;
+  min-width: 17px;
+  height: 17px;
+  padding: 0;
+  margin: 2px 0 0;
+  accent-color: var(--accent-strong);
+}
+.auth-page__consent a {
+  color: var(--accent-ink);
+  text-underline-offset: 3px;
 }
 .auth-page__link {
   display: inline-block;

@@ -1,6 +1,11 @@
 import type { Locale } from "../../types";
 
 const fi = {
+  consentStart: "Olen lukenut ja hyväksyn",
+  consentTerms: "käyttöehdot",
+  consentAnd: "ja",
+  consentPolicy: "tietosuojakäytännön",
+  consentRequired: "Lue ja hyväksy käyttöehdot ja tietosuojakäytäntö ennen tunnuksen luontia.",
   showcaseLabel: "RAKENNA OMANLAISESI",
   showcaseTitle: "Hyville osille. Uusi alku.",
   showcaseBody: "Löydä seuraava päivityksesi tai anna omille komponenteillesi uusi koti.",
@@ -33,6 +38,11 @@ const fi = {
   policy: "Tietosuoja",
 };
 const en: typeof fi = {
+  consentStart: "I have read and accept the",
+  consentTerms: "terms of use",
+  consentAnd: "and",
+  consentPolicy: "privacy policy",
+  consentRequired: "Read and accept the terms of use and privacy policy before creating an account.",
   showcaseLabel: "BUILD SOMETHING YOURS",
   showcaseTitle: "Good parts. A fresh start.",
   showcaseBody: "Find your next upgrade or give your components a new home.",
@@ -66,6 +76,11 @@ const en: typeof fi = {
 };
 const sv: typeof fi = {
   ...en,
+  consentStart: "Jag har läst och godkänner",
+  consentTerms: "användarvillkoren",
+  consentAnd: "och",
+  consentPolicy: "integritetspolicyn",
+  consentRequired: "Läs och godkänn användarvillkoren och integritetspolicyn innan du skapar ett konto.",
   showcaseLabel: "BYGG NÅGOT EGET",
   showcaseTitle: "Bra delar. En ny början.",
   showcaseBody: "Hitta din nästa uppgradering eller ge dina komponenter ett nytt hem.",
