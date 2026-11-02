@@ -24,3 +24,26 @@ export const supabase =
     : null;
 
 export type BackendMode = typeof backendMode;
+
+/** Lue vain julkinen providerin käyttötila ennen OAuth-ohjausta.
+ * Pois käytöstä oleva Google ei näin vie käyttäjää palvelun JSON-virhesivulle. */
+export async function googleAuthEnabled(): Promise<boolean> {
+  if (!supabaseUrl || !supabaseKey) return false;
+  const response = await fetch(new URL("/auth/v1/settings", supabaseUrl), {
+    headers: { apikey: supabaseKey },
+    signal: AbortSignal.timeout(10000),
+  });
+  if (!response.ok) throw new Error("Could not check sign-in availability");
+  const data: unknown = await response.json();
+  if (
+    !data ||
+    typeof data !== "object" ||
+    !("external" in data) ||
+    !data.external ||
+    typeof data.external !== "object" ||
+    !("google" in data.external) ||
+    typeof data.external.google !== "boolean"
+  )
+    throw new Error("Invalid sign-in settings");
+  return data.external.google;
+}

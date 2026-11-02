@@ -43,3 +43,5 @@
 @import "./features/marketplace/filters.css";
 
 @import "./features/sell/listing-profile.css";
+
+@import "./features/auth/auth-page.css";

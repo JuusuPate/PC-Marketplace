@@ -1,7 +1,8 @@
+import { authRedirectUrl } from "../config/auth-routes";
 import type { User } from "@supabase/supabase-js";
 import { LAUNCH_MARKET, MARKETS } from "../config/markets";
 import type { CountryCode, DemoUser, Locale } from "../types";
-import { backendMode, passwordRecoveryRedirect, supabase } from "./supabase";
+import { backendMode, googleAuthEnabled, passwordRecoveryRedirect, supabase } from "./supabase";
 
 const locales: Locale[] = ["fi", "sv", "da", "nb", "en"];
 export const DEMO_ADMIN_EMAIL = "admin@pcmarket.fi";
@@ -42,6 +43,8 @@ async function mapUser(user: User): Promise<DemoUser> {
     role,
   };
 }
+
+export class GoogleAuthUnavailableError extends Error {}
 
 export interface AuthResult {
   user: DemoUser | null;
@@ -85,6 +88,7 @@ export const authService = {
     password: string,
     countryCode: CountryCode,
     locale: Locale,
+    returnTo = "/",
   ): Promise<AuthResult> {
     if (!supabase) {
       return {
@@ -97,7 +101,7 @@ export const authService = {
       email,
       password,
       options: {
-        emailRedirectTo: window.location.origin,
+        emailRedirectTo: authRedirectUrl(window.location.origin, returnTo),
         data: {
           display_name: name,
           country_code: countryCode,
@@ -161,6 +165,16 @@ export const authService = {
     };
   },
 
+  /** Google luo tarvittaessa uuden Auth-käyttäjän; sama OAuth-polku palvelee myös rekisteröintiä. */
+  async signInWithGoogle(returnTo = "/") {
+    if (!supabase || !(await googleAuthEnabled())) throw new GoogleAuthUnavailableError();
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: authRedirectUrl(window.location.origin, returnTo) },
+    });
+    if (error) throw error;
+  },
+
   async signOut() {
     if (!supabase) return;
     const { error } = await supabase.auth.signOut();
@@ -168,13 +182,13 @@ export const authService = {
   },
 
   /**
-   * Pyytää Supabasea lähettämään palautuslinkin, joka palaa tämän sivuston juureen.
+   * Pyytää palautuslinkin kirjautumisreitille, jossa istunto ja turvallinen paluuosoite käsitellään.
    * Palvelukutsun onnistuminen ei vielä varmista sähköpostin toimitusta.
    */
-  async requestPasswordReset(email: string) {
+  async requestPasswordReset(email: string, returnTo = "/") {
     if (!supabase) throw new Error("Salasanan palautus vaatii Supabase-yhteyden.");
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: window.location.origin,
+      redirectTo: authRedirectUrl(window.location.origin, returnTo),
     });
     if (error) throw error;
   },

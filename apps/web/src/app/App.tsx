@@ -44,7 +44,9 @@ import { SIMULATED_LISTINGS } from "../data/simulated-listings";
 import { AccountModal } from "../features/account/AccountModal";
 import { AdminDashboardPage } from "../features/admin/AdminDashboardPage";
 import { getAdminCopy } from "../features/admin/admin-copy";
-import { AuthModal } from "../features/auth/AuthModal";
+import { AuthPage } from "../features/auth/AuthPage";
+import { getAuthCopy } from "../features/auth/auth-copy";
+import { getAuthPath, getAuthRoute } from "../config/auth-routes";
 import { PasswordRecoveryModal } from "../features/auth/PasswordRecoveryModal";
 import { CategoryHero } from "../features/catalog/CategoryHero";
 import { CheckoutModal } from "../features/checkout/CheckoutModal";
@@ -252,11 +254,10 @@ export function App() {
   const [sort, setSort] = useState<SortOption>("newest");
   const [catalogPagination, setCatalogPagination] = useState({ scope: "", page: 1 });
   const [checkoutListing, setCheckoutListing] = useState<Listing | null>(null);
-  const [authOpen, setAuthOpen] = useState(false);
+  const [authRoute, setAuthRoute] = useState(() => getAuthRoute(window.location.pathname, window.location.search));
   const [passwordRecoveryOpen, setPasswordRecoveryOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [favouritesOpen, setFavouritesOpen] = useState(false);
-  const [pendingSell, setPendingSell] = useState(false);
   const [pendingCheckout, setPendingCheckout] = useState<Listing | null>(null);
   const [toast, setToast] = useState<string | null>(null);
   const [homeExpanded, setHomeExpanded] = useState(false);
@@ -333,7 +334,6 @@ export function App() {
       authService.subscribe(
         setUser,
         () => {
-          setAuthOpen(false);
           setPasswordRecoveryOpen(true);
         },
         setAuthLoading,
@@ -441,6 +441,7 @@ export function App() {
       setCatalogPage(getCatalogPage(window.location.pathname));
       setCatalogNavigationFilter(nextCatalogFilter.filter);
       setActiveCatalogSubmenuHref(nextCatalogFilter.activeHref);
+      setAuthRoute(getAuthRoute(window.location.pathname, window.location.search));
       setLegalRoute(getLegalRoute(window.location.pathname));
       setAdminPath(isAdminPath(window.location.pathname) ? window.location.pathname : null);
       setCreateListingPage(isCreateListingPath(window.location.pathname));
@@ -512,23 +513,26 @@ export function App() {
 
   useEffect(() => {
     document.documentElement.lang = locale;
-    document.title = adminPath
-      ? `${getAdminCopy(locale).title} | PC Market`
-      : legalRoute
-        ? `${copy[legalRoute.labelKey]} | PC Market`
-        : editListingId
-          ? `${locale === "fi" ? "Muokkaa ilmoitusta" : "Edit listing"} | PC Market`
-          : activeListing
-            ? `${activeListing.title} | PC Market`
-            : listingPageId
-              ? `${copy.noResults} | PC Market`
-              : createListingPage
-                ? `${copy.sellTitle} | PC Market`
-                : catalogPage
-                  ? `${copy[catalogPage.labelKey]} | PC Market`
-                  : copy.siteTitle;
+    document.title = authRoute
+      ? `${getAuthCopy(locale)[authRoute.mode]} | PC Market`
+      : adminPath
+        ? `${getAdminCopy(locale).title} | PC Market`
+        : legalRoute
+          ? `${copy[legalRoute.labelKey]} | PC Market`
+          : editListingId
+            ? `${locale === "fi" ? "Muokkaa ilmoitusta" : "Edit listing"} | PC Market`
+            : activeListing
+              ? `${activeListing.title} | PC Market`
+              : listingPageId
+                ? `${copy.noResults} | PC Market`
+                : createListingPage
+                  ? `${copy.sellTitle} | PC Market`
+                  : catalogPage
+                    ? `${copy[catalogPage.labelKey]} | PC Market`
+                    : copy.siteTitle;
   }, [
     activeListing,
+    authRoute,
     adminPath,
     catalogPage,
     copy,
@@ -540,24 +544,19 @@ export function App() {
   ]);
 
   useEffect(() => {
-    if (!createListingPage) return;
-    if (user) {
-      setAuthOpen(false);
-      setPendingSell(false);
-      return;
+    if (!authLoading && !user) {
+      // StrictMode voi suorittaa efektin kahdesti: alkuperäinen kohde tulee
+      // reittitilasta, ei jo ensimmäisellä kerralla muuttuneesta locationista.
+      if (createListingPage) requestAuth(CREATE_LISTING_PATH);
+      else if (editListingId) requestAuth(getListingEditPath(editListingId));
     }
-    setPendingSell(true);
-    setAuthOpen(true);
-  }, [createListingPage, user]);
+  }, [createListingPage, editListingId, user, authLoading]);
 
+  // Myös OAuth-/vahvistuslinkiltä palannut istunto jatkaa URL:ssa säilynyttä asiointia.
   useEffect(() => {
-    if (!editListingId) return;
-    if (user) {
-      setAuthOpen(false);
-      return;
-    }
-    setAuthOpen(true);
-  }, [editListingId, user]);
+    if (authRoute && user && !authLoading && !passwordRecoveryOpen) navigateTo(authRoute.returnTo, "", true);
+    if (!authRoute && !user) setPendingCheckout(null);
+  }, [authRoute, user, authLoading, passwordRecoveryOpen]);
 
   useEffect(() => {
     if (backendMode !== "supabase") return;
@@ -645,13 +644,13 @@ export function App() {
    * Päivittää selaimen historian ja Reactin reittitilan yhdessä.
    * Reitin vaihdon jälkeen vieritys kohdistuu ankkuriin tai sivun otsikkoon.
    */
-  const navigateTo = (path: string, hash = "") => {
+  const navigateTo = (path: string, hash = "", replace = false) => {
     const destination = new URL(path, window.location.origin);
     if (hash) destination.hash = hash;
     const { pathname, search } = destination;
     const target = `${pathname}${search}${destination.hash}`;
     if (`${window.location.pathname}${window.location.search}${window.location.hash}` !== target) {
-      window.history.pushState({}, "", target);
+      window.history[replace ? "replaceState" : "pushState"]({}, "", target);
     }
 
     const nextPage = getCatalogPage(pathname);
@@ -662,6 +661,7 @@ export function App() {
     setCatalogPage(nextPage);
     setCatalogNavigationFilter(nextCatalogFilter.filter);
     setActiveCatalogSubmenuHref(nextCatalogFilter.activeHref);
+    setAuthRoute(getAuthRoute(pathname, search));
     setLegalRoute(nextLegalRoute);
     setAdminPath(isAdminPath(pathname) ? pathname : null);
     setCreateListingPage(isCreateListingPath(pathname));
@@ -674,10 +674,11 @@ export function App() {
 
     window.setTimeout(() => {
       if (destination.hash) {
-        document.querySelector(destination.hash)?.scrollIntoView({ behavior: "smooth" });
+        document.getElementById(destination.hash.slice(1))?.scrollIntoView({ behavior: "smooth" });
         return;
       }
       window.scrollTo({ top: 0, behavior: "smooth" });
+      if (getAuthRoute(pathname, search)) document.getElementById("auth-page-title")?.focus({ preventScroll: true });
       if (nextPage) document.querySelector<HTMLElement>("#category-page-title")?.focus({ preventScroll: true });
       if (nextListingId) document.querySelector<HTMLElement>("#listing-page-title")?.focus({ preventScroll: true });
       if (nextLegalRoute) document.querySelector<HTMLElement>("#legal-page-title")?.focus({ preventScroll: true });
@@ -698,22 +699,22 @@ export function App() {
     setUser(nextUser);
     setAuthLoading(false);
     if (backendMode === "demo") demoStorage.setSession(nextUser);
-    setAuthOpen(false);
+    navigateTo(authRoute?.returnTo ?? "/", "", true);
     if (pendingCheckout) {
       setCheckoutListing(pendingCheckout);
       setPendingCheckout(null);
-    } else if (pendingSell) {
-      setPendingSell(false);
-      navigateTo(CREATE_LISTING_PATH);
     }
+  };
+
+  const requestAuth = (returnTo = `${window.location.pathname}${window.location.search}${window.location.hash}`) => {
+    setAccountOpen(false);
+    setFavouritesOpen(false);
+    navigateTo(getAuthPath("login", returnTo));
   };
 
   const requireSellAuth = () => {
     if (user) navigateTo(CREATE_LISTING_PATH);
-    else {
-      setPendingSell(true);
-      setAuthOpen(true);
-    }
+    else requestAuth(CREATE_LISTING_PATH);
   };
 
   const searchCatalog = (searchQuery: string) => {
@@ -727,7 +728,7 @@ export function App() {
       setCheckoutListing(listing);
     } else {
       setPendingCheckout(listing);
-      setAuthOpen(true);
+      requestAuth(getListingPath(listing.id));
     }
   };
 
@@ -807,7 +808,7 @@ export function App() {
    */
   const toggleFavourite = async (listingId: string) => {
     if (backendMode === "supabase" && !user) {
-      setAuthOpen(true);
+      requestAuth();
       return;
     }
     if (!favouritesReady) {
@@ -873,7 +874,7 @@ export function App() {
         user={user}
         onHome={(hash) => navigateTo("/", hash)}
         onLocale={setLocale}
-        onAuth={() => setAuthOpen(true)}
+        onAuth={() => requestAuth()}
         onSell={requireSellAuth}
         searchQuery={query}
         onSearchQuery={setQuery}
@@ -893,6 +894,19 @@ export function App() {
       />
 
       <main>
+        {authRoute && (
+          <AuthPage
+            copy={copy}
+            locale={locale}
+            market={market}
+            mode={authRoute.mode}
+            returnTo={authRoute.returnTo}
+            loading={authLoading}
+            onNavigate={navigateTo}
+            onComplete={completeAuth}
+          />
+        )}
+
         {adminPath && (
           <AdminDashboardPage
             key={`${user?.id ?? "anonymous"}:${adminPath}`}
@@ -912,7 +926,7 @@ export function App() {
             system={isAdminSystemPath(adminPath)}
             settings={isAdminSettingsPath(adminPath)}
             reports={isAdminReportsPath(adminPath)}
-            onLogin={() => setAuthOpen(true)}
+            onLogin={() => requestAuth()}
             onNavigate={navigateTo}
           />
         )}
@@ -995,7 +1009,7 @@ export function App() {
               onFavourite={() => toggleFavourite(activeListing.id)}
               onBuy={() => beginCheckout(activeListing)}
               onEdit={() => beginEditListing(activeListing)}
-              onRequireReportAuth={() => setAuthOpen(true)}
+              onRequireReportAuth={() => requestAuth()}
               onReport={(reason, details) => submitReport(activeListing, reason, details)}
             />
           ) : (
@@ -1016,7 +1030,8 @@ export function App() {
             </section>
           ))}
 
-        {!adminPath &&
+        {!authRoute &&
+          !adminPath &&
           !legalRoute &&
           !listingPageId &&
           !editListingId &&
@@ -1189,21 +1204,6 @@ export function App() {
         <span>© 2026 PC Market Demo</span>
       </footer>
 
-      {authOpen && (
-        <AuthModal
-          copy={copy}
-          locale={locale}
-          market={market}
-          onClose={() => {
-            setAuthOpen(false);
-            if (pendingSell && createListingPage) navigateTo("/");
-            if (editListingId && !user) navigateTo("/");
-            setPendingSell(false);
-            setPendingCheckout(null);
-          }}
-          onComplete={completeAuth}
-        />
-      )}
       {passwordRecoveryOpen && (
         <PasswordRecoveryModal
           locale={locale}
