@@ -1,8 +1,14 @@
 .marketplace-section {
   padding-block: 88px 105px;
 }
-.marketplace-section--category {
-  padding-top: 62px;
+.marketplace-section.marketplace-section--category {
+  padding-top: 28px;
+}
+.marketplace-results-heading {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 14px;
 }
 .section-heading {
   margin-bottom: 34px;

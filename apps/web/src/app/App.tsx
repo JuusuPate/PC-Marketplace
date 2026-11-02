@@ -1130,13 +1130,10 @@ export function App() {
               className={`marketplace-section section-shell${catalogPage ? " marketplace-section--category" : ""}`}
               id="marketplace"
             >
-              <div className="section-heading">
-                <div>
-                  <span className="section-index">{catalogPage ? "01 / CATEGORY" : "01 / MARKET"}</span>
-                  <h2 id="marketplace-list-title" tabIndex={-1}>
-                    {catalogPage ? copy.categoryListings : copy.marketplace}
-                  </h2>
-                </div>
+              <div className="marketplace-results-heading">
+                <h2 className="sr-only" id="marketplace-list-title" tabIndex={-1}>
+                  {copy.listings}
+                </h2>
                 <span className="listing-count">
                   {visibleListings.length} {copy.listings}
                 </span>
