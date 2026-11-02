@@ -2125,3 +2125,130 @@ describe("public Rigi storefront", () => {
       });
   });
 });
+
+describe("public fair-price badges", () => {
+  let target: string;
+  let model: string;
+  let sales: string[];
+  const sellers = [
+    "00000000-0000-4000-8000-000000000101",
+    "00000000-0000-4000-8000-000000000102",
+    "00000000-0000-4000-8000-000000000103",
+  ];
+  const sql = () => `select * from public.get_listing_price_signals(array['${target}']::uuid[])`;
+  const read = async () => (await asRole("anon", null, sql())).rows;
+  beforeEach(async () => {
+    for (const id of sellers)
+      await db.query("insert into auth.users(id,email) values($1,$2)", [id, `${id}@example.test`]);
+    model = (
+      await db.query<{ id: string }>("select id from public.catalog_product_models where category='gpu' limit 1")
+    ).rows[0].id;
+    target = await listing();
+    await db.query(
+      "update public.listings set category='gpu',specs=jsonb_build_object('_catalog_model_id',$1::text),price_minor=10000 where id=$2",
+      [model, target],
+    );
+    sales = [];
+    for (const [i, price] of [9000, 10000, 10000, 11000, 100000].entries()) {
+      const id = await listing("sold");
+      const seller = sellers[i % sellers.length];
+      await db.query(
+        "update public.listings set category='gpu',specs=jsonb_build_object('_catalog_model_id',$1::text),seller_id=$2 where id=$3",
+        [model, seller, id],
+      );
+      await db.query(
+        `insert into public.orders (listing_id,buyer_id,seller_id,buyer_country_code,seller_country_code,item_price_minor,
+        marketplace_fee_minor,payment_processing_minor,shipping_minor,total_minor,currency,payment_provider,payment_reference,status,created_at)
+        values($1,$2,$3,'FI','FI',$4,0,0,0,$4,'EUR','stripe',$1::uuid::text,'completed',now()-interval '1 day')`,
+        [id, userId, seller, price],
+      );
+      sales.push(id);
+    }
+  });
+  it("gives guests and users only public listing fields and a classification, without exposing orders", async () => {
+    for (const [role, identity] of [
+      ["anon", null],
+      ["authenticated", null],
+      ["authenticated", userId],
+      ["authenticated", adminId],
+      ["service_role", null],
+    ] as const) {
+      expect((await asRole(role, identity, sql())).rows).toEqual([
+        { id: target, price_minor: 10000, catalog_model_id: model, condition: "good", price_signal: "fair" },
+      ]);
+    }
+    await expect(asRole("anon", null, "select * from public.orders")).rejects.toMatchObject({ code: "42501" });
+    await expect(asRole("authenticated", userId, "update public.orders set item_price_minor=1")).rejects.toMatchObject({
+      code: "42501",
+    });
+  });
+  it("uses the robust median and exact 80/110 percent boundaries", async () => {
+    for (const [price, shown] of [
+      [7999, false],
+      [8000, true],
+      [11000, true],
+      [11001, false],
+    ] as const) {
+      await db.query("update public.listings set price_minor=$1 where id=$2", [price, target]);
+      expect((await read()).length).toBe(shown ? 1 : 0);
+    }
+  });
+  it("requires five completed sales and three independent sellers", async () => {
+    await db.query("update public.orders set status='refunded' where listing_id=$1", [sales[0]]);
+    expect(await read()).toEqual([]);
+    await db.query("update public.orders set status='completed',seller_id=$1", [sellers[0]]);
+    await db.query("update public.listings set seller_id=$1 where id=any($2::uuid[])", [sellers[0], sales]);
+    expect(await read()).toEqual([]);
+  });
+  it.each([
+    "update public.orders set payment_provider='test'",
+    "update public.orders set payment_provider='demo'",
+    "update public.orders set payment_provider='stripe_test'",
+    "update public.orders set payment_reference=null",
+    "update public.orders set created_at=now()-interval '91 days'",
+    "update public.orders set created_at=now()+interval '1 day'",
+    "update public.orders set status='paid'",
+    "update public.listings set condition='fair' where status='sold'",
+    "update public.listings set moderation_hidden=true,status='removed' where status='sold'",
+    "update public.listings set catalog_model_id=null where status='sold'",
+    "update public.listings set status='removed' where status='sold'",
+  ])("does not treat incompatible or unverified data as a benchmark: %s", async (change) => {
+    await db.exec(change);
+    expect(await read()).toEqual([]);
+  });
+  it("never classifies hidden, inactive, unlinked or differently conditioned target listings", async () => {
+    for (const change of [
+      "status='removed'",
+      "status='draft'",
+      "status='sold'",
+      "moderation_hidden=true,status='removed'",
+      "catalog_model_id=null",
+      "condition='excellent'",
+    ]) {
+      await db.query(`update public.listings set ${change} where id=$1`, [target]);
+      expect(await read()).toEqual([]);
+      await db.query(
+        "update public.listings set status='active',moderation_hidden=false,catalog_model_id=$1,condition='good' where id=$2",
+        [model, target],
+      );
+    }
+  });
+  it("rejects invalid requests and accepts empty/deduplicated IDs", async () => {
+    for (const ids of ["null", "array[null]::uuid[]", `array_fill('${target}'::uuid,array[201])`])
+      await expect(
+        asRole("anon", null, `select * from public.get_listing_price_signals(${ids})`),
+      ).rejects.toMatchObject({ code: "22023" });
+    expect((await asRole("anon", null, "select * from public.get_listing_price_signals('{}'::uuid[])")).rows).toEqual(
+      [],
+    );
+    expect(
+      (
+        await asRole(
+          "anon",
+          null,
+          `select * from public.get_listing_price_signals(array['${target}','${target}']::uuid[])`,
+        )
+      ).rows,
+    ).toHaveLength(1);
+  });
+});

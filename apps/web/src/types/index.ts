@@ -75,7 +75,8 @@ export interface Listing {
   shipsTo: CountryCode[];
   specs: Record<string, string>;
   description: string;
-  priceSignal: PriceSignal;
+  /** Palvelimen toteutuneisiin kauppoihin perustuva arvio; null = ei luotettavaa vertailua. */
+  priceSignal: PriceSignal | null;
   /** Server-owned promotion flag. Demo data may set this explicitly for navigation previews. */
   isFeatured?: boolean;
   buyerProtection: boolean;

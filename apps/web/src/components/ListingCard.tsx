@@ -40,7 +40,9 @@ export function ListingCard({ listing, locale, copy, favourite, href, onFavourit
         >
           <ListingVisual listing={listing} />
         </a>
-        <span className={`price-signal signal--${listing.priceSignal}`}>{copy[listing.priceSignal]}</span>
+        {listing.priceSignal && (
+          <span className={`price-signal signal--${listing.priceSignal}`}>{copy[listing.priceSignal]}</span>
+        )}
         <button
           className={`favourite-button ${favourite ? "is-active" : ""}`}
           type="button"

@@ -204,9 +204,11 @@ export function FeaturedShowcase({ listings, locale, copy, onOpen }: FeaturedSho
             >
               <div className="featured-card__media">
                 <ListingVisual listing={listing} />
-                <span className={`featured-card__signal signal--${listing.priceSignal}`}>
-                  {copy[listing.priceSignal]}
-                </span>
+                {listing.priceSignal && (
+                  <span className={`featured-card__signal signal--${listing.priceSignal}`}>
+                    {copy[listing.priceSignal]}
+                  </span>
+                )}
               </div>
               <div className="featured-card__content">
                 <div className="featured-card__eyebrow">

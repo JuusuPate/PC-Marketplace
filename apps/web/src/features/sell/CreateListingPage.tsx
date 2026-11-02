@@ -634,7 +634,7 @@ export function CreateListingPage({
         ...technicalSpecifications,
       },
       description: description.trim(),
-      priceSignal: initialListing?.priceSignal ?? "fair",
+      priceSignal: null,
       buyerProtection: initialListing?.buyerProtection ?? true,
       serialVerified: initialListing?.serialVerified ?? false,
       createdLabel: initialListing?.createdLabel ?? copy.justNow,

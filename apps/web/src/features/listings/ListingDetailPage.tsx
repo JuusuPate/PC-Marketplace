@@ -219,7 +219,9 @@ export function ListingDetailPage({
             </div>
 
             <div className="detail-content">
-              <span className={`price-signal signal--${listing.priceSignal}`}>{copy[listing.priceSignal]}</span>
+              {listing.priceSignal && (
+                <span className={`price-signal signal--${listing.priceSignal}`}>{copy[listing.priceSignal]}</span>
+              )}
               <h1 id="listing-page-title" tabIndex={-1}>
                 {listing.title}
               </h1>

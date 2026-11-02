@@ -35,7 +35,7 @@ export function CategoryHero({ page, copy, onHome, onSell }: CategoryHeroProps) 
             {title}
           </h1>
           <p>{copy.categoryPageBody}</p>
-          <button className="button button--light" type="button" onClick={onSell}>
+          <button className="button button--outline" type="button" onClick={onSell}>
             <Icon name="plus" />
             {copy.sell}
           </button>

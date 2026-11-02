@@ -1,3 +1,4 @@
+import { applyListingPriceSignals } from "./listing-price-service";
 import { readSpecification } from "../features/sell/listing-profile";
 import type {
   Category,
@@ -172,7 +173,7 @@ function mapListing(row: DbListing): Listing {
     shipsTo: row.destinations.map((destination) => destination.country_code),
     specs,
     description: row.description,
-    priceSignal: "fair",
+    priceSignal: null,
     isFeatured: row.is_featured,
     buyerProtection: true,
     serialVerified: false,
@@ -215,7 +216,7 @@ export const listingService = {
       rows.push(...page);
       if (page.length < pageSize) break;
     }
-    return [...new Map(rows.map((row) => [row.id, mapListing(row)])).values()];
+    return applyListingPriceSignals([...new Map(rows.map((row) => [row.id, mapListing(row)])).values()]);
   },
 
   async listMine(userId: string): Promise<Listing[]> {
@@ -255,7 +256,7 @@ export const listingService = {
         return ((data ?? []) as unknown as DbListing[]).map(mapListing);
       }),
     );
-    return results.flat();
+    return applyListingPriceSignals(results.flat());
   },
 
   async getActiveById(id: string): Promise<Listing | null> {
@@ -269,7 +270,7 @@ export const listingService = {
       .maybeSingle();
 
     if (error) throw error;
-    return data ? mapListing(data as unknown as DbListing) : null;
+    return data ? (await applyListingPriceSignals([mapListing(data as unknown as DbListing)]))[0] : null;
   },
 
   /**
@@ -306,6 +307,7 @@ export const listingService = {
     preparedImages: PreparedListingImage[] = [],
     pickupAddress?: PrivatePickupAddress,
   ): Promise<Listing> {
+    listing = { ...listing, priceSignal: null };
     if (preparedImages.length > MAX_LISTING_IMAGES) {
       throw new Error(`Ilmoitukseen voi lisätä enintään ${MAX_LISTING_IMAGES} kuvaa.`);
     }
@@ -359,7 +361,7 @@ export const listingService = {
     if (preparedImages.length === 0) {
       const { error } = await supabase.rpc("update_listing_details", details);
       if (error) throw error;
-      return listing;
+      return (await applyListingPriceSignals([listing]))[0];
     }
 
     const uploadedPaths: string[] = [];
@@ -399,10 +401,14 @@ export const listingService = {
         }
       }
 
-      return {
-        ...listing,
-        images: reservedImages.sort((a, b) => a.sort_order - b.sort_order).map(mapImage),
-      };
+      return (
+        await applyListingPriceSignals([
+          {
+            ...listing,
+            images: reservedImages.sort((a, b) => a.sort_order - b.sort_order).map(mapImage),
+          },
+        ])
+      )[0];
     } catch (caught) {
       if (!finalized) {
         try {
@@ -430,6 +436,7 @@ export const listingService = {
     preparedImages: PreparedListingImage[] = [],
     pickupAddress?: PrivatePickupAddress,
   ): Promise<Listing> {
+    listing = { ...listing, priceSignal: null };
     if (preparedImages.length > MAX_LISTING_IMAGES) {
       throw new Error(`Ilmoitukseen voi lisätä enintään ${MAX_LISTING_IMAGES} kuvaa.`);
     }
@@ -498,12 +505,16 @@ export const listingService = {
         throw publishError;
       }
 
-      return {
-        ...listing,
-        id: listingId,
-        status: "active",
-        images: reservedImages.sort((a, b) => a.sort_order - b.sort_order).map((image) => mapImage(image)),
-      };
+      return (
+        await applyListingPriceSignals([
+          {
+            ...listing,
+            id: listingId,
+            status: "active",
+            images: reservedImages.sort((a, b) => a.sort_order - b.sort_order).map((image) => mapImage(image)),
+          },
+        ])
+      )[0];
     } catch (caught) {
       if (uploadedPaths.length > 0) {
         await supabase.storage

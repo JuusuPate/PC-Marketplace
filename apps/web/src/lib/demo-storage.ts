@@ -75,7 +75,8 @@ export const demoStorage = {
   },
   setSession: (user: DemoUser | null) =>
     user ? write(SESSION_KEY, user) : window.localStorage.removeItem(SESSION_KEY),
-  getListings: () => read<Listing[]>(LISTINGS_KEY, []),
+  // Vanhat tallennetut demotagit eivät ole toteutunutta markkinadataa.
+  getListings: () => read<Listing[]>(LISTINGS_KEY, []).map((listing) => ({ ...listing, priceSignal: null })),
   setListings: (listings: Listing[]) => write(LISTINGS_KEY, listings),
   getOrders: () => read<DemoOrder[]>(ORDERS_KEY, []),
   setOrders: (orders: DemoOrder[]) => write(ORDERS_KEY, orders),

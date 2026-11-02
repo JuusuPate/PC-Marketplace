@@ -101,7 +101,7 @@ export function createSimulatedListings(now = Date.now()): Listing[] {
       },
       description:
         "Simuloitu esimerkkituote sivuston ulkoasun ja toimintojen kokeiluun. Tämä ei ole oikea myynti-ilmoitus. Kuva on havainnollistava.",
-      priceSignal: "fair",
+      priceSignal: null,
       buyerProtection: false,
       serialVerified: false,
       createdLabel: `${Math.floor((index * 43) / 60)} h`,
