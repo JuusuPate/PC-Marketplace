@@ -4,16 +4,18 @@ import type { FeaturedEngagementByListingId } from "./featured-listings";
 import type { Listing } from "../types";
 
 function gpuDescriptor(listing: Listing) {
-  return [listing.title, listing.subtitle, ...Object.values(listing.specs)].join(" ").toLocaleLowerCase();
+  return [listing.brand, listing.title, listing.subtitle, ...Object.values(listing.specs)]
+    .join(" ")
+    .toLocaleLowerCase();
 }
 
 function matchesGpuChipVendor(listing: Listing, vendor: NonNullable<CatalogNavigationFilter["gpuChipVendor"]>) {
   if (listing.category !== "gpu") return false;
 
   const descriptor = gpuDescriptor(listing);
-  return vendor === "nvidia"
-    ? /\b(nvidia|geforce|rtx|gtx)\b/i.test(descriptor)
-    : /\b(amd|radeon|rx[ -]?\d{3,4})\b/i.test(descriptor);
+  if (vendor === "nvidia") return /\b(nvidia|geforce|rtx|gtx)\b/i.test(descriptor);
+  if (vendor === "amd") return /\b(amd|radeon|rx[ -]?\d{3,4})\b/i.test(descriptor);
+  return /\b(intel|arc)\b/i.test(descriptor);
 }
 
 function featuredScore(listing: Listing) {

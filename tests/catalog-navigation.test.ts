@@ -35,3 +35,14 @@ it("orders the component submenu consistently with its category list", () => {
     ...order.map((id) => `components-${id}`),
   ]);
 });
+
+it("puts all graphics cards before the three vendor presets", () => {
+  const gpu = CATALOG_PAGES.find((page) => page.id === "gpu")!;
+  expect(gpu.submenu!.map((item) => item.label)).toEqual(["Kaikki näytönohjaimet", "NVIDIA", "AMD", "Intel"]);
+  expect(gpu.submenu!.map((item) => item.filters)).toEqual([
+    {},
+    { gpuChipVendor: "nvidia" },
+    { gpuChipVendor: "amd" },
+    { gpuChipVendor: "intel" },
+  ]);
+});

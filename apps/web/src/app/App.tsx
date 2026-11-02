@@ -91,7 +91,7 @@ function toNavigationFilter(filter: CatalogRuntimeFilter): CatalogNavigationFilt
   if (
     filter.kind === "spec_option" &&
     filter.specKey === "gpu_chip_vendor" &&
-    (filter.optionKey === "nvidia" || filter.optionKey === "amd")
+    (filter.optionKey === "nvidia" || filter.optionKey === "amd" || filter.optionKey === "intel")
   ) {
     return { gpuChipVendor: filter.optionKey };
   }
@@ -150,7 +150,7 @@ function getCatalogNavigationFilter(pathname: string, search: string): CatalogNa
     }
   }
   if (page.id === "pc" && key === "featured" && value === "true") return { featuredOnly: true };
-  if (page.id === "gpu" && key === "chipVendor" && (value === "nvidia" || value === "amd")) {
+  if (page.id === "gpu" && key === "chipVendor" && (value === "nvidia" || value === "amd" || value === "intel")) {
     return { gpuChipVendor: value };
   }
   return null;

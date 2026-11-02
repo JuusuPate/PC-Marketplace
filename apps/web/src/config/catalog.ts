@@ -16,7 +16,7 @@ export type CatalogLabelKey = "allProducts" | "components" | "accessories" | Exc
 export interface CatalogNavigationFilter {
   maxPriceMinor?: number;
   featuredOnly?: boolean;
-  gpuChipVendor?: "nvidia" | "amd";
+  gpuChipVendor?: "nvidia" | "amd" | "intel";
 }
 
 export interface CatalogSubmenuItem {
@@ -104,7 +104,7 @@ export const CATALOG_PAGES: CatalogPage[] = [
     submenu: [
       {
         id: "gpu-all",
-        label: "Kaikki näytöohjaimet",
+        label: "Kaikki näytönohjaimet",
         href: "/kategoriat/naytonohjaimet",
         filters: {},
       },
@@ -119,6 +119,12 @@ export const CATALOG_PAGES: CatalogPage[] = [
         label: "AMD",
         href: "/kategoriat/naytonohjaimet?chipVendor=amd",
         filters: { gpuChipVendor: "amd" },
+      },
+      {
+        id: "gpu-intel",
+        label: "Intel",
+        href: "/kategoriat/naytonohjaimet?chipVendor=intel",
+        filters: { gpuChipVendor: "intel" },
       },
     ],
   },

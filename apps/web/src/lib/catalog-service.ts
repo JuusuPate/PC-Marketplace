@@ -149,6 +149,15 @@ function fallbackCategories(locale: Locale): CatalogNavigationCategory[] {
           href: "/kategoriat/naytonohjaimet?chipVendor=amd",
           sortOrder: 20,
         },
+        {
+          id: "fallback-gpu-intel",
+          slug: "intel",
+          label: "Intel",
+          kind: "spec_option",
+          filter: { kind: "spec_option", specKey: "gpu_chip_vendor", optionKey: "intel" },
+          href: "/kategoriat/naytonohjaimet?chipVendor=intel",
+          sortOrder: 30,
+        },
       ],
     },
   ];
@@ -222,7 +231,7 @@ function buildHref(categorySlug: string, filter: CatalogRuntimeFilter): string |
 
   if (filter.kind === "price_max_minor") params.set("maxPrice", String(filter.maxPriceMinor / 100));
   else if (filter.kind === "featured") params.set("featured", "true");
-  else if (filter.specKey === "gpu_chip_vendor" && ["nvidia", "amd"].includes(filter.optionKey)) {
+  else if (filter.specKey === "gpu_chip_vendor" && ["nvidia", "amd", "intel"].includes(filter.optionKey)) {
     params.set("chipVendor", filter.optionKey);
   } else return null;
 

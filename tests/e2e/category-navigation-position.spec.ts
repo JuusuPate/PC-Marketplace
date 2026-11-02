@@ -136,3 +136,67 @@ test("gaming PC shortcuts remain separate from all PCs and filter actual prices"
   await search.fill("PikahakuPC");
   await expect(cards).toHaveCount(3);
 });
+
+test("graphics-card menu includes every vendor and the Intel filter survives reload", async ({ page }) => {
+  await page.goto("/");
+  await page.evaluate(async () => {
+    const { DEMO_LISTINGS } = await import("/src/data/demo-listings.ts");
+    const base = DEMO_LISTINGS.find((item: any) => item.category === "gpu" && item.seller.countryCode === "FI")!;
+    localStorage.setItem(
+      "pc-marketplace.demo-listings",
+      JSON.stringify([
+        {
+          ...base,
+          id: "vendor-nvidia",
+          title: "Valmistajahaku RTX 3070",
+          brand: "ASUS",
+          specs: { chipVendor: "NVIDIA" },
+        },
+        {
+          ...base,
+          id: "vendor-amd",
+          title: "Valmistajahaku Radeon RX 6800",
+          brand: "Sapphire",
+          specs: { chipVendor: "AMD" },
+        },
+        {
+          ...base,
+          id: "vendor-intel",
+          title: "Valmistajahaku Arc A770",
+          brand: "ASRock",
+          specs: { chipVendor: "Intel" },
+        },
+      ]),
+    );
+  });
+  await page.goto("/kategoriat/naytonohjaimet");
+  const trigger = page.locator(".category-navigation-link").filter({ hasText: "Näytönohjaimet" });
+  const menu = page.locator('.category-navigation-submenu[aria-label="Näytönohjaimet"]');
+  const cards = page.locator(".listing-grid .listing-card");
+  const search = page.locator(".market-toolbar input");
+  await trigger.hover();
+  expect(
+    await menu.getByRole("link").evaluateAll((links) => links.map((link) => link.firstChild!.textContent!.trim())),
+  ).toEqual(["Kaikki näytönohjaimet", "NVIDIA", "AMD", "Intel"]);
+  for (const [label, title] of [
+    ["NVIDIA", "Valmistajahaku RTX 3070"],
+    ["AMD", "Valmistajahaku Radeon RX 6800"],
+    ["Intel", "Valmistajahaku Arc A770"],
+  ]) {
+    await trigger.hover();
+    await menu.getByRole("link", { name: label, exact: true }).click();
+    await search.fill("Valmistajahaku");
+    await expect(cards).toHaveCount(1);
+    await expect(cards.locator(".card-title")).toHaveText(title);
+  }
+  await expect(page).toHaveURL(/chipVendor=intel#marketplace$/);
+  await page.reload();
+  await search.fill("Valmistajahaku");
+  await expect(cards).toHaveCount(1);
+  await expect(cards.locator(".card-title")).toHaveText("Valmistajahaku Arc A770");
+  await trigger.hover();
+  await menu.getByRole("link", { name: "Kaikki näytönohjaimet", exact: true }).click();
+  await expect(page).toHaveURL(/naytonohjaimet#marketplace$/);
+  await search.fill("Valmistajahaku");
+  await expect(cards).toHaveCount(3);
+});

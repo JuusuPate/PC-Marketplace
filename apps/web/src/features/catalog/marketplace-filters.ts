@@ -288,7 +288,7 @@ export function listingFilterValues(listing: Listing, key: string): string[] {
       ? "NVIDIA"
       : /\bamd\b|radeon|ryzen/i.test(text)
         ? "AMD"
-        : /\bintel\b/i.test(text)
+        : /\b(intel|arc)\b/i.test(text)
           ? "Intel"
           : "";
   } else if (key === "vram" || key === "capacity") result = capacity(raw);
