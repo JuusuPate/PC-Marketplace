@@ -1,0 +1,155 @@
+.account-page {
+  padding-top: 42px;
+  padding-bottom: 80px;
+}
+.account-page__heading h1 {
+  margin: 0 0 12px;
+  font-size: clamp(28px, 4vw, 42px);
+  letter-spacing: -0.04em;
+}
+.account-page__heading p {
+  margin: 0;
+  max-width: 700px;
+  color: #626d7c;
+  line-height: 1.7;
+  font-size: 15px;
+}
+.account-page__nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 28px 0 22px;
+}
+.account-page__nav a {
+  padding: 10px 15px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: #4d5d74;
+  font-size: 13px;
+  font-weight: 650;
+  text-decoration: none;
+}
+.account-page__nav a[aria-current="page"] {
+  color: var(--ink);
+  border-color: #9fbbdf;
+  background: #eef4fc;
+}
+.account-page__panel {
+  max-width: 1020px;
+  min-width: 0;
+  padding: 30px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: #fff;
+}
+.account-page__profile {
+  display: flex;
+  align-items: flex-start;
+  gap: 35px;
+}
+.account-page__avatar {
+  width: 76px;
+  height: 76px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #e6effc;
+  color: #214c83;
+  font-size: 23px;
+  font-weight: 800;
+}
+.account-page__details {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 25px;
+  margin: 0;
+}
+.account-page__details dt {
+  color: #687488;
+  font-size: 12px;
+  margin-bottom: 7px;
+}
+.account-page__details dd {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.account-page__settings {
+  max-width: 600px;
+}
+.account-page__language {
+  display: grid;
+  gap: 10px;
+  max-width: 320px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.account-page__language select {
+  padding: 12px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  border-radius: 8px;
+  font: inherit;
+}
+.account-page__settings p {
+  font-size: 13px;
+  line-height: 1.7;
+  color: #626d7c;
+}
+.account-page__settings section {
+  border-top: 1px solid var(--line);
+  margin-top: 26px;
+  padding-top: 23px;
+}
+.account-page__settings h2 {
+  font-size: 18px;
+  margin: 0 0 12px;
+}
+.account-page__sell {
+  margin-bottom: 23px;
+}
+.account-page .account-list article strong {
+  font-size: 14px;
+}
+.account-page .account-list article small {
+  font-size: 12px;
+}
+.account-page .account-list article {
+  gap: 14px;
+  padding-block: 16px;
+}
+.account-page .account-listing__open {
+  flex: 1;
+}
+.account-page a:focus-visible,
+.account-page button:focus-visible,
+.account-page select:focus-visible {
+  outline: 2px solid var(--accent-strong);
+  outline-offset: 3px;
+}
+@media (max-width: 600px) {
+  .account-page {
+    padding-top: 28px;
+  }
+  .account-page__panel {
+    padding: 22px 18px;
+  }
+  .account-page__profile {
+    flex-direction: column;
+    gap: 24px;
+  }
+  .account-page__details {
+    width: 100%;
+    grid-template-columns: 1fr;
+  }
+  .account-page .account-list article {
+    flex-wrap: wrap;
+  }
+  .account-page .order-value {
+    margin-left: auto;
+  }
+}

@@ -1,3 +1,4 @@
+import { AccountMenu } from "../features/account/AccountMenu";
 import { useEffect, useRef, useState, type FormEvent, type MouseEvent } from "react";
 import { LOCALE_LABELS, PUBLIC_LOCALES } from "../config/markets";
 import type { Messages } from "../i18n/messages/fi";
@@ -55,7 +56,9 @@ interface HeaderProps {
   onSearch: (query: string) => void;
   favouriteCount: number;
   onFavourites: () => void;
-  onAccount: () => void;
+  onNavigate: (path: string) => void;
+  onLogout: () => void;
+  currentPath: string;
 }
 
 export function Header({
@@ -71,9 +74,12 @@ export function Header({
   onSearch,
   favouriteCount,
   onFavourites,
-  onAccount,
+  onNavigate,
+  onLogout,
+  currentPath,
 }: HeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   const pickerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -147,7 +153,10 @@ export function Header({
           <button
             type="button"
             className="language-picker__trigger"
-            onClick={() => setMenuOpen((open) => !open)}
+            onClick={() => {
+              setAccountMenuOpen(false);
+              setMenuOpen((open) => !open);
+            }}
             aria-expanded={menuOpen}
             aria-label={LOCALE_LABELS[locale]}
             title={LOCALE_LABELS[locale]}
@@ -190,10 +199,28 @@ export function Header({
           <Icon name="heart" fill={favouriteCount > 0 ? "currentColor" : "none"} />
           {favouriteCount > 0 ? <span className="header-favourites-count">{favouriteCount}</span> : null}
         </button>
-        <button className="button button--dark account-button" type="button" onClick={user ? onAccount : onAuth}>
-          {user ? <span className="mini-avatar">{user.name.slice(0, 2).toUpperCase()}</span> : <Icon name="user" />}
-          <span>{user ? copy.account : copy.login}</span>
-        </button>
+        {user ? (
+          <AccountMenu
+            copy={copy}
+            locale={locale}
+            user={user}
+            open={accountMenuOpen}
+            onOpenChange={(open) => {
+              setAccountMenuOpen(open);
+              if (open) setMenuOpen(false);
+            }}
+            currentPath={currentPath}
+            onNavigate={onNavigate}
+            onFavourites={onFavourites}
+            onLogout={onLogout}
+            favouriteCount={favouriteCount}
+          />
+        ) : (
+          <button className="button button--dark account-button" type="button" onClick={onAuth}>
+            <Icon name="user" />
+            <span>{copy.login}</span>
+          </button>
+        )}
       </div>
     </header>
   );

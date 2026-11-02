@@ -29,7 +29,6 @@ import {
 import { getLegalPath, getLegalRoute } from "../config/legal-routes";
 import { getListingEditId, getListingEditPath, getListingId, getListingPath } from "../config/listing-routes";
 import {
-  ADMIN_PATH,
   isAdminOverviewPath,
   isAdminPath,
   isAdminUsersPath,
@@ -48,7 +47,9 @@ import {
 import { LAUNCH_MARKET, MARKETS } from "../config/markets";
 import { DEMO_LISTINGS } from "../data/demo-listings";
 import { SIMULATED_LISTINGS } from "../data/simulated-listings";
-import { AccountModal } from "../features/account/AccountModal";
+import { AccountPage } from "../features/account/AccountPage";
+import { getAccountCopy } from "../features/account/account-copy";
+import { getAccountPath, getAccountTab } from "../config/account-routes";
 import { AdminDashboardPage } from "../features/admin/AdminDashboardPage";
 import { getAdminCopy } from "../features/admin/admin-copy";
 import { AuthPage } from "../features/auth/AuthPage";
@@ -274,7 +275,7 @@ export function App() {
   const [checkoutListing, setCheckoutListing] = useState<Listing | null>(null);
   const [authRoute, setAuthRoute] = useState(() => getAuthRoute(window.location.pathname, window.location.search));
   const [passwordRecoveryOpen, setPasswordRecoveryOpen] = useState(false);
-  const [accountOpen, setAccountOpen] = useState(false);
+  const [accountTab, setAccountTab] = useState(() => getAccountTab(window.location.pathname));
   const [favouritesOpen, setFavouritesOpen] = useState(false);
   const [pendingCheckout, setPendingCheckout] = useState<Listing | null>(null);
   const [toast, setToast] = useState<string | null>(null);
@@ -460,6 +461,7 @@ export function App() {
       setCatalogNavigationFilter(nextCatalogFilter.filter);
       setActiveCatalogSubmenuHref(nextCatalogFilter.activeHref);
       setAuthRoute(getAuthRoute(window.location.pathname, window.location.search));
+      setAccountTab(getAccountTab(window.location.pathname));
       setLegalRoute(getLegalRoute(window.location.pathname));
       setAdminPath(isAdminPath(window.location.pathname) ? window.location.pathname : null);
       setCreateListingPage(isCreateListingPath(window.location.pathname));
@@ -533,24 +535,27 @@ export function App() {
     document.documentElement.lang = locale;
     document.title = authRoute
       ? `${getAuthCopy(locale)[authRoute.mode]} | PC Market`
-      : adminPath
-        ? `${getAdminCopy(locale).title} | PC Market`
-        : legalRoute
-          ? `${copy[legalRoute.labelKey]} | PC Market`
-          : editListingId
-            ? `${locale === "fi" ? "Muokkaa ilmoitusta" : "Edit listing"} | PC Market`
-            : activeListing
-              ? `${activeListing.title} | PC Market`
-              : listingPageId
-                ? `${copy.noResults} | PC Market`
-                : createListingPage
-                  ? `${copy.sellTitle} | PC Market`
-                  : catalogPage
-                    ? `${copy[catalogPage.labelKey]} | PC Market`
-                    : copy.siteTitle;
+      : accountTab
+        ? `${getAccountCopy(locale)[accountTab]} | PC Market`
+        : adminPath
+          ? `${getAdminCopy(locale).title} | PC Market`
+          : legalRoute
+            ? `${copy[legalRoute.labelKey]} | PC Market`
+            : editListingId
+              ? `${locale === "fi" ? "Muokkaa ilmoitusta" : "Edit listing"} | PC Market`
+              : activeListing
+                ? `${activeListing.title} | PC Market`
+                : listingPageId
+                  ? `${copy.noResults} | PC Market`
+                  : createListingPage
+                    ? `${copy.sellTitle} | PC Market`
+                    : catalogPage
+                      ? `${copy[catalogPage.labelKey]} | PC Market`
+                      : copy.siteTitle;
   }, [
     activeListing,
     authRoute,
+    accountTab,
     adminPath,
     catalogPage,
     copy,
@@ -567,8 +572,9 @@ export function App() {
       // reittitilasta, ei jo ensimmäisellä kerralla muuttuneesta locationista.
       if (createListingPage) requestAuth(CREATE_LISTING_PATH);
       else if (editListingId) requestAuth(getListingEditPath(editListingId));
+      else if (accountTab) requestAuth(getAccountPath(accountTab));
     }
-  }, [createListingPage, editListingId, user, authLoading]);
+  }, [createListingPage, editListingId, accountTab, user, authLoading]);
 
   // Myös OAuth-/vahvistuslinkiltä palannut istunto jatkaa URL:ssa säilynyttä asiointia.
   useEffect(() => {
@@ -680,6 +686,7 @@ export function App() {
     setCatalogNavigationFilter(nextCatalogFilter.filter);
     setActiveCatalogSubmenuHref(nextCatalogFilter.activeHref);
     setAuthRoute(getAuthRoute(pathname, search));
+    setAccountTab(getAccountTab(pathname));
     setLegalRoute(nextLegalRoute);
     setAdminPath(isAdminPath(pathname) ? pathname : null);
     setCreateListingPage(isCreateListingPath(pathname));
@@ -697,6 +704,7 @@ export function App() {
       }
       window.scrollTo({ top: 0, behavior: "smooth" });
       if (getAuthRoute(pathname, search)) document.getElementById("auth-page-title")?.focus({ preventScroll: true });
+      if (getAccountTab(pathname)) document.getElementById("account-page-title")?.focus({ preventScroll: true });
       if (nextPage) document.querySelector<HTMLElement>("#category-page-title")?.focus({ preventScroll: true });
       if (nextListingId) document.querySelector<HTMLElement>("#listing-page-title")?.focus({ preventScroll: true });
       if (nextLegalRoute) document.querySelector<HTMLElement>("#legal-page-title")?.focus({ preventScroll: true });
@@ -725,7 +733,6 @@ export function App() {
   };
 
   const requestAuth = (returnTo = `${window.location.pathname}${window.location.search}${window.location.hash}`) => {
-    setAccountOpen(false);
     setFavouritesOpen(false);
     navigateTo(getAuthPath("login", returnTo));
   };
@@ -804,7 +811,6 @@ export function App() {
 
   const beginEditListing = (listing: Listing) => {
     if (!user || listing.seller.id !== user.id) return;
-    setAccountOpen(false);
     navigateTo(getListingEditPath(listing.id));
   };
 
@@ -876,8 +882,7 @@ export function App() {
       setReportedListingIds([]);
       setSupabaseOwnListings([]);
     }
-    setAccountOpen(false);
-    if (createListingPage || editListingId || adminPath) navigateTo("/");
+    if (createListingPage || editListingId || adminPath || accountTab) navigateTo("/");
   };
 
   return (
@@ -899,7 +904,13 @@ export function App() {
         onSearch={searchCatalog}
         favouriteCount={favouriteListings.length}
         onFavourites={() => setFavouritesOpen(true)}
-        onAccount={() => setAccountOpen(true)}
+        currentPath={`${window.location.pathname}${window.location.search}${window.location.hash}`}
+        onNavigate={navigateTo}
+        onLogout={() => {
+          void logout().catch(() =>
+            showToast(locale === "fi" ? "Uloskirjautuminen epäonnistui." : "Could not sign out."),
+          );
+        }}
       />
 
       <CategoryNavigation
@@ -924,6 +935,27 @@ export function App() {
             onComplete={completeAuth}
           />
         )}
+
+        {accountTab &&
+          (user && !authLoading ? (
+            <AccountPage
+              key={`${user.id}:${accountTab}`}
+              copy={copy}
+              locale={locale}
+              user={user}
+              tab={accountTab}
+              ownListings={ownListings}
+              ownListingsLoading={ownListingsLoading}
+              orders={orders}
+              onNavigate={navigateTo}
+              onEditListing={beginEditListing}
+              onLocale={setLocale}
+            />
+          ) : (
+            <section className="account-page section-shell" role="status">
+              {getAccountCopy(locale).loading}
+            </section>
+          ))}
 
         {adminPath && (
           <AdminDashboardPage
@@ -1049,6 +1081,7 @@ export function App() {
           ))}
 
         {!authRoute &&
+          !accountTab &&
           !adminPath &&
           !legalRoute &&
           !listingPageId &&
@@ -1249,35 +1282,6 @@ export function App() {
           locale={locale}
           onClose={() => setCheckoutListing(null)}
           onComplete={completeOrder}
-        />
-      )}
-      {accountOpen && user && (
-        <AccountModal
-          copy={copy}
-          locale={locale}
-          user={user}
-          orders={orders}
-          ownListings={ownListings}
-          ownListingsLoading={ownListingsLoading}
-          onClose={() => setAccountOpen(false)}
-          onLogout={() => {
-            void logout().catch(() => {
-              showToast(locale === "fi" ? "Uloskirjautuminen epäonnistui." : "Could not sign out.");
-            });
-          }}
-          onOpenListing={(listing) => {
-            setAccountOpen(false);
-            navigateTo(getListingPath(listing.id));
-          }}
-          onEditListing={beginEditListing}
-          onAdmin={() => {
-            setAccountOpen(false);
-            navigateTo(ADMIN_PATH);
-          }}
-          onManageLegal={() => {
-            setAccountOpen(false);
-            navigateTo(getLegalPath("terms"));
-          }}
         />
       )}
       {favouritesOpen && (

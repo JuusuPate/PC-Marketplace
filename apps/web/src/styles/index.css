@@ -47,3 +47,6 @@
 @import "./features/auth/auth-page.css";
 
 @import "./features/privacy/cookies.css";
+
+@import "./features/account/account-menu.css";
+@import "./features/account/account-page.css";
