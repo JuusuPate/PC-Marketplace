@@ -53,3 +53,22 @@ test("the authentication form fits a phone viewport", async ({ page }) => {
   await expect(page.getByRole("button", { name: "Jatka Googlella" })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });
+
+test("registration requires eight password characters and uses a white submit button", async ({ page }) => {
+  await page.goto("/rekisteroidy");
+  await page.getByLabel("Näyttönimi", { exact: true }).fill("Testikäyttäjä");
+  await page.getByLabel("Sähköposti", { exact: true }).fill("test@example.test");
+  const password = page.getByLabel("Salasana", { exact: true });
+  const confirmation = page.getByLabel("Vahvista salasana", { exact: true });
+  const submit = page.locator("form").getByRole("button", { name: "Luo tunnus", exact: true });
+  await expect(submit).toHaveCSS("background-color", "rgb(255, 255, 255)");
+  await password.fill("seitse7");
+  await confirmation.fill("seitse7");
+  await submit.click();
+  expect(await password.evaluate((el: HTMLInputElement) => el.validity.tooShort)).toBe(true);
+  await expect(page).toHaveURL(/\/rekisteroidy$/);
+  await password.fill("kahdeks8");
+  await confirmation.fill("kahdeks8");
+  await submit.click();
+  await expect(page).toHaveURL(/127\.0\.0\.1:4183\/$/);
+});

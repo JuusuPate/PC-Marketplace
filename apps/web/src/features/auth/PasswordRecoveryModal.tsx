@@ -21,8 +21,8 @@ export function PasswordRecoveryModal({ locale, onCancel, onSuccess }: PasswordR
 
   const submit = async (event: FormEvent) => {
     event.preventDefault();
-    if (password.length < 6) {
-      setError(finnish ? "Salasanassa pitää olla vähintään 6 merkkiä." : "Use at least 6 characters.");
+    if (password.length < 8) {
+      setError(finnish ? "Salasanassa pitää olla vähintään 8 merkkiä." : "Use at least 8 characters.");
       return;
     }
     if (password !== confirmation) {
@@ -62,7 +62,7 @@ export function PasswordRecoveryModal({ locale, onCancel, onSuccess }: PasswordR
             {finnish ? "Uusi salasana" : "New password"}
             <input
               autoComplete="new-password"
-              minLength={6}
+              minLength={8}
               onChange={(event) => setPassword(event.target.value)}
               required
               type="password"
@@ -73,7 +73,7 @@ export function PasswordRecoveryModal({ locale, onCancel, onSuccess }: PasswordR
             {finnish ? "Vahvista salasana" : "Confirm password"}
             <input
               autoComplete="new-password"
-              minLength={6}
+              minLength={8}
               onChange={(event) => setConfirmation(event.target.value)}
               required
               type="password"

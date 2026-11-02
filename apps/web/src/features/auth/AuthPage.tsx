@@ -221,7 +221,7 @@ export function AuthPage({
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
-                      minLength={mode === "register" ? 6 : undefined}
+                      minLength={mode === "register" ? 8 : undefined}
                       aria-describedby={mode === "register" ? "auth-password-help" : undefined}
                     />
                     <button
@@ -245,12 +245,15 @@ export function AuthPage({
                       value={confirmation}
                       onChange={(e) => setConfirmation(e.target.value)}
                       required
-                      minLength={6}
+                      minLength={8}
                     />
                   </label>
                 </>
               )}
-              <button className="button button--primary button--full" type="submit">
+              <button
+                className={`button ${mode === "register" ? "button--outline" : "button--primary"} button--full`}
+                type="submit"
+              >
                 {busy
                   ? runtime.working
                   : mode === "forgot"

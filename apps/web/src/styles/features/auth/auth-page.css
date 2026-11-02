@@ -168,6 +168,9 @@
   border-radius: 8px;
   margin-top: 3px;
 }
+.auth-page__form .button--outline {
+  background: #fff;
+}
 .auth-page__link {
   display: inline-block;
   font-size: 13px;
