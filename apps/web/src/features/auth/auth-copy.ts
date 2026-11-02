@@ -1,6 +1,10 @@
 import type { Locale } from "../../types";
 
 const fi = {
+  showcaseLabel: "RAKENNA OMANLAISESI",
+  showcaseTitle: "Hyville osille. Uusi alku.",
+  showcaseBody: "Löydä seuraava päivityksesi tai anna omille komponenteillesi uusi koti.",
+  showcaseNote: "Osta. Myy. Päivitä.",
   login: "Kirjaudu sisään",
   register: "Luo tunnus",
   forgot: "Unohditko salasanasi?",
@@ -29,6 +33,10 @@ const fi = {
   policy: "Tietosuoja",
 };
 const en: typeof fi = {
+  showcaseLabel: "BUILD SOMETHING YOURS",
+  showcaseTitle: "Good parts. A fresh start.",
+  showcaseBody: "Find your next upgrade or give your components a new home.",
+  showcaseNote: "Buy. Sell. Upgrade.",
   login: "Sign in",
   register: "Create an account",
   forgot: "Forgot your password?",
@@ -58,6 +66,10 @@ const en: typeof fi = {
 };
 const sv: typeof fi = {
   ...en,
+  showcaseLabel: "BYGG NÅGOT EGET",
+  showcaseTitle: "Bra delar. En ny början.",
+  showcaseBody: "Hitta din nästa uppgradering eller ge dina komponenter ett nytt hem.",
+  showcaseNote: "Köp. Sälj. Uppgradera.",
   login: "Logga in",
   register: "Skapa konto",
   forgot: "Glömt lösenordet?",

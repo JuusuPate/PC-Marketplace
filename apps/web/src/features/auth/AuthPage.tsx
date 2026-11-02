@@ -125,6 +125,27 @@ export function AuthPage({
         ← {text.back}
       </a>
       <div className="auth-page__layout">
+        <aside className="auth-page__showcase">
+          <span className="auth-page__eyebrow">{text.showcaseLabel}</span>
+          <div className="auth-page__components" aria-hidden="true">
+            <div className="auth-page__gpu">
+              <span className="auth-page__fan" />
+              <span className="auth-page__fan" />
+              <span className="auth-page__part-label">GPU</span>
+            </div>
+            <div className="auth-page__cpu">
+              <span>CPU</span>
+            </div>
+            <div className="auth-page__ram">
+              <span />
+              <span />
+              <span className="auth-page__part-label">RAM</span>
+            </div>
+          </div>
+          <h2>{text.showcaseTitle}</h2>
+          <p>{text.showcaseBody}</p>
+          <span className="auth-page__showcase-note">{text.showcaseNote}</span>
+        </aside>
         <div className="auth-page__card">
           <nav className="auth-page__switch" aria-label={copy.authTitle}>
             {(["login", "register"] as const).map((item) => (
