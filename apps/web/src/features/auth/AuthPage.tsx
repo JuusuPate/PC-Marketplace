@@ -125,25 +125,6 @@ export function AuthPage({
         ← {text.back}
       </a>
       <div className="auth-page__layout">
-        <aside className="auth-page__story" aria-label="PC Market">
-          <span className="auth-page__eyebrow">PC MARKET / COMMUNITY</span>
-          <div className="auth-page__art" aria-hidden="true">
-            <span />
-            <span />
-            <span />
-            <Icon name="shield" />
-          </div>
-          <h2>{text.welcome}</h2>
-          <p>{text.welcomeBody}</p>
-          <ul>
-            {[text.benefit1, text.benefit2, text.benefit3].map((label) => (
-              <li key={label}>
-                <Icon name="check" />
-                {label}
-              </li>
-            ))}
-          </ul>
-        </aside>
         <div className="auth-page__card">
           <nav className="auth-page__switch" aria-label={copy.authTitle}>
             {(["login", "register"] as const).map((item) => (

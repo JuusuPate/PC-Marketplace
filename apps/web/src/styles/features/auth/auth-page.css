@@ -11,96 +11,15 @@
   gap: 8px;
 }
 .auth-page__layout {
-  max-width: 1020px;
+  max-width: 510px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 0.9fr 1fr;
+  grid-template-columns: 1fr;
   border: 1px solid var(--line);
   border-radius: 22px;
   overflow: hidden;
   background: white;
   box-shadow: 0 14px 55px #10234208;
-}
-.auth-page__story {
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 52px 40px;
-  color: #fff;
-  background:
-    radial-gradient(ellipse at 100% 0%, #346cba 0, transparent 60%), linear-gradient(150deg, #132c55, #0a152a);
-}
-.auth-page__eyebrow {
-  font-size: 11px;
-  letter-spacing: 0.15em;
-  color: #a9c9f7;
-  font-weight: 700;
-}
-.auth-page__story h2 {
-  font-size: clamp(30px, 3.6vw, 44px);
-  line-height: 1.12;
-  letter-spacing: -0.04em;
-  max-width: 330px;
-  margin: 32px 0 16px;
-}
-.auth-page__story p {
-  color: #c3d2e9;
-  line-height: 1.7;
-  font-size: 15px;
-  max-width: 310px;
-  margin: 0;
-}
-.auth-page__story ul {
-  list-style: none;
-  padding: 0;
-  margin: 30px 0 0;
-  display: grid;
-  gap: 17px;
-}
-.auth-page__story li {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 14px;
-}
-.auth-page__story li svg {
-  width: 18px;
-  height: 18px;
-  color: #93c5fd;
-  flex-shrink: 0;
-}
-.auth-page__art {
-  position: relative;
-  width: 176px;
-  height: 150px;
-  margin: 42px auto 5px;
-  display: grid;
-  place-items: center;
-}
-.auth-page__art span {
-  position: absolute;
-  inset: 0;
-  border: 1px solid #9bc7ff32;
-  border-radius: 36px;
-  transform: rotate(-20deg);
-}
-.auth-page__art span:nth-child(2) {
-  inset: 14px;
-  transform: rotate(15deg);
-  background: #aacfff0a;
-}
-.auth-page__art span:nth-child(3) {
-  inset: 28px;
-  transform: rotate(-5deg);
-  background: #c4deff10;
-}
-.auth-page__art > svg {
-  width: 54px;
-  height: 54px;
-  color: #b9d9ff;
-  position: relative;
 }
 .auth-page__card {
   padding: 38px 42px;
@@ -207,6 +126,14 @@
   background: #fff;
   color: var(--ink);
 }
+/* Selain voi maalata tallennetut tunnukset omalla automaattitäytön värillään.
+ * Sisävarjo pitää kentän valkoisena muuttamatta automaattitäyttöä tai fokusrajausta. */
+.auth-page__form input:autofill,
+.auth-page__form input:-webkit-autofill {
+  box-shadow: 0 0 0 1000px #fff inset !important;
+  -webkit-text-fill-color: var(--ink);
+  caret-color: var(--ink);
+}
 .auth-page__form input:focus {
   outline: 2px solid var(--accent-strong);
   outline-offset: 2px;
@@ -281,13 +208,6 @@
   outline-offset: 3px;
 }
 @media (max-width: 760px) {
-  .auth-page__layout {
-    grid-template-columns: 1fr;
-    max-width: 510px;
-  }
-  .auth-page__story {
-    display: none;
-  }
   .auth-page__card {
     padding: 30px;
   }
