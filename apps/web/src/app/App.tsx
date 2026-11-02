@@ -1,3 +1,10 @@
+import { CookiePreferences } from "../features/privacy/CookiePreferences";
+import {
+  COOKIE_CONSENT_KEY,
+  persistPreferredLocale,
+  readCookieConsent,
+  readPreferredLocale,
+} from "../lib/cookie-consent";
 import { MarketplaceFilterSidebar } from "../features/catalog/MarketplaceFilterSidebar";
 import {
   EMPTY_MARKETPLACE_FILTERS,
@@ -187,7 +194,18 @@ const categories: Array<{ key: "all" | Category; glyph: string }> = [
  * Palvelukutsut kuuluvat lib-kerrokseen; tämä komponentti päivittää niiden tuloksista käyttöliittymän.
  */
 export function App() {
-  const [locale, setLocale] = useState<Locale>("fi");
+  const [cookieConsent, setCookieConsent] = useState(readCookieConsent);
+  const [locale, setLocale] = useState<Locale>(readPreferredLocale);
+  useEffect(() => {
+    persistPreferredLocale(locale, cookieConsent?.preferences === true);
+  }, [locale, cookieConsent]);
+  useEffect(() => {
+    const syncConsent = (event: StorageEvent) => {
+      if (event.key === COOKIE_CONSENT_KEY || event.key === null) setCookieConsent(readCookieConsent());
+    };
+    window.addEventListener("storage", syncConsent);
+    return () => window.removeEventListener("storage", syncConsent);
+  }, []);
   const market = LAUNCH_MARKET;
   const [catalogPage, setCatalogPage] = useState(() => getCatalogPage(window.location.pathname));
   const [catalogNavigationPages, setCatalogNavigationPages] = useState<readonly CatalogPage[]>(() =>
@@ -1279,6 +1297,7 @@ export function App() {
           }}
         />
       )}
+      <CookiePreferences locale={locale} consent={cookieConsent} onChange={setCookieConsent} />
       {toast && (
         <div className="toast" role="status">
           <Icon name="check" />

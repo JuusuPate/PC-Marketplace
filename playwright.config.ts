@@ -11,6 +11,20 @@ export default defineConfig({
   reporter: process.env.CI ? "github" : "list",
   use: {
     baseURL,
+    storageState: {
+      cookies: [],
+      origins: [
+        {
+          origin: baseURL,
+          localStorage: [
+            {
+              name: "pc-marketplace.cookie-consent",
+              value: JSON.stringify({ version: 1, necessary: true, preferences: false, savedAt: Date.now() }),
+            },
+          ],
+        },
+      ],
+    },
     trace: "retain-on-failure",
   },
   projects: [
