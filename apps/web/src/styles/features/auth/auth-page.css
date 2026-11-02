@@ -27,35 +27,40 @@
   justify-content: center;
   padding: 42px 36px;
   min-width: 0;
-  background: #f5f6f7;
-  border-right: 1px solid var(--line);
+  color: #f5f8ff;
+  background:
+    radial-gradient(ellipse at 10% 8%, #396bbf66 0, transparent 55%),
+    radial-gradient(ellipse at 100% 50%, #1d4e8c40 0, transparent 60%),
+    linear-gradient(155deg, #152b4b 0%, #0c1729 58%, #070d17 100%);
+  border-right: 1px solid #253651;
 }
 .auth-page__eyebrow {
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.16em;
-  color: #68717e;
+  color: #b4c9e8;
 }
 .auth-page__showcase h2 {
   font-size: clamp(30px, 3.5vw, 43px);
   line-height: 1.12;
   letter-spacing: -0.045em;
+  color: #f5f8ff;
   max-width: 300px;
   margin: 30px 0 14px;
 }
 .auth-page__showcase p {
   font-size: 14px;
   line-height: 1.8;
-  color: #626b77;
+  color: #c0cbe0;
   max-width: 290px;
   margin: 0;
 }
 .auth-page__showcase-note {
   padding-top: 24px;
   margin-top: 28px;
-  border-top: 1px solid #dce0e5;
+  border-top: 1px solid #94afd333;
   font-size: 12px;
-  color: #4d5968;
+  color: #b9cbe4;
   letter-spacing: 0.025em;
 }
 /* Koristekuvitus syntyy tyyleistä: se ei esitä myytäviä ilmoituksia. */
@@ -65,7 +70,7 @@
   width: 100%;
   max-width: 330px;
   margin: 38px auto 0;
-  background-image: radial-gradient(#cdd3dc 0.8px, transparent 0.8px);
+  background-image: radial-gradient(#9bb8e140 0.8px, transparent 0.8px);
   background-size: 16px 16px;
 }
 .auth-page__gpu {
@@ -78,10 +83,10 @@
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  border: 1px solid #cbd2dc;
+  border: 1px solid #61728c90;
   border-radius: 13px;
-  background: #fff;
-  box-shadow: 0 18px 30px #293b5512;
+  background: linear-gradient(145deg, #34435b, #1d2a3e);
+  box-shadow: 0 18px 30px #02071050;
   transform: rotate(-8deg);
 }
 .auth-page__gpu::after {
@@ -98,9 +103,9 @@
   width: 65px;
   height: 65px;
   border-radius: 50%;
-  border: 7px solid #e8ecf1;
-  outline: 1px solid #d6dce5;
-  background: repeating-conic-gradient(#71839b 0deg 18deg, #e1e7ef 18deg 45deg);
+  border: 7px solid #192434;
+  outline: 1px solid #627493;
+  background: repeating-conic-gradient(#a7bdd9 0deg 18deg, #435771 18deg 45deg);
   position: relative;
 }
 .auth-page__fan::after {
@@ -108,7 +113,7 @@
   position: absolute;
   inset: 17px;
   border-radius: 50%;
-  background: #edf1f6;
+  background: #c0d3eb;
   border: 1px solid #a6b3c5;
 }
 .auth-page__part-label {
@@ -117,7 +122,7 @@
   bottom: 8px;
   font-size: 9px;
   font-weight: 700;
-  color: #6b7788;
+  color: #cad9ed;
   letter-spacing: 0.1em;
 }
 .auth-page__cpu {
@@ -126,21 +131,21 @@
   left: 7%;
   width: 105px;
   height: 105px;
-  border: 6px solid #d1d8e2;
+  border: 6px solid #60728d;
   border-radius: 10px;
-  background: #fff;
-  outline: 1px solid #b6c0ce;
+  background: linear-gradient(145deg, #34435b, #1d2a3e);
+  outline: 1px solid #8da2c070;
   display: grid;
   place-items: center;
-  box-shadow: 0 12px 25px #293b5510;
+  box-shadow: 0 12px 25px #02071050;
   transform: rotate(8deg);
 }
 .auth-page__cpu span {
-  border: 1px solid #c9d4e2;
+  border: 1px solid #8ba5c64d;
   border-radius: 4px;
   padding: 20px 12px;
-  background: #edf2f8;
-  color: #526b8d;
+  background: #283d5b;
+  color: #c4dcfc;
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -152,10 +157,10 @@
   width: 45%;
   height: 88px;
   padding: 13px 9px 25px;
-  border: 1px solid #d4dae3;
+  border: 1px solid #61728c90;
   border-radius: 9px;
-  background: #fff;
-  box-shadow: 0 12px 25px #293b5510;
+  background: linear-gradient(145deg, #34435b, #1d2a3e);
+  box-shadow: 0 12px 25px #02071050;
   transform: rotate(-5deg);
 }
 .auth-page__ram > span:not(.auth-page__part-label) {
@@ -164,7 +169,7 @@
   margin-bottom: 7px;
   border-bottom: 3px solid #a7bed9;
   border-radius: 3px;
-  background: repeating-linear-gradient(90deg, #6b7d96 0 15px, #d5dce7 15px 20px);
+  background: repeating-linear-gradient(90deg, #b0c4df 0 15px, #425675 15px 20px);
 }
 .auth-page__card {
   padding: 38px 42px;
