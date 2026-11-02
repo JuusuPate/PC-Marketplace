@@ -113,3 +113,30 @@ test("registration legal links preserve the form and acceptance resets on changi
   await page.getByRole("link", { name: "Luo tunnus", exact: true }).click();
   await expect(page.getByRole("checkbox")).not.toBeChecked();
 });
+
+test("animated mode changes preserve email, fit resized content and respect reduced motion", async ({ page }) => {
+  await page.goto("/kirjaudu");
+  await page.getByLabel("Sähköposti", { exact: true }).fill("test@example.test");
+  await page.getByRole("link", { name: "Luo tunnus", exact: true }).click();
+  await expect(page.getByLabel("Sähköposti", { exact: true })).toHaveValue("test@example.test");
+  await expect(page.locator(".auth-page__form")).toHaveCount(1);
+  await page.getByRole("link", { name: "Kirjaudu sisään", exact: true }).click();
+  await page.getByRole("link", { name: "Luo tunnus", exact: true }).click();
+  await page.setViewportSize({ width: 390, height: 844 });
+  await expect
+    .poll(() =>
+      page
+        .locator(".auth-page__content")
+        .evaluate((el) =>
+          Math.abs(parseFloat((el as HTMLElement).style.height) - el.firstElementChild!.getBoundingClientRect().height),
+        ),
+    )
+    .toBeLessThan(2);
+  await expect(page.getByRole("checkbox")).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.getByRole("link", { name: "Kirjaudu sisään", exact: true }).click();
+  await expect(page.locator(".auth-page__content-inner")).toHaveCSS("animation-name", "none");
+  await expect(page.locator(".auth-page__content")).toHaveCSS("transition-property", "none");
+  await expect(page.getByLabel("Sähköposti", { exact: true })).toHaveValue("test@example.test");
+});

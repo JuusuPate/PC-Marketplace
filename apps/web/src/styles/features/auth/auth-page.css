@@ -176,6 +176,8 @@
   min-width: 0;
 }
 .auth-page__switch {
+  position: relative;
+  isolation: isolate;
   display: grid;
   grid-template-columns: 1fr 1fr;
   padding: 4px;
@@ -184,6 +186,27 @@
   border-radius: 10px;
   gap: 4px;
   margin-bottom: 30px;
+}
+.auth-page__switch::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 5px;
+  bottom: 5px;
+  left: 5px;
+  width: calc((100% - 14px) / 2);
+  border-radius: 7px;
+  background: #fff;
+  box-shadow: 0 1px 5px #1118270d;
+  transition:
+    transform 300ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 180ms ease;
+}
+.auth-page__switch[data-mode="register"]::before {
+  transform: translateX(calc(100% + 4px));
+}
+.auth-page__switch[data-mode="forgot"]::before {
+  opacity: 0;
 }
 .auth-page__switch a {
   text-align: center;
@@ -195,9 +218,38 @@
   text-decoration: none;
 }
 .auth-page__switch a[aria-current="page"] {
-  background: white;
   color: var(--ink);
-  box-shadow: 0 1px 5px #1118270d;
+}
+/* Reittisisältö vaihtuu yhtenä kokonaisuutena. Reunavara säilyttää kenttien fokusrajaukset. */
+.auth-page__content {
+  box-sizing: content-box;
+  margin: -24px;
+  padding: 24px;
+  overflow: hidden;
+  transition: height 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.auth-page__content-inner {
+  display: flow-root;
+  animation: auth-content-in 260ms ease-out both;
+}
+@keyframes auth-content-in {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .auth-page__content,
+  .auth-page__switch::before {
+    transition: none;
+  }
+  .auth-page__content-inner {
+    animation: none;
+  }
 }
 .auth-page__card h1 {
   font-size: clamp(27px, 3vw, 35px);

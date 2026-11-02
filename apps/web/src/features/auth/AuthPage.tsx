@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type FormEvent, type MouseEvent } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type FormEvent, type MouseEvent } from "react";
 import { getAuthPath, type AuthMode } from "../../config/auth-routes";
 import { Icon } from "../../components/Icon";
 import { authService, DEMO_ADMIN_EMAIL, GoogleAuthUnavailableError } from "../../lib/auth-service";
@@ -40,6 +40,19 @@ export function AuthPage({
   const [busy, setBusy] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const consentRef = useRef<HTMLInputElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [contentHeight, setContentHeight] = useState<number>();
+  // Mitataan vain sisältö: ulkokuoren animoitu korkeus ei saa ruokkia mittaussilmukkaa.
+  // ResizeObserver huomioi myös virheviestit, käännökset ja puhelimen leveyden.
+  useLayoutEffect(() => {
+    const content = contentRef.current;
+    if (!content) return;
+    const measure = () => setContentHeight(Math.ceil(content.getBoundingClientRect().height));
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(content);
+    return () => observer.disconnect();
+  }, [mode]);
   const inFlight = useRef(false),
     alive = useRef(true);
   useEffect(() => {
@@ -157,7 +170,7 @@ export function AuthPage({
           <span className="auth-page__showcase-note">{text.showcaseNote}</span>
         </aside>
         <div className="auth-page__card">
-          <nav className="auth-page__switch" aria-label={copy.authTitle}>
+          <nav className="auth-page__switch" data-mode={mode} aria-label={copy.authTitle}>
             {(["login", "register"] as const).map((item) => (
               <a
                 key={item}
@@ -169,189 +182,193 @@ export function AuthPage({
               </a>
             ))}
           </nav>
-          <h1 id="auth-page-title" tabIndex={-1}>
-            {text[mode]}
-          </h1>
-          <p className="auth-page__intro">
-            {mode === "login" ? text.loginBody : mode === "register" ? text.registerBody : text.forgotBody}
-          </p>
-          {mode !== "forgot" && (
-            <>
-              <button
-                className="auth-page__google"
-                type="button"
-                disabled={busy || loading}
-                onClick={() => void google()}
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
-                  <path
-                    fill="#4285F4"
-                    d="M21.6 12.23c0-.71-.06-1.39-.18-2.05H12v3.88h5.38a4.6 4.6 0 0 1-2 3.02v2.51h3.24c1.9-1.75 2.98-4.33 2.98-7.36Z"
-                  />
-                  <path
-                    fill="#34A853"
-                    d="M12 22c2.7 0 4.96-.9 6.62-2.41l-3.24-2.51c-.9.6-2.04.96-3.38.96-2.6 0-4.8-1.76-5.59-4.12H3.07v2.59A10 10 0 0 0 12 22Z"
-                  />
-                  <path fill="#FBBC05" d="M6.41 13.92a6 6 0 0 1 0-3.84V7.49H3.07a10 10 0 0 0 0 9.02l3.34-2.59Z" />
-                  <path
-                    fill="#EA4335"
-                    d="M12 5.96c1.47 0 2.79.5 3.83 1.5l2.88-2.87A9.6 9.6 0 0 0 12 2a10 10 0 0 0-8.93 5.49l3.34 2.59C7.2 7.72 9.4 5.96 12 5.96Z"
-                  />
-                </svg>
-                {text.google}
-              </button>
-              <div className="auth-page__divider">
-                <span>{text.separator}</span>
-              </div>
-            </>
-          )}
-          {error && (
-            <p className="form-error auth-page__message" role="alert">
-              {error}
-            </p>
-          )}
-          {notice && (
-            <p className="form-notice auth-page__message" role="status">
-              {notice}
-            </p>
-          )}
-          <form className="auth-page__form" onSubmit={submit} aria-busy={busy}>
-            <fieldset disabled={busy || loading}>
-              {mode === "register" && (
-                <label>
-                  {text.name}
-                  <input
-                    autoComplete="nickname"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required
-                    minLength={2}
-                    maxLength={60}
-                  />
-                </label>
-              )}
-              <label>
-                {text.email}
-                <input
-                  type="email"
-                  autoComplete="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  maxLength={254}
-                />
-              </label>
+          <div className="auth-page__content" style={{ height: contentHeight }}>
+            <div key={mode} ref={contentRef} className="auth-page__content-inner">
+              <h1 id="auth-page-title" tabIndex={-1}>
+                {text[mode]}
+              </h1>
+              <p className="auth-page__intro">
+                {mode === "login" ? text.loginBody : mode === "register" ? text.registerBody : text.forgotBody}
+              </p>
               {mode !== "forgot" && (
-                <div className="auth-page__field">
-                  <label htmlFor="auth-password">{text.password}</label>
-                  <span className="auth-page__password">
-                    <input
-                      id="auth-password"
-                      type={visible ? "text" : "password"}
-                      autoComplete={mode === "register" ? "new-password" : "current-password"}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                      minLength={mode === "register" ? 8 : undefined}
-                      aria-describedby={mode === "register" ? "auth-password-help" : undefined}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setVisible(!visible)}
-                      aria-label={visible ? text.hide : text.show}
-                    >
-                      {visible ? text.hide : text.show}
-                    </button>
-                  </span>
-                </div>
-              )}
-              {mode === "register" && (
                 <>
-                  <small id="auth-password-help">{text.passwordHelp}</small>
-                  <label>
-                    {text.confirm}
-                    <input
-                      type={visible ? "text" : "password"}
-                      autoComplete="new-password"
-                      value={confirmation}
-                      onChange={(e) => setConfirmation(e.target.value)}
-                      required
-                      minLength={8}
-                    />
-                  </label>
+                  <button
+                    className="auth-page__google"
+                    type="button"
+                    disabled={busy || loading}
+                    onClick={() => void google()}
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+                      <path
+                        fill="#4285F4"
+                        d="M21.6 12.23c0-.71-.06-1.39-.18-2.05H12v3.88h5.38a4.6 4.6 0 0 1-2 3.02v2.51h3.24c1.9-1.75 2.98-4.33 2.98-7.36Z"
+                      />
+                      <path
+                        fill="#34A853"
+                        d="M12 22c2.7 0 4.96-.9 6.62-2.41l-3.24-2.51c-.9.6-2.04.96-3.38.96-2.6 0-4.8-1.76-5.59-4.12H3.07v2.59A10 10 0 0 0 12 22Z"
+                      />
+                      <path fill="#FBBC05" d="M6.41 13.92a6 6 0 0 1 0-3.84V7.49H3.07a10 10 0 0 0 0 9.02l3.34-2.59Z" />
+                      <path
+                        fill="#EA4335"
+                        d="M12 5.96c1.47 0 2.79.5 3.83 1.5l2.88-2.87A9.6 9.6 0 0 0 12 2a10 10 0 0 0-8.93 5.49l3.34 2.59C7.2 7.72 9.4 5.96 12 5.96Z"
+                      />
+                    </svg>
+                    {text.google}
+                  </button>
+                  <div className="auth-page__divider">
+                    <span>{text.separator}</span>
+                  </div>
                 </>
               )}
-              {mode === "register" && (
-                <label className="auth-page__consent">
-                  <input
-                    ref={consentRef}
-                    type="checkbox"
-                    checked={termsAccepted}
-                    required
-                    aria-labelledby="auth-consent-text"
-                    onChange={(event) => {
-                      setTermsAccepted(event.target.checked);
-                      if (error === text.consentRequired) setError("");
-                    }}
-                  />
-                  <span id="auth-consent-text">
-                    {text.consentStart}{" "}
-                    <a href="/kayttoehdot" target="_blank" rel="noopener noreferrer">
-                      {text.consentTerms}
-                    </a>{" "}
-                    {text.consentAnd}{" "}
-                    <a href="/tietosuoja" target="_blank" rel="noopener noreferrer">
-                      {text.consentPolicy}
-                    </a>
-                    .
-                  </span>
-                </label>
+              {error && (
+                <p className="form-error auth-page__message" role="alert">
+                  {error}
+                </p>
               )}
-              <button className="button button--primary button--full" type="submit">
-                {busy
-                  ? runtime.working
-                  : mode === "forgot"
-                    ? text.send
-                    : mode === "register"
-                      ? text.register
-                      : copy.login}
-                <Icon name="arrow" />
-              </button>
-            </fieldset>
-          </form>
-          {mode !== "register" && (
-            <a
-              className="auth-page__link"
-              href={getAuthPath(mode === "forgot" ? "login" : "forgot", returnTo)}
-              onClick={follow(getAuthPath(mode === "forgot" ? "login" : "forgot", returnTo))}
-            >
-              {mode === "forgot" ? text.toLogin : text.forgot}
-            </a>
-          )}
-          {authService.mode === "demo" && mode !== "register" && (
-            <div className="auth-page__demo">
-              <span>DEMO</span>
-              <button className="button button--outline" disabled={busy} onClick={() => demo(false)}>
-                {copy.useDemo}
-              </button>
-              <button className="button button--outline" disabled={busy} onClick={() => demo(true)}>
-                {locale === "fi" ? "Käytä admin-demotunnusta" : "Use admin demo account"}
-              </button>
+              {notice && (
+                <p className="form-notice auth-page__message" role="status">
+                  {notice}
+                </p>
+              )}
+              <form className="auth-page__form" onSubmit={submit} aria-busy={busy}>
+                <fieldset disabled={busy || loading}>
+                  {mode === "register" && (
+                    <label>
+                      {text.name}
+                      <input
+                        autoComplete="nickname"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        required
+                        minLength={2}
+                        maxLength={60}
+                      />
+                    </label>
+                  )}
+                  <label>
+                    {text.email}
+                    <input
+                      type="email"
+                      autoComplete="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      maxLength={254}
+                    />
+                  </label>
+                  {mode !== "forgot" && (
+                    <div className="auth-page__field">
+                      <label htmlFor="auth-password">{text.password}</label>
+                      <span className="auth-page__password">
+                        <input
+                          id="auth-password"
+                          type={visible ? "text" : "password"}
+                          autoComplete={mode === "register" ? "new-password" : "current-password"}
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          required
+                          minLength={mode === "register" ? 8 : undefined}
+                          aria-describedby={mode === "register" ? "auth-password-help" : undefined}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setVisible(!visible)}
+                          aria-label={visible ? text.hide : text.show}
+                        >
+                          {visible ? text.hide : text.show}
+                        </button>
+                      </span>
+                    </div>
+                  )}
+                  {mode === "register" && (
+                    <>
+                      <small id="auth-password-help">{text.passwordHelp}</small>
+                      <label>
+                        {text.confirm}
+                        <input
+                          type={visible ? "text" : "password"}
+                          autoComplete="new-password"
+                          value={confirmation}
+                          onChange={(e) => setConfirmation(e.target.value)}
+                          required
+                          minLength={8}
+                        />
+                      </label>
+                    </>
+                  )}
+                  {mode === "register" && (
+                    <label className="auth-page__consent">
+                      <input
+                        ref={consentRef}
+                        type="checkbox"
+                        checked={termsAccepted}
+                        required
+                        aria-labelledby="auth-consent-text"
+                        onChange={(event) => {
+                          setTermsAccepted(event.target.checked);
+                          if (error === text.consentRequired) setError("");
+                        }}
+                      />
+                      <span id="auth-consent-text">
+                        {text.consentStart}{" "}
+                        <a href="/kayttoehdot" target="_blank" rel="noopener noreferrer">
+                          {text.consentTerms}
+                        </a>{" "}
+                        {text.consentAnd}{" "}
+                        <a href="/tietosuoja" target="_blank" rel="noopener noreferrer">
+                          {text.consentPolicy}
+                        </a>
+                        .
+                      </span>
+                    </label>
+                  )}
+                  <button className="button button--primary button--full" type="submit">
+                    {busy
+                      ? runtime.working
+                      : mode === "forgot"
+                        ? text.send
+                        : mode === "register"
+                          ? text.register
+                          : copy.login}
+                    <Icon name="arrow" />
+                  </button>
+                </fieldset>
+              </form>
+              {mode !== "register" && (
+                <a
+                  className="auth-page__link"
+                  href={getAuthPath(mode === "forgot" ? "login" : "forgot", returnTo)}
+                  onClick={follow(getAuthPath(mode === "forgot" ? "login" : "forgot", returnTo))}
+                >
+                  {mode === "forgot" ? text.toLogin : text.forgot}
+                </a>
+              )}
+              {authService.mode === "demo" && mode !== "register" && (
+                <div className="auth-page__demo">
+                  <span>DEMO</span>
+                  <button className="button button--outline" disabled={busy} onClick={() => demo(false)}>
+                    {copy.useDemo}
+                  </button>
+                  <button className="button button--outline" disabled={busy} onClick={() => demo(true)}>
+                    {locale === "fi" ? "Käytä admin-demotunnusta" : "Use admin demo account"}
+                  </button>
+                </div>
+              )}
+              {mode !== "register" && (
+                <p className="auth-page__privacy">
+                  {text.privacy}
+                  <br />
+                  <a href="/kayttoehdot" onClick={follow("/kayttoehdot")}>
+                    {text.terms}
+                  </a>
+                  <span aria-hidden="true"> · </span>
+                  <a href="/tietosuoja" onClick={follow("/tietosuoja")}>
+                    {text.policy}
+                  </a>
+                </p>
+              )}
             </div>
-          )}
-          {mode !== "register" && (
-            <p className="auth-page__privacy">
-              {text.privacy}
-              <br />
-              <a href="/kayttoehdot" onClick={follow("/kayttoehdot")}>
-                {text.terms}
-              </a>
-              <span aria-hidden="true"> · </span>
-              <a href="/tietosuoja" onClick={follow("/tietosuoja")}>
-                {text.policy}
-              </a>
-            </p>
-          )}
+          </div>
         </div>
       </div>
     </section>
