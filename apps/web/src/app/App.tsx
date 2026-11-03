@@ -59,7 +59,6 @@ import { getAuthPath, getAuthRoute } from "../config/auth-routes";
 import { PasswordRecoveryModal } from "../features/auth/PasswordRecoveryModal";
 import { CategoryHero } from "../features/catalog/CategoryHero";
 import { CheckoutModal } from "../features/checkout/CheckoutModal";
-import { FavouritesModal } from "../features/favourites/FavouritesModal";
 import { ListingDetailPage } from "../features/listings/ListingDetailPage";
 import { LegalPage } from "../features/legal/LegalPage";
 import { CreateListingPage } from "../features/sell/CreateListingPage";
@@ -242,6 +241,9 @@ export function App() {
     backendMode === "demo" ? demoStorage.getFavourites() : [],
   );
   const [favouritesReady, setFavouritesReady] = useState(backendMode === "demo");
+  const [favouritesLoadError, setFavouritesLoadError] = useState(false);
+  const [savedListingsLoading, setSavedListingsLoading] = useState(false);
+  const [savedListingsError, setSavedListingsError] = useState(false);
   const [savedListings, setSavedListings] = useState<Listing[]>([]);
   const [reportedListingIds, setReportedListingIds] = useState<string[]>(() =>
     backendMode === "demo" && user ? demoStorage.getReportedListingIds(user.id) : [],
@@ -279,7 +281,6 @@ export function App() {
   const [authRoute, setAuthRoute] = useState(() => getAuthRoute(window.location.pathname, window.location.search));
   const [passwordRecoveryOpen, setPasswordRecoveryOpen] = useState(false);
   const [accountTab, setAccountTab] = useState(() => getAccountTab(window.location.pathname));
-  const [favouritesOpen, setFavouritesOpen] = useState(false);
   const [pendingCheckout, setPendingCheckout] = useState<Listing | null>(null);
   const [toast, setToast] = useState<string | null>(null);
   const [homeExpanded, setHomeExpanded] = useState(false);
@@ -303,8 +304,20 @@ export function App() {
     () =>
       [...customListings, ...(backendMode === "demo" ? [...DEMO_LISTINGS, ...SIMULATED_LISTINGS] : [])]
         .filter(isLaunchListing)
-        .map((listing) => ({ ...listing, shipsTo: [LAUNCH_MARKET] })),
-    [customListings],
+        .map((listing) => ({
+          ...listing,
+          shipsTo: [LAUNCH_MARKET],
+          seller:
+            user?.id === listing.seller.id
+              ? {
+                  ...listing.seller,
+                  name: user.name,
+                  initials: user.name.slice(0, 2).toUpperCase(),
+                  avatarUrl: user.avatarUrl,
+                }
+              : listing.seller,
+        })),
+    [customListings, user],
   );
 
   const activeListing = useMemo(() => {
@@ -375,6 +388,9 @@ export function App() {
     setReportedListingIds([]);
     setSupabaseOwnListings([]);
     setFavouritesReady(false);
+    setFavouritesLoadError(false);
+    setSavedListingsLoading(false);
+    setSavedListingsError(false);
     setOwnListingsLoading(Boolean(user));
     setOwnListingsError(false);
     if (!user)
@@ -388,7 +404,10 @@ export function App() {
         if (isCurrent) setFavourites(ids);
       })
       .catch(() => {
-        if (isCurrent) showToast(locale === "fi" ? "Suosikkeja ei voitu ladata." : "Could not load favourites.");
+        if (isCurrent) {
+          setFavouritesLoadError(true);
+          showToast(locale === "fi" ? "Suosikkeja ei voitu ladata." : "Could not load favourites.");
+        }
       })
       .finally(() => {
         if (isCurrent) setFavouritesReady(true);
@@ -428,6 +447,8 @@ export function App() {
     if (backendMode !== "supabase" || !user || !favouritesReady) return;
     const loadedIds = new Set(listings.map((listing) => listing.id));
     const missingIds = favourites.filter((id) => !loadedIds.has(id));
+    setSavedListingsError(false);
+    setSavedListingsLoading(missingIds.length > 0);
     if (missingIds.length === 0) {
       setSavedListings([]);
       return;
@@ -440,8 +461,13 @@ export function App() {
         if (isCurrent) setSavedListings(results);
       })
       .catch(() => {
-        if (isCurrent)
+        if (isCurrent) {
+          setSavedListingsError(true);
           showToast(locale === "fi" ? "Tallennettuja ilmoituksia ei voitu ladata." : "Could not load saved listings.");
+        }
+      })
+      .finally(() => {
+        if (isCurrent) setSavedListingsLoading(false);
       });
     return () => {
       isCurrent = false;
@@ -739,7 +765,6 @@ export function App() {
   };
 
   const requestAuth = (returnTo = `${window.location.pathname}${window.location.search}${window.location.hash}`) => {
-    setFavouritesOpen(false);
     navigateTo(getAuthPath("login", returnTo));
   };
 
@@ -909,7 +934,7 @@ export function App() {
         onSearchQuery={setQuery}
         onSearch={searchCatalog}
         favouriteCount={favouriteListings.length}
-        onFavourites={() => setFavouritesOpen(true)}
+        onFavourites={() => navigateTo(getAccountPath("favourites"))}
         currentPath={`${window.location.pathname}${window.location.search}${window.location.hash}`}
         onNavigate={navigateTo}
         onLogout={() => {
@@ -958,7 +983,32 @@ export function App() {
               onEditListing={beginEditListing}
               onLocale={setLocale}
               onCookieSettings={() => setCookieSettingsOpen(true)}
-              onFavourites={() => setFavouritesOpen(true)}
+              favouriteListings={favouriteListings}
+              favouritesLoading={!favouritesReady || listingsLoading || savedListingsLoading}
+              favouritesError={favouritesLoadError || savedListingsError}
+              onFavourite={toggleFavourite}
+              onProfileUpdated={(next) => {
+                if (currentUserId.current !== next.id) return;
+                setUser(next);
+                const updateSeller = (listing: Listing): Listing =>
+                  listing.seller.id !== next.id
+                    ? listing
+                    : {
+                        ...listing,
+                        seller: {
+                          ...listing.seller,
+                          name: next.name,
+                          initials: next.name.slice(0, 2).toUpperCase(),
+                          avatarUrl: next.avatarUrl,
+                        },
+                      };
+                setCustomListings((previous) => previous.map(updateSeller));
+                setSavedListings((previous) => previous.map(updateSeller));
+                setSupabaseOwnListings((previous) => previous.map(updateSeller));
+              }}
+              onNotice={(message) => {
+                if (currentUserId.current === user.id) showToast(message);
+              }}
             />
           ) : (
             <section className="account-page section-shell" role="status">
@@ -1295,23 +1345,6 @@ export function App() {
           locale={locale}
           onClose={() => setCheckoutListing(null)}
           onComplete={completeOrder}
-        />
-      )}
-      {favouritesOpen && (
-        <FavouritesModal
-          copy={copy}
-          locale={locale}
-          listings={favouriteListings}
-          onClose={() => setFavouritesOpen(false)}
-          onOpenListing={(listing) => {
-            setFavouritesOpen(false);
-            navigateTo(getListingPath(listing.id));
-          }}
-          onRemoveFavourite={toggleFavourite}
-          onBrowseProducts={() => {
-            setFavouritesOpen(false);
-            navigateTo("/kategoriat/kaikki");
-          }}
         />
       )}
       <CookiePreferences

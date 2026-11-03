@@ -1,3 +1,4 @@
+import { profileAvatarUrl } from "./profile-avatar";
 import { authRedirectUrl } from "../config/auth-routes";
 import type { User } from "@supabase/supabase-js";
 import { LAUNCH_MARKET, MARKETS } from "../config/markets";
@@ -15,7 +16,7 @@ function isLocale(value: unknown): value is Locale {
  * Muuntaa Auth-käyttäjän käyttöliittymän käyttäjäksi.
  * Admin-rooli varmistetaan suojatulla palvelinkutsulla; muokattavaa käyttäjämetadataa ei käytetä oikeuksiin.
  */
-async function mapUser(user: User): Promise<DemoUser> {
+export async function mapUser(user: User): Promise<DemoUser> {
   const metadata = user.user_metadata;
   const countryCode = LAUNCH_MARKET;
   const locale = isLocale(metadata.locale) ? metadata.locale : MARKETS[countryCode].defaultLocale;
@@ -33,6 +34,7 @@ async function mapUser(user: User): Promise<DemoUser> {
 
   return {
     id: user.id,
+    avatarUrl: profileAvatarUrl(metadata.avatar_path),
     name:
       typeof metadata.display_name === "string" && metadata.display_name.trim().length >= 2
         ? metadata.display_name.trim()

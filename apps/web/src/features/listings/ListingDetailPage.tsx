@@ -303,7 +303,9 @@ export function ListingDetailPage({
               </section>
 
               <section className="seller-panel" aria-labelledby="listing-seller-title">
-                <span className="seller-avatar seller-avatar--large">{listing.seller.initials}</span>
+                <span className="seller-avatar seller-avatar--large">
+                  {listing.seller.avatarUrl ? <img src={listing.seller.avatarUrl} alt="" /> : listing.seller.initials}
+                </span>
                 <div>
                   <small id="listing-seller-title">{copy.sellerDetails}</small>
                   <strong>

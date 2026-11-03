@@ -1,3 +1,4 @@
+import { profileAvatarUrl } from "./profile-avatar";
 import { applyListingPriceSignals } from "./listing-price-service";
 import { readSpecification } from "../features/sell/listing-profile";
 import type {
@@ -17,7 +18,7 @@ import { backendMode, supabase } from "./supabase";
 
 const LISTING_IMAGES_BUCKET = "listing-images";
 const LISTING_SELECT =
-  "id,catalog_model_id,title,description,category,condition,price_minor,currency,city,specs,status,is_featured,created_at,published_at,seller:profiles!listings_seller_id_fkey(id,display_name,country_code,joined_at,reviews:reviews!reviews_subject_id_fkey(rating)),destinations:listing_shipping_countries(country_code),images:listing_images(id,storage_path,alt_text,width,height,sort_order)";
+  "id,catalog_model_id,title,description,category,condition,price_minor,currency,city,specs,status,is_featured,created_at,published_at,seller:profiles!listings_seller_id_fkey(id,display_name,country_code,joined_at,avatar_path,reviews:reviews!reviews_subject_id_fkey(rating)),destinations:listing_shipping_countries(country_code),images:listing_images(id,storage_path,alt_text,width,height,sort_order)";
 
 interface DbListingImage {
   id: string;
@@ -29,6 +30,7 @@ interface DbListingImage {
 }
 
 interface DbSeller {
+  avatar_path?: string | null;
   id: string;
   display_name: string;
   country_code: CountryCode;
@@ -161,6 +163,7 @@ function mapListing(row: DbListing): Listing {
     city: row.city,
     seller: {
       id: seller.id,
+      avatarUrl: profileAvatarUrl(seller.avatar_path),
       name: seller.display_name,
       initials: seller.display_name.slice(0, 2).toUpperCase(),
       countryCode: seller.country_code,

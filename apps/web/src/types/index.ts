@@ -21,6 +21,7 @@ export interface Market {
 }
 
 export interface Seller {
+  avatarUrl?: string;
   id: string;
   name: string;
   initials: string;
@@ -96,6 +97,7 @@ export interface Listing {
  * role ohjaa UI:n näkyvyyttä; palvelin varmistaa oikeudet omasta suojatusta roolitaulustaan.
  */
 export interface DemoUser {
+  avatarUrl?: string;
   id: string;
   name: string;
   email: string;

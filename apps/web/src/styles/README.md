@@ -18,12 +18,7 @@
 | `features/legal/`       | Ehto- ja tietosuojasivut sekä niiden muokkaus                                                         |
 | `responsive/`           | Nykyiset sivunlaajuiset työpöytä-, tabletti- ja mobiilisäännöt                                        |
 
-Adminin ja suosikkien jo erilliset tyylit ovat omien ominaisuuksiensa vieressä:
-
-- `../features/admin/styles/admin-dashboard.css`
-- `../features/favourites/styles/favourites-modal.css`
-
-Niiden React-komponentit lataavat nämä tyylit kuten ennenkin. Muita tyylejä ladataan vain `index.css`-tiedostosta, jotta samaa tiedostoa ei tuoda kahdesti eri järjestyksessä.
+Adminin erilliset tyylit ovat ominaisuuden vieressä: `../features/admin/styles/admin-dashboard.css`. Adminin komponentit lataavat ne. Suosikit kuuluu oman tilin sivuihin ja käyttää `features/account/account-page.css`-tyylejä sekä yhteisiä ilmoituskortteja. Muut tyylit ladataan `index.css`-tiedostosta.
 
 ## Työskentely tiimissä
 

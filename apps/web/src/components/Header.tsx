@@ -211,7 +211,6 @@ export function Header({
             }}
             currentPath={currentPath}
             onNavigate={onNavigate}
-            onFavourites={onFavourites}
             onLogout={onLogout}
             favouriteCount={favouriteCount}
           />

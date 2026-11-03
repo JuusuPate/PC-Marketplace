@@ -1,5 +1,7 @@
+import { ProfileEditor } from "./ProfileEditor";
 import { getCookieCopy } from "../privacy/cookie-copy";
 import { useEffect, useRef, useState, type MouseEvent } from "react";
+import { ListingCard } from "../../components/ListingCard";
 import { Icon } from "../../components/Icon";
 import { getAccountPath, type AccountTab } from "../../config/account-routes";
 import { LOCALE_LABELS, PUBLIC_LOCALES } from "../../config/markets";
@@ -31,7 +33,12 @@ export function AccountPage({
   onEditListing,
   onLocale,
   onCookieSettings,
-  onFavourites,
+  favouriteListings,
+  favouritesLoading,
+  favouritesError,
+  onFavourite,
+  onProfileUpdated,
+  onNotice,
 }: {
   copy: Messages;
   locale: Locale;
@@ -45,7 +52,12 @@ export function AccountPage({
   onEditListing: (listing: Listing) => void;
   onLocale: (locale: Locale) => void;
   onCookieSettings: () => void;
-  onFavourites: () => void;
+  favouriteListings: Listing[];
+  favouritesLoading: boolean;
+  favouritesError: boolean;
+  onFavourite: (listingId: string) => void;
+  onProfileUpdated: (user: DemoUser) => void;
+  onNotice: (message: string) => void;
 }) {
   const text = getAccountCopy(locale);
   const [listingFilter, setListingFilter] = useState<OwnListingFilter>("all");
@@ -84,15 +96,17 @@ export function AccountPage({
     onNavigate(path);
   };
   const intro =
-    tab === "profile"
-      ? text.profileIntro
-      : tab === "settings"
-        ? text.settingsIntro
-        : tab === "listings"
-          ? text.listingsIntro
-          : backendMode === "demo"
-            ? text.ordersIntro
-            : "";
+    tab === "favourites"
+      ? text.favouritesIntro
+      : tab === "profile"
+        ? text.profileIntro
+        : tab === "settings"
+          ? text.settingsIntro
+          : tab === "listings"
+            ? text.listingsIntro
+            : backendMode === "demo"
+              ? text.ordersIntro
+              : "";
   const statuses =
     locale === "fi"
       ? { draft: "Luonnos", active: "Julkaistu", reserved: "Varattu", sold: "Myyty", removed: "Poistettu" }
@@ -106,7 +120,7 @@ export function AccountPage({
         {intro && <p>{intro}</p>}
       </header>
       <nav className="account-page__nav" aria-label={text.navigation}>
-        {(["profile", "settings", "listings", "orders"] as const).map((item) => (
+        {(["profile", "listings", "favourites", "orders", "settings"] as const).map((item) => (
           <a
             key={item}
             href={getAccountPath(item)}
@@ -116,25 +130,53 @@ export function AccountPage({
             {text[item]}
           </a>
         ))}
-        <button type="button" onClick={onFavourites} aria-haspopup="dialog">
-          {text.favourites}
-        </button>
       </nav>
       <div className="account-page__panel">
-        {tab === "profile" && (
-          <div className="account-page__profile">
-            <div className="account-page__avatar" aria-hidden="true">
-              {user.name.slice(0, 2).toUpperCase()}
+        {tab === "favourites" &&
+          (favouritesLoading ? (
+            <p role="status">{text.loadingFavourites}</p>
+          ) : favouritesError ? (
+            <p className="form-error" role="alert">
+              {text.favouritesLoadError}
+            </p>
+          ) : favouriteListings.length === 0 ? (
+            <div className="account-page__favourites-empty">
+              <Icon name="heart" />
+              <h2>{copy.favouritesEmpty}</h2>
+              <p>{copy.favouritesEmptyBody}</p>
+              <a
+                className="button button--outline"
+                href="/kategoriat/kaikki"
+                onClick={(event) => follow(event, "/kategoriat/kaikki")}
+              >
+                {copy.browseProducts}
+              </a>
             </div>
-            <dl className="account-page__details">
-              <div>
-                <dt>{text.name}</dt>
-                <dd>{user.name}</dd>
+          ) : (
+            <>
+              <p className="account-page__favourites-count" role="status">
+                {favouriteListings.length} {copy.listings}
+              </p>
+              <div className="listing-grid account-page__favourites-grid">
+                {favouriteListings.map((listing) => (
+                  <ListingCard
+                    key={listing.id}
+                    listing={listing}
+                    locale={locale}
+                    copy={copy}
+                    favourite
+                    href={getListingPath(listing.id)}
+                    onFavourite={() => onFavourite(listing.id)}
+                    onOpen={() => onNavigate(getListingPath(listing.id))}
+                  />
+                ))}
               </div>
-              <div>
-                <dt>{text.email}</dt>
-                <dd>{user.email}</dd>
-              </div>
+            </>
+          ))}
+        {tab === "profile" && (
+          <>
+            <ProfileEditor user={user} locale={locale} onUpdated={onProfileUpdated} onNotice={onNotice} />
+            <dl className="account-page__details profile-editor__details">
               <div>
                 <dt>{text.country}</dt>
                 <dd>{locale === "fi" ? "Suomi" : "Finland"}</dd>
@@ -144,7 +186,7 @@ export function AccountPage({
                 <dd>{user.role === "admin" ? "Admin" : text.user}</dd>
               </div>
             </dl>
-          </div>
+          </>
         )}
         {tab === "settings" && (
           <div className="account-page__settings">

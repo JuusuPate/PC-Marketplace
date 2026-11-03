@@ -79,7 +79,6 @@
   font-size: 15px;
   font-weight: 600;
   line-height: 1.2;
-  transform: translateY(-1px);
 }
 .card-content > p,
 .card-footer {

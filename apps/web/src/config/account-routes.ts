@@ -3,6 +3,7 @@ export const ACCOUNT_PATHS = {
   settings: "/oma-tili/asetukset",
   listings: "/oma-tili/ilmoitukset",
   orders: "/oma-tili/ostokset",
+  favourites: "/oma-tili/suosikit",
 } as const;
 export type AccountTab = keyof typeof ACCOUNT_PATHS;
 export function getAccountPath(tab: AccountTab) {

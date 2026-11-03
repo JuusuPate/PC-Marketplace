@@ -17,18 +17,20 @@ test("profile opens a dropdown, not the removed account dialog; pages survive re
   await menu.getByRole("menuitem", { name: "Profiili", exact: true }).click();
   await expect(page).toHaveURL(/\/oma-tili$/);
   await expect(page.getByRole("heading", { name: "Profiili", exact: true })).toBeVisible();
-  await expect(page.getByText("demo@pcmarket.fi", { exact: true })).toBeVisible();
+  await expect(page.getByLabel("Sähköpostiosoite", { exact: true })).toHaveValue("demo@pcmarket.fi");
   await expect(page.locator(".account-wrap")).toHaveCount(0);
   await page.reload();
   await expect(page.getByRole("heading", { name: "Profiili", exact: true })).toBeVisible();
   const favourites = page
     .getByRole("navigation", { name: "Tilin sivut", exact: true })
-    .getByRole("button", { name: "Suosikit", exact: true });
+    .getByRole("link", { name: "Suosikit", exact: true });
   await favourites.click();
-  await expect(page.getByRole("dialog", { name: "Suosikit", exact: true })).toBeVisible();
-  await page.getByRole("button", { name: "Sulje", exact: true }).click();
-  await expect(favourites).toBeFocused();
-  await expect(page).toHaveURL(/\/oma-tili$/);
+  await expect(page).toHaveURL(/\/oma-tili\/suosikit$/);
+  await expect(page.getByRole("heading", { name: "Suosikit", exact: true })).toBeVisible();
+  await expect(favourites).toHaveAttribute("aria-current", "page");
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+  await page.reload();
+  await expect(page.getByRole("heading", { name: "Suosikit", exact: true })).toBeVisible();
 });
 test("keyboard, outside click and mobile settings work without overflowing", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
@@ -58,9 +60,9 @@ test("favourites keep their existing action and admin links are role-specific", 
   await login(page, true);
   await page.getByRole("button", { name: "Oma tili", exact: true }).click();
   await page.getByRole("menuitem", { name: "Suosikit", exact: true }).click();
-  await expect(page.getByRole("dialog")).toBeVisible();
-  await expect(page.locator(".account-wrap")).toHaveCount(0);
-  await page.getByRole("button", { name: "Sulje", exact: true }).click();
+  await expect(page).toHaveURL(/\/oma-tili\/suosikit$/);
+  await expect(page.getByRole("heading", { name: "Suosikit", exact: true })).toBeVisible();
+  await expect(page.getByRole("dialog")).toHaveCount(0);
   await page.getByRole("button", { name: "Oma tili", exact: true }).click();
   await page.getByRole("menuitem", { name: "Ylläpito", exact: true }).click();
   await expect(page).toHaveURL(/\/admin$/);
@@ -189,7 +191,7 @@ test("loading and failed own-listing reads do not expose stale rows or claim zer
     ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(AccountPage,{
       copy:getMessages('fi'),locale:'fi',user:{id:'owner',name:'Owner',email:'owner@example.test',countryCode:'FI',role:'user'},
       tab:'listings',ownListings:[DEMO_LISTINGS[0]],ownListingsLoading:loading,ownListingsError:!loading,orders:[],
-      onNavigate:()=>{},onEditListing:()=>{},onLocale:()=>{},onCookieSettings:()=>{},onFavourites:()=>{}
+      onNavigate:()=>{},onEditListing:()=>{},onLocale:()=>{},onCookieSettings:()=>{},favouriteListings:[],favouritesLoading:false,favouritesError:false,onFavourite:()=>{},onProfileUpdated:()=>{}
     }));
     </script></body></html>`,
     }),
@@ -204,4 +206,42 @@ test("loading and failed own-listing reads do not expose stale rows or claim zer
     if (state === "error") await expect(page.getByRole("alert")).toContainText("Omia ilmoituksia ei voitu ladata.");
     else await expect(page.getByRole("status")).toHaveText("Ladataan omia ilmoituksia…");
   }
+});
+
+test("profile saves public name and image and supports the local demo email flow", async ({ page }) => {
+  await login(page);
+  await page.goto("/oma-tili");
+  const nav = page.getByRole("navigation", { name: "Tilin sivut", exact: true });
+  await expect(nav.getByRole("link")).toHaveText([
+    "Profiili",
+    "Omat ilmoitukset",
+    "Suosikit",
+    "Ostokseni",
+    "Käyttäjäasetukset",
+  ]);
+  await page.getByLabel("Julkinen näyttönimi", { exact: true }).fill("New public name");
+  await page.getByLabel("Profiilikuva", { exact: true }).setInputFiles({
+    name: "avatar.png",
+    mimeType: "image/png",
+    buffer: Buffer.from(
+      "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jSucAAAAASUVORK5CYII=",
+      "base64",
+    ),
+  });
+  await page.getByRole("button", { name: "Tallenna profiili", exact: true }).click();
+  await expect(page.locator(".mini-avatar img")).toBeVisible();
+  await page.reload();
+  await expect(page.getByLabel("Julkinen näyttönimi", { exact: true })).toHaveValue("New public name");
+  await expect(page.locator(".profile-editor__avatar img")).toBeVisible();
+  await page.getByLabel("Sähköpostiosoite", { exact: true }).fill("new@example.test");
+  await page.getByRole("button", { name: "Vaihda sähköpostiosoite", exact: true }).click();
+  await expect(page.getByRole("status")).toContainText("Sähköposti vaihdettu");
+  await page.reload();
+  await expect(page.getByLabel("Sähköpostiosoite", { exact: true })).toHaveValue("new@example.test");
+  await page.getByRole("button", { name: "Poista profiilikuva", exact: true }).click();
+  await page.getByRole("button", { name: "Tallenna profiili", exact: true }).click();
+  await expect(page.locator(".mini-avatar img")).toHaveCount(0);
+  await nav.getByRole("link", { name: "Suosikit", exact: true }).click();
+  await expect(page).toHaveURL(/\/oma-tili\/suosikit$/);
+  await expect(page.getByRole("dialog")).toHaveCount(0);
 });

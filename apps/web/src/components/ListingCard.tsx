@@ -22,7 +22,6 @@ interface ListingCardProps {
  * Tavallinen linkkipainallus käyttää sovelluksen reititystä, mutta Ctrl-/Cmd-painallus säilyttää selaimen toiminnan.
  */
 export function ListingCard({ listing, locale, copy, favourite, href, onFavourite, onOpen }: ListingCardProps) {
-  const conditionLabel = listing.condition === "fair" ? copy.conditionFair : copy[listing.condition];
   const handleOpen = (event: MouseEvent<HTMLAnchorElement>) => {
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     event.preventDefault();
@@ -61,7 +60,7 @@ export function ListingCard({ listing, locale, copy, favourite, href, onFavourit
           <ListingAge listing={listing} locale={locale} />
         </div>
         <a className="card-title" href={href} onClick={handleOpen}>
-          {listing.title}
+          <span>{listing.title}</span>
         </a>
         {isRgbListing(listing) && <span className="listing-rgb-tag">RGB</span>}
         <p>{listing.subtitle}</p>
@@ -74,7 +73,9 @@ export function ListingCard({ listing, locale, copy, favourite, href, onFavourit
           )}
         </div>
         <div className="card-footer">
-          <span className="seller-avatar">{listing.seller.initials}</span>
+          <span className="seller-avatar">
+            {listing.seller.avatarUrl ? <img src={listing.seller.avatarUrl} alt="" /> : listing.seller.initials}
+          </span>
           <span>{listing.seller.name}</span>
           {listing.seller.verified && (
             <span className="verified-dot" title={copy.verified}>

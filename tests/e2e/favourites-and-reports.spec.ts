@@ -8,11 +8,11 @@ test("demotilan suosikki ja ilmoitusraportti säilyvät sivun latauksessa", asyn
   await page.reload();
   await expect(page.getByRole("button", { name: "Tallennettu" })).toBeVisible();
   await page.getByRole("button", { name: /Suosikit: 1/ }).click();
-  await expect(page.getByRole("dialog", { name: "Suosikit" })).toContainText("AMD Ryzen 7 7800X3D");
-  await page.getByRole("dialog", { name: "Suosikit" }).getByRole("button", { name: "Sulje" }).click();
-
-  await page.getByRole("button", { name: "Ilmoita kohteesta" }).click();
-  await page.getByRole("button", { name: "Käytä demotunnusta" }).click();
+  await expect(page).toHaveURL(/\/kirjaudu\?paluu=%2Foma-tili%2Fsuosikit$/);
+  await page.getByRole("button", { name: "Käytä demotunnusta", exact: true }).click();
+  await expect(page).toHaveURL(/\/oma-tili\/suosikit$/);
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+  await page.getByRole("link", { name: "AMD Ryzen 7 7800X3D", exact: true }).click();
   await page.getByRole("button", { name: "Ilmoita kohteesta" }).click();
   const reportDialog = page.getByRole("dialog", { name: "Ilmoita ongelmasta" });
   await reportDialog.getByRole("combobox", { name: "Ilmoituksen syy" }).selectOption("other");

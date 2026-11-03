@@ -2252,3 +2252,86 @@ describe("public fair-price badges", () => {
     ).toHaveLength(1);
   });
 });
+
+// These queries use only the in-memory PGlite instance created in beforeAll.
+// This test file imports no Supabase client and has no remote database connection.
+describe("editable public profiles and avatar ownership", () => {
+  let avatar: string;
+  beforeEach(async () => {
+    avatar = userId + "/" + crypto.randomUUID() + ".webp";
+    // Match Supabase's Storage role privileges in this isolated test fixture.
+    await db.exec(
+      "grant usage on schema storage to authenticated; grant select,insert,delete on storage.objects to authenticated",
+    );
+  });
+  it("mirrors public fields while roles and public table writes remain protected", async () => {
+    await db.query("insert into storage.objects(bucket_id,name) values('profile-avatars',$1)", [avatar]);
+    await db.query(
+      "update auth.users set raw_user_meta_data=raw_user_meta_data||jsonb_build_object('display_name','New public name','avatar_path',$1::text,'role','admin') where id=$2",
+      [avatar, userId],
+    );
+    expect(
+      (await asRole("anon", null, `select display_name,avatar_path from public.profiles where id='${userId}'`)).rows[0],
+    ).toEqual({ display_name: "New public name", avatar_path: avatar });
+    expect((await asRole("authenticated", userId, "select public.is_current_user_admin() as admin")).rows[0]).toEqual({
+      admin: false,
+    });
+    await expect(
+      asRole("authenticated", userId, `update public.profiles set display_name='Another user' where id='${adminId}'`),
+    ).rejects.toMatchObject({ code: "42501" });
+    await expect(asRole("anon", null, "select public.sync_public_profile_from_auth()")).rejects.toMatchObject({
+      code: "42501",
+    });
+  });
+  it("rejects invalid names and foreign, missing or traversal avatar paths atomically", async () => {
+    const before = (await db.query("select display_name from public.profiles where id=$1", [userId])).rows[0];
+    for (const value of ["x", " ", "a".repeat(61)])
+      await expect(
+        db.query("update auth.users set raw_user_meta_data=jsonb_build_object('display_name',$1::text) where id=$2", [
+          value,
+          userId,
+        ]),
+      ).rejects.toMatchObject({ code: "22023" });
+    for (const value of [
+      avatar,
+      adminId + "/" + crypto.randomUUID() + ".webp",
+      userId + "/../avatar.webp",
+      "https://outside.test/pic.svg",
+    ])
+      await expect(
+        db.query(
+          "update auth.users set raw_user_meta_data=jsonb_build_object('display_name','Valid name','avatar_path',$1::text) where id=$2",
+          [value, userId],
+        ),
+      ).rejects.toMatchObject({ code: "22023" });
+    expect((await db.query("select display_name from public.profiles where id=$1", [userId])).rows[0]).toEqual(before);
+  });
+  it("permits own uploads, denies foreign paths and preserves an active avatar", async () => {
+    await asRole(
+      "authenticated",
+      userId,
+      `insert into storage.objects(bucket_id,name) values('profile-avatars','${avatar}')`,
+    );
+    await expect(
+      asRole(
+        "authenticated",
+        adminId,
+        `insert into storage.objects(bucket_id,name) values('profile-avatars','${userId}/${crypto.randomUUID()}.webp')`,
+      ),
+    ).rejects.toMatchObject({ code: "42501" });
+    await db.query(
+      "update auth.users set raw_user_meta_data=jsonb_build_object('display_name','Owner name','avatar_path',$1::text) where id=$2",
+      [avatar, userId],
+    );
+    await asRole("authenticated", userId, `delete from storage.objects where name='${avatar}'`);
+    expect((await db.query("select name from storage.objects where name=$1", [avatar])).rows).toHaveLength(1);
+    await db.query(
+      "update auth.users set raw_user_meta_data=jsonb_build_object('display_name','Owner name','avatar_path',null) where id=$1",
+      [userId],
+    );
+    await asRole("authenticated", adminId, `delete from storage.objects where name='${avatar}'`);
+    expect((await db.query("select name from storage.objects where name=$1", [avatar])).rows).toHaveLength(1);
+    await asRole("authenticated", userId, `delete from storage.objects where name='${avatar}'`);
+    expect((await db.query("select name from storage.objects where name=$1", [avatar])).rows).toHaveLength(0);
+  });
+});

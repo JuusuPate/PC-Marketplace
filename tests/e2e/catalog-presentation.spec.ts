@@ -13,7 +13,7 @@ for (const width of [390, 1920]) {
     expect(box!.height).toBeLessThan(width === 390 ? 350 : 330);
     await expect(sell).toHaveCSS("border-top-width", "1px");
     await expect(sell).not.toHaveCSS("border-top-color", "rgba(0, 0, 0, 0)");
-    for (const side of ["top", "right", "bottom", "left"]) await expect(card).toHaveCSS(`border-${side}-width`, "1px");
+    for (const side of ["top", "right", "bottom", "left"]) await expect(card).toHaveCSS(`border-${side}-width`, "2px");
     await expect(card).toHaveCSS("border-style", "solid");
     await expect(page.locator(".price-signal")).toHaveCount(0);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
@@ -36,4 +36,26 @@ test("old locally stored demo badges never become market claims", async ({ page 
   await page.locator(".market-toolbar input").fill("Legacy badge fixture");
   await expect(page.locator(".listing-grid .listing-card")).toHaveCount(1);
   await expect(page.locator(".price-signal")).toHaveCount(0);
+});
+
+test("card metadata opens the listing and its favourite action stays independent", async ({ page }) => {
+  await page.goto("/kategoriat/kaikki");
+  const card = page.locator(".listing-grid .listing-card").first();
+  await card.hover();
+  await expect(card).not.toHaveCSS("transform", "none");
+  await card.getByRole("button", { name: "Tallenna", exact: true }).click();
+  await expect(page).toHaveURL(/\/kategoriat\/kaikki$/);
+  const href = await card.locator(".card-title").getAttribute("href");
+  await card.locator(".card-footer").scrollIntoViewIfNeeded();
+  const footer = await card.locator(".card-footer").boundingBox();
+  await page.mouse.click(footer!.x + footer!.width / 2, footer!.y + footer!.height / 2);
+  await expect(page).toHaveURL(new RegExp(href + "$"));
+  await page.goBack();
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await card.hover();
+  await expect(card).toHaveCSS("transform", "none");
+  await card.locator(".card-price-row").scrollIntoViewIfNeeded();
+  const price = await card.locator(".card-price-row").boundingBox();
+  await page.mouse.click(price!.x + price!.width / 2, price!.y + price!.height / 2);
+  await expect(page).toHaveURL(new RegExp(href + "$"));
 });

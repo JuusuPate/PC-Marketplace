@@ -15,7 +15,6 @@ export function AccountMenu({
   onOpenChange,
   currentPath,
   onNavigate,
-  onFavourites,
   onLogout,
   favouriteCount,
 }: {
@@ -26,7 +25,6 @@ export function AccountMenu({
   onOpenChange: (open: boolean) => void;
   currentPath: string;
   onNavigate: (path: string) => void;
-  onFavourites: () => void;
   onLogout: () => void;
   favouriteCount: number;
 }) {
@@ -59,9 +57,7 @@ export function AccountMenu({
   };
   const links: { label: string; path: string; icon: IconName }[] = [
     { label: text.profile, path: getAccountPath("profile"), icon: "user" },
-    { label: text.settings, path: getAccountPath("settings"), icon: "edit" },
     { label: text.listings, path: getAccountPath("listings"), icon: "package" },
-    { label: text.orders, path: getAccountPath("orders"), icon: "truck" },
   ];
   return (
     <div className="account-menu" ref={rootRef}>
@@ -85,7 +81,9 @@ export function AccountMenu({
           }
         }}
       >
-        <span className="mini-avatar">{user.name.slice(0, 2).toUpperCase()}</span>
+        <span className="mini-avatar">
+          {user.avatarUrl ? <img src={user.avatarUrl} alt="" /> : user.name.slice(0, 2).toUpperCase()}
+        </span>
         <span>{copy.account}</span>
       </button>
       {open && (
@@ -139,19 +137,34 @@ export function AccountMenu({
               <span>{item.label}</span>
             </a>
           ))}
-          <button
+          <a
             role="menuitem"
             tabIndex={-1}
-            type="button"
-            onClick={() => {
-              close();
-              onFavourites();
-            }}
+            href={getAccountPath("favourites")}
+            onClick={(event) => follow(event, getAccountPath("favourites"))}
           >
             <Icon name="heart" />
             <span>{text.favourites}</span>
             {favouriteCount > 0 && <small>{favouriteCount}</small>}
-          </button>
+          </a>
+          <a
+            role="menuitem"
+            tabIndex={-1}
+            href={getAccountPath("orders")}
+            onClick={(event) => follow(event, getAccountPath("orders"))}
+          >
+            <Icon name="truck" />
+            <span>{text.orders}</span>
+          </a>
+          <a
+            role="menuitem"
+            tabIndex={-1}
+            href={getAccountPath("settings")}
+            onClick={(event) => follow(event, getAccountPath("settings"))}
+          >
+            <Icon name="edit" />
+            <span>{text.settings}</span>
+          </a>
           {user.role === "admin" && (
             <>
               <div role="separator" />

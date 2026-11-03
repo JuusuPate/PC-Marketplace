@@ -233,3 +233,115 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+.account-page__favourites-count {
+  margin: 0 0 18px;
+  color: #626d7c;
+  font-size: 13px;
+}
+.account-page__favourites-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.account-page__favourites-empty {
+  padding: 24px 0;
+  text-align: center;
+}
+.account-page__favourites-empty > svg {
+  width: 32px;
+  height: 32px;
+  color: #4d5d74;
+}
+.account-page__favourites-empty h2 {
+  font-size: 21px;
+}
+.account-page__favourites-empty p {
+  color: #626d7c;
+  line-height: 1.6;
+  margin-bottom: 22px;
+}
+@media (min-width: 761px) and (max-width: 1180px) {
+  .account-page__favourites-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 760px) {
+  .account-page__favourites-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 480px) {
+  .account-page__favourites-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.seller-avatar img,
+.mini-avatar img,
+.profile-editor__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.profile-editor {
+  max-width: 600px;
+}
+.profile-editor fieldset {
+  display: grid;
+  gap: 16px;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  min-width: 0;
+}
+.profile-editor label {
+  display: grid;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 650;
+}
+.profile-editor input {
+  min-width: 0;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+}
+.profile-editor form + form {
+  border-top: 1px solid var(--line);
+  margin-top: 28px;
+  padding-top: 26px;
+}
+.profile-editor p {
+  margin: 0;
+  font-size: 13px;
+  color: #626d7c;
+  line-height: 1.6;
+}
+.profile-editor__avatar {
+  width: 84px;
+  height: 84px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #e6effc;
+  color: #214c83;
+  font-size: 26px;
+  font-weight: 800;
+  overflow: hidden;
+}
+.profile-editor input:focus-visible {
+  outline: 2px solid var(--accent-strong);
+  outline-offset: 3px;
+}
+
+.profile-editor__details {
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+  max-width: 600px;
+}
